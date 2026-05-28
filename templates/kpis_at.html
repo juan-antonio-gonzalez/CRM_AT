@@ -1,0 +1,698 @@
+{% extends "layout.html" %}
+
+{% block title %}KPIs - Asignación AT | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">KPIs - Asignación AT</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Control de Cobertura</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in pb-10">
+    <!-- Header -->
+    <div
+        class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Control de Asignación AT</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+                Seguimiento de visitas técnicas asignadas y realizadas por cliente. <span
+                    class="text-primary font-bold">Edición directa permitida.</span>
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="addRecord"
+                class="flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary/20">
+                <span class="material-symbols-rounded !text-base">add</span>
+                Nuevo Registro
+            </button>
+            <button id="downloadExcel"
+                class="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-emerald-200 dark:shadow-none">
+                <span class="material-symbols-rounded !text-base">download</span>
+                Exportar Excel
+            </button>
+            <button id="copyTable"
+                class="flex items-center gap-2 px-4 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-slate-200 dark:shadow-none">
+                <span class="material-symbols-rounded !text-base">content_copy</span>
+                Copiar Datos
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Total Visits KPI -->
+        <div
+            class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group flex items-center gap-4">
+            <div
+                class="size-10 rounded-xl bg-primary/10 flex-shrink-0 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                <span class="material-symbols-rounded text-xl">event_available</span>
+            </div>
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Total Visitas</p>
+                    <span
+                        class="text-[9px] font-black text-primary bg-primary/5 px-1.5 py-0.5 rounded-md uppercase">Global</span>
+                </div>
+                <p class="text-xl font-black text-slate-900 dark:text-white leading-none mt-0.5">{{ stats.total_visitas
+                    }}</p>
+            </div>
+        </div>
+
+        <!-- Premium Visits KPI -->
+        <div
+            class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-amber-500/5 transition-all group border-l-4 border-l-amber-500 flex items-center gap-4">
+            <div
+                class="size-10 rounded-xl bg-amber-500/10 flex-shrink-0 flex items-center justify-center text-amber-500 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-rounded text-xl">workspace_premium</span>
+            </div>
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Visitas Premium</p>
+                    <span
+                        class="text-[9px] font-black text-amber-600 bg-amber-500/5 px-1.5 py-0.5 rounded-md uppercase">Nivel
+                        I</span>
+                </div>
+                <p class="text-xl font-black text-slate-900 dark:text-white leading-none mt-0.5">{{ stats.total_premium
+                    }}</p>
+            </div>
+        </div>
+
+        <!-- Standard Visits KPI -->
+        <div
+            class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all group border-l-4 border-l-indigo-500 flex items-center gap-4">
+            <div
+                class="size-10 rounded-xl bg-indigo-500/10 flex-shrink-0 flex items-center justify-center text-indigo-500 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-rounded text-xl">assignment_turned_in</span>
+            </div>
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Visitas Estándar</p>
+                    <span
+                        class="text-[9px] font-black text-indigo-600 bg-indigo-500/5 px-1.5 py-0.5 rounded-md uppercase">Nivel
+                        II</span>
+                </div>
+                <p class="text-xl font-black text-slate-900 dark:text-white leading-none mt-0.5">{{ stats.total_estandar
+                    }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div
+        class="bg-white dark:bg-slate-900 p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden min-h-[500px]">
+        <div id="kpiTable" class="text-sm"></div>
+    </div>
+</div>
+
+<!-- Modal de Detalle Cliente -->
+<div id="customerModal"
+    class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div
+        class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Detalles del Cliente</h3>
+            <button class="btn-close-cust-modal size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div id="modalContent" class="p-8 space-y-6">
+            <div class="animate-pulse flex flex-col gap-4">
+                <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div>
+                <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>
+                <div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex justify-end">
+            <button class="btn-close-cust-modal px-6 py-2.5 bg-slate-900 dark:bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-opacity">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Observaciones/Atención -->
+<div id="attentionModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <span class="material-symbols-rounded text-primary">edit_note</span> Observaciones AT
+            </h3>
+            <button type="button" id="btn-close-attention-modal" class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="p-8 space-y-6">
+            <input type="hidden" id="attention_row_id">
+            
+            <label class="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <div class="relative flex items-center">
+                    <input type="checkbox" id="attention_checkbox" class="sr-only peer">
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-500"></div>
+                </div>
+                <div>
+                    <span class="text-sm font-bold text-slate-900 dark:text-white">Requiere Atención</span>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-black">Marcar si hay urgencia o problema</p>
+                </div>
+            </label>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Notas / Observaciones</label>
+                <textarea id="attention_observations" rows="4" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20 text-slate-900 dark:text-white resize-none" placeholder="Agregar detalles sobre la situación..."></textarea>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+            <button type="button" id="btn-cancel-attention-modal" class="px-6 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl transition-colors">Cancelar</button>
+            <button type="button" id="btn-save-attention-notes" class="px-6 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:opacity-90 shadow-lg shadow-primary/20 transition-all">Guardar Notas</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tabulator CSS -->
+<link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_modern.min.css" rel="stylesheet">
+<style>
+    .tabulator {
+        border: 1px solid #e2e8f0 !important;
+        background-color: transparent !important;
+        font-family: inherit !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+
+    .tabulator-header {
+        background-color: #f8fafc !important;
+        border-bottom: 2px solid #e2e8f0 !important;
+        font-weight: 800 !important;
+        color: #64748b !important;
+        text-transform: uppercase !important;
+        font-size: 10px !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    .tabulator-col {
+        background-color: transparent !important;
+        border-right: 1px solid #e2e8f0 !important;
+    }
+
+    .tabulator-col:last-child {
+        border-right: none !important;
+    }
+
+    /* Filters - Light Mode */
+    .tabulator-header-filter input {
+        background-color: white !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        transition: all 0.2s !important;
+    }
+
+    .tabulator-row {
+        border-bottom: 1px solid #e2e8f0 !important;
+        background-color: white !important;
+    }
+
+    .tabulator-row-even {
+        background-color: #fafafa !important;
+    }
+
+    .tabulator-row:hover {
+        background-color: #f1f5f9 !important;
+    }
+
+    .tabulator-cell {
+        padding: 14px 16px !important;
+        border-right: 1px solid #f1f5f9 !important;
+    }
+
+    .tabulator-cell:last-child {
+        border-right: none !important;
+    }
+
+    /* --- DARK MODE FIXES --- */
+    .dark .tabulator {
+        border-color: #1e293b !important;
+    }
+
+    .dark .tabulator-header {
+        background-color: #1e293b !important;
+        border-bottom-color: #334155 !important;
+        color: #94a3b8 !important;
+    }
+
+    .dark .tabulator-col {
+        border-right-color: #334155 !important;
+    }
+
+    .dark .tabulator-header-filter input {
+        background-color: #0f172a !important;
+        border-color: #475569 !important;
+        color: #f1f5f9 !important;
+    }
+
+    .dark .tabulator-row {
+        background-color: #111621 !important;
+        border-bottom-color: #1e293b !important;
+        color: #cbd5e1 !important;
+    }
+
+    .dark .tabulator-row-even {
+        background-color: #161d2a !important;
+    }
+
+    .dark .tabulator-row:hover {
+        background-color: #1e293b !important;
+    }
+
+    .dark .tabulator-cell {
+        background-color: transparent !important;
+        color: #cbd5e1 !important;
+        border-right-color: #1e293b !important;
+    }
+
+    .dark .tabulator-cell:last-child {
+        border-right: none !important;
+    }
+
+    .dark .tabulator-cell.tabulator-editing {
+        background-color: #1e1b1e !important;
+        color: #ffffff !important;
+        border-color: #f59e0b !important;
+    }
+
+    /* Badge AT Styles */
+    .at-badge {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 11px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    }
+
+    .at-badge:hover {
+        border-color: #0369a1;
+        background-color: #bae6fd;
+        transform: translateY(-1px);
+    }
+
+    .dark .at-badge {
+        background-color: rgba(3, 105, 161, 0.2) !important;
+        color: #7dd3fc !important;
+        border-color: rgba(3, 105, 161, 0.3) !important;
+    }
+
+    .dark .at-badge:hover {
+        border-color: #7dd3fc !important;
+        background-color: rgba(3, 105, 161, 0.4) !important;
+    }
+
+    .dark .tabulator-tableholder::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .dark .tabulator-tableholder::-webkit-scrollbar-track {
+        background: #111621;
+    }
+    .dark .tabulator-tableholder::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 10px;
+    }
+    .dark .tabulator-tableholder::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}" type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
+<script nonce="{{ request.state.script_nonce }}">
+    const tableData = {{ table_data | tojson }};
+    const advisors = {{ advisors | tojson }};
+    const customerNames = {{ customer_names | tojson }};
+
+    const table = new Tabulator("#kpiTable", {
+        data: tableData,
+        layout: "fitColumns",
+        placeholder: "No hay datos disponibles",
+        selectable: true,
+        clipboard: "copy",
+        clipboardCopyRowRange: "selected",
+        columns: [
+            {
+                title: "Cliente", 
+                field: "cliente", 
+                headerFilter: "list",
+                headerFilterParams: { valuesLookup: "active", clearable: true, autocomplete: true },
+                minWidth: 200, 
+                editor: "list",
+                editorParams: {
+                    values: customerNames,
+                    autocomplete: true,
+                    listOnEmpty: true,
+                    freetext: true // Allow typing if customer not in list yet
+                },
+                formatter: (cell) => {
+                    const rowData = cell.getRow().getData();
+                    const val = cell.getValue();
+                    const hasAttention = rowData.attention_required || (rowData.attention_observations && rowData.attention_observations.trim() !== "");
+                    
+                    let indicator = "";
+                    if (hasAttention) {
+                        const pulseColor = rowData.attention_required ? "bg-red-500" : "bg-amber-500";
+                        const pingColor = rowData.attention_required ? "bg-red-400" : "bg-amber-400";
+                        indicator = `<span class="absolute -top-1 -right-2 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full ${pingColor} opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 ${pulseColor}"></span></span>`;
+                    }
+                    
+                    return `<div class="relative inline-block"><div class="font-black text-slate-900 capitalize dark:text-white pr-2">${val || '<i>Seleccionar Cliente...</i>'}</div>${indicator}</div>`;
+                },
+                cellEdited: function(cell) {
+                    const val = cell.getValue();
+                    const row = cell.getRow();
+                    const data = row.getData();
+                    
+                    // Duplicate check inside the table
+                    const duplicate = table.getData().find(r => r.id !== data.id && r.cliente === val);
+                    if (duplicate && val) {
+                        alert(`El cliente "${val}" ya tiene una asignación en esta tabla.`);
+                        cell.setValue("");
+                        return;
+                    }
+                }
+            },
+            {
+                title: "AT Asignado",
+                field: "at",
+                headerFilter: "list",
+                headerFilterParams: { valuesLookup: "active", clearable: true, autocomplete: true },
+                minWidth: 150,
+                editor: "list",
+                editorParams: {
+                    values: advisors,
+                    autocomplete: true,
+                    listOnEmpty: true,
+                    freetext: true
+                },
+                formatter: (cell) => `<span class="at-badge">${cell.getValue() || 'Asignar AT...'}</span>`
+            },
+            { title: "Estándar", field: "estandar", hozAlign: "center", minWidth: 100, headerFilter: "number", editor: "number" },
+            { title: "Premium", field: "premium", hozAlign: "center", minWidth: 100, headerFilter: "number", editor: "number" },
+            {
+                title: "Total", field: "total", hozAlign: "center", minWidth: 100, headerFilter: "number",
+                formatter: "html", formatter: (cell) => `<span class="font-black text-primary">${cell.getValue()}</span>`
+            },
+            {
+                title: "Acciones",
+                field: "id",
+                headerSort: false,
+                hozAlign: "right",
+                formatter: (cell) => {
+                    const rowData = cell.getRow().getData();
+                    const id = rowData.id;
+
+                    if (!id) {
+                        return `
+                            <div class="flex items-center justify-end gap-1">
+                                <button class="btn-delete-local-row p-1.5 text-slate-400 hover:text-red-500 transition-colors" title="Eliminar fila nueva">
+                                    <span class="material-symbols-rounded !text-lg">delete</span>
+                                </button>
+                            </div>
+                        `;
+                    }
+
+                    return `
+                        <div class="flex items-center justify-end gap-1">
+                            <button class="btn-view-details p-1.5 text-slate-400 hover:text-primary transition-colors" data-id="${id}" title="Ver Detalle">
+                                <span class="material-symbols-rounded !text-lg">visibility</span>
+                            </button>
+                            <button class="btn-focus-edit p-1.5 text-slate-400 hover:text-amber-500 transition-colors" title="Editar AT (Inline)">
+                                <span class="material-symbols-rounded !text-lg">edit_square</span>
+                            </button>
+                            <button class="btn-open-attention p-1.5 text-slate-400 hover:text-indigo-500 transition-colors" data-id="${id}" title="Observaciones/Atención">
+                                <span class="material-symbols-rounded !text-lg">edit_note</span>
+                            </button>
+                            <form action="/eliminar-asignacion/${id}?redirect=/kpis-at" method="POST" class="inline delete-at-form" data-confirm="¿Eliminar esta asignación de AT?">
+                                <input type="hidden" name="csrf_token" value="${getCsrfToken()}">
+                                <button type="submit" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors" title="Eliminar">
+                                    <span class="material-symbols-rounded !text-lg">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    `;
+                }
+            }
+        ],
+    });
+
+    function deleteLocalRow(btn) {
+        const row = table.getRow(btn.closest(".tabulator-row"));
+        if (row) {
+            row.delete();
+        }
+    }
+
+    // Handle Inline Edit Save
+    table.on("cellEdited", function (cell) {
+        const field = cell.getField();
+        const row = cell.getRow().getData();
+
+        // If it's a new row (no ID yet) and we have a name, create it
+        if (!row.id && field === "cliente" && row.cliente) {
+            fetch(`/api/customers/quick-create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: row.cliente, at: row.at })
+            })
+                .then(async res => {
+                    const data = await res.json();
+                    if (!res.ok) {
+                        alert(data.detail || "Error al crear cliente");
+                        cell.getRow().delete(); // Remove the invalid row
+                        return;
+                    }
+                    if (data.status === 'success') {
+                        cell.getRow().update(data);
+                        console.log("Customer created successfully with ID:", data.id);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error creating customer:", err);
+                    alert("Error de conexión al crear cliente");
+                });
+            return;
+        }
+
+        if (row.id && (field === "estandar" || field === "premium" || field === "at" || field === "cliente")) {
+            // Update local total
+            const newTotal = (parseInt(row.estandar) || 0) + (parseInt(row.premium) || 0);
+            cell.getRow().update({ total: newTotal });
+
+            fetch(`/api/customers/${row.id}/update-kpis`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    standard: row.estandar,
+                    premium: row.premium,
+                    at: row.at,
+                    name: row.cliente
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status !== 'success') {
+                        alert("Error al actualizar: " + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error de conexión al guardar cambios");
+                });
+        }
+    });
+
+    // Add Record Button
+    document.getElementById("addRecord").addEventListener("click", () => {
+        table.addRow({ cliente: "", at: "No asignado", estandar: 0, premium: 0, total: 0 }, true)
+            .then((row) => {
+                row.getCell("cliente").edit();
+            });
+    });
+
+    function focusEdit(btn) {
+        // Find cell in the same row
+        const row = table.getRow(btn.closest(".tabulator-row"));
+        if (row) {
+            row.getCell("estandar").edit();
+        }
+    }
+
+    async function viewCustomerDetails(id) {
+        const modal = document.getElementById("customerModal");
+        const content = document.getElementById("modalContent");
+        modal.classList.remove("hidden");
+        // Loading skeleton
+        content.innerHTML = `<div class="animate-pulse flex flex-col gap-4"><div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div><div class="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div></div>`;
+
+        try {
+            const res = await fetch(`/api/customers/${id}/details`);
+            const data = await res.json();
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-5">
+                        <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Empresa</p>
+                            <p class="text-xl font-black text-slate-900 dark:text-white">${escapeHtml(data.name)}</p>
+                        </div>
+                        <div class="flex flex-col gap-4 pl-1">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Planta / Unidad</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-300 text-sm">${escapeHtml(data.plant || 'No especificada')}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Sector Industrial</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-300 text-sm">${escapeHtml(data.industry_sector || '-')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-5">
+                        <div class="bg-slate-50 dark:bg-slate-800/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">AT Asignado</p>
+                            <p class="text-lg font-black text-primary">${escapeHtml(data.technical_advisor || 'Pendiente')}</p>
+                        </div>
+                        <div class="flex flex-col gap-4 pl-1">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Ubicación Geográfica</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-300 text-sm">${escapeHtml(data.city)}, ${escapeHtml(data.address)}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estado de Cuenta</p>
+                                <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider">${escapeHtml(data.status)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div class="bg-indigo-50/30 dark:bg-indigo-900/10 p-5 rounded-2xl border border-indigo-100/50 dark:border-indigo-900/50">
+                            <p class="text-[10px] font-black text-indigo-400 dark:text-indigo-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <span class="material-symbols-rounded !text-sm">notes</span>Observaciones Estratégicas
+                            </p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed italic">${escapeHtml(data.observations || 'No se han registrado observaciones adicionales para este cliente.')}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch (err) {
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-10 text-center">
+                    <span class="material-symbols-rounded text-red-500 text-5xl mb-4">error</span>
+                    <p class="text-slate-900 dark:text-white font-bold">Error de sincronización</p>
+                    <p class="text-sm text-slate-500">No se pudieron recuperar los datos del servidor.</p>
+                </div>
+            `;
+        }
+    }
+
+    function closeCustomerModal() {
+        document.getElementById("customerModal").classList.add("hidden");
+    }
+
+    // Export & Copy
+    document.getElementById("copyTable").addEventListener("click", () => {
+        table.copyToClipboard("all");
+        // Custom message instead of alert
+        console.log("All data copied");
+        const btn = document.getElementById("copyTable");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-rounded !text-base">check</span> Copiado`;
+        btn.classList.replace("bg-slate-800", "bg-emerald-500");
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.replace("bg-emerald-500", "bg-slate-800");
+        }, 2000);
+    });
+
+    document.getElementById("downloadExcel").addEventListener("click", () => {
+        table.download("csv", "kpis_asignacion_at.csv");
+    });
+
+    // Attention Modal Logic
+    function openAttentionModal(id) {
+        const row = table.searchRows("id", "=", id)[0];
+        if (!row) return;
+        const data = row.getData();
+        
+        document.getElementById('attention_row_id').value = id;
+        document.getElementById('attention_checkbox').checked = data.attention_required || false;
+        document.getElementById('attention_observations').value = data.attention_observations || "";
+        
+        document.getElementById('attentionModal').classList.remove('hidden');
+    }
+
+    function closeAttentionModal() {
+        document.getElementById('attentionModal').classList.add('hidden');
+    }
+
+    function saveAttentionNotes() {
+        const idStr = document.getElementById('attention_row_id').value;
+        if (!idStr) return;
+        const id = parseInt(idStr);
+        
+        const attentionReq = document.getElementById('attention_checkbox').checked;
+        const observations = document.getElementById('attention_observations').value;
+        
+        const row = table.searchRows("id", "=", id)[0];
+        if (row) {
+            row.update({ attention_required: attentionReq, attention_observations: observations });
+        }
+        
+        // Send to backend
+        fetch(`/api/customers/${id}/update-kpis`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                attention_required: attentionReq,
+                attention_observations: observations
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status !== 'success') {
+                alert("Error al actualizar observaciones: " + data.message);
+            } else {
+                closeAttentionModal();
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error de conexión al guardar cambios");
+        });
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-close-cust-modal-x')?.addEventListener('click', closeCustomerModal);
+    document.getElementById('btn-cancel-cust-modal')?.addEventListener('click', closeCustomerModal);
+    document.getElementById('btn-close-attention-modal')?.addEventListener('click', closeAttentionModal);
+    document.getElementById('btn-cancel-attention-modal')?.addEventListener('click', closeAttentionModal);
+    document.getElementById('btn-save-attention-notes')?.addEventListener('click', saveAttentionNotes);
+    document.querySelectorAll('.btn-delete-local-row').forEach(b => b.addEventListener('click', function() { deleteLocalRow(this); }));
+    document.querySelectorAll('.btn-view-details').forEach(b => b.addEventListener('click', function() { viewCustomerDetails(this.dataset.id); }));
+    document.querySelectorAll('.btn-focus-edit').forEach(b => b.addEventListener('click', function() { focusEdit(this); }));
+    document.querySelectorAll('.btn-open-attention').forEach(b => b.addEventListener('click', function() { openAttentionModal(this.dataset.id); }));
+    document.querySelectorAll('.delete-at-form').forEach(f => f.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showConfirmModal(this, this.dataset.confirm);
+    }));
+});
+
+    document.querySelectorAll('.btn-close-cust-modal').forEach(b => b.addEventListener('click', closeCustomerModal));
+</script>
+{% endblock %}

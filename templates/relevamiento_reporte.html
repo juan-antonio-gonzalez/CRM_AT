@@ -1,0 +1,401 @@
+{% extends "layout.html" %}
+
+{% block title %}Reporte de Relevamiento Técnico #{{ machine.id }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .pdf-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    @media print {
+        @page {
+            margin: 1.5cm;
+            size: auto;
+        }
+
+        body,
+        html,
+        main,
+        .main-content-wrapper,
+        #sidebarNav,
+        #sidebar,
+        header {
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #sidebarNav,
+        #sidebar,
+        #mobile-nav,
+        header,
+        .no-print,
+        nav,
+        button,
+        .print\:hidden {
+            display: none !important;
+        }
+
+        * {
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+        }
+
+        .pdf-page {
+            box-shadow: none !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            height: auto !important;
+        }
+
+        .page-break-inside-avoid {
+            break-inside: avoid;
+        }
+
+        table {
+            width: 100% !important;
+            page-break-inside: auto;
+        }
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        thead {
+            display: table-header-group;
+        }
+        tfoot {
+            display: table-footer-group;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col h-full w-full bg-slate-100 dark:bg-slate-950 print:bg-white print:h-auto print:block">
+    <!-- Toolbar -->
+    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
+        <div class="flex items-center gap-4">
+            <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
+                <a href="/relevamiento" class="hover:text-primary transition-colors">Relevamiento Técnico</a>
+                <span class="material-symbols-rounded text-sm">chevron_right</span>
+                <span class="text-slate-900 dark:text-slate-100">Vista Previa #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</span>
+            </nav>
+        </div>
+        <div class="flex items-center gap-2">
+            {% if survey and survey.status != 'Completado' %}
+            <a href="/relevamiento?edit_machine={{ machine.id }}"
+                class="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors text-sm font-bold mr-2">
+                <span class="material-symbols-rounded text-[20px]">edit</span>
+                Volver a Edición
+            </a>
+            {% endif %}
+            <button style="cursor:pointer" data-print-btn
+                class="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-semibold">
+                <span class="material-symbols-rounded text-[20px]">print</span>
+                Imprimir
+            </button>
+            <button style="cursor:pointer" data-print-btn
+                class="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-primary/90 rounded-lg transition-colors text-sm font-bold shadow-sm">
+                <span class="material-symbols-rounded text-[20px]">download</span>
+                Descargar PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- Document Scrollable Area -->
+    <div class="flex-1 overflow-y-auto w-full px-4 py-4 md:px-8 md:py-6 scroll-smooth flex justify-center bg-slate-100 dark:bg-slate-950 print:bg-white print:p-0 print:overflow-visible print:block print:h-auto print:min-h-0 print:shadow-none print:m-0">
+        
+        <!-- PDF Page Simulation -->
+        <div class="pdf-page w-full max-w-[850px] min-h-0 print:min-h-0 print:max-w-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-8 py-6 md:px-12 md:py-8 print:p-0 pdf-shadow print:shadow-none flex flex-col gap-8 rounded-sm text-sm" style="height: fit-content;">
+
+            <!-- PDF Header -->
+            <div class="flex justify-between items-start border-b-2 border-slate-100 dark:border-slate-800 pb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-white shrink-0">
+                        <span class="material-symbols-rounded text-3xl">fact_check</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">Aplicación AT</h2>
+                        <p class="text-xs font-semibold text-primary uppercase tracking-widest">Servicios Técnicos Profesionales</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">REPORTE DE MÁQUINA</h3>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Folio: #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</p>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Fecha: {{ survey.updated_at.strftime('%d/%m/%Y') if survey and survey.updated_at else '-' }}</p>
+                </div>
+            </div>
+
+            <!-- Customer & Technical Info Grid -->
+            <div class="grid grid-cols-2 gap-8">
+                <section>
+                    <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
+                    <div class="space-y-1.5">
+                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Cliente:</span> {{ customer.name if customer else 'No asignado' }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Planta/Sede:</span> {{ customer.plant if customer and customer.plant else '-' }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Línea de Prod.:</span> {{ machine.line if machine.line else '-' }}</p>
+                    </div>
+                </section>
+                <section>
+                    <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
+                    <div class="space-y-1.5">
+                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Asistente Técnico:</span> {{ customer.technical_advisor if customer and customer.technical_advisor else '-' }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Estado global:</span> 
+                            {% if machine.relevamiento_status == 'Completado' %}
+                                <span class="text-emerald-600 dark:text-emerald-500 font-bold">Completado</span>
+                            {% elif machine.relevamiento_status == 'En Proceso' %}
+                                <span class="text-blue-600 dark:text-blue-500 font-bold">En Proceso</span>
+                            {% else %}
+                                <span class="text-amber-600 dark:text-amber-500 font-bold">Pendiente</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Section: Machine Specs -->
+            <section class="mt-4 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
+                    <span class="material-symbols-rounded align-middle mr-1 text-base">precision_manufacturing</span> Especificaciones de la Máquina
+                </h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Máquina (Marca y Modelo):</span> {{ machine.brand }} {{ machine.model }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">PPM Promedio:</span> {{ survey_data.get('maquinaria_ppm', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Velocidad Objetivo:</span> {{ survey_data.get('maquinaria_capacidad', '-') }} cj/min</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Slotter:</span> {{ survey_data.get('tipo_slotter', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Impresión:</span>
+                        {% set imp = survey_data.get('tipo_impresion') %}
+                        {% if imp is string %}
+                            {{ imp }}
+                        {% elif imp is iterable and imp is not string %}
+                            {{ imp | join(', ') }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Observaciones:</span> {{ survey_data.get('maquinaria_obs', '-') }}</p>
+                </div>
+            </section>
+
+            <!-- Station E1: Alimentación -->
+            <section class="mt-4 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
+                    <span class="material-symbols-rounded align-middle mr-1 text-base">input</span> Estación 1: Alimentación (Feeder)
+                </h4>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Toma de Cajas:</span> {{ survey_data.get('e1_toma_cajas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Vacío:</span> {{ survey_data.get('e1_tipo_vacio', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Cant. de Ventosas:</span> {{ survey_data.get('e1_cant_ventosas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Center Line:</span> {{ 'Sí' if survey_data.get('e1_centerline') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e1_requires_sqt') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span>
+                        {% set c = survey_data.get('criticidad_e1') %}
+                        {% if c == 'alta' %}
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        {% elif c == 'media' %}
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        {% elif c == 'baja' %}
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </p>
+                    {% if survey_data.get('e1_requires_sqt') %}
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">SQT (Nominal / Mín / Máx):</span>
+                        {{ survey_data.get('e1_sqt_nominal', '-') }} / {{ survey_data.get('e1_sqt_min', '-') }} / {{ survey_data.get('e1_sqt_max', '-') }}</p>
+                    {% endif %}
+                </div>
+                {% if survey_data.get('e1_obs') %}
+                <div class="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                    <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e1_obs') }}</p>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Station E2: Formado y Escuadrado -->
+            <section class="mt-4 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
+                    <span class="material-symbols-rounded align-middle mr-1 text-base">square_foot</span> Estación 2: Formado y Escuadrado
+                </h4>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Formado:</span> {{ survey_data.get('e2_tipo_formado', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Cierre Inferior:</span> {{ survey_data.get('e2_cierre_inferior', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Vacío:</span> {{ survey_data.get('e2_tipo_vacio', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Ventosas:</span> {{ survey_data.get('e2_ventosas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Center Line:</span> {{ 'Sí' if survey_data.get('e2_centerline') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e2_requires_sqt') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span>
+                        {% set c = survey_data.get('criticidad_e2') %}
+                        {% if c == 'alta' %}
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        {% elif c == 'media' %}
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        {% elif c == 'baja' %}
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </p>
+                    {% if survey_data.get('e2_requires_sqt') %}
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">SQT (Nominal / Mín / Máx):</span>
+                        {{ survey_data.get('e2_sqt_nominal', '-') }} / {{ survey_data.get('e2_sqt_min', '-') }} / {{ survey_data.get('e2_sqt_max', '-') }}</p>
+                    {% endif %}
+                </div>
+                {% if survey_data.get('e2_obs') %}
+                <div class="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                    <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e2_obs') }}</p>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Station E3: Sistema de Cierre -->
+            <section class="mt-4 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
+                    <span class="material-symbols-rounded align-middle mr-1 text-base">handyman</span> Estación 3: Sistema de Cierre
+                </h4>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Cierre:</span> {{ survey_data.get('e3_tipo_cierre', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span>
+                        {% set c = survey_data.get('criticidad_e3') %}
+                        {% if c == 'alta' %}
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        {% elif c == 'media' %}
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        {% elif c == 'baja' %}
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e3_requires_sqt') else 'No' }}</p>
+                    {% if survey_data.get('e3_requires_sqt') %}
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">SQT (Nominal / Mín / Máx):</span>
+                        {{ survey_data.get('e3_sqt_nominal', '-') }} / {{ survey_data.get('e3_sqt_min', '-') }} / {{ survey_data.get('e3_sqt_max', '-') }}</p>
+                    {% endif %}
+                </div>
+
+                {% if survey_data.get('e3_tipo_cierre') == 'Hotmelt' %}
+                <h5 class="font-bold text-sm mt-3 mb-2 text-slate-700 dark:text-slate-300">Configuración Hotmelt</h5>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Marca de Adhesivo:</span> {{ survey_data.get('e3_marca_adhesivo', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Proveedor:</span> {{ survey_data.get('e3_proveedor', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Adhesivo:</span> {{ survey_data.get('e3_tipo_adhesivo', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Colero:</span> {{ survey_data.get('e3_tipo_colero', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Marca de Colero:</span> {{ survey_data.get('e3_marca_colero', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Temperatura:</span> {{ survey_data.get('e3_temp', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Gramos por Caja:</span> {{ survey_data.get('e3_gramos_caja', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Presión de Aire:</span> {{ survey_data.get('e3_presion_aire', '-') }}</p>
+                </div>
+                {% elif survey_data.get('e3_tipo_cierre') == 'Cinta' %}
+                <h5 class="font-bold text-sm mt-3 mb-2 text-slate-700 dark:text-slate-300">Configuración Cinta</h5>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Cinta:</span> {{ survey_data.get('e3_tipo_cinta', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Marca de Cinta:</span> {{ survey_data.get('e3_marca_cinta', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Center Line:</span> {{ 'Sí' if survey_data.get('e3_cinta_cl') else 'No' }}</p>
+                </div>
+                {% endif %}
+
+                {% if survey_data.get('e3_obs') %}
+                <div class="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                    <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e3_obs') }}</p>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Team Section -->
+            {% set team_names = survey_data.get('team_name') %}
+            {% if team_names %}
+            <section class="mt-4 page-break-inside-avoid">
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
+                    <span class="material-symbols-rounded align-middle mr-1 text-base">group</span> Equipo de Relevamiento
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-700">
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Nombre</th>
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Cargo</th>
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set team_roles = survey_data.get('team_role', []) %}
+                            {% set team_obss = survey_data.get('team_obs', []) %}
+                            {% if team_names is string %}
+                            {% set team_names = [team_names] %}
+                            {% endif %}
+                            {% if team_roles is string %}
+                            {% set team_roles = [team_roles] %}
+                            {% endif %}
+                            {% if team_obss is string %}
+                            {% set team_obss = [team_obss] %}
+                            {% endif %}
+                            {% for idx in range(team_names|length) %}
+                            <tr class="border-b border-slate-100 dark:border-slate-800">
+                                <td class="py-1.5 pr-4">{{ team_names[idx] }}</td>
+                                <td class="py-1.5 pr-4">{{ team_roles[idx] if team_roles and idx < team_roles|length else '' }}</td>
+                                <td class="py-1.5">{{ team_obss[idx] if team_obss and idx < team_obss|length else '' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if survey_data.get('relev_obs_equipo') %}
+                <div class="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Observaciones del Equipo</p>
+                    <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('relev_obs_equipo') }}</p>
+                </div>
+                {% endif %}
+            </section>
+            {% endif %}
+
+            <!-- Conclusions & Signatures -->
+            <div class="mt-auto pt-8 border-t border-slate-100 dark:border-slate-800 page-break-inside-avoid">
+                {% if survey_data.get('relev_obs_generales') %}
+                <section class="mb-8">
+                    <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Conclusiones Finales</h4>
+                    <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed italic border-l-2 border-slate-300 dark:border-slate-700 pl-4 py-1 whitespace-pre-wrap">
+                        "{{ survey_data.get('relev_obs_generales') }}"
+                    </p>
+                </section>
+                {% endif %}
+
+                <div class="grid grid-cols-2 gap-20 mt-12">
+                    <div class="text-center">
+                        <div class="border-b border-slate-900 dark:border-slate-100 mb-2 h-16 flex items-end justify-center">
+                        </div>
+                        <p class="text-xs font-bold dark:text-slate-100">Firma Técnico / Profesional</p>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400">Representante Aplicación AT</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Page Number -->
+            <div class="pt-8 flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200 dark:border-slate-800">
+                <span>{{ survey.updated_at.strftime('%Y-%m-%d %H:%M') if survey and survey.updated_at else '' }}</span>
+                <span>Documento Generado vía Aplicación AT</span>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-print-btn]').forEach(b => b.addEventListener('click', () => window.print()));
+});
+</script>
+{% endblock %}

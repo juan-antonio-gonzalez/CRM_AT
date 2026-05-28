@@ -1,0 +1,339 @@
+{% extends "layout.html" %}
+
+{% block title %}Seguimiento Plan de Acción - CRM-AT{% endblock %}
+
+{% block header_extra %}
+<h2 class="text-lg lg:text-xl font-black text-slate-800 dark:text-white tracking-tight">Seguimiento Plan de Acción</h2>
+{% endblock %}
+
+{% block content %}
+<div class="h-full flex flex-col gap-6 w-full max-w-[1600px] mx-auto animate-in fade-in duration-500">
+    
+    <!-- Top Configuration Bar (KPIs) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Total -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                <span class="material-symbols-rounded">format_list_bulleted</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Total Tareas</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ total_tareas }}</h3>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pendientes -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center text-rose-500">
+                <span class="material-symbols-rounded">hourglass_empty</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Pendientes</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ pendientes }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- En curso -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-500">
+                <span class="material-symbols-rounded">construction</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">En curso</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ en_curso }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finalizadas -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-500">
+                <span class="material-symbols-rounded">task_alt</span>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Finalizadas</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ finalizadas }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area: Table -->
+    <div class="flex-1 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col overflow-hidden relative">
+        <div class="flex px-6 py-5 border-b border-slate-200 dark:border-slate-800 justify-between items-center bg-white dark:bg-slate-900 z-10">
+            <div>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">Listado de Tareas</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Seguimiento de planes de acción generados a partir de visitas técnicas.</p>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-auto bg-slate-50/50 dark:bg-slate-900/50">
+            <table class="w-full text-left border-collapse whitespace-nowrap min-w-[1000px]">
+                <thead>
+                    <tr class="bg-white dark:bg-slate-900 sticky top-0 z-10 shadow-sm">
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Fecha / Cliente</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Tarea Requerida</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">Responsable / Límite</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 text-center">Estado</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                    {% for item in trackings %}
+                    <tr class="hover:bg-blue-50/50 dark:hover:bg-slate-800/50 transition-colors group">
+                        <!-- Fecha y Cliente -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="size-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs shrink-0 bg-blue-50 text-blue-500 dark:bg-blue-900/20 dark:text-blue-400">
+                                    {{ item.visit_date.strftime('%d/%m') if item.visit_date else '--/--' }}
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate" title="{{ item.customer_name }}">{{ item.customer_name }}</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate" title="{{ item.plant }}">{{ item.plant or 'S/P' }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Tarea Requerida -->
+                        <td class="px-6 py-4 text-sm font-medium text-slate-700 dark:text-slate-300">
+                            <div class="max-w-[300px] truncate" title="{{ item.task }}">
+                                {{ item.task }}
+                            </div>
+                        </td>
+
+                        <!-- Responsable y Fecha -->
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col min-w-0">
+                                <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{{ item.responsible or 'Sin Asignar' }}</p>
+                                <div class="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                    <span class="material-symbols-rounded text-[14px]">event</span>
+                                    {{ item.due_date or 'No Definida' }}
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Estado -->
+                        <td class="px-6 py-4 text-center">
+                            {% set st = item.status | lower %}
+                            {% if st == 'pendiente' or st == 'pending' %}
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-full text-xs font-bold border border-rose-100 dark:border-rose-800/30">
+                                <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                Pendiente
+                            </span>
+                            {% elif st == 'en curso' or st == 'en_curso' or st == 'in_progress' or st == 'progress' or st == 'en proceso' %}
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 rounded-full text-xs font-bold border border-amber-100 dark:border-amber-800/30">
+                                <span class="size-1.5 rounded-full bg-amber-500"></span>
+                                En curso
+                            </span>
+                            {% elif st == 'finalizado' or st == 'done' or st == 'completado' or st == 'completed' %}
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-bold border border-emerald-100 dark:border-emerald-800/30">
+                                <span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                Finalizado
+                            </span>
+                            {% elif st == 'cancelado' or st == 'canceled' %}
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700">
+                                <span class="size-1.5 rounded-full bg-slate-400"></span>
+                                Cancelado
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-bold">
+                                {{ item.status }}
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Acciones -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="btn-open-edit-seg"
+                                    data-id="{{ item.id }}" data-task="{{ item.task | escape }}" data-responsible="{{ item.responsible | escape }}" data-due="{{ item.due_date | escape }}" data-status="{{ item.status | escape }}" data-obs="{{ (item.observations or '') | escape }}"
+                                    class="p-2 text-slate-400 hover:text-primary hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all shadow-sm">
+                                    <span class="material-symbols-rounded text-[20px]">edit</span>
+                                </button>
+                                <form id="delete-form-{{ item.id }}" action="/seguimiento-plan/{{ item.id }}/eliminar" method="POST" class="inline">
+                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                    <button type="button"
+                                        class="btn-delete-seg p-2 text-slate-400 hover:text-red-500 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all shadow-sm"
+                                        data-form-id="delete-form-{{ item.id }}"
+                                        <span class="material-symbols-rounded text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-20 text-center text-slate-500 dark:text-slate-400">
+                            <div class="flex flex-col items-center justify-center gap-3">
+                                <span class="material-symbols-rounded text-6xl text-slate-200 dark:text-slate-800">fact_check</span>
+                                <p class="text-lg font-bold">No hay tareas de seguimiento</p>
+                                <p class="text-sm">Se generarán automáticamente al guardar el "Plan de Acción" de una visita.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Tracking Modal -->
+<div id="editTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300 p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col max-h-[90vh]">
+        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+            <div class="flex items-center gap-3">
+                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-rounded">edit_square</span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white">Editar Seguimiento</h3>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400">Actualiza detalles o cambia el estado</p>
+                </div>
+            </div>
+            <button id="btn-close-edit-modal" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <form id="editTrackingForm" method="POST" class="flex flex-col overflow-hidden h-full">
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <div class="p-6 overflow-y-auto flex-1 space-y-5">
+                <!-- Task -->
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Tarea Requerida</label>
+                    <textarea name="task" id="edit-task" required rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white resize-none"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Responsible -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Responsable</label>
+                        <input type="text" name="responsible" id="edit-responsible" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white" />
+                    </div>
+                    <!-- Due Date -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Fecha Límite</label>
+                        <input type="text" name="due_date" id="edit-due-date" placeholder="DD/MM/YYYY" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white" />
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Estado</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <label class="cursor-pointer relative overflow-hidden">
+                            <input type="radio" name="status" id="status-pending" value="Pendiente" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                            <div class="p-2 text-center border-2 border-slate-100 dark:border-slate-800 rounded-xl peer-checked:border-rose-500 peer-checked:bg-rose-50 dark:peer-checked:bg-rose-500/10 transition-all">
+                                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 peer-checked:text-rose-600 dark:peer-checked:text-rose-400 block uppercase tracking-wider">Pendiente</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer relative overflow-hidden">
+                            <input type="radio" name="status" id="status-in-progress" value="En curso" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                            <div class="p-2 text-center border-2 border-slate-100 dark:border-slate-800 rounded-xl peer-checked:border-amber-500 peer-checked:bg-amber-50 dark:peer-checked:bg-amber-500/10 transition-all">
+                                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 peer-checked:text-amber-600 dark:peer-checked:text-amber-400 block uppercase tracking-wider">En curso</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer relative overflow-hidden">
+                            <input type="radio" name="status" id="status-done" value="Finalizado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                            <div class="p-2 text-center border-2 border-slate-100 dark:border-slate-800 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 dark:peer-checked:bg-emerald-500/10 transition-all">
+                                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 peer-checked:text-emerald-600 dark:peer-checked:text-emerald-400 block uppercase tracking-wider">Finalizado</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer relative overflow-hidden">
+                            <input type="radio" name="status" id="status-canceled" value="Cancelado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                            <div class="p-2 text-center border-2 border-slate-100 dark:border-slate-800 rounded-xl peer-checked:border-slate-500 peer-checked:bg-slate-50 dark:peer-checked:bg-slate-500/10 transition-all">
+                                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 peer-checked:text-slate-600 dark:peer-checked:text-slate-400 block uppercase tracking-wider">Cancelado</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Observations -->
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Observaciones del Seguimiento</label>
+                    <textarea name="observations" id="edit-observations" rows="3" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white" placeholder="Agregue notas o avances sobre esta tarea..."></textarea>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex gap-3">
+                <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-white dark:hover:bg-slate-800 transition-all shadow-sm">
+                    Cancelar
+                </button>
+                <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    function openEditModal(id, task, responsible, dueDate, status, obs) {
+        document.getElementById('editTrackingForm').action = `/seguimiento-plan/${id}/editar`;
+        document.getElementById('edit-task').value = task;
+        document.getElementById('edit-responsible').value = responsible;
+        document.getElementById('edit-due-date').value = dueDate;
+        document.getElementById('edit-observations').value = obs;
+
+        // Map status variants to current values
+        const stMap = {
+            'pending': 'Pendiente', 'pendiente': 'Pendiente',
+            'in_progress': 'En curso', 'in progress': 'En curso', 'progress': 'En curso', 'en proceso': 'En curso', 'en_curso': 'En curso',
+            'done': 'Finalizado', 'completed': 'Finalizado', 'completado': 'Finalizado', 'finalizado': 'Finalizado',
+            'canceled': 'Cancelado', 'cancelado': 'Cancelado',
+        };
+        let s = stMap[status] || status;
+
+        if (s === 'Pendiente') document.getElementById('status-pending').checked = true;
+        else if (s === 'En curso') document.getElementById('status-in-progress').checked = true;
+        else if (s === 'Finalizado') document.getElementById('status-done').checked = true;
+        else if (s === 'Cancelado') document.getElementById('status-canceled').checked = true;
+        else document.getElementById('status-pending').checked = true; // fallback
+
+        document.getElementById('editTrackingModal').classList.remove('hidden');
+        document.getElementById('editTrackingModal').classList.add('flex');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editTrackingModal').classList.remove('flex');
+        document.getElementById('editTrackingModal').classList.add('hidden');
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-close-edit-modal')?.addEventListener('click', closeEditModal);
+    document.getElementById('btn-cancel-edit-modal')?.addEventListener('click', closeEditModal);
+
+    // CSP-safe: edit buttons via data attributes
+    document.querySelectorAll('.btn-open-edit-seg').forEach(btn => {
+        btn.addEventListener('click', function() {
+            openEditModal(
+                this.dataset.id,
+                this.dataset.task,
+                this.dataset.responsible,
+                this.dataset.due,
+                this.dataset.status,
+                this.dataset.obs
+            );
+        });
+    });
+
+    // CSP-safe: delete buttons via data attributes
+    document.querySelectorAll('.btn-delete-seg').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const form = document.getElementById(this.dataset.formId);
+            if (form) {
+                showConfirmModal(form, '¿Está seguro de descartar este seguimiento de su lista?', {title: 'Descartar Tarea', buttonText: 'Eliminar'});
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

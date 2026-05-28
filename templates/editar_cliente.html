@@ -1,0 +1,290 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Cliente | CRM-AT{% endblock %}{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Clientes</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Edición de Cuenta</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-4 animate-fade-in pb-10">
+
+    <!-- Form Container -->
+    <form action="/editar-cliente/{{ customer.id }}" method="POST" class="space-y-6 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl shadow-slate-200/20 dark:shadow-none border border-slate-200 dark:border-slate-800">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <!-- Section: General Info -->
+        <section>
+            <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+                <span class="material-symbols-rounded text-primary text-xl">domain</span>
+                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información General</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre de la
+                         Empresa <span class="text-red-500">*</span></label>
+                    <input name="name" value="{{ customer.name }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-2.5 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 dark:text-white placeholder:text-slate-400"
+                        placeholder="Ej: Aceros Industriales S.A." type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta / Unidad
+                         Productiva <span class="text-red-500">*</span></label>
+                    <input name="plant" value="{{ customer.plant }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        placeholder="Ej: Planta Norte" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sector
+                         Industrial <span class="text-red-500">*</span></label>
+                    <select name="industry_sector" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        {% for s in sectors %}
+                        <option value="{{ s.name }}" {% if customer.industry_sector==s.name %}selected{% endif %}>{{
+                            s.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asesor Comercial
+                         Asignado <span class="text-red-500">*</span></label>
+                    <select name="assigned_commercial" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        {% for c in commercials %}
+                        <option value="{{ c.name }}" {% if customer.assigned_commercial==c.name %}selected{% endif %}>{{
+                            c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asistente Técnico
+                         Asignado <span class="text-red-500">*</span></label>
+                    <select name="technical_advisor" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        {% for a in advisors %}
+                        <option value="{{ a.name }}" {% if customer.technical_advisor==a.name %}selected{% endif %}>{{
+                            a.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Diseñador
+                         Asignado <span class="text-red-500">*</span></label>
+                    <select name="designer" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        {% for d in designers %}
+                        <option value="{{ d.name }}" {% if customer.designer==d.name %}selected{% endif %}>{{ d.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ciudad</label>
+                    <input name="city" value="{{ customer.city or '' }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        placeholder="Ej: Monterrey" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-rounded text-slate-400 text-sm">location_on</span>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dirección</label>
+                    </div>
+                    <input name="address" value="{{ customer.address or '' }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        placeholder="Ej: Av. Central 123" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status de
+                        Cuenta</label>
+                    <select name="status" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="Prospecto" {% if customer.status=="Prospecto" %}selected{% endif %}>Prospecto
+                        </option>
+                        <option value="Cliente" {% if customer.status=="Cliente" %}selected{% endif %}>Cliente</option>
+                        <option value="Inactivo" {% if customer.status=="Inactivo" %}selected{% endif %}>Inactivo
+                        </option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status Relevamiento (Automático)</label>
+                    <div class="p-4 rounded-xl text-sm font-bold flex items-center gap-2 
+                        {% if customer.relevamiento_status == 'Completado' %} bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400
+                        {% elif customer.relevamiento_status == 'En Proceso' %} bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400
+                        {% else %} bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 {% endif %}">
+                        <span class="w-2 h-2 rounded-full 
+                            {% if customer.relevamiento_status == 'Completado' %} bg-emerald-500
+                            {% elif customer.relevamiento_status == 'En Proceso' %} bg-amber-500
+                            {% else %} bg-rose-500 {% endif %} animate-pulse"></span>
+                        {{ customer.relevamiento_status }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-rounded text-primary text-xl">groups_3</span>
+                    <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
+                </div>
+                <button type="button" id="btn-add-team-row-edit"
+                    class="group flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest hover:scale-105 transition-all">
+                    <span class="material-symbols-rounded text-[18px]">add_circle</span>
+                    Añadir Nuevo
+                </button>
+            </div>
+
+            <!-- Team Table -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800 mb-8 shadow-sm">
+                <table class="w-full text-left border-collapse min-w-[600px]" id="teamTable">
+                    <thead>
+                         <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre
+                                 Completo</th>
+                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo
+                                 / Función</th>
+                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">E-mail
+                                 de Contacto</th>
+                             <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono</th>
+                             <th
+                                 class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+                                 Acciones</th>
+                         </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
+                        {% if customer.client_team %}
+{% for member in customer.client_team %}
+                         <tr>
+                             <td class="px-4 py-2"><input name="member_name" value="{{ member.name }}"
+                                     class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                                     placeholder="Nombre..." type="text" /></td>
+                             <td class="px-4 py-2"><input name="member_role" value="{{ member.role }}"
+                                     class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                                     placeholder="Cargo..." type="text" /></td>
+                             <td class="px-4 py-2"><input name="member_email" value="{{ member.email }}"
+                                     class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                                     placeholder="email@ejemplo.com" type="text" /></td>
+                             <td class="px-4 py-2"><input name="member_phone" value="{{ member.phone or '' }}"
+                                     class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                                     placeholder="Teléfono..." type="text" /></td>
+                             <td class="px-4 py-2 text-center">
+                                 <button type="button" class="btn-remove-team-row-edit"
+                                     class="p-2 text-slate-300 hover:text-red-500 transition-colors">
+                                     <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                                 </button>
+                             </td>
+                         </tr>
+{% endfor %}
+                        {% else %}
+                 <tr>
+                     <td class="px-4 py-2"><input name="member_name"
+                             class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                             placeholder="Nombre..." type="text" /></td>
+                     <td class="px-4 py-2"><input name="member_role"
+                             class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                             placeholder="Cargo..." type="text" /></td>
+                     <td class="px-4 py-2"><input name="member_email"
+                             class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                             placeholder="email@ejemplo.com" type="text" /></td>
+                     <td class="px-4 py-2"><input name="member_phone"
+                             class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                             placeholder="Teléfono..." type="text" /></td>
+                     <td class="px-4 py-2 text-center">
+                         <button type="button" class="btn-remove-team-row-edit"
+                             class="p-2 text-slate-300 hover:text-red-500 transition-colors">
+                             <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                         </button>
+                     </td>
+                 </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
+                <textarea name="observations"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
+                    placeholder="Notas estratégicas..."
+                    rows="3">{{ customer.observations or '' }}</textarea>
+            </div>
+        </section>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end gap-6 pt-10 border-t border-slate-100 dark:border-slate-800">
+            <a href="/clientes"
+                class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar</a>
+            <button type="submit"
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
+                Guardar Cambios
+            </button>
+        </div>
+</form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    function updateProgress() {
+        const requiredFields = document.querySelectorAll('input[required], select[required]');
+        let completed = 0;
+        requiredFields.forEach(field => {
+            if (field.value.trim() !== "") completed++;
+        });
+        const percentage = Math.round((completed / requiredFields.length) * 100);
+        const bar = document.getElementById('progressBar');
+        const text = document.getElementById('progressText');
+
+        if (bar) bar.style.width = percentage + '%';
+        if (text) text.innerText = percentage + '%';
+    }
+
+    function addRow() {
+        const tbody = document.querySelector('#teamTable tbody');
+        const newRow = document.createElement('tr');
+        newRow.className = "divide-y divide-slate-100 dark:divide-slate-800";
+         newRow.innerHTML = `
+         <td class="px-4 py-2"><input name="member_name"
+                 class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                 placeholder="Nombre..." type="text" /></td>
+         <td class="px-4 py-2"><input name="member_role"
+                 class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                 placeholder="Cargo..." type="text" /></td>
+         <td class="px-4 py-2"><input name="member_email"
+                 class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                 placeholder="email@ejemplo.com" type="text" /></td>
+         <td class="px-4 py-2"><input name="member_phone"
+                 class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                 placeholder="Teléfono..." type="text" /></td>
+         <td class="px-4 py-2 text-center">
+             <button type="button" class="btn-remove-team-row-edit" class="p-2 text-slate-300 hover:text-red-500 transition-colors">
+                 <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+             </button>
+         </td>
+     `;
+        tbody.appendChild(newRow);
+    }
+
+    function removeRow(button) {
+        const row = button.closest('tr');
+        const tbody = row.parentElement;
+        if (tbody.rows.length > 1) {
+            row.remove();
+        } else {
+            row.querySelectorAll('input').forEach(i => i.value = '');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateProgress();
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('input', updateProgress);
+            field.addEventListener('change', updateProgress);
+        });
+
+        document.getElementById('btn-add-team-row-edit')?.addEventListener('click', addRow);
+        document.querySelectorAll('.btn-remove-team-row-edit').forEach(b => b.addEventListener('click', function() { removeRow(this); }));
+    });
+</script>
+{% endblock %}
+{% endblock %}

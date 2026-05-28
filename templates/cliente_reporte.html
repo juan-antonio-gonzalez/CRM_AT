@@ -1,0 +1,265 @@
+{% extends "layout.html" %}
+
+{% block title %}Reporte Maestro: {{ customer.name }} | CRM-AT{% endblock %}{% block content %}
+<div class="max-w-5xl mx-auto py-8 print:p-0">
+    <!-- Action Bar (Hidden on print) -->
+    <div class="flex justify-between items-center mb-8 print:hidden">
+        <a href="/clientes" class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors font-bold text-sm">
+            <span class="material-symbols-rounded">arrow_back</span>
+            Volver al Directorio
+        </a>
+        <button id="btn-print-customer" class="bg-slate-900 dark:bg-primary text-white px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+            <span class="material-symbols-rounded">print</span>
+            Imprimir Reporte
+        </button>
+    </div>
+
+    <!-- Report Paper Simulation -->
+    <div class="pdf-page w-full max-w-[850px] min-h-[1100px] mx-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-10 py-10 print:px-0 print:py-4 print:shadow-none shadow-2xl rounded-sm border border-slate-100 dark:border-slate-800 flex flex-col gap-10 text-sm transition-colors duration-300">
+        
+        <!-- Header Section -->
+        <header class="flex justify-between items-start border-b-2 border-slate-900 dark:border-slate-100 pb-6">
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-3">
+                    <div class="size-12 bg-slate-900 dark:bg-primary text-white flex items-center justify-center rounded-xl font-black text-xl logo-shadow">
+                        AT
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tighter uppercase">Informe Estratégico de Cuenta</h1>
+                        <p class="text-xs font-bold text-primary tracking-widest uppercase">Inteligencia Industrial & Soporte Técnico</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right flex flex-col gap-1">
+                <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Generado el {{ generation_date.strftime('%d/%m/%Y') }}</p>
+                <div class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest inline-block ml-auto">
+                    Confidencial
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Information Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 block">Datos de la Empresa</span>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">{{ customer.name }}</h2>
+                    <p class="text-slate-600 dark:text-slate-300 font-medium text-sm mt-1">Planta: {{ customer.plant or 'N/A' }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Sector Industrial</span>
+                        <p class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ customer.industry_sector or 'No definido' }}</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Ubicación</span>
+                        <p class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ customer.city or 'N/A' }}, {{ customer.country or 'N/A' }}</p>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Dirección</span>
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-300 leading-tight">
+                        {{ customer.address or 'Sin dirección registrada' }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-6 border-l border-slate-200 dark:border-slate-700 pl-8">
+                <div>
+                    <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 block">Equipo Asignado AT</span>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                                <span class="material-symbols-rounded text-lg">person</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Asesor Técnico</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-slate-100">{{ customer.technical_advisor or 'Pendiente' }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 border border-amber-500/20">
+                                <span class="material-symbols-rounded text-lg">handshake</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Responsable Comercial</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-slate-100">{{ customer.assigned_commercial or 'Pendiente' }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="size-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-600 border border-indigo-500/20">
+                                <span class="material-symbols-rounded text-lg">architecture</span>
+                            </div>
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Diseñador Estructural</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-slate-100">{{ customer.designer or 'Pendiente' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Team -->
+        <section class="flex flex-col gap-4">
+            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest border-l-4 border-primary pl-3">Equipo del Cliente</h3>
+            <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800">
+                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Nombre</th>
+                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Cargo / Función</th>
+                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Email de Contacto</th>
+                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        {% if customer.client_team %}
+                            {% for member in customer.client_team %}
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                <td class="px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100">{{ member.name }}</td>
+                                <td class="px-5 py-3 text-xs text-slate-600 dark:text-slate-300">{{ member.role }}</td>
+                                <td class="px-5 py-3 text-xs font-medium text-primary">{{ member.email }}</td>
+                                <td class="px-5 py-3 text-xs text-slate-600 dark:text-slate-300">{{ member.phone or '' }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="px-5 py-8 text-center text-slate-400 italic text-xs">No hay contactos registrados para este cliente.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Machinery Inventory -->
+        <section class="flex flex-col gap-4 page-break-inside-avoid">
+            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest border-l-4 border-amber-500 pl-3">Parque de Maquinaria</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% if machines %}
+                    {% for machine in machines %}
+                    <div class="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 shadow-sm flex flex-col gap-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{{ machine.brand }}</p>
+                                <p class="text-sm font-black text-slate-900 dark:text-white leading-tight">{{ machine.model }}</p>
+                            </div>
+                            <span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 uppercase">
+                                {{ machine.machine_type or 'General' }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-1 border-t border-slate-50 dark:border-slate-700 pt-3">
+                            <div class="flex justify-between">
+                                <span class="text-[9px] font-medium text-slate-400 uppercase">S/N:</span>
+                                <span class="text-[10px] font-black text-slate-700 dark:text-slate-300">{{ machine.serial_number }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-[9px] font-medium text-slate-400 uppercase">Línea:</span>
+                                <span class="text-[10px] font-black text-slate-700 dark:text-slate-300">{{ machine.line or 'N/A' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-span-full py-8 text-center text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                        No se han registrado máquinas para esta planta.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Technical Intervention History -->
+        <section class="flex flex-col gap-4">
+            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest border-l-4 border-indigo-500 pl-3">Historial de Intervenciones Técnicas</h3>
+            <div class="flex flex-col gap-4">
+                {% if visits %}
+                    <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 dark:bg-slate-800/80">
+                                <tr class="border-b border-slate-200 dark:border-slate-800">
+                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase">Fecha</th>
+                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase">Tipo de Visita</th>
+                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase">Objetivo Principal</th>
+                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase">Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                {% for visit in visits %}
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+                                    <td class="px-5 py-4 whitespace-nowrap">
+                                        <p class="text-xs font-black text-slate-900 dark:text-white">{{ visit.date.strftime('%d/%m/%Y') }}</p>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ visit.visit_type }}</span>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-1 max-w-xs">{{ visit.objective or 'Sin detalles' }}</p>
+                                    </td>
+                                    <td class="px-5 py-4">
+                                        <span class="inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase {% if visit.status == 'Completada' %}bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300{% else %}bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300{% endif %}">
+                                            {{ visit.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="py-8 text-center text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                        Aún no se han registrado visitas técnicas.
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Observations -->
+        {% if customer.observations %}
+        <section class="mt-auto pt-10 border-t border-slate-100 dark:border-slate-800 page-break-inside-avoid">
+            <h4 class="text-[10px] font-black text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Observaciones Estratégicas</h4>
+            <div class="bg-indigo-50/50 dark:bg-indigo-900/10 p-5 rounded-2xl border border-indigo-100/50 dark:border-indigo-500/10 text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                {{ customer.observations }}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Report Footer -->
+        <footer class="mt-10 pt-6 border-t border-dashed border-slate-200 dark:border-slate-700 flex justify-between items-center text-[9px] text-slate-400 dark:text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.2em]">
+            <span>© {{ generation_date.year }} Aplicación AT - Inteligencia Industrial</span>
+            <div class="flex gap-4">
+                <span>Página 1 de 1</span>
+                <span>Ref: MAST-{{ customer.id }}</span>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<style>
+    @media print {
+        body { background: white !important; }
+        .pdf-page { 
+            box-shadow: none !important; 
+            border: none !important; 
+            width: 100% !important; 
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .bg-slate-50 { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; }
+    }
+    
+    .logo-shadow {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-print-btn]').forEach(b => b.addEventListener('click', () => window.print()));
+});
+</script>
+{% endblock %}
+{% endblock %}

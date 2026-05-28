@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full overflow-hidden">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}CRM-AT{% endblock %}</title>
+    <link href="{{ url_for('static', path='/css/tailwind.css') }}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" crossorigin="anonymous" />
+    <link rel="stylesheet" crossorigin="anonymous"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
+    {% if request.state.csrf_token %}
+    <meta name="csrf-token" content="{{ request.state.csrf_token }}">
+    {% endif %}
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .sidebar-active {
+            background-color: rgba(26, 87, 219, 0.1);
+            color: #1a57db;
+            font-weight: 700;
+        }
+
+        .sidebar-active .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300 h-full overflow-hidden m-0 p-0">
+    <div class="flex h-full w-full overflow-hidden print:h-auto print:overflow-visible">
+        <!-- Mobile Overlay -->
+        <div id="sidebarOverlay"
+            class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+        <!-- Side Navigation Bar -->
+        <aside id="sidebarNav"
+            class="fixed inset-y-0 left-0 z-50 w-56 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
+            {% block sidebar %}
+            <div class="flex flex-col gap-4">
+                <!-- Logo Section -->
+                <a href="/" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+                    <div
+                        class="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                        <span class="material-symbols-rounded text-lg">package_2</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1
+                            class="text-slate-900 dark:text-white text-xs font-black leading-tight uppercase tracking-widest">
+                            CRM-AT</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase leading-tight">Gestión Operativa</p>
+                    </div>
+                </a>
+
+                <!-- Navigation Groups -->
+                <nav class="flex flex-col gap-3">
+                    <!-- Group: Análisis -->
+                    <div class="flex flex-col gap-0.5">
+                        <span
+                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Análisis</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'dashboard' %}sidebar-active{% endif %}"
+                            href="/">
+                            <span class="material-symbols-rounded text-lg">dashboard</span>
+                            <span class="text-xs font-semibold">Dashboard Gerencial</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'kpis_at' %}sidebar-active{% endif %}"
+                            href="/kpis-at">
+                            <span class="material-symbols-rounded text-lg">ssid_chart</span>
+                            <span class="text-xs font-semibold">KPIs - Asignación AT</span>
+                        </a>
+                    </div>
+
+                    <!-- Group: Operaciones -->
+                    <div class="flex flex-col gap-0.5">
+                        <span
+                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Operaciones</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'clientes' %}sidebar-active{% endif %}"
+                            href="/clientes">
+                            <span class="material-symbols-rounded text-lg">group</span>
+                            <span class="text-xs font-semibold">Biblioteca de Clientes</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'productos' %}sidebar-active{% endif %}"
+                            href="/productos">
+                            <span class="material-symbols-rounded text-lg">inventory_2</span>
+                            <span class="text-xs font-semibold">Biblioteca de Productos</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'maquinaria' %}sidebar-active{% endif %}"
+                            href="/maquinaria">
+                            <span class="material-symbols-rounded text-lg">precision_manufacturing</span>
+                            <span class="text-xs font-semibold">Inventario de Maquinaria</span>
+                        </a>
+                    </div>
+
+                    <!-- Group: Gestión -->
+                    <div class="flex flex-col gap-0.5">
+                        <span
+                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Gestión</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'relevamiento' %}sidebar-active{% endif %}"
+                            href="/relevamiento">
+                            <span class="material-symbols-rounded text-lg">analytics</span>
+                            <span class="text-xs font-semibold">Relevamiento Técnico</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'infraestructura' %}sidebar-active{% endif %}"
+                            href="/relevamiento-infraestructura">
+                            <span class="material-symbols-rounded text-lg">factory</span>
+                            <span class="text-xs font-semibold">Infraestructura & Logística</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'visitas' %}sidebar-active{% endif %}"
+                            href="/visitas">
+                            <span class="material-symbols-rounded text-lg">engineering</span>
+                            <span class="text-xs font-semibold">Visitas Técnicas</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'seguimiento' %}sidebar-active{% endif %}"
+                            href="/seguimiento-plan">
+                            <span class="material-symbols-rounded text-lg">checklist_rtl</span>
+                            <span class="text-xs font-semibold">Seguimiento Plan</span>
+                        </a>
+                        {% if request.state.user and request.state.user.role == 'admin' %}
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'papelera' %}sidebar-active{% endif %}"
+                            href="/papelera">
+                            <span class="material-symbols-rounded text-lg">delete_sweep</span>
+                            <span class="text-xs font-semibold">Papelera</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'usuarios' %}sidebar-active{% endif %}"
+                            href="/auth/usuarios">
+                            <span class="material-symbols-rounded text-lg">manage_accounts</span>
+                            <span class="text-xs font-semibold">Usuarios</span>
+                        </a>
+                        {% endif %}
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'agenda' %}sidebar-active{% endif %}"
+                            href="/agenda">
+                            <span class="material-symbols-rounded text-lg">calendar_month</span>
+                            <span class="text-xs font-semibold">Agenda de Visitas</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'configuracion' %}sidebar-active{% endif %}"
+                            href="/configuracion">
+                            <span class="material-symbols-rounded text-lg">settings</span>
+                            <span class="text-xs font-semibold">Tablas Auxiliares</span>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex items-center justify-between">
+                    <a href="/auth/perfil" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity flex-1 min-w-0">
+                        <div
+                            class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-[10px] uppercase shrink-0">
+                            {{ (request.state.user.username[:2] if request.state.user else 'AD') }}</div>
+                        <div class="flex flex-col overflow-hidden min-w-0">
+                            <p class="text-[11px] font-bold text-slate-900 dark:text-white truncate">{{ request.state.user.username if request.state.user else 'Invitado' }}</p>
+                            <p class="text-[9px] text-slate-500 dark:text-slate-400 truncate capitalize">{{ request.state.user.role if request.state.user else 'Sin sesión' }}</p>
+                        </div>
+                    </a>
+                    <a href="/auth/logout" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="Cerrar sesión">
+                        <span class="material-symbols-rounded text-lg">logout</span>
+                    </a>
+                </div>
+            </div>
+            {% endblock %}
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 flex flex-col overflow-hidden print:overflow-visible print:h-auto">
+            <!-- Global Header -->
+            <header
+                class="h-16 lg:h-20 flex-shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-10 print:hidden">
+                {% block header %}
+                <div class="flex items-center gap-3 lg:gap-6">
+                    <!-- Mobile Hamburger -->
+                    <button id="btnMobileMenu"
+                        class="lg:hidden p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
+                        <span class="material-symbols-rounded">menu</span>
+                    </button>
+                    <button id="themeToggle"
+                        class="p-2 lg:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
+                        <span id="themeIcon" class="material-symbols-rounded">light_mode</span>
+                    </button>
+                    <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden lg:block"></div>
+                    {% block header_extra %}{% endblock %}
+                </div>
+
+                <div class="flex items-center gap-6">
+                    {% if not request.state.user %}
+                    <a href="/auth/login"
+                        class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary/20">
+                        Iniciar Sesión
+                    </a>
+                    {% else %}
+                    <button
+                        class="relative p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
+                        <span class="material-symbols-rounded">notifications</span>
+                        <span
+                            class="absolute top-2.5 right-2.5 size-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                    </button>
+                    {% endif %}
+                </div>
+                {% endblock %}
+            </header>
+
+            <!-- Scrollable Content -->
+            <main
+                class="flex-1 overflow-y-auto bg-slate-50 dark:bg-background-dark p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+      <!-- Custom Confirmation Modal -->
+    <div id="confirmModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div
+            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+            <div class="flex flex-col items-center text-center gap-4">
+                <div id="confirmModalIconContainer"
+                    class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-2">
+                    <span id="confirmModalIcon" class="material-symbols-rounded text-[32px]">warning</span>
+                </div>
+                <h3 id="confirmModalTitle" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">¿Confirmar Acción?</h3>
+                <p id="confirmModalMessage" class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    ¿Deseas continuar con esta acción?
+                </p>
+                <div class="flex gap-3 w-full mt-6">
+                    <button id="btnCancelConfirm"
+                        class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        Cancelar
+                    </button>
+                    <button id="confirmModalAction"
+                        class="flex-1 px-6 py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-widest transition-all">
+                        Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer"
+        class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none">
+    </div>
+
+    <script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

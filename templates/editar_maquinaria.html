@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Máquina | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Maquinaria</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Edición de Activo</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-10 animate-fade-in pb-20">
+    <!-- Header -->
+    <div
+        class="flex items-center justify-between bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Editar Máquina
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm italic">Actualización de parámetros del equipo
+                industrial.</p>
+        </div>
+        <div class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+            <span class="material-symbols-rounded text-[32px]">precision_manufacturing</span>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <form action="/editar-maquinaria/{{ machine.id }}" method="POST"
+        class="space-y-12 bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-xl shadow-slate-200/20 dark:shadow-none border border-slate-200 dark:border-slate-800">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <section>
+            <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <span class="material-symbols-rounded text-primary text-xl">settings</span>
+                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información
+                    del Equipo</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente
+                        Asignado</label>
+                    <select id="client_select" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="">Seleccionar cliente...</option>
+                        {% for name in unique_customer_names %}
+                        <option value="{{ name }}" {% if machine.customer and machine.customer.name==name %}selected{%
+                            endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta
+                        Asignada</label>
+                    <select id="plant_select" name="customer_id" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        {% for p in current_plants %}
+                        <option value="{{ p.id }}" {% if machine.customer_id==p.id %}selected{% endif %}>{{ p.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" id="plant_assigned" name="plant_assigned" value="{{ machine.plant_assigned }}">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de
+                        Máquina</label>
+                    <select name="machine_type" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="">Seleccionar tipo...</option>
+                        {% for type in machine_types %}
+                        <option value="{{ type.name }}" {% if machine.machine_type==type.name %}selected{% endif %}>{{
+                            type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de
+                        Serie</label>
+                    <input name="serial_number" value="{{ machine.serial_number }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-slate-900 dark:text-white"
+                        type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca</label>
+                    <input name="brand" value="{{ machine.brand }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo</label>
+                    <input name="model_name" value="{{ machine.model }}" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
+                    <input name="line" value="{{ machine.line or '' }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                        type="text" style="text-transform: uppercase;" placeholder="Ej: LÍNEA 1" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</label>
+                    <select name="status" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="Operativo" {% if machine.status=="Operativo" %}selected{% endif %}>Operativo
+                        </option>
+                        <option value="Mantenimiento" {% if machine.status=="Mantenimiento" %}selected{% endif %}>En
+                            Mantenimiento</option>
+                        <option value="Fuera de Servicio" {% if machine.status=="Fuera de Servicio" %}selected{% endif
+                            %}>Fuera de Servicio</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end gap-6 pt-10 border-t border-slate-100 dark:border-slate-800">
+            <a href="/maquinaria"
+                class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar</a>
+            <button type="submit"
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
+                Guardar Cambios
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    async function loadPlants(clientName) {
+        const plantSelect = document.getElementById('plant_select');
+        const plantInput = document.getElementById('plant_assigned');
+
+        plantSelect.innerHTML = '<option value="">Cargando...</option>';
+        plantInput.value = '';
+
+        if (!clientName) {
+            plantSelect.innerHTML = '<option value="">Seleccione un cliente primero</option>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/cliente-plantas/${encodeURIComponent(clientName)}`);
+            const plants = await response.json();
+
+            plantSelect.innerHTML = '<option value="">Seleccionar planta...</option>';
+            plants.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.name;
+                plantSelect.appendChild(opt);
+            });
+        } catch (error) {
+            console.error('Error loading plants:', error);
+            plantSelect.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+
+    function updatePlantName(select) {
+        const plantInput = document.getElementById('plant_assigned');
+        const selectedOption = select.options[select.selectedIndex];
+        plantInput.value = selectedOption.textContent;
+    }
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('client_select')?.addEventListener('change', function() { loadPlants(this.value); });
+    document.getElementById('plant_select')?.addEventListener('change', function() { updatePlantName(this); });
+});
+</script>
+{% endblock %}

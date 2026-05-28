@@ -1,0 +1,842 @@
+{% extends "layout.html" %}
+
+{% block title %}Directorio de Clientes | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Clientes</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Gestión de Cuentas</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
+
+    <!-- Filters and Search -->
+    <section
+        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-xl shadow-sm">
+        <form method="GET" action="/clientes" class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="relative flex-1">
+                <span
+                    class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input name="q" value="{{ q or '' }}"
+                    class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg focus:ring-1 focus:ring-primary/50 text-xs text-slate-900 dark:text-white placeholder:text-slate-500 dark:text-slate-400"
+                    placeholder="Buscar empresa, planta, sector..." type="text" />
+            </div>
+            {% if q %}
+            <a href="/clientes"
+                class="text-[10px] font-black text-slate-500 dark:text-slate-400 hover:text-primary transition-colors uppercase tracking-wider">Limpiar</a>
+            {% endif %}
+            <button type="submit"
+                class="bg-slate-900 dark:bg-primary text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
+            <button type="button" id="btn-nuevo-cliente"
+                class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-primary/10">
+                <span class="material-symbols-rounded text-sm">person_add</span>
+                <span class="whitespace-nowrap">Nuevo Cliente</span>
+            </button>
+        </form>
+    </section>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Total Clientes</p>
+            <h4 class="text-lg font-black text-slate-900 dark:text-white">{{ stats.total }}</h4>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">En Relevamiento</p>
+            <h4 class="text-lg font-black text-amber-500">{{ stats.en_relevamiento }}</h4>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Completados</p>
+            <h4 class="text-lg font-black text-emerald-500">{{ stats.completados }}</h4>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Pendiente</p>
+            <h4 class="text-lg font-black text-primary">{{ stats.pendientes }}</h4>
+        </div>
+    </div>
+    <!-- Data Table -->
+    <div
+        class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Empresa / Sector</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ubicación</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Equipo</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Status</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for customer in customers %}
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-black text-[10px] border border-primary/10">
+                                    {{ customer.name[:2]|upper }}
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-900 dark:text-white">{{ customer.name }}</span>
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-xs">
+                             <div class="flex flex-col">
+                                <span class="font-bold text-slate-700 dark:text-slate-300">{{ customer.plant }}</span>
+                                <span class="text-[9px] text-slate-400 uppercase font-bold">{{ customer.city }}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-xs">
+                            <div class="flex flex-row gap-1">
+                                <div class="size-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[8px] font-black text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700" title="Comercial: {{ customer.assigned_commercial }}">
+                                    {{ customer.assigned_commercial[:1]|upper if customer.assigned_commercial else '?' }}
+                                </div>
+                                <div class="size-5 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-[8px] font-black text-primary border border-primary/20" title="Técnico: {{ customer.technical_advisor }}">
+                                    {{ customer.technical_advisor[:1]|upper if customer.technical_advisor else '?' }}
+                                </div>
+                                <div class="size-5 rounded-full bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center text-[8px] font-black text-amber-600 border border-amber-500/20" title="Diseñador: {{ customer.designer }}">
+                                    {{ customer.designer[:1]|upper if customer.designer else '?' }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase {% if customer.relevamiento_status == 'Completado' %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300{% elif customer.relevamiento_status == 'En Proceso' %}bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400{% else %}bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400{% endif %}">
+                                {{ customer.relevamiento_status }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="/cliente-reporte/{{ customer.id }}"
+                                    class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Ver Reporte">
+                                    <span class="material-symbols-rounded text-[18px]">visibility</span>
+                                </a>
+                                 <button type="button"
+                                         class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700"
+                                         title="Editar Cliente"
+                                         data-customer-id="{{ customer.id }}"
+                                         data-action="edit">
+                                     <span class="material-symbols-rounded text-[18px]">edit</span>
+                                 </button>
+                                <form action="/eliminar-cliente/{{ customer.id }}" method="POST"
+                                    class="inline delete-customer-form"
+                                    data-confirm="¿Estás seguro de que deseas eliminar el registro de {{ customer.name }}?">
+                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                    <button type="submit"
+                                        class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                        title="Eliminar Cliente">
+                                        <span class="material-symbols-rounded text-[18px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if pagination.total_pages > 1 %}
+<div class="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 rounded-b-xl">
+    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        Página {{ pagination.page }} de {{ pagination.total_pages }}
+        <span class="mx-1">·</span>
+        {{ pagination.total }} registro{{ 's' if pagination.total != 1 else '' }}
+    </div>
+    <div class="flex items-center gap-1">
+        {% if pagination.has_prev %}
+        <a href="?page={{ pagination.page - 1 }}{% if q %}&q={{ q }}{% endif %}"
+            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">
+            Anterior
+        </a>
+        {% else %}
+        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">
+            Anterior
+        </span>
+        {% endif %}
+
+        {% for p in range(1, pagination.total_pages + 1) %}
+            {% if p == pagination.page %}
+            <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">
+                {{ p }}
+            </span>
+            {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
+            <a href="?page={{ p }}{% if q %}&q={{ q }}{% endif %}"
+                class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                {{ p }}
+            </a>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+        <a href="?page={{ pagination.page + 1 }}{% if q %}&q={{ q }}{% endif %}"
+            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">
+            Siguiente
+        </a>
+        {% else %}
+        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">
+            Siguiente
+        </span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Nuevo Cliente -->
+<div id="nuevoClienteModal"
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    <div
+        class="bg-white dark:bg-slate-900 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-rounded text-primary text-xl">person_add</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Registro de Cuenta</h3>
+            </div>
+            <button type="button" id="btn-close-nuevo-cliente"
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        {% set modal_suffix = 'modal' %}
+        <form action="/nuevo-cliente" method="POST" class="p-6 space-y-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
+            {% include "_cliente_form_fields.html" with context %}
+            <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" id="btn-cancel-nuevo-cliente"
+                    class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar</button>
+                <button type="submit"
+                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
+                    Registrar Cliente
+                </button>
+            </div>
+         </form>
+     </div>
+ </div>
+
+ <!-- Modal Editar Cliente -->
+ <div id="editarClienteModal"
+      class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+     <div
+         class="bg-white dark:bg-slate-900 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
+          <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-3">
+                  <span class="material-symbols-rounded text-primary text-xl">edit</span>
+                  <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Editar Cliente</h3>
+              </div>
+              <button type="button" id="btn-close-editar-cliente"
+                  class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                  <span class="material-symbols-rounded">close</span>
+              </button>
+          </div>
+          <div id="editarClienteModalContent"
+              class="p-6 space-y-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
+             <!-- Content will be loaded here via AJAX -->
+         </div>
+     </div>
+ </div>
+
+ <!-- Auxiliary Management Modal -->
+ <div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-slate-200 dark:border-slate-800">
+         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
+             <h3 id="manageEntityTitle" class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Gestionar</h3>
+             <button type="button" id="manageEntityCloseBtn"
+                 class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                 <span class="material-symbols-rounded text-lg">close</span>
+             </button>
+         </div>
+         <div class="p-6 space-y-4">
+             <div class="flex gap-2">
+                 <input id="manageEntityInput" type="text" placeholder="Nuevo elemento..."
+                     class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
+                 <button id="manageEntityAddBtn" type="button"
+                     class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
+                     <span class="material-symbols-rounded text-lg">add</span>
+                     Agregar
+                 </button>
+             </div>
+             <div id="manageEntityList" class="space-y-1.5 overflow-y-auto" style="max-height:260px">
+                 <p class="text-center py-8 text-slate-400 text-xs font-bold italic">Cargando...</p>
+             </div>
+         </div>
+     </div>
+ </div>
+ {% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    // ── Quick-add: create auxiliary entity inline ──
+    function closeAllPopovers() {
+        document.querySelectorAll('.quick-add-popover').forEach(p => p.classList.add('hidden'));
+    }
+
+    function setupQuickAddHandlers(scope) {
+        scope.querySelectorAll('.quick-add-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeAllPopovers();
+                const popover = this.closest('.relative').querySelector('.quick-add-popover');
+                const input = popover.querySelector('.quick-add-input');
+                const field = this.dataset.field;
+                if (field) {
+                    const mainInput = document.querySelector(`input[name="${field}"]`);
+                    if (mainInput) input.value = mainInput.value;
+                }
+                popover.classList.toggle('hidden');
+                if (!popover.classList.contains('hidden')) {
+                    input.focus();
+                }
+            });
+        });
+
+        scope.querySelectorAll('.quick-add-confirm').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const popover = this.closest('.quick-add-popover');
+                const input = popover.querySelector('.quick-add-input');
+                const name = input.value.trim();
+                if (!name) return;
+
+                const field = this.dataset.field;
+                if (field) {
+                    const feedback = popover.querySelector('.quick-add-feedback');
+                    const errorFeedback = popover.querySelector('.quick-add-feedback-error');
+                    const mainInput = document.querySelector(`input[name="${field}"]`);
+                    const datalist = document.getElementById(`${field}-names-list`);
+
+                    let exists = false;
+                    if (datalist) {
+                        Array.from(datalist.options).forEach(opt => {
+                            if (opt.value.toUpperCase() === name.toUpperCase()) exists = true;
+                        });
+                    }
+
+                    if (exists) {
+                        if (feedback) feedback.classList.add('hidden');
+                        if (errorFeedback) errorFeedback.classList.remove('hidden');
+                        setTimeout(() => { if (errorFeedback) errorFeedback.classList.add('hidden'); }, 2000);
+                    } else {
+                        if (datalist) {
+                            const opt = document.createElement('option');
+                            opt.value = name;
+                            datalist.appendChild(opt);
+                        }
+                        if (mainInput) mainInput.value = name;
+                        if (errorFeedback) errorFeedback.classList.add('hidden');
+                        if (feedback) feedback.classList.remove('hidden');
+                        input.value = '';
+                        setTimeout(() => {
+                            popover.classList.add('hidden');
+                            if (feedback) feedback.classList.add('hidden');
+                        }, 600);
+                    }
+                } else {
+                    const addBtn = popover.closest('.relative').querySelector('.quick-add-btn');
+                    const entityType = addBtn.dataset.entity;
+                    const selectName = addBtn.dataset.select;
+                    const select = document.querySelector(`select[name="${selectName}"]`);
+
+                    this.disabled = true;
+                    this.textContent = '...';
+
+                    try {
+                        const params = new URLSearchParams();
+                        params.append('name', name);
+                        params.append('csrf_token', getCsrfToken());
+
+                        const response = await fetch(`/configuracion/add/${entityType}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                            body: params
+                        });
+
+                        if (response.ok) {
+                            const option = document.createElement('option');
+                            option.value = name;
+                            option.textContent = name;
+                            select.appendChild(option);
+                            select.value = name;
+                            input.value = '';
+                            popover.classList.add('hidden');
+                        } else {
+                            alert('Error al crear el elemento');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error de conexión');
+                    } finally {
+                        this.disabled = false;
+                        this.textContent = 'Crear';
+                    }
+                }
+            });
+        });
+    }
+
+    // Close popover on click outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.quick-add-popover') && !e.target.closest('.quick-add-btn')) {
+            closeAllPopovers();
+        }
+    });
+
+    // Close popover on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeAllPopovers();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.delete-customer-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                showConfirmModal(this, this.dataset.confirm);
+            });
+        });
+
+        const modal = document.getElementById('nuevoClienteModal');
+        const btnOpen = document.getElementById('btn-nuevo-cliente');
+        const btnClose = document.getElementById('btn-close-nuevo-cliente');
+        const btnCancel = document.getElementById('btn-cancel-nuevo-cliente');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        btnOpen.addEventListener('click', openModal);
+        btnClose.addEventListener('click', closeModal);
+        btnCancel.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.getElementById('btn-add-team-row-modal').addEventListener('click', function() {
+            const tbody = document.querySelector('#teamTable-modal tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-3 py-2"><input name="member_name"
+                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                    placeholder="Nombre..." type="text" /></td>
+                <td class="px-3 py-2"><input name="member_role"
+                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                    placeholder="Cargo..." type="text" /></td>
+                <td class="px-3 py-2"><input name="member_email"
+                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                    placeholder="email@ejemplo.com" type="text" /></td>
+                <td class="px-3 py-2"><input name="member_phone"
+                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                    placeholder="Teléfono..." type="text" /></td>
+                <td class="px-3 py-2 text-center">
+                    <button type="button" class="btn-remove-team-row-modal p-2 text-slate-300 hover:text-red-500 transition-colors">
+                        <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                    </button>
+                </td>`;
+            tbody.appendChild(row);
+            row.querySelectorAll('input[type="text"]').forEach(inp => {
+                inp.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+            });
+            row.querySelector('.btn-remove-team-row-modal').addEventListener('click', function() {
+                const tr = this.closest('tr');
+                const tb = tr.parentElement;
+                if (tb.rows.length > 1) tr.remove();
+                else tr.querySelectorAll('input').forEach(i => i.value = '');
+            });
+        });
+
+        document.querySelectorAll('.btn-remove-team-row-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tr = this.closest('tr');
+                const tb = tr.parentElement;
+                if (tb.rows.length > 1) tr.remove();
+                else tr.querySelectorAll('input').forEach(i => i.value = '');
+            });
+        });
+
+        setupQuickAddHandlers(document);
+
+         // ── Uppercase all text inputs in modal (except textarea/select) ──
+         document.querySelectorAll('#nuevoClienteModal input[type="text"]').forEach(input => {
+             input.addEventListener('input', function() {
+                 this.value = this.value.toUpperCase();
+             });
+         });
+
+         // ── Form validation: Equipo & Observaciones required ──
+         const form = document.querySelector('form[action="/nuevo-cliente"]');
+         if (form) {
+             form.addEventListener('submit', function(e) {
+                 const teamTable = document.querySelector('#teamTable-modal tbody');
+                 const observations = document.querySelector('textarea[name="observations"]');
+                 
+                 // Check if team has at least one valid row (name and role not empty)
+                 let hasValidTeamMember = false;
+                 if (teamTable) {
+                     const rows = teamTable.querySelectorAll('tr');
+                     for (const row of rows) {
+                         const nameInput = row.querySelector('input[name="member_name"]');
+                         const roleInput = row.querySelector('input[name="member_role"]');
+                         if (nameInput && roleInput && 
+                             nameInput.value.trim() !== '' && 
+                             roleInput.value.trim() !== '') {
+                             hasValidTeamMember = true;
+                             break;
+                         }
+                     }
+                 }
+                 
+                 // Check if observations has content
+                 const hasObservations = observations && observations.value.trim() !== '';
+                 
+                 // If neither team nor observations have content, prevent submission
+                 if (!hasValidTeamMember && !hasObservations) {
+                     e.preventDefault();
+                     alert('Debe agregar al menos un miembro al equipo o agregar observaciones');
+                     // Focus on the first empty team row or observations
+                     if (teamTable && teamTable.rows.length === 0) {
+                         document.getElementById('btn-add-team-row-modal').click();
+                         const firstRow = teamTable.querySelector('tr');
+                         if (firstRow) {
+                             firstRow.querySelector('input[name="member_name"]').focus();
+                         }
+                     } else if (observations) {
+                         observations.focus();
+                     }
+                     return false;
+                 }
+             });
+         }
+
+       // ── Deduplicate select options in modal ──
+       document.querySelectorAll('#nuevoClienteModal select').forEach(select => {
+           const seen = new Set();
+           Array.from(select.options).forEach(opt => {
+               const val = opt.value.trim().toLowerCase();
+               if (val && seen.has(val)) {
+                   opt.remove();
+               } else if (val) {
+                   seen.add(val);
+               }
+           });
+       });
+       
+   });
+   
+   
+   // ── Editar Cliente Modal ──
+      const editModal = document.getElementById('editarClienteModal');
+      const editModalContent = document.getElementById('editarClienteModalContent');
+      
+      function openEditModal(customerId) {
+          editModal.classList.remove('hidden');
+          editModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          
+          // Show loading state
+          editModalContent.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded">hourglass_top</span> <p class="mt-2">Cargando datos del cliente...</p></div>';
+          
+           // Fetch the edit form
+           fetch(`/editar-cliente/${customerId}`, {
+               headers: { 'X-Requested-With': 'XMLHttpRequest' }
+           })
+               .then(response => response.text())
+              .then(html => {
+                  editModalContent.innerHTML = html;
+                  
+                  // Re-initialize quick-add buttons and other scripts for the loaded content
+                  initializeEditModalScripts();
+              })
+              .catch(error => {
+                  editModalContent.innerHTML = '<div class="text-center py-8 text-red-500"><span class="material-symbols-rounded">error</span> <p class="mt-2">Error al cargar el formulario de edición</p></div>';
+                  console.error('Error loading edit form:', error);
+              });
+      }
+      
+      function closeEditModal() {
+          editModal.classList.add('hidden');
+          editModal.classList.remove('flex');
+          document.body.style.overflow = '';
+          editModalContent.innerHTML = '';
+      }
+      
+       function initializeEditModalScripts() {
+            // Rebind quick-add buttons for the edit modal content
+            const editModalEl = document.getElementById('editarClienteModal');
+            setupQuickAddHandlers(editModalEl);
+
+            // Rebind manage entity buttons for the edit modal content
+            editModalEl.querySelectorAll('[data-manage-entity]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const entityType = this.dataset.manageEntity;
+                    openManageEntityModal(entityType);
+                });
+            });
+
+            // Cancel button closes modal
+           document.getElementById('btn-cancel-editar-cliente')?.addEventListener('click', closeEditModal);
+
+           // Reapply uppercase to text inputs
+           document.querySelectorAll('#editarClienteModal input[type="text"]').forEach(input => {
+               input.addEventListener('input', function() {
+                   this.value = this.value.toUpperCase();
+               });
+           });
+           
+           // Handle team row addition in edit modal
+           document.getElementById('btn-add-team-row-edit')?.addEventListener('click', function() {
+               const tbody = document.querySelector('#teamTable-edit tbody');
+               const newRow = document.createElement('tr');
+               newRow.className = "divide-y divide-slate-100 dark:divide-slate-800";
+               newRow.innerHTML = `
+               <td class="px-3 py-2"><input name="member_name"
+                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                       placeholder="Nombre..." type="text" /></td>
+               <td class="px-3 py-2"><input name="member_role"
+                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                       placeholder="Cargo..." type="text" /></td>
+               <td class="px-3 py-2"><input name="member_email"
+                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                       placeholder="email@ejemplo.com" type="text" /></td>
+               <td class="px-3 py-2"><input name="member_phone"
+                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                       placeholder="Teléfono..." type="text" /></td>
+               <td class="px-3 py-2 text-center">
+                   <button type="button" class="btn-remove-team-row-edit p-2 text-slate-300 hover:text-red-500 transition-colors">
+                       <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                   </button>
+               </td>
+           `;
+               tbody.appendChild(newRow);
+               
+               // Apply uppercase to new inputs
+               newRow.querySelectorAll('input[type="text"]').forEach(inp => {
+                   inp.addEventListener('input', function() {
+                       this.value = this.value.toUpperCase();
+                   });
+               });
+               
+               // Bind click handler on the delete button for the new row
+               newRow.querySelector('.btn-remove-team-row-edit').addEventListener('click', function() {
+                   const row = this.closest('tr');
+                   const tbody = row.parentElement;
+                   if (tbody.rows.length > 1) {
+                       row.remove();
+                   } else {
+                       row.querySelectorAll('input').forEach(i => i.value = '');
+                   }
+               });
+           });
+           
+           // Handle team row removal in edit modal (existing rows)
+           document.querySelectorAll('.btn-remove-team-row-edit').forEach(button => {
+               button.addEventListener('click', function() {
+                   const row = this.closest('tr');
+                   const tbody = row.parentElement;
+                   if (tbody.rows.length > 1) {
+                       row.remove();
+                   } else {
+                       row.querySelectorAll('input').forEach(i => i.value = '');
+                   }
+               });
+           });
+          
+           // Handle form submission in edit modal — no client-side blocking,
+           // the server handles empty teams fine for existing customers
+          
+          // Deduplicate select options in edit modal
+          document.querySelectorAll('#editarClienteModal select').forEach(select => {
+              const seen = new Set();
+              Array.from(select.options).forEach(opt => {
+                  const val = opt.value.trim().toLowerCase();
+                  if (val && seen.has(val)) {
+                      opt.remove();
+                  } else if (val) {
+                      seen.add(val);
+                  }
+              });
+          });
+      }
+      
+      // Close modal on close button click
+      document.getElementById('btn-close-editar-cliente')?.addEventListener('click', closeEditModal);
+      
+      // Close modal on clicking outside
+      editModal.addEventListener('click', function(e) {
+          if (e.target === this) closeEditModal();
+      });
+      
+      // Close modal on Escape key
+      document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+              closeEditModal();
+          }
+      });
+      
+        // Handle edit button clicks in table
+        document.querySelectorAll('[data-action="edit"]').forEach(button => {
+             button.addEventListener('click', function() {
+                 const customerId = this.dataset.customerId;
+                 if (customerId) {
+                     openEditModal(customerId);
+                 }
+             });
+         });
+
+    // ── Manage entity modal ──
+    document.querySelectorAll('[data-manage-entity]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const entityType = this.dataset.manageEntity;
+            openManageEntityModal(entityType);
+        });
+    });
+
+    let manageEntityCurrentType = '';
+
+    async function loadManageEntityList(entityType) {
+        const list = document.getElementById('manageEntityList');
+        list.innerHTML = '<p class="text-center py-8 text-slate-400 text-xs font-bold italic">Cargando...</p>';
+        try {
+            const response = await fetch(`/configuracion/list/${entityType}`);
+            const data = await response.json();
+            if (data.items.length === 0) {
+                list.innerHTML = '<p class="text-center py-8 text-slate-400 text-xs font-bold italic">No hay elementos</p>';
+                return;
+            }
+            list.innerHTML = '';
+            data.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group';
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${item.name}</span>
+                    <button type="button" class="text-slate-400 hover:text-red-500 p-1 transition-colors"
+                        data-delete-entity-id="${item.id}" data-delete-entity-type="${entityType}">
+                        <span class="material-symbols-rounded text-sm">delete</span>
+                    </button>`;
+                list.appendChild(div);
+            });
+            list.querySelectorAll('[data-delete-entity-id]').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const id = this.dataset.deleteEntityId;
+                    const type = this.dataset.deleteEntityType;
+                    if (!confirm('¿Eliminar este elemento?')) return;
+                    try {
+                        const params = new URLSearchParams();
+                        params.append('csrf_token', getCsrfToken());
+                        const resp = await fetch(`/configuracion/delete/${type}/${id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: params
+                        });
+                        if (resp.ok) {
+                            loadManageEntityList(type);
+                            const select = getSelectForEntity(type);
+                            if (select) {
+                                const opt = select.querySelector(`option[value="${this.closest('.flex').querySelector('span').textContent}"]`);
+                                if (opt) opt.remove();
+                            }
+                        } else {
+                            alert('Error al eliminar');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error de conexión');
+                    }
+                });
+            });
+        } catch (err) {
+            console.error(err);
+            list.innerHTML = '<p class="text-center py-8 text-red-400 text-xs font-bold italic">Error al cargar</p>';
+        }
+    }
+
+    function getSelectForEntity(entityType) {
+        const map = {
+            'client-name': 'select[name="name"]',
+            'plant-name': 'select[name="plant"]',
+            'sector': 'select[name="industry_sector"]',
+            'commercial': 'select[name="assigned_commercial"]',
+            'advisor': 'select[name="technical_advisor"]',
+            'designer': 'select[name="designer"]',
+        };
+        return document.querySelector(map[entityType] || '');
+    }
+
+    function openManageEntityModal(entityType) {
+        manageEntityCurrentType = entityType;
+        const labels = {
+            'client-name': 'Nombre de Empresa',
+            'plant-name': 'Planta / Unidad Productiva',
+            'sector': 'Sector Industrial',
+            'commercial': 'Asesor Comercial',
+            'advisor': 'Asistente Técnico',
+            'designer': 'Diseñador',
+        };
+        document.getElementById('manageEntityTitle').textContent = 'Gestionar: ' + (labels[entityType] || entityType);
+        document.getElementById('manageEntityModal').classList.remove('hidden');
+        loadManageEntityList(entityType);
+        document.getElementById('manageEntityInput').value = '';
+        document.getElementById('manageEntityInput').focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('manageEntityAddBtn')?.addEventListener('click', async function() {
+            const input = document.getElementById('manageEntityInput');
+            const name = input.value.trim();
+            if (!name) return;
+            const entityType = manageEntityCurrentType;
+            try {
+                const params = new URLSearchParams();
+                params.append('name', name);
+                params.append('csrf_token', getCsrfToken());
+                const resp = await fetch(`/configuracion/add/${entityType}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                    body: params
+                });
+                if (resp.ok) {
+                    input.value = '';
+                    loadManageEntityList(entityType);
+                    const select = getSelectForEntity(entityType);
+                    if (select) {
+                        const opt = document.createElement('option');
+                        opt.value = name;
+                        opt.textContent = name;
+                        select.appendChild(opt);
+                        select.value = name;
+                    }
+                } else {
+                    alert('Error al crear el elemento');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error de conexión');
+            }
+        });
+
+        document.getElementById('manageEntityInput')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('manageEntityAddBtn')?.click();
+            }
+        });
+
+        document.getElementById('manageEntityModal')?.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.add('hidden');
+        });
+        document.getElementById('manageEntityCloseBtn')?.addEventListener('click', function() {
+            document.getElementById('manageEntityModal').classList.add('hidden');
+        });
+    });
+</script>
+{% endblock %}

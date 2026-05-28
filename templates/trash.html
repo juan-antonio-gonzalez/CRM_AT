@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}Papelera{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6 h-full">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Papelera</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+                Elementos eliminados. Solo visible para administradores.
+            </p>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <span class="material-symbols-rounded text-base">delete</span>
+            <span class="font-semibold">{{ items|length }} elementos</span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-2">
+        <a href="/papelera"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if not active_tipo %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Todos
+        </a>
+        <a href="/papelera?tipo=customer"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'customer' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Clientes
+        </a>
+        <a href="/papelera?tipo=machine"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'machine' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Máquinas
+        </a>
+        <a href="/papelera?tipo=product"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'product' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Productos
+        </a>
+        <a href="/papelera?tipo=visit"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Visitas
+        </a>
+        <a href="/papelera?tipo=infrastructure"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'infrastructure' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Infraestructura
+        </a>
+        <a href="/papelera?tipo=auxiliary"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'auxiliary' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            Tablas Auxiliares
+        </a>
+    </div>
+
+    <!-- Trash Items -->
+    <div class="flex-1 overflow-y-auto">
+        {% if items %}
+        <div class="space-y-2">
+            {% for item in items %}
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4 min-w-0">
+                    <div class="size-10 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 shrink-0">
+                        <span class="material-symbols-rounded">delete</span>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white truncate">
+                            {% if item.entity_name %}
+                                {{ item.entity_name }}
+                            {% else %}
+                                {{ item.data.get('name') or item.data.get('brand', '') ~ ' ' ~ item.data.get('model', '') or 'Sin nombre' }}
+                            {% endif %}
+                        </p>
+                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-semibold uppercase text-[10px]">
+                                {{ item.entity_type }}
+                            </span>
+                            <span>ID {{ item.entity_id or '-' }}</span>
+                            <span>•</span>
+                            <span>{{ item.deleted_at.strftime('%d/%m/%Y %H:%M') if item.deleted_at else '-' }}</span>
+                            {% if item.deleted_by_name %}
+                            <span>•</span>
+                            <span>por {{ item.deleted_by_name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <form method="POST" action="/papelera/restaurar/{{ item.id }}" class="shrink-0 ml-4">
+                    <button type="submit"
+                        class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-lg transition-colors text-xs font-bold">
+                        <span class="material-symbols-rounded text-[16px]">restore</span>
+                        Restaurar
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-20 text-slate-400 dark:text-slate-500">
+            <span class="material-symbols-rounded text-6xl mb-4">delete_sweep</span>
+            <p class="text-lg font-bold">La papelera está vacía</p>
+            <p class="text-sm">Los elementos eliminados aparecerán aquí.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Environment
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite3
+
+# Node / Assets
+node_modules/
+static/css/tailwind.css
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads (user files, not stored in git)
+static/uploads/visitas/*.jpg
+static/uploads/visitas/*.png
+static/uploads/visitas/*.jpeg
+
+# IDE
+.vscode/
+.idea/

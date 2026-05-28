@@ -1,0 +1,525 @@
+{% extends "layout.html" %}
+
+{% block title %}Inventario de Maquinaria | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Maquinaria</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Activos Industriales</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
+    {% if request.query_params.get('error') == 'duplicate_serial' %}
+    <script nonce="{{ request.state.script_nonce }}">document.addEventListener('DOMContentLoaded', () => showToast('El número de serie ingresado ya existe en la base de datos.', 'error'));</script>
+    {% endif %}
+    {% if request.query_params.get('success') == 'machine_created' %}
+    <script nonce="{{ request.state.script_nonce }}">document.addEventListener('DOMContentLoaded', () => showToast('Máquina registrada correctamente.', 'success'));</script>
+    {% endif %}
+
+    {% if selected_customer or selected_asistente or q %}
+    <div class="flex items-center gap-2 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+        <span class="material-symbols-rounded text-base">filter_alt</span>
+        Mostrando equipos filtrados
+        <a href="/maquinaria" class="ml-2 text-[10px] uppercase tracking-wider hover:text-primary underline">Limpiar filtros</a>
+    </div>
+    {% endif %}
+
+    <!-- Client Filter -->
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form method="GET" action="/maquinaria" class="flex flex-col sm:flex-row sm:items-end gap-4">
+            <div class="flex-1 flex flex-col gap-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <select name="cliente" class="filter-submit"
+                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                    <option value="">Todos los clientes</option>
+                    {% for c in customers %}
+                    <option value="{{ c.id }}" {% if selected_customer_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex-1 flex flex-col gap-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
+                <select name="asistente" class="filter-submit"
+                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                    <option value="">Todos los asistentes</option>
+                    {% for advisor in advisors %}
+                    <option value="{{ advisor.name }}" {% if selected_asistente == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex-[1.5] flex flex-col gap-1.5">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Buscar Equipo</label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                    <input name="q" value="{{ q or '' }}"
+                        class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                        placeholder="N° de serie, marca o modelo..." type="text" />
+                </div>
+            </div>
+            <button type="submit"
+                class="px-6 py-2 bg-slate-900 dark:bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
+                Buscar
+            </button>
+            <button type="button"
+                id="btn-new-machine"
+                class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
+                <span class="material-symbols-rounded !text-base">add_circle</span>
+                Nueva Máquina
+            </button>
+            {% if selected_customer_id or q %}
+            <a href="/maquinaria"
+                class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+                Limpiar
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Indicators -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Máquinas</p>
+            <p class="text-3xl font-black text-slate-900 dark:text-white">{{ stats.total }}</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">En Relevamiento</p>
+            <p class="text-3xl font-black text-amber-500">{{ stats.en_proceso }}</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Completados</p>
+            <p class="text-3xl font-black text-primary">{{ stats.completados }}</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pendiente</p>
+            <p class="text-3xl font-black text-blue-500">{{ stats.pendientes }}</p>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div
+        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">N° Serie</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Maquinaria / Modelo</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Cliente</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Planta</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Asistente</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Tipo</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Línea</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Estado</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Relevamiento</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right whitespace-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                    {% for machine in machines %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+                        <td class="px-2 py-2 text-[11px] font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                            {{ machine.serial_number }}
+                        </td>
+                        <td class="px-2 py-2 whitespace-nowrap">
+                            <div class="flex flex-col">
+                                <span class="text-[11px] font-bold">{{ machine.brand }} {{ machine.model }}</span>
+                            </div>
+                        </td>
+                        <td class="px-2 py-2 whitespace-nowrap">
+                            {% if machine.customer %}
+                            <a href="/maquinaria?cliente={{ machine.customer.id }}"
+                                class="text-[11px] font-semibold text-primary hover:underline">
+                                {{ machine.customer.name }}
+                            </a>
+                            {% else %}
+                            <span class="text-[11px] text-slate-400 italic">Sin asignar</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-2 py-2 text-[11px] whitespace-nowrap">{{ machine.plant_assigned }}</td>
+                        <td class="px-2 py-2 whitespace-nowrap">
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase">
+                                {{ machine.customer.technical_advisor if machine.customer else 'Sin Asignar' }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-2 text-center whitespace-nowrap">
+                            <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 uppercase tracking-wider">
+                                {{ machine.machine_type or 'Sin Tipo' }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-2 text-[11px] font-bold uppercase text-slate-600 dark:text-slate-400 whitespace-nowrap">{{
+                            machine.line or '' }}</td>
+                        <td class="px-2 py-2 whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
+                                <span
+                                    class="size-1.5 rounded-full {% if machine.status == 'Operativo' %}bg-emerald-500{% else %}bg-amber-500{% endif %}"></span>
+                                <span class="text-[11px]">{{ machine.status }}</span>
+                            </div>
+                        </td>
+                        <td class="px-2 py-2 text-center whitespace-nowrap">
+                            {% if machine.relevamiento_status == 'Completado' %}
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 uppercase">
+                                <span class="size-1 bg-emerald-500 rounded-full"></span>Completado
+                            </span>
+                            {% elif machine.relevamiento_status == 'En Proceso' %}
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 uppercase">
+                                <span class="size-1 bg-amber-500 rounded-full animate-pulse"></span>En Proceso
+                            </span>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 uppercase">
+                                <span class="size-1 bg-slate-400 rounded-full"></span>Pendiente
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-2 py-2 text-right whitespace-nowrap">
+                            <div class="flex justify-end gap-1 transition-opacity">
+                                <button type="button" data-edit-machine="{{ machine.id }}"
+                                    class="p-1 text-slate-400 hover:text-primary transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 btn-edit-machine"
+                                    title="Editar Máquina">
+                                    <span class="material-symbols-rounded !text-[14px]">edit</span>
+                                </button>
+                                <form action="/eliminar-maquinaria/{{ machine.id }}" method="POST"
+                                    class="inline delete-machine-form2" data-confirm="¿Eliminar el equipo {{ machine.brand }} {{ machine.model}}?"
+                                    class="inline">
+                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                    <button type="submit"
+                                        class="p-1 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
+                                        title="Eliminar Máquina">
+                                        <span class="material-symbols-rounded !text-[14px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% set ns = namespace(qs='') %}
+{% if selected_customer_id %}{% set ns.qs = ns.qs + '&cliente=' + selected_customer_id|string %}{% endif %}
+{% if selected_asistente %}{% set ns.qs = ns.qs + '&asistente=' + selected_asistente|urlencode %}{% endif %}
+{% if q %}{% set ns.qs = ns.qs + '&q=' + q|urlencode %}{% endif %}
+
+{% if pagination.total_pages > 1 %}
+<div class="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl -mt-2">
+    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        Página {{ pagination.page }} de {{ pagination.total_pages }}
+        <span class="mx-1">·</span>
+        {{ pagination.total }} máquina{{ 's' if pagination.total != 1 else '' }}
+    </div>
+    <div class="flex items-center gap-1">
+        {% if pagination.has_prev %}
+        <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
+            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">
+            Anterior
+        </a>
+        {% else %}
+        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">
+            Anterior
+        </span>
+        {% endif %}
+
+        {% for p in range(1, pagination.total_pages + 1) %}
+            {% if p == pagination.page %}
+            <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">
+                {{ p }}
+            </span>
+            {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
+            <a href="?page={{ p }}{{ ns.qs }}"
+                class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                {{ p }}
+            </a>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+        <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
+            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">
+            Siguiente
+        </a>
+        {% else %}
+        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">
+            Siguiente
+        </span>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="px-3 py-2 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 rounded-b-xl">
+    <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{{ pagination.total }} máquina{{ 's' if pagination.total != 1 else '' }}</span>
+</div>
+{% endif %}
+
+<!-- New Machine Modal -->
+<div id="newMachineModal"
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    <div
+        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-rounded text-primary text-xl">precision_manufacturing</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Nueva Máquina</h3>
+            </div>
+            <button type="button" id="btn-close-new-machine-modal"
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <form action="/nuevo-maquinaria" method="POST" class="p-6 space-y-5 max-h-[calc(100vh-16rem)] overflow-y-auto">
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente *</label>
+                    <select id="client_select" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                        <option value="">Seleccionar cliente...</option>
+                        {% for name in unique_customer_names %}
+                        <option value="{{ name }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta *</label>
+                    <select id="plant_select" name="customer_id" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                        <option value="">Seleccione un cliente primero</option>
+                    </select>
+                    <input type="hidden" id="plant_assigned" name="plant_assigned">
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Máquina *</label>
+                <select name="machine_type" required
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                    <option value="">Seleccionar tipo...</option>
+                    {% for type in machine_types %}
+                    <option value="{{ type.name }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">N° de Serie *</label>
+                    <input name="serial_number" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        placeholder="SN-XXXXX" type="text" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca *</label>
+                    <input name="brand" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        placeholder="Ej: ATLAS COPCO" type="text" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo *</label>
+                    <input name="model_name" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        placeholder="Ej: GA 37VSD" type="text" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
+                    <input name="line"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        placeholder="Ej: LÍNEA 1" type="text" oninput="this.value = this.value.toUpperCase()" />
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" id="btn-cancel-new-machine"
+                    class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar</button>
+                <button type="submit"
+                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
+                    Registrar Máquina
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Machine Modal -->
+<div id="editMachineModal"
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    <div
+        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-rounded text-primary text-xl">precision_manufacturing</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Editar Máquina</h3>
+            </div>
+            <button type="button" id="btn-close-edit-machine-modal"
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div id="editMachineModalContent">
+            <div class="text-center py-12 text-slate-400">
+                <span class="material-symbols-rounded text-3xl mb-2">hourglass_top</span>
+                <p class="text-sm font-bold">Cargando datos del equipo...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    // --- Plant cascade ---
+    async function loadPlants(clientName) {
+        const plantSelect = document.getElementById('plant_select');
+        const plantInput = document.getElementById('plant_assigned');
+        plantSelect.innerHTML = '<option value="">Cargando...</option>';
+        plantInput.value = '';
+        if (!clientName) {
+            plantSelect.innerHTML = '<option value="">Seleccione un cliente primero</option>';
+            return;
+        }
+        try {
+            const response = await fetch(`/api/cliente-plantas/${encodeURIComponent(clientName)}`);
+            const plants = await response.json();
+            plantSelect.innerHTML = '<option value="">Seleccionar planta...</option>';
+            plants.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.name;
+                plantSelect.appendChild(opt);
+            });
+        } catch (error) {
+            console.error('Error loading plants:', error);
+            plantSelect.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+
+    function updatePlantName(select) {
+        const plantInput = document.getElementById('plant_assigned');
+        const selectedOption = select.options[select.selectedIndex];
+        plantInput.value = selectedOption.textContent;
+    }
+
+    // --- New Machine Modal ---
+    function openNewMachineModal() {
+        const modal = document.getElementById('newMachineModal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeNewMachineModal() {
+        const modal = document.getElementById('newMachineModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // --- Edit Machine Modal ---
+    function openEditMachineModal(machineId) {
+        const modal = document.getElementById('editMachineModal');
+        const content = document.getElementById('editMachineModalContent');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        content.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-3xl mb-2">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
+        fetch(`/editar-maquinaria/${machineId}/partial`)
+            .then(response => response.text())
+            .then(html => {
+                content.innerHTML = html;
+                initializeEditMachineForm();
+            })
+            .catch(error => {
+                content.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-3xl mb-2">error</span><p class="text-sm font-bold">Error al cargar los datos del equipo.</p></div>';
+            });
+    }
+
+    function initializeEditMachineForm() {
+        const editClientSelect = document.getElementById('edit_client_select');
+        const editPlantSelect = document.getElementById('edit_plant_select');
+        const editPlantInput = document.getElementById('edit_plant_assigned');
+        if (editClientSelect) {
+            editClientSelect.addEventListener('change', function() {
+                const clientName = this.value;
+                editPlantSelect.innerHTML = '<option value="">Cargando...</option>';
+                editPlantInput.value = '';
+                if (!clientName) {
+                    editPlantSelect.innerHTML = '<option value="">Seleccione un cliente primero</option>';
+                    return;
+                }
+                fetch(`/api/cliente-plantas/${encodeURIComponent(clientName)}`)
+                    .then(r => r.json())
+                    .then(plants => {
+                        editPlantSelect.innerHTML = '<option value="">Seleccionar planta...</option>';
+                        plants.forEach(p => {
+                            const opt = document.createElement('option');
+                            opt.value = p.id;
+                            opt.textContent = p.name;
+                            editPlantSelect.appendChild(opt);
+                        });
+                    })
+                    .catch(() => { editPlantSelect.innerHTML = '<option value="">Error al cargar</option>'; });
+            });
+        }
+        if (editPlantSelect) {
+            editPlantSelect.addEventListener('change', function() {
+                editPlantInput.value = this.options[this.selectedIndex].textContent;
+            });
+        }
+        document.getElementById('btn-cancel-edit-machine')?.addEventListener('click', closeEditMachineModal);
+    }
+
+    function closeEditMachineModal() {
+        const modal = document.getElementById('editMachineModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('editMachineModalContent').innerHTML = '';
+    }
+
+
+    
+    function closeRelevamientoModal() {
+        const modal = document.getElementById('relevamientoModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('relevamientoModalContent').innerHTML = '';
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Filters auto-submit
+    document.querySelectorAll('.filter-submit').forEach(s => s.addEventListener('change', function() { this.form.submit(); }));
+
+    // New Machine Modal
+    document.getElementById('btn-new-machine')?.addEventListener('click', openNewMachineModal);
+    document.getElementById('btn-close-new-machine-modal')?.addEventListener('click', closeNewMachineModal);
+    document.getElementById('btn-cancel-new-machine')?.addEventListener('click', closeNewMachineModal);
+    document.getElementById('newMachineModal')?.addEventListener('click', function(e) { if (e.target === this) closeNewMachineModal(); });
+
+    // Edit Machine Modal
+    document.querySelectorAll('.btn-edit-machine').forEach(btn => {
+        btn.addEventListener('click', function() {
+            openEditMachineModal(parseInt(this.dataset.editMachine));
+        });
+    });
+    document.getElementById('btn-close-edit-machine-modal')?.addEventListener('click', closeEditMachineModal);
+    document.getElementById('editMachineModal')?.addEventListener('click', function(e) { if (e.target === this) closeEditMachineModal(); });
+
+    // Delete machine forms
+    document.querySelectorAll('.delete-machine-form2').forEach(f => f.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showConfirmModal(this, this.dataset.confirm);
+    }));
+
+    // Plant cascade for new machine
+    document.getElementById('client_select')?.addEventListener('change', function() { loadPlants(this.value); });
+    document.getElementById('plant_select')?.addEventListener('change', function() { updatePlantName(this); });
+});
+</script>
+{% endblock %}

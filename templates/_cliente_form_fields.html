@@ -1,0 +1,277 @@
+<input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+<!-- Section: General Info -->
+<section>
+    <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+        <span class="material-symbols-rounded text-primary text-xl">domain</span>
+        <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información General</h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Nombre de la Empresa <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="client-name" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="name" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase">
+                            <option value="">Seleccionar Cliente...</option>
+                            {% for c in client_names %}
+                            <option value="{{ c.name }}" {% if customer and customer.name == c.name %}selected{% endif %}>{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="client-name" data-select="name" title="Crear nuevo cliente">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Planta / Unidad Productiva <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="plant-name" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="plant" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase">
+                            <option value="">Seleccionar Planta...</option>
+                            {% for p in plant_names %}
+                            <option value="{{ p.name }}" {% if customer and customer.plant == p.name %}selected{% endif %}>{{ p.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="plant-name" data-select="plant" title="Crear nueva planta">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Sector Industrial <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="sector" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="industry_sector" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <option value="">Seleccionar Sector...</option>
+                            {% for s in sectors %}
+                            <option value="{{ s.name }}" {% if customer and customer.industry_sector == s.name %}selected{% endif %}>{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="sector" data-select="industry_sector" title="Crear nuevo sector">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Asesor Comercial Asignado <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="commercial" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="assigned_commercial" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <option value="">Seleccionar Comercial...</option>
+                            {% for c in commercials %}
+                            <option value="{{ c.name }}" {% if customer and customer.assigned_commercial == c.name %}selected{% endif %}>{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="commercial" data-select="assigned_commercial" title="Crear nuevo comercial">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Asistente Técnico Asignado <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="advisor" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="technical_advisor" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <option value="">Seleccionar AT...</option>
+                            {% for a in advisors %}
+                            <option value="{{ a.name }}" {% if customer and customer.technical_advisor == a.name %}selected{% endif %}>{{ a.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="advisor" data-select="technical_advisor" title="Crear nuevo AT">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                Diseñador Asignado <span class="text-red-500">*</span>
+                <button type="button" data-manage-entity="designer" class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+            </label>
+            <div class="relative">
+                <div class="flex gap-1.5">
+                    <div class="flex-1">
+                        <select name="designer" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <option value="">Seleccionar Diseñador...</option>
+                            {% for d in designers %}
+                            <option value="{{ d.name }}" {% if customer and customer.designer == d.name %}selected{% endif %}>{{ d.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="designer" data-select="designer" title="Crear nuevo diseñador">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                    </button>
+                </div>
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ciudad</label>
+            <input name="city" required
+                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                placeholder="Ej: Monterrey" type="text"
+                value="{{ customer.city if customer else '' }}" />
+        </div>
+        <div class="space-y-2">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-rounded text-slate-400 text-sm">location_on</span>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dirección</label>
+            </div>
+            <input name="address" required
+                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                placeholder="Ej: Av. Central 123" type="text"
+                value="{{ customer.address if customer else '' }}" />
+        </div>
+        <div class="space-y-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estatus de Cuenta</label>
+            <select name="status" required
+                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                <option value="Prospecto" {% if not customer or customer.status == 'Prospecto' %}selected{% endif %}>Prospecto</option>
+                <option value="Cliente" {% if customer and customer.status == 'Cliente' %}selected{% endif %}>Cliente</option>
+                <option value="Inactivo" {% if customer and customer.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-rounded text-primary text-xl">groups_3</span>
+            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
+        </div>
+        <button type="button" id="btn-add-team-row-{{ modal_suffix }}"
+            class="group flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest hover:scale-105 transition-all">
+            <span class="material-symbols-rounded text-[18px]">add_circle</span>
+            Añadir Nuevo
+        </button>
+    </div>
+
+    <!-- Team Table -->
+    <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800 mb-6 shadow-sm max-h-80 overflow-y-auto">
+        <table class="w-full text-left border-collapse min-w-[500px]" id="teamTable-{{ modal_suffix }}">
+            <thead>
+             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                 <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre Completo</th>
+                 <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo / Función</th>
+                 <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">E-mail de Contacto</th>
+                 <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono</th>
+                 <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Acciones</th>
+             </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
+                {% if customer and customer.client_team %}
+                    {% for member in customer.client_team %}
+                    <tr>
+                        <td class="px-3 py-2"><input name="member_name"
+                                class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Nombre..." type="text" value="{{ member.name or '' }}" /></td>
+                        <td class="px-3 py-2"><input name="member_role"
+                                class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Cargo..." type="text" value="{{ member.role or '' }}" /></td>
+                        <td class="px-3 py-2"><input name="member_email"
+                                class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="email@ejemplo.com" type="text" value="{{ member.email or '' }}" /></td>
+                        <td class="px-3 py-2"><input name="member_phone"
+                                class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Teléfono..." type="text" value="{{ member.phone or '' }}" /></td>
+                        <td class="px-3 py-2 text-center">
+                            <button type="button" class="btn-remove-team-row-{{ modal_suffix }} p-2 text-slate-300 hover:text-red-500 transition-colors">
+                                <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td class="px-3 py-2"><input name="member_name"
+                            class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Nombre..." type="text" /></td>
+                    <td class="px-3 py-2"><input name="member_role"
+                            class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Cargo..." type="text" /></td>
+                    <td class="px-3 py-2"><input name="member_email"
+                            class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="email@ejemplo.com" type="text" /></td>
+                    <td class="px-3 py-2"><input name="member_phone"
+                            class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Teléfono..." type="text" /></td>
+                    <td class="px-3 py-2 text-center">
+                        <button type="button" class="btn-remove-team-row-{{ modal_suffix }} p-2 text-slate-300 hover:text-red-500 transition-colors">
+                            <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="space-y-2">
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
+        <textarea name="observations"
+            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
+            placeholder="Notas estratégicas..." rows="2">{{ customer.observations if customer else '' }}</textarea>
+    </div>
+</section>

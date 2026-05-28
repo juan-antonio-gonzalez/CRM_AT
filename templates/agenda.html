@@ -1,0 +1,398 @@
+{% extends "layout.html" %}
+
+{% block title %}Agenda de Visitas | CRM-AT{% endblock %}
+
+{% block extra_head %}
+<style>
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background-color: #e2e8f0;
+        border: 1px solid #e2e8f0;
+    }
+    .dark .calendar-grid {
+        background-color: #1e293b;
+        border-color: #1e293b;
+    }
+    .calendar-day {
+        min-height: 120px;
+        background-color: white;
+        padding: 0.5rem;
+    }
+    .dark .calendar-day {
+        background-color: #0f172a;
+    }
+    .calendar-day.today {
+        background-color: #f8fafc;
+    }
+    .dark .calendar-day.today {
+        background-color: #1e293b/50;
+    }
+    .calendar-day.other-month {
+        background-color: #f1f5f9;
+        color: #94a3b8;
+    }
+    .dark .calendar-day.other-month {
+        background-color: #020617;
+        color: #475569;
+    }
+    .event-pill {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="h-full flex flex-col gap-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Agenda Mensual</h3>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Planificación y seguimiento de visitas técnicas.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex bg-white dark:bg-slate-900 rounded-xl p-1 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <button id="btn-prev-month" class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </button>
+                <div id="currentMonthLabel" class="px-4 py-2 text-sm font-black uppercase tracking-widest text-slate-700 dark:text-slate-200 min-w-[150px] text-center">
+                    Cargando...
+                </div>
+                <button id="btn-next-month" class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </button>
+            </div>
+            <button id="btn-new-visit-agenda" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg">add_circle</span>
+                Nueva Visita
+            </button>
+        </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
+        <!-- Weekday Headers -->
+        <div class="grid grid-cols-7 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+            {% for day in ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] %}
+            <div class="py-3 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 dark:text-slate-400">
+                {{ day }}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Days Grid -->
+        <div id="calendarGrid" class="calendar-grid flex-1">
+            <!-- Day cells will be injected here -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal: New Visit -->
+<div id="newVisitModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Programar Visita</h3>
+            <button id="btn-close-new-visit" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <form id="newVisitForm" class="space-y-6" id="newVisitForm"><input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Cliente</label>
+                    <select name="customer_id" required class="w-full h-11 bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none">
+                        <option value="" disabled selected>Seleccione un cliente</option>
+                        {% for name in unique_customer_names %}
+                        <option value="{{ name }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fecha</label>
+                        <input type="date" name="date" required class="w-full h-11 bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Motivo</label>
+                        <select name="visit_type" required class="w-full h-11 bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none">
+                            <option value="Agenda">Agenda</option>
+                            <option value="Seguimiento">Seguimiento</option>
+                            <option value="Prueba técnica">Prueba técnica</option>
+                            <option value="Capacitación">Capacitación</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Objetivo / Observaciones</label>
+                    <textarea name="objective" rows="3" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm font-semibold focus:ring-2 focus:ring-primary outline-none" placeholder="¿Qué se busca lograr en esta visita?"></textarea>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" id="btn-cancel-new-visit" class="flex-1 px-6 py-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Cancelar</button>
+                <button type="submit" class="flex-1 px-6 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">Guardar Visita</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Event Details / Manage Status -->
+<div id="eventModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+        <div class="flex items-center justify-between mb-6">
+            <div id="eventStatusBadge" class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">Cargando...</div>
+            <button id="btn-close-event-modal" class="text-slate-400">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="space-y-4 mb-8">
+            <h3 id="eventTitle" class="text-xl font-black text-slate-900 dark:text-white leading-tight">Título de la Visita</h3>
+            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm font-semibold">
+                <span class="material-symbols-rounded text-lg">event</span>
+                <span id="eventDate">Fecha</span>
+            </div>
+            <p id="eventDesc" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed italic border-l-2 border-slate-200 dark:border-slate-800 pl-4">Descripción de la visita.</p>
+        </div>
+
+        <div id="cancelForm" class="hidden space-y-4 mb-6 animate-in slide-in-from-top-2">
+            <div>
+                <label class="block text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Motivo de Cancelación</label>
+                <textarea id="cancelReason" rows="2" required class="w-full bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-xl p-3 text-sm font-semibold focus:ring-1 focus:ring-red-500 outline-none" placeholder="Explique por qué se canceló la visita..."></textarea>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <div id="normalActions" class="flex gap-2">
+                <button id="btn-finalize-visit" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all">Completar</button>
+                <button id="btn-show-cancel" class="flex-1 border border-red-200 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 px-4 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all">Cancelar</button>
+            </div>
+            <div id="cancelAction" class="hidden">
+                <button id="btn-confirm-cancel" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-4 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 dark:shadow-none transition-all">Confirmar Cancelación</button>
+            </div>
+            <a id="eventEditBtn" href="#" class="w-full text-center py-2 text-xs font-bold text-slate-400 hover:text-primary transition-all">Ver ficha completa</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    let currentDate = new Date();
+    let events = [];
+    let currentEventId = null;
+
+    async function loadEvents() {
+        try {
+            const response = await fetch('/api/visitas-agenda');
+            if (response.ok) {
+                events = await response.json();
+                renderCalendar();
+            }
+        } catch (error) {
+            console.error("Error loading events:", error);
+        }
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        const monthLabel = document.getElementById('currentMonthLabel');
+        grid.innerHTML = '';
+
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        monthLabel.textContent = `${monthNames[month]} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+        // Previous month days
+        for (let i = firstDay - 1; i >= 0; i--) {
+            createDayCell(daysInPrevMonth - i, true);
+        }
+
+        // Current month days
+        const today = new Date();
+        for (let i = 1; i <= daysInMonth; i++) {
+            const isToday = today.getDate() === i && today.getMonth() === month && today.getFullYear() === year;
+            createDayCell(i, false, isToday);
+        }
+
+        // Next month days
+        const totalCells = grid.children.length;
+        const nextDays = 42 - totalCells; // Standard 6 weeks grid
+        for (let i = 1; i <= nextDays; i++) {
+            createDayCell(i, true);
+        }
+    }
+
+    function createDayCell(dayNumber, isOtherMonth, isToday = false) {
+        const grid = document.getElementById('calendarGrid');
+        const cell = document.createElement('div');
+        cell.className = `calendar-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`;
+        
+        const dayHeader = document.createElement('div');
+        dayHeader.className = `text-[10px] font-black ${isToday ? 'text-primary' : 'text-slate-400'} mb-2`;
+        dayHeader.textContent = dayNumber;
+        cell.appendChild(dayHeader);
+
+        if (!isOtherMonth) {
+            const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
+            
+            // Render events for this day
+            const dayEvents = events.filter(e => e.start.startsWith(dateStr));
+            dayEvents.forEach(e => {
+                const ep = document.createElement('div');
+                ep.className = 'event-pill';
+                ep.style.backgroundColor = `${e.color}15`;
+                ep.style.color = e.color;
+                ep.style.borderColor = `${e.color}30`;
+                ep.textContent = e.title;
+                ep.onclick = (ev) => {
+                    ev.stopPropagation();
+                    openEventModal(e);
+                };
+                cell.appendChild(ep);
+            });
+
+            cell.onclick = () => {
+                const dateInput = document.querySelector('input[name="date"]');
+                dateInput.value = dateStr;
+                openNewVisitModal();
+            };
+        }
+
+        grid.appendChild(cell);
+    }
+
+    function changeMonth(delta) {
+        currentDate.setMonth(currentDate.getMonth() + delta);
+        renderCalendar();
+    }
+
+    function openNewVisitModal() {
+        document.getElementById('newVisitModal').classList.remove('hidden');
+        document.getElementById('newVisitModal').classList.add('flex');
+    }
+
+    function closeNewVisitModal() {
+        document.getElementById('newVisitModal').classList.add('hidden');
+        document.getElementById('newVisitModal').classList.remove('flex');
+        document.getElementById('newVisitForm').reset();
+    }
+
+    async function handleNewVisitSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('/visitas/nueva', {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                closeNewVisitModal();
+                loadEvents();
+            }
+        } catch (error) {
+            console.error("Error creating visit:", error);
+        }
+    }
+
+    function openEventModal(event) {
+        currentEventId = event.id;
+        document.getElementById('eventTitle').textContent = event.title;
+        document.getElementById('eventDate').textContent = new Date(event.start).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('eventDesc').textContent = event.description || 'Sin descripción adicional';
+        document.getElementById('eventStatusBadge').textContent = event.status;
+        document.getElementById('eventStatusBadge').style.backgroundColor = `${event.color}15`;
+        document.getElementById('eventStatusBadge').style.color = event.color;
+        document.getElementById('eventEditBtn').href = `/visitas/${event.id}/editar`;
+        
+        // Reset cancel form
+        document.getElementById('cancelForm').classList.add('hidden');
+        document.getElementById('normalActions').classList.remove('hidden');
+        document.getElementById('cancelAction').classList.add('hidden');
+
+        document.getElementById('eventModal').classList.remove('hidden');
+        document.getElementById('eventModal').classList.add('flex');
+    }
+
+    function closeEventModal() {
+        document.getElementById('eventModal').classList.add('hidden');
+        document.getElementById('eventModal').classList.remove('flex');
+    }
+
+    function showCancelForm() {
+        document.getElementById('cancelForm').classList.remove('hidden');
+        document.getElementById('normalActions').classList.add('hidden');
+        document.getElementById('cancelAction').classList.remove('hidden');
+    }
+
+    async function updateStatus(newStatus) {
+        try {
+            const response = await fetch(`/api/visitas/${currentEventId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (response.ok) {
+                closeEventModal();
+                loadEvents();
+            }
+        } catch (error) {
+            console.error("Error updating status:", error);
+        }
+    }
+
+    async function confirmCancellation() {
+        const reason = document.getElementById('cancelReason').value;
+        if (!reason) {
+            alert("⚠️ Por favor ingrese el motivo de la cancelación.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/visitas/${currentEventId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'Cancelada', reason: reason })
+            });
+            if (response.ok) {
+                closeEventModal();
+                loadEvents();
+            }
+        } catch (error) {
+            console.error("Error cancelling visit:", error);
+        }
+    }
+
+    // Initial load
+    loadEvents();
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-prev-month')?.addEventListener('click', () => changeMonth(-1));
+    document.getElementById('btn-next-month')?.addEventListener('click', () => changeMonth(1));
+    document.getElementById('btn-new-visit-agenda')?.addEventListener('click', openNewVisitModal);
+    document.getElementById('btn-close-new-visit')?.addEventListener('click', closeNewVisitModal);
+    document.getElementById('btn-cancel-new-visit')?.addEventListener('click', closeNewVisitModal);
+    document.getElementById('btn-close-event-modal')?.addEventListener('click', closeEventModal);
+    document.getElementById('btn-finalize-visit')?.addEventListener('click', () => updateStatus('Finalizada'));
+    document.getElementById('btn-show-cancel')?.addEventListener('click', showCancelForm);
+    document.getElementById('btn-confirm-cancel')?.addEventListener('click', confirmCancellation);
+});
+</script>
+{% endblock %}

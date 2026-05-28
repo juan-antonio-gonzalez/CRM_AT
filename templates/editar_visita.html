@@ -1,0 +1,1235 @@
+{% extends "layout.html" %}
+
+{% block title %}Registro de Visita Técnica{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Editar Visita #{{ visit.id }}</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Actualización de Actividades</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto w-full animate-fade-in">
+    <div class="mb-8">
+        <h3 class="text-3xl font-black mb-2 text-slate-900">Editar Visita Técnica #{{ visit.id }}</h3>
+        <p class="text-slate-500 dark:text-slate-400 font-medium">Actualice la información de la intervención técnica. Estado actual: <span
+                class="font-bold {{ 'text-blue-600' if visit.status == 'En Progreso' else ('text-emerald-600' if visit.status == 'Completada' else 'text-amber-600') }}">{{
+                visit.status }}</span>.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <form class="p-4 md:p-8 space-y-8" action="/visitas/{{ visit.id }}/editar" method="POST" id="visitForm"
+            enctype="multipart/form-data">
+            <!-- Hidden inputs -->
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <input type="hidden" name="action_plan_json" id="action_plan_json"
+                value="{{ visit.action_plan|default('[]') | escape }}">
+            <input type="hidden" name="save_status" id="save_status" value="borrador">
+            <input type="hidden" name="preview_mode" id="preview_mode" value="false">
+
+            <!-- Section 1: General Info -->
+            <div class="space-y-6">
+                <div class="border-b border-slate-100 pb-2">
+                    <h4 class="text-sm font-black text-primary uppercase tracking-wider">Información General</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2">Cliente</label>
+                        <!-- We use data-selected to help JS pre-select correctly -->
+                        <select name="customer_id" id="customer_select" required
+                            data-selected="{{ visit.customer.name if visit.customer else (visit.customer_name_backup if visit.customer_name_backup else '') }}"
+                            class="w-full h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium">
+                            <option disabled value="">Seleccione un cliente</option>
+                            {% for c in unique_customer_names %}
+                            <option value="{{ c }}" {% if (visit.customer and visit.customer.name==c) or (not
+                                visit.customer and visit.customer_name_backup==c) %}selected{% endif %}>{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2">Planta / Sede</label>
+                        <!-- data-selected helps JS reconstruct the previous choice -->
+                        <select name="plant" id="plant_select" required data-selected="{{ visit.plant }}"
+                            class="w-full h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium disabled:opacity-50">
+                            <option disabled selected value="">Seleccione un cliente primero</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2">Fecha</label>
+                        <div class="relative">
+                            <span
+                                class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">calendar_today</span>
+                            <input name="date" required
+                                class="w-full h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium"
+                                type="date" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2 flex items-center gap-2">
+                            Asistente Técnico
+                            <button type="button" data-manage-entity="advisor"
+                                class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+                        </label>
+                        <div class="relative flex gap-1.5">
+                            <select name="technical_advisor" required
+                                class="flex-1 h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium">
+                                <option disabled value="">Seleccione el asistente</option>
+                                {% for advisor in advisors %}
+                                <option value="{{ advisor.name }}" {% if visit.technical_advisor == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button"
+                                class="quick-add-btn size-11 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all"
+                                data-entity="advisor" data-select="technical_advisor"
+                                title="Agregar nuevo asistente">
+                                <span class="material-symbols-rounded text-lg">add</span>
+                            </button>
+                            <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Nuevo asistente..."
+                                        class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase">
+                                    <button type="button"
+                                        class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap"
+                                        data-entity="advisor" data-select="technical_advisor">Crear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2 flex items-center gap-2">
+                            Motivo de la visita
+                            <button type="button" data-manage-entity="visit-type"
+                                class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+                        </label>
+                        <div class="relative flex gap-1.5">
+                            <select name="visit_type" required
+                                class="flex-1 h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium">
+                                <option disabled value="">Seleccione el motivo</option>
+                                {% for vt in visit_types %}
+                                <option value="{{ vt.name }}" {% if visit.visit_type == vt.name %}selected{% endif %}>{{ vt.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button"
+                                class="quick-add-btn size-11 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all"
+                                data-entity="visit-type" data-select="visit_type"
+                                title="Agregar nuevo motivo">
+                                <span class="material-symbols-rounded text-lg">add</span>
+                            </button>
+                            <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Nuevo motivo..."
+                                        class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase">
+                                    <button type="button"
+                                        class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap"
+                                        data-entity="visit-type" data-select="visit_type">Crear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-bold mb-2 flex items-center gap-2">
+                            Planta Distribuidora
+                            <button type="button" data-manage-entity="distributor-plant"
+                                class="text-[10px] font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+                        </label>
+                        <div class="relative flex gap-1.5">
+                            <select name="distributor_plant" required
+                                class="flex-1 h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium">
+                                <option disabled value="">Seleccione la planta</option>
+                                {% for dp in distributor_plants %}
+                                <option value="{{ dp.name }}" {% if visit.distributor_plant == dp.name %}selected{% endif %}>{{ dp.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button"
+                                class="quick-add-btn size-11 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all"
+                                data-entity="distributor-plant" data-select="distributor_plant"
+                                title="Agregar nueva planta">
+                                <span class="material-symbols-rounded text-lg">add</span>
+                            </button>
+                            <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                                <div class="flex gap-2">
+                                    <input type="text" placeholder="Nueva planta..."
+                                        class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase">
+                                    <button type="button"
+                                        class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap"
+                                        data-entity="distributor-plant" data-select="distributor_plant">Crear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Participantes</label>
+                        <input name="participants" value="{{ visit.participants }}" required
+                            class="w-full h-11 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-medium"
+                            placeholder="Nombres de los asistentes a la reunión" type="text" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Objectives & Follow-up -->
+            <div class="space-y-6 pt-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h4 class="text-sm font-black text-primary uppercase tracking-wider">Objetivos y Seguimiento</h4>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Objetivo principal de la visita</label>
+                        <textarea name="objective"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                            placeholder="Defina el propósito principal de la visita..."
+                            rows="3">{{ visit.objective }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Seguimiento de visitas / no conformidades</label>
+                        <input type="hidden" name="follow_up_json" id="follow_up_json"
+                            value="{{ visit.follow_up_previous|default('[]') | escape }}">
+                        <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+                            <table class="w-full text-sm text-left" id="followUpTable">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                    <tr>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-36">Fecha</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">ET / Pedido</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Tema</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Situación Actual</th>
+                                        <th class="py-3 px-4 w-12 text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900" id="followUpBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn-add-followup-row mt-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1 transition-colors">
+                            <span class="material-symbols-rounded text-base">add</span>
+                            Agregar Seguimiento
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Technical Findings -->
+            <div class="space-y-6 pt-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h4 class="text-sm font-black text-primary uppercase tracking-wider">Hallazgos Técnicos</h4>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            {% for topic in topics %}
+                            <label class="relative flex items-center group cursor-pointer">
+                                <input type="checkbox" name="topics" value="{{ topic.name }}" {% if visit.topics and
+                                    topic.name in visit.topics %}checked{% endif %} class="peer hidden">
+                                <div
+                                    class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-tight transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-sm group-hover:bg-slate-50 dark:group-hover:bg-slate-700 group-hover:border-slate-300 dark:group-hover:border-slate-600 flex items-center justify-between">
+                                    <span>{{ topic.name }}</span>
+                                    <span
+                                        class="material-symbols-rounded text-sm opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Consultas / No conformidades del cliente</label>
+                        <input type="hidden" name="findings_quality_json" id="findings_quality_json"
+                            value="{{ visit.findings_quality|default('[]') | escape }}">
+                        <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+                            <table class="w-full text-sm text-left" id="findingsTable">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                    <tr>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">ET / Pedido</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Tema</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Situación actual</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">Severidad / Impacto</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-28">Cantidad</th>
+                                        <th class="py-3 px-4 w-12 text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900" id="findingsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn-add-findings-row mt-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1 transition-colors">
+                            <span class="material-symbols-rounded text-sm">add</span>
+                            Agregar Consulta
+                        </button>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Asistencia Técnica no detectada por el cliente</label>
+                        <input type="hidden" name="findings_support_json" id="findings_support_json"
+                            value="{{ visit.findings_support|default('[]') | escape }}">
+                        <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+                            <table class="w-full text-sm text-left" id="supportTable">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                                    <tr>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">ET / Pedido</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Issue</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Situación actual</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">Impacto / Severidad</th>
+                                        <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-28">Cantidad</th>
+                                        <th class="py-3 px-4 w-12 text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900" id="supportBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn-add-support-row mt-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1 transition-colors">
+                            <span class="material-symbols-rounded text-sm">add</span>
+                            Agregar Issue
+                        </button>
+                    </div>
+                    <div class="pt-6">
+                        <label class="block text-sm font-bold mb-2">Conclusiones</label>
+                        <textarea name="conclusions" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                            placeholder="Resumen de la situación actual..." rows="4">{{ visit.conclusions }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Actions -->
+            <div class="space-y-6 pt-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h4 class="text-sm font-black text-primary uppercase tracking-wider">Plan de Acción</h4>
+                </div>
+
+                <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
+                    <table class="w-full text-sm text-left" id="actionPlanTable">
+                        <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                            <tr>
+                                <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase">Acción / Tarea</th>
+                                <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-48">Responsable</th>
+                                <th class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400 text-xs uppercase w-40">Fecha Límite</th>
+                                <th class="py-3 px-4 w-12 text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900" id="actionPlanBody">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn-add-action-row-csp mt-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-rounded text-base">add</span>
+                    Agregar Tarea
+                </button>
+            </div>
+
+            <!-- Section 5: Technical Annex & Photos -->
+            <div class="space-y-6 pt-4">
+                <div class="border-b border-slate-100 pb-2">
+                    <h4 class="text-sm font-black text-primary uppercase tracking-wider">Desarrollo y Evidencias</h4>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div class="md:col-span-8">
+                        <label class="block text-sm font-bold mb-2">Desarrollo Detallado</label>
+                        <textarea name="detailed_development"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                            placeholder="Documentación técnica detallada de la intervención..."
+                            rows="8">{{ visit.detailed_development }}</textarea>
+                    </div>
+                    <div class="md:col-span-4">
+                        <label class="block text-sm font-bold mb-2">Registro Fotográfico</label>
+                        <label for="file_registro"
+                            class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-8 flex flex-col items-center justify-center text-center bg-slate-50 dark:bg-slate-800/50 hover:border-primary/50 dark:hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer group h-full">
+                            <span
+                                class="material-symbols-rounded text-slate-300 dark:text-slate-600 group-hover:text-primary dark:group-hover:text-primary text-4xl mb-2 transition-colors">add_a_photo</span>
+                            <p class="text-sm font-bold text-slate-600 dark:text-slate-300">Subir evidencias</p>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">Formatos: JPG, PNG (Máx 5 fotos)</p>
+                            <p id="count_registro" class="text-sm text-primary font-bold mt-2 hidden">0 seleccionadas
+                            </p>
+                            <div id="preview_registro" class="w-full flex flex-col gap-2 mt-4"
+                                >
+                            </div>
+                            <input id="file_registro" name="photos_registro" class="hidden" multiple type="file"
+                                accept="image/*" class="file-input-registro-edit" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-8 border-t border-slate-100 dark:border-slate-800">
+                <a href="/visitas"
+                    class="w-full sm:w-auto px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors text-center">
+                    Cancelar
+                </a>
+                <button type="button" class="btn-submit-borrador"
+                    class="w-full sm:w-auto px-6 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">save</span>
+                    Guardar Borrador
+                </button>
+                <button type="button" class="btn-open-preview"
+                    class="w-full sm:w-auto px-6 py-3 text-sm font-bold text-primary bg-blue-50 dark:bg-blue-900/20 border-2 border-transparent hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">visibility</span>
+                    Vista Previa
+                </button>
+                <button type="button" class="btn-submit-final" id="btn_finalize"
+                    class="w-full sm:w-auto px-8 py-3 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">check_circle</span>
+                    Finalizar Registro
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Auxiliary Management Modal -->
+<div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
+            <h3 id="manageEntityTitle" class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Gestionar</h3>
+            <button type="button" id="manageEntityCloseBtn"
+                class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                <span class="material-symbols-rounded text-lg">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex gap-2">
+                <input id="manageEntityInput" type="text" placeholder="Nuevo elemento..."
+                    class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
+                <button id="manageEntityAddBtn" type="button"
+                    class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
+                    <span class="material-symbols-rounded text-lg">add</span>
+                    Agregar
+                </button>
+            </div>
+            <div id="manageEntityList" class="space-y-1.5 overflow-y-auto" style="max-height:260px">
+                <p class="text-center py-8 text-slate-400 text-xs font-bold italic">Cargando...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    // Set today's date automatically
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.querySelector('input[name="date"]');
+        const dbDate = "{{ visit.date.strftime('%Y-%m-%d') if visit.date else '' }}";
+        if (dbDate !== '') {
+            dateInput.value = dbDate;
+        } else {
+            if (!dateInput.value) dateInput.valueAsDate = new Date();
+        }
+
+        // Initialize Action Plan Data from DB
+        const actionPlanInput = document.getElementById('action_plan_json').value;
+        if (actionPlanInput && actionPlanInput !== "[]") {
+            try {
+                const actionPlan = JSON.parse(actionPlanInput);
+                actionPlan.forEach(item => {
+                    addActionRow(item.task, item.responsible, item.due_date, item.status);
+                });
+            } catch (e) {
+                console.error("Error parsing action plan:", e);
+                addActionRow();
+            }
+        } else {
+            addActionRow();
+        }
+
+        // Initialize Follow-up Data from DB
+        const followUpInput = document.getElementById('follow_up_json').value;
+        if (followUpInput && followUpInput !== "[]") {
+            try {
+                const followUp = JSON.parse(followUpInput);
+                followUp.forEach(item => {
+                    addFollowUpRow(item.fecha, item.et_pedido, item.tema, item.situacion);
+                });
+            } catch (e) {
+                console.error("Error parsing follow-up:", e);
+                addFollowUpRow();
+            }
+        } else {
+            addFollowUpRow();
+        }
+
+        // Initialize Findings Data from DB
+        const findingsInput = document.getElementById('findings_quality_json').value;
+        if (findingsInput && findingsInput !== "[]") {
+            try {
+                const findings = JSON.parse(findingsInput);
+                findings.forEach(item => {
+                    addFindingsRow(item.et_pedido, item.tema, item.situacion, item.severidad, item.cantidad);
+                });
+            } catch (e) {
+                console.error("Error parsing findings:", e);
+            }
+        }
+
+        // Initialize Support Data from DB
+        const supportInput = document.getElementById('findings_support_json').value;
+        if (supportInput && supportInput !== "[]") {
+            try {
+                const support = JSON.parse(supportInput);
+                support.forEach(item => {
+                    addSupportRow(item.et_pedido, item.issue, item.situacion, item.impacto, item.cantidad);
+                });
+            } catch (e) {
+                console.error("Error parsing support:", e);
+            }
+        }
+
+        // Handle dynamic plants
+        const customerSelect = document.getElementById('customer_select');
+        const plantSelect = document.getElementById('plant_select');
+
+        if (customerSelect) {
+            customerSelect.addEventListener('change', async function () {
+                const customerName = this.value;
+                if (!customerName) {
+                    plantSelect.innerHTML = '<option disabled selected value="">Seleccione un cliente primero</option>';
+                    plantSelect.disabled = true;
+                    return;
+                }
+
+                try {
+                    plantSelect.innerHTML = '<option disabled selected value="">Cargando plantas...</option>';
+                    plantSelect.disabled = true;
+
+                    const response = await fetch(`/api/cliente-plantas/${encodeURIComponent(customerName)}`);
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        plantSelect.innerHTML = '';
+                        if (Array.isArray(data) && data.length > 0) {
+                            plantSelect.innerHTML = '<option disabled value="">Seleccione una planta</option>';
+
+                            const selectedPlant = plantSelect.getAttribute('data-selected');
+
+                            data.forEach(planta => {
+                                const option = document.createElement('option');
+                                option.value = planta.name;
+                                option.textContent = planta.name;
+                                if (planta.name === selectedPlant) option.selected = true;
+                                plantSelect.appendChild(option);
+                            });
+                            plantSelect.disabled = false;
+                        } else {
+                            plantSelect.innerHTML = '<option disabled selected value="">Sin plantas registradas</option>';
+                        }
+                    } else {
+                        throw new Error('Error al cargar plantas');
+                    }
+                } catch (error) {
+                    console.error("Error fetching plants:", error);
+                    plantSelect.innerHTML = '<option disabled selected value="">Error al cargar</option>';
+                }
+            });
+
+            // Trigger change on load to fill plant from attribute
+            if (customerSelect.value) {
+                const evt = new Event('change');
+                customerSelect.dispatchEvent(evt);
+            }
+        }
+    });
+
+    const selectedFilesState = {
+        'file_asistencia': new DataTransfer(),
+        'file_registro': new DataTransfer()
+    };
+
+    function handleFiles(input, counterId, previewId) {
+        const dataTransfer = selectedFilesState[input.id];
+
+        for (let file of input.files) {
+            if (dataTransfer.items.length < 5) {
+                // Check if file is already added by name to avoid duplicates (optional but good)
+                const isDuplicate = Array.from(dataTransfer.files).some(f => f.name === file.name);
+                if (!isDuplicate) {
+                    dataTransfer.items.add(file);
+                }
+            } else {
+                alert('❌ Solo se permite subir un máximo de 5 fotos por sección.');
+                break;
+            }
+        }
+
+        // Always reset the actual input so change event fires even for the same files next time
+        input.value = '';
+        input.files = dataTransfer.files;
+
+        // Update UI
+        updateFileUI(input.id, counterId, previewId);
+    }
+
+    function removeFile(inputId, counterId, previewId, fileIndex) {
+        const dataTransfer = selectedFilesState[inputId];
+        dataTransfer.items.remove(fileIndex);
+
+        // Update input
+        document.getElementById(inputId).files = dataTransfer.files;
+
+        // Update UI
+        updateFileUI(inputId, counterId, previewId);
+    }
+
+    function updateFileUI(inputId, counterId, previewId) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        const previewList = document.getElementById(previewId);
+
+        const filesCount = input.files.length;
+
+        if (filesCount > 0) {
+            counter.textContent = filesCount + (filesCount === 1 ? ' foto seleccionada' : ' fotos seleccionadas');
+            counter.classList.remove('hidden');
+        } else {
+            counter.classList.add('hidden');
+        }
+
+        // Render preview items
+        previewList.innerHTML = '';
+        Array.from(input.files).forEach((file, index) => {
+            const item = document.createElement('div');
+            item.className = 'flex items-center justify-between bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 rounded-lg shadow-sm w-full';
+
+            const leftDiv = document.createElement('div');
+            leftDiv.className = 'flex items-center gap-2 overflow-hidden';
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'material-symbols-rounded text-primary text-xl shrink-0';
+            iconSpan.textContent = 'image';
+            leftDiv.appendChild(iconSpan);
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'text-xs font-medium text-slate-700 dark:text-slate-300 truncate';
+            nameSpan.textContent = file.name;
+            leftDiv.appendChild(nameSpan);
+            item.appendChild(leftDiv);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'text-slate-400 hover:text-red-500 p-1 rounded hover:bg-red-50 transition-colors shrink-0';
+            btn.onclick = () => removeFile(inputId, counterId, previewId, index);
+            const closeSpan = document.createElement('span');
+            closeSpan.className = 'material-symbols-rounded text-lg';
+            closeSpan.textContent = 'close';
+            btn.appendChild(closeSpan);
+            item.appendChild(btn);
+
+            previewList.appendChild(item);
+        });
+    }
+
+    function addActionRow(task = '', resp = '', date = '') {
+        const tbody = document.getElementById('actionPlanBody');
+        const tr = document.createElement('tr');
+
+        let td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const taskTa = document.createElement('textarea');
+        taskTa.rows = 1;
+        taskTa.className = 'action-task w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        taskTa.placeholder = 'Describa la tarea...';
+        taskTa.value = task;
+        taskTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(taskTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const respTa = document.createElement('textarea');
+        respTa.rows = 1;
+        respTa.className = 'action-resp w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        respTa.placeholder = 'Nombre...';
+        respTa.value = resp;
+        respTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(respTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        let input = document.createElement('input');
+        input.type = 'date';
+        input.className = 'action-date w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium text-slate-600 dark:text-slate-300';
+        input.value = date;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3 text-center';
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50';
+        delBtn.onclick = function () { tr.remove(); };
+        const delSpan = document.createElement('span');
+        delSpan.className = 'material-symbols-rounded text-lg';
+        delSpan.textContent = 'delete';
+        delBtn.appendChild(delSpan);
+        td.appendChild(delBtn);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+        taskTa.style.height = taskTa.scrollHeight + 'px';
+        respTa.style.height = respTa.scrollHeight + 'px';
+    }
+
+    function addFollowUpRow(fecha = '', etPedido = '', tema = '', situacion = '') {
+        const tbody = document.getElementById('followUpBody');
+        const tr = document.createElement('tr');
+
+        let td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        let input = document.createElement('input');
+        input.type = 'date';
+        input.className = 'followup-fecha w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.value = fecha;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'followup-et w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = 'ET / Pedido...';
+        input.value = etPedido;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const temaTa = document.createElement('textarea');
+        temaTa.rows = 1;
+        temaTa.className = 'followup-tema w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        temaTa.placeholder = 'Tema...';
+        temaTa.value = tema;
+        temaTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(temaTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const sitTa = document.createElement('textarea');
+        sitTa.rows = 1;
+        sitTa.className = 'followup-situacion w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        sitTa.placeholder = 'Situación actual...';
+        sitTa.value = situacion;
+        sitTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(sitTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3 text-center';
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50';
+        delBtn.onclick = function () { const p = this.closest('tr'); const tb = p.parentElement; if (tb.rows.length > 1) p.remove(); else p.querySelectorAll('input, textarea').forEach(i => i.value = ''); };
+        const delSpan = document.createElement('span');
+        delSpan.className = 'material-symbols-rounded text-lg';
+        delSpan.textContent = 'delete';
+        delBtn.appendChild(delSpan);
+        td.appendChild(delBtn);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+        temaTa.style.height = temaTa.scrollHeight + 'px';
+        sitTa.style.height = sitTa.scrollHeight + 'px';
+    }
+
+    function addFindingsRow(etPedido = '', tema = '', situacion = '', severidad = '', cantidad = '') {
+        const tbody = document.getElementById('findingsBody');
+        const tr = document.createElement('tr');
+
+        let td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'findings-et w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = 'ET / Pedido...';
+        input.value = etPedido;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const temaTa = document.createElement('textarea');
+        temaTa.rows = 1;
+        temaTa.className = 'findings-tema w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        temaTa.placeholder = 'Tema...';
+        temaTa.value = tema;
+        temaTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(temaTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const sitTa = document.createElement('textarea');
+        sitTa.rows = 1;
+        sitTa.className = 'findings-situacion w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        sitTa.placeholder = 'Situación actual...';
+        sitTa.value = situacion;
+        sitTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(sitTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'findings-severidad w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = 'Severidad / Impacto...';
+        input.value = severidad;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.className = 'findings-cantidad w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = '0';
+        input.value = cantidad;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3 text-center';
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50';
+        delBtn.onclick = function () { const p = this.closest('tr'); const tb = p.parentElement; if (tb.rows.length > 1) p.remove(); else p.querySelectorAll('input, textarea').forEach(i => i.value = ''); };
+        const delSpan = document.createElement('span');
+        delSpan.className = 'material-symbols-rounded text-lg';
+        delSpan.textContent = 'delete';
+        delBtn.appendChild(delSpan);
+        td.appendChild(delBtn);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+        temaTa.style.height = temaTa.scrollHeight + 'px';
+        sitTa.style.height = sitTa.scrollHeight + 'px';
+    }
+
+    function addSupportRow(etPedido = '', issue = '', situacion = '', impacto = '', cantidad = '') {
+        const tbody = document.getElementById('supportBody');
+        const tr = document.createElement('tr');
+
+        let td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'support-et w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = 'ET / Pedido...';
+        input.value = etPedido;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const issueTa = document.createElement('textarea');
+        issueTa.rows = 1;
+        issueTa.className = 'support-issue w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        issueTa.placeholder = 'Issue...';
+        issueTa.value = issue;
+        issueTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(issueTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        const sitTa = document.createElement('textarea');
+        sitTa.rows = 1;
+        sitTa.className = 'support-situacion w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium resize-none overflow-hidden';
+        sitTa.placeholder = 'Situación actual...';
+        sitTa.value = situacion;
+        sitTa.oninput = function () { this.style.height = ''; this.style.height = this.scrollHeight + 'px'; };
+        td.appendChild(sitTa);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'support-impacto w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = 'Impacto / Severidad...';
+        input.value = impacto;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3';
+        input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.className = 'support-cantidad w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-1 focus:ring-primary p-2 text-sm font-medium';
+        input.placeholder = '0';
+        input.value = cantidad;
+        td.appendChild(input);
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.className = 'px-4 py-3 text-center';
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50';
+        delBtn.onclick = function () { const p = this.closest('tr'); const tb = p.parentElement; if (tb.rows.length > 1) p.remove(); else p.querySelectorAll('input, textarea').forEach(i => i.value = ''); };
+        const delSpan = document.createElement('span');
+        delSpan.className = 'material-symbols-rounded text-lg';
+        delSpan.textContent = 'delete';
+        delBtn.appendChild(delSpan);
+        td.appendChild(delBtn);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+        issueTa.style.height = issueTa.scrollHeight + 'px';
+        sitTa.style.height = sitTa.scrollHeight + 'px';
+    }
+
+    function submitForm(status) {
+        if (!document.getElementById('visitForm').reportValidity()) {
+            return;
+        }
+
+        prepareFormData();
+        document.getElementById('save_status').value = status;
+        document.getElementById('preview_mode').value = 'false';
+
+        if (status === 'final') {
+            showConfirmModal(
+                document.getElementById('visitForm'),
+                'Al finalizar la visita se generará el informe técnico definitivo y no podrá ser modificada posteriormente. ¿Deseas continuar?',
+                {
+                    title: '¿Finalizar Visita Técnica?',
+                    buttonText: 'Sí, Finalizar',
+                    type: 'primary',
+                    icon: 'task_alt'
+                }
+            );
+        } else {
+            document.getElementById('visitForm').submit();
+        }
+    }
+
+    function prepareFormData() {
+        const actionPlan = [];
+        const rows = document.querySelectorAll('#actionPlanBody tr');
+
+        rows.forEach(row => {
+            const task = row.querySelector('.action-task').value;
+            if (task.trim() !== '') {
+                actionPlan.push({
+                    task: task,
+                    responsible: row.querySelector('.action-resp').value,
+                    due_date: row.querySelector('.action-date').value
+                });
+            }
+        });
+
+        document.getElementById('action_plan_json').value = JSON.stringify(actionPlan);
+
+        const followUp = [];
+        document.querySelectorAll('#followUpBody tr').forEach(row => {
+            const fecha = row.querySelector('.followup-fecha').value;
+            if (fecha.trim() !== '') {
+                followUp.push({
+                    fecha: fecha,
+                    et_pedido: row.querySelector('.followup-et').value,
+                    tema: row.querySelector('.followup-tema').value,
+                    situacion: row.querySelector('.followup-situacion').value
+                });
+            }
+        });
+        document.getElementById('follow_up_json').value = JSON.stringify(followUp);
+
+        const findings = [];
+        document.querySelectorAll('#findingsBody tr').forEach(row => {
+            const et = row.querySelector('.findings-et').value;
+            if (et.trim() !== '') {
+                findings.push({
+                    et_pedido: et,
+                    tema: row.querySelector('.findings-tema').value,
+                    situacion: row.querySelector('.findings-situacion').value,
+                    severidad: row.querySelector('.findings-severidad').value,
+                    cantidad: row.querySelector('.findings-cantidad').value
+                });
+            }
+        });
+        document.getElementById('findings_quality_json').value = JSON.stringify(findings);
+
+        const support = [];
+        document.querySelectorAll('#supportBody tr').forEach(row => {
+            const et = row.querySelector('.support-et').value;
+            if (et.trim() !== '') {
+                support.push({
+                    et_pedido: et,
+                    issue: row.querySelector('.support-issue').value,
+                    situacion: row.querySelector('.support-situacion').value,
+                    impacto: row.querySelector('.support-impacto').value,
+                    cantidad: row.querySelector('.support-cantidad').value
+                });
+            }
+        });
+        document.getElementById('findings_support_json').value = JSON.stringify(support);
+    }
+
+    function openPreview() {
+        if (!document.getElementById('visitForm').reportValidity()) {
+            return;
+        }
+
+        prepareFormData();
+        document.getElementById('save_status').value = 'borrador';
+        document.getElementById('preview_mode').value = 'true';
+
+        showConfirmModal(
+            document.getElementById('visitForm'),
+            'Para previsualizar el informe es necesario guardar los datos actuales como borrador. ¿Deseas guardar y continuar a la vista previa?',
+            {
+                title: 'Guardar y Previsualizar',
+                buttonText: 'Sí, Guardar y Ver',
+                type: 'primary',
+                icon: 'visibility'
+            }
+        );
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-add-action-row-edit')?.addEventListener('click', () => addActionRow());
+    document.getElementById('btn-save-draft-edit')?.addEventListener('click', () => submitForm('borrador'));
+    document.getElementById('btn-preview-visit-edit')?.addEventListener('click', openPreview);
+    document.getElementById('btn-finalize-visit-edit')?.addEventListener('click', () => submitForm('final'));
+    document.querySelectorAll('.file-input-asistencia-edit').forEach(el => el.addEventListener('change', function() {
+        handleFiles(this, 'count_asistencia', 'preview_asistencia');
+    }));
+    document.querySelectorAll('.file-input-registro-edit').forEach(el => el.addEventListener('change', function() {
+        handleFiles(this, 'count_registro', 'preview_registro');
+    }));
+});
+
+    document.querySelectorAll('.btn-add-action-row-csp').forEach(b => b.addEventListener('click', () => addActionRow()));
+    document.querySelectorAll('.btn-add-followup-row').forEach(b => b.addEventListener('click', () => addFollowUpRow()));
+    document.querySelectorAll('.btn-add-findings-row').forEach(b => b.addEventListener('click', () => addFindingsRow()));
+    document.querySelectorAll('.btn-add-support-row').forEach(b => b.addEventListener('click', () => addSupportRow()));
+    document.querySelectorAll('.btn-submit-borrador').forEach(b => b.addEventListener('click', () => submitForm('borrador')));
+    document.querySelectorAll('.btn-open-preview').forEach(b => b.addEventListener('click', openPreview));
+    document.querySelectorAll('.btn-submit-final').forEach(b => b.addEventListener('click', () => submitForm('final')));
+
+    // ── Quick-add popovers ──
+    document.querySelectorAll('.quick-add-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAllPopovers();
+            const popover = this.closest('.relative').querySelector('.quick-add-popover');
+            if (!popover) return;
+            const input = popover.querySelector('.quick-add-input');
+            if (input) input.value = '';
+            popover.classList.toggle('hidden');
+            if (!popover.classList.contains('hidden') && input) {
+                input.focus();
+            }
+        });
+    });
+
+    document.querySelectorAll('.quick-add-confirm').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const popover = this.closest('.quick-add-popover');
+            const input = popover.querySelector('.quick-add-input');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const entityType = this.dataset.entity;
+            const selectName = this.dataset.select;
+            const select = document.querySelector(`select[name="${selectName}"]`);
+
+            this.disabled = true;
+            this.textContent = '...';
+
+            try {
+                const params = new URLSearchParams();
+                params.append('name', name);
+                params.append('csrf_token', getCsrfToken());
+
+                const response = await fetch(`/configuracion/add/${entityType}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                    body: params
+                });
+
+                if (response.ok) {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    select.appendChild(option);
+                    select.value = name;
+                    input.value = '';
+                    popover.classList.add('hidden');
+                } else {
+                    alert('Error al crear el elemento');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error de conexión');
+            } finally {
+                this.disabled = false;
+                this.textContent = 'Crear';
+            }
+        });
+    });
+
+    // ── Manage entity modal ──
+    document.querySelectorAll('[data-manage-entity]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const entityType = this.dataset.manageEntity;
+            openManageEntityModal(entityType);
+        });
+    });
+
+    function closeAllPopovers() {
+        document.querySelectorAll('.quick-add-popover').forEach(p => p.classList.add('hidden'));
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.quick-add-popover') && !e.target.closest('.quick-add-btn')) {
+            closeAllPopovers();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllPopovers();
+        }
+    });
+
+    let manageEntityCurrentType = '';
+
+    async function loadManageEntityList(entityType) {
+        const list = document.getElementById('manageEntityList');
+        list.innerHTML = '<p class="text-center py-8 text-slate-400 text-xs font-bold italic">Cargando...</p>';
+        try {
+            const response = await fetch(`/configuracion/list/${entityType}`);
+            const data = await response.json();
+            if (data.items.length === 0) {
+                list.innerHTML = '<p class="text-center py-8 text-slate-400 text-xs font-bold italic">No hay elementos</p>';
+                return;
+            }
+            list.innerHTML = '';
+            data.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group';
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${item.name}</span>
+                    <button type="button" class="text-slate-400 hover:text-red-500 p-1 transition-colors"
+                        data-delete-entity-id="${item.id}" data-delete-entity-type="${entityType}">
+                        <span class="material-symbols-rounded text-sm">delete</span>
+                    </button>`;
+                list.appendChild(div);
+            });
+            list.querySelectorAll('[data-delete-entity-id]').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const id = this.dataset.deleteEntityId;
+                    const type = this.dataset.deleteEntityType;
+                    if (!confirm('¿Eliminar este elemento?')) return;
+                    try {
+                        const params = new URLSearchParams();
+                        params.append('csrf_token', getCsrfToken());
+                        const resp = await fetch(`/configuracion/delete/${type}/${id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: params
+                        });
+                        if (resp.ok) {
+                            loadManageEntityList(type);
+                            const select = getSelectForEntity(type);
+                            if (select) {
+                                const opt = select.querySelector(`option[value="${this.closest('.flex').querySelector('span').textContent}"]`);
+                                if (opt) opt.remove();
+                            }
+                        } else {
+                            alert('Error al eliminar');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error de conexión');
+                    }
+                });
+            });
+        } catch (err) {
+            console.error(err);
+            list.innerHTML = '<p class="text-center py-8 text-red-400 text-xs font-bold italic">Error al cargar</p>';
+        }
+    }
+
+    function getSelectForEntity(entityType) {
+        const map = {
+            'advisor': 'select[name="technical_advisor"]',
+            'visit-type': 'select[name="visit_type"]',
+            'distributor-plant': 'select[name="distributor_plant"]',
+        };
+        return document.querySelector(map[entityType] || '');
+    }
+
+    function openManageEntityModal(entityType) {
+        manageEntityCurrentType = entityType;
+        const labels = {
+            'advisor': 'Asistente Técnico',
+            'visit-type': 'Motivo de Visita',
+            'distributor-plant': 'Planta Distribuidora',
+        };
+        document.getElementById('manageEntityTitle').textContent = 'Gestionar: ' + (labels[entityType] || entityType);
+        document.getElementById('manageEntityModal').classList.remove('hidden');
+        loadManageEntityList(entityType);
+        document.getElementById('manageEntityInput').value = '';
+        document.getElementById('manageEntityInput').focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('manageEntityAddBtn')?.addEventListener('click', async function() {
+            const input = document.getElementById('manageEntityInput');
+            const name = input.value.trim();
+            if (!name) return;
+            const entityType = manageEntityCurrentType;
+            try {
+                const params = new URLSearchParams();
+                params.append('name', name);
+                params.append('csrf_token', getCsrfToken());
+                const resp = await fetch(`/configuracion/add/${entityType}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                    body: params
+                });
+                if (resp.ok) {
+                    input.value = '';
+                    loadManageEntityList(entityType);
+                    const select = getSelectForEntity(entityType);
+                    if (select) {
+                        const opt = document.createElement('option');
+                        opt.value = name;
+                        opt.textContent = name;
+                        select.appendChild(opt);
+                        select.value = name;
+                    }
+                } else {
+                    alert('Error al crear el elemento');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error de conexión');
+            }
+        });
+
+        document.getElementById('manageEntityInput')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('manageEntityAddBtn')?.click();
+            }
+        });
+
+        document.getElementById('manageEntityModal')?.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.add('hidden');
+        });
+        document.getElementById('manageEntityCloseBtn')?.addEventListener('click', function() {
+            document.getElementById('manageEntityModal').classList.add('hidden');
+        });
+    });
+</script>
+{% endblock %}

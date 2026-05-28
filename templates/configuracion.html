@@ -1,0 +1,717 @@
+{% extends "layout.html" %}
+
+{% block title %}Configuración de Tablas | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Configuración</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Gestión de Listas Auxiliares</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-4 animate-fade-in pb-10">
+    <!-- Header Section -->
+    <div
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col gap-0.5">
+            <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Tablas Auxiliares</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-[11px] uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="/relevamiento"
+                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all hover:bg-slate-50">
+                <span class="material-symbols-rounded text-sm">arrow_back</span>
+                Cerrar
+            </a>
+        </div>
+    </div>
+
+    <!-- Grid of Tables -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- ASESORES TÉCNICOS (AT) -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">engineering</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">AT Asignados</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-advisor" type="text" placeholder="Nuevo AT..." 
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-advisor"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-advisor" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not advisors %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in advisors %}
+                    <div id="item-advisor-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- DISEÑADORES -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">draw</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Diseñadores</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-designer" type="text" placeholder="Nuevo Diseñador..." 
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-designer"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-designer" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not designers %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in designers %}
+                    <div id="item-designer-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- COMERCIALES -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">assignment_ind</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Comerciales</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-commercial" type="text" placeholder="Nuevo Comercial..." 
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-commercial"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-commercial" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not commercials %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in commercials %}
+                    <div id="item-commercial-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTORES INDUSTRIALES -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">factory</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Sectores</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-sector" type="text" placeholder="Nuevo Sector..." 
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-sector"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not sectors %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in sectors %}
+                    <div id="item-sector-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- TIPOS DE MAQUINARIA -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">precision_manufacturing</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Maquinaria</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-machine-type" type="text" placeholder="Nuevo Tipo..." 
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-machine-type"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-machine-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not machine_types %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in machine_types %}
+                    <div id="item-machine-type-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- TIPO DE FORMADO -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">square_foot</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Tipo de Formado</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-formado" type="text" placeholder="Nuevo tipo..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-formado"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-formado" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not formado_types %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in formado_types %}
+                    <div id="item-formado-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- CIERRE INFERIOR -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">handyman</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Cierre Inferior</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-cierre-inferior" type="text" placeholder="Nuevo tipo..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-cierre-inferior"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-cierre-inferior" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not inferior_closure_types %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in inferior_closure_types %}
+                    <div id="item-cierre-inferior-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- NOMBRE DE CLIENTE -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">badge</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Nombre de Cliente</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-client-name" type="text" placeholder="Nuevo nombre..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-client-name"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-client-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not client_names %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in client_names %}
+                    <div id="item-client-name-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PLANTA -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">business</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Planta</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-plant-name" type="text" placeholder="Nueva planta..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-plant-name"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-plant-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not plant_names %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in plant_names %}
+                    <div id="item-plant-name-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-primary p-1 transition-colors" title="Editar">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                                class="text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- MOTIVO DE VISITA -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">topic</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Motivo de Visita</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-visit-type" type="text" placeholder="Nuevo motivo..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-visit-type"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-visit-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not visit_types %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in visit_types %}
+                    <div id="item-visit-type-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PLANTA DISTRIBUIDORA -->
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg">warehouse</span>
+                    <h3 class="font-black text-xs text-slate-800 dark:text-slate-200 uppercase tracking-tight">Planta Distribuidora</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-distributor-plant" type="text" placeholder="Nueva planta..."
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-distributor-plant"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center">
+                        <span class="material-symbols-rounded text-sm">add</span>
+                    </button>
+                </div>
+                <div id="list-distributor-plant" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not distributor_plants %}
+                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in distributor_plants %}
+                    <div id="item-distributor-plant-{{ item.id }}"
+                        class="flex items-center justify-between p-2 bg-slate-50/50 dark:bg-slate-800/40 rounded-lg border border-slate-100 dark:border-slate-800 group">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}">
+                                <span class="material-symbols-rounded text-sm">edit</span>
+                            </button>
+                            <button class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}">
+                                <span class="material-symbols-rounded text-sm">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Modals Container -->
+<div id="modal-container" class="fixed inset-0 z-[100] hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
+    
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md hidden animate-zoom-in">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-rounded">edit</span>
+                </div>
+                <div>
+                    <h3 class="font-black text-slate-900 dark:text-white uppercase tracking-tight text-sm">Editar Elemento</h3>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Actualizar nombre del catálogo</p>
+                </div>
+            </div>
+            <div class="p-8 space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nuevo Nombre</label>
+                    <input id="modal-edit-input" type="text" 
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                </div>
+                <div class="flex items-center justify-end gap-4 pt-4">
+                    <button id="btn-cancel-edit" class="text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 uppercase tracking-widest transition-colors">Cancelar</button>
+                    <button id="modal-edit-confirm" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="delete-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md hidden animate-zoom-in">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="p-8 text-center space-y-6">
+                <div class="size-20 bg-red-50 dark:bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-4">
+                    <span class="material-symbols-rounded text-4xl">delete_forever</span>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">¿Confirmar Eliminación?</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm italic">Esta acción eliminará permanentemente a <span id="delete-item-name" class="font-bold text-slate-900 dark:text-white"></span> de la lista.</p>
+                </div>
+                <div class="flex flex-col gap-3 pt-4">
+                    <button id="modal-delete-confirm" class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-500/20 transition-all">Eliminar permanentemente</button>
+                    <button id="btn-cancel-delete" class="w-full py-4 text-xs font-black text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 uppercase tracking-widest transition-colors">Mantener elemento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+    async function addConfigItem(entityType) {
+        const input = document.getElementById(`input-${entityType}`);
+        const name = input.value.trim();
+        if (!name) return;
+
+        try {
+            const params = new URLSearchParams();
+            params.append('name', name);
+            params.append('csrf_token', getCsrfToken());
+            
+            const response = await fetch(`/configuracion/add/${entityType}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function openModal(type, entityType, itemId, currentName) {
+        const container = document.getElementById('modal-container');
+        const modal = document.getElementById(`${type}-modal`);
+        
+        container.classList.remove('hidden');
+        modal.classList.remove('hidden');
+        
+        if (type === 'edit') {
+            const input = document.getElementById('modal-edit-input');
+            input.value = currentName;
+            input.focus();
+            
+            document.getElementById('modal-edit-confirm').onclick = () => performEdit(entityType, itemId, input.value);
+        } else if (type === 'delete') {
+            document.getElementById('delete-item-name').innerText = currentName;
+            document.getElementById('modal-delete-confirm').onclick = () => performDelete(entityType, itemId);
+        }
+    }
+
+    function closeModal(type) {
+        document.getElementById('modal-container').classList.add('hidden');
+        document.getElementById(`${type}-modal`).classList.add('hidden');
+    }
+
+    async function performEdit(entityType, itemId, newName) {
+        if (!newName || newName.trim() === "") return;
+        
+        try {
+            const params = new URLSearchParams();
+            params.append('name', newName.trim());
+            params.append('csrf_token', getCsrfToken());
+            
+            const response = await fetch(`/configuracion/edit/${entityType}/${itemId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            });
+
+            if (response.ok) {
+                closeModal('edit');
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function performDelete(entityType, itemId) {
+        try {
+            const params = new URLSearchParams();
+            params.append('csrf_token', getCsrfToken());
+            const response = await fetch(`/configuracion/delete/${entityType}/${itemId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            });
+
+            if (response.ok) {
+                closeModal('delete');
+                const element = document.getElementById(`item-${entityType}-${itemId}`);
+                if (element) {
+                    element.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => {
+                        element.remove();
+                        const list = document.getElementById(`list-${entityType}`);
+                        if (list && list.children.length === 0) {
+                            list.innerHTML = `<p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>`;
+                        }
+                    }, 300);
+                } else {
+                    window.location.reload();
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function editConfigItem(entityType, itemId, currentName) {
+        openModal('edit', entityType, itemId, currentName);
+    }
+
+    async function deleteConfigItem(entityType, itemId, itemName) {
+        openModal('delete', entityType, itemId, itemName);
+    }
+
+    // Restore scroll position after reload if needed (fallback for reload)
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollPos = localStorage.getItem('config_scroll_pos');
+        if (scrollPos) {
+            window.scrollTo(0, parseInt(scrollPos));
+            localStorage.removeItem('config_scroll_pos');
+        }
+
+        // CSP-safe: add buttons via ID
+        const addTypes = ['advisor', 'designer', 'commercial', 'sector', 'machine-type', 'formado', 'cierre-inferior', 'client-name', 'plant-name', 'visit-type', 'distributor-plant'];
+        addTypes.forEach(t => {
+            document.getElementById(`btn-add-${t}`)?.addEventListener('click', () => addConfigItem(t));
+        });
+
+        // CSP-safe: edit buttons via data attributes (event delegation)
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                editConfigItem(this.dataset.entity, this.dataset.id, this.dataset.name);
+            });
+        });
+
+        // CSP-safe: delete buttons via data attributes
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function() {
+                deleteConfigItem(this.dataset.entity, this.dataset.id, this.dataset.name);
+            });
+        });
+
+        // CSP-safe: modal cancel buttons
+        document.getElementById('btn-cancel-edit')?.addEventListener('click', () => closeModal('edit'));
+        document.getElementById('btn-cancel-delete')?.addEventListener('click', () => closeModal('delete'));
+    });
+
+    window.addEventListener('beforeunload', () => {
+        localStorage.setItem('config_scroll_pos', window.scrollY);
+    });
+</script>
+{% endblock %}
+```

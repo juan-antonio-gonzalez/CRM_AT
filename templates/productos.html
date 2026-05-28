@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block title %}Biblioteca de Productos | CRM-AT{% endblock %}{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Productos</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Biblioteca Técnica</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
+
+    <!-- Filters and Search -->
+    <section
+        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-xl shadow-sm">
+        <form method="GET" action="/productos" class="flex flex-col lg:flex-row gap-4">
+            <!-- Search -->
+            <div class="flex-1">
+                <div class="relative">
+                    <span
+                        class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                    <input name="q" value="{{ q or '' }}"
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary/50 text-sm text-slate-900 dark:text-white placeholder:text-slate-500 dark:text-slate-400"
+                        placeholder="Buscar por descripción, material o número de ET..." type="text" />
+                </div>
+            </div>
+            <!-- Filters -->
+            <div class="flex flex-wrap items-center gap-3">
+                <div
+                    class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Material:</span>
+                    <select name="material" class="filter-submit"
+                        class="bg-transparent border-none text-sm font-semibold focus:ring-0 p-0 pr-8 text-slate-700 dark:text-slate-300">
+                        <option value="Todos">Todos</option>
+                        <option value="Corrugado Doble" {% if selected_material=="Corrugado Doble" %}selected{% endif
+                            %}>Corrugado Doble</option>
+                        <option value="Corrugado Simple" {% if selected_material=="Corrugado Simple" %}selected{% endif
+                            %}>Corrugado Simple</option>
+                    </select>
+                </div>
+                <div
+                    class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Estado:</span>
+                    <select name="status" class="filter-submit"
+                        class="bg-transparent border-none text-sm font-semibold focus:ring-0 p-0 pr-8 text-slate-700 dark:text-slate-300">
+                        <option value="Todos">Todos</option>
+                        <option value="Activo" {% if selected_status=="Activo" %}selected{% endif %}>Activo</option>
+                        <option value="Inactivo" {% if selected_status=="Inactivo" %}selected{% endif %}>Inactivo
+                        </option>
+                    </select>
+                </div>
+                {% if q or selected_material or selected_status %}
+                <a href="/productos"
+                    class="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary transition-colors uppercase tracking-wider">
+                    <span class="material-symbols-rounded text-[18px]">filter_list_off</span>
+                    Limpiar
+                </a>
+                {% endif %}
+                <button type="submit"
+                    class="bg-slate-900 dark:bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity whitespace-nowrap">Filtrar</button>
+                <a href="/nuevo-producto"
+                    class="bg-primary hover:bg-primary/90 text-white px-4 py-1.5 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px]">add_circle</span>
+                    Añadir Producto
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <!-- Table Section -->
+    <div
+        class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                            Descripción / ET</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Material
+                        </th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                            Dimensiones</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ruta
+                            Fabricación</th>
+                        <th
+                            class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">
+                            Estado</th>
+                        <th
+                            class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for product in products %}
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                        <td class="px-6 py-5">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">{{ product.name }}</span>
+                                <span class="text-[10px] font-mono text-slate-400 mt-0.5">{{ product.et_number }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 uppercase">
+                                {{ product.material }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-5 text-xs text-slate-600 dark:text-slate-400 font-medium italic">
+                            {{ product.dimensions_l }} x {{ product.dimensions_a }} x {{ product.dimensions_h }} mm
+                        </td>
+                        <td class="px-6 py-5 text-xs text-slate-600 dark:text-slate-400">
+                            {{ product.manufacturing_route }}
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold {% if product.status == 'Activo' %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300{% else %}bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400{% endif %}">
+                                <span
+                                    class="w-1.5 h-1.5 rounded-full {% if product.status == 'Activo' %}bg-green-500{% else %}bg-slate-400{% endif %}"></span>
+                                {{ product.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <div class="flex justify-end gap-2 transition-opacity">
+                                <a href="/editar-producto/{{ product.id }}"
+                                    class="p-2 text-slate-400 hover:text-primary transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
+                                    title="Editar Producto">
+                                    <span class="material-symbols-rounded text-[20px]">edit</span>
+                                </a>
+                                <form action="/eliminar-producto/{{ product.id }}" method="POST"
+                                    class="inline delete-product-form" data-confirm="¿Estás seguro de que deseas eliminar el producto {{ product.name }}?"
+                                    class="inline">
+                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                    <button type="submit"
+                                        class="p-2 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
+                                        title="Eliminar Producto">
+                                        <span class="material-symbols-rounded text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div
+            class="bg-slate-50/50 dark:bg-slate-800/50 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mostrando {{ products|length }} de
+                24 productos</span>
+            <div class="flex gap-2">
+                <button
+                    class="px-4 py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-400 cursor-not-allowed uppercase">Anterior</button>
+                <button
+                    class="px-4 py-1.5 text-[10px] font-bold rounded-lg bg-primary text-white shadow-lg shadow-primary/20">1</button>
+                <button
+                    class="px-4 py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 transition-colors uppercase">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.filter-submit').forEach(s => s.addEventListener('change', function() { this.form.submit(); }));
+    document.querySelectorAll('.delete-product-form').forEach(f => f.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showConfirmModal(this, this.dataset.confirm);
+    }));
+});
+</script>
+{% endblock %}
+{% endblock %}

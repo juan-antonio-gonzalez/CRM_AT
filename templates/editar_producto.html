@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Producto | CRM-AT{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-step-down').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepDown();
+    }));
+    document.querySelectorAll('.btn-step-up').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepUp();
+    }));
+});
+</script>
+{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Productos</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Edición Técnica</p>
+</div>
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-step-down').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepDown();
+    }));
+    document.querySelectorAll('.btn-step-up').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepUp();
+    }));
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-10 animate-fade-in pb-20">
+    <!-- Header -->
+    <div
+        class="flex items-center justify-between bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Editar Producto
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm italic">Modificando especificaciones para: <strong>{{
+                    product.name }}</strong></p>
+        </div>
+        <div class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+            <span class="material-symbols-rounded text-[32px]">edit</span>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <form action="/editar-producto/{{ product.id }}" method="POST"
+        class="space-y-12 bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-xl shadow-slate-200/20 dark:shadow-none border border-slate-200 dark:border-slate-800">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <!-- Section: General Info -->
+        <section>
+            <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <span class="material-symbols-rounded text-primary text-xl">settings_input_component</span>
+                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">
+                    Especificaciones Generales</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Descripción del
+                        Producto</label>
+                    <input name="name" required value="{{ product.name }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 dark:text-white placeholder:text-slate-400"
+                        placeholder="Ej: Caja de Cartón Reforzada Premium" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de ET
+                        (Especificación Técnica)</label>
+                    <input name="et_number" required value="{{ product.et_number }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold"
+                        placeholder="Ej: ET-2024-042" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Material
+                        Principal</label>
+                    <select name="material" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="Corrugado Simple (Flauta B)" {% if
+                            product.material=='Corrugado Simple (Flauta B)' %}selected{% endif %}>Corrugado Simple
+                            (Flauta B)</option>
+                        <option value="Corrugado Doble (Flauta BC)" {% if
+                            product.material=='Corrugado Doble (Flauta BC)' %}selected{% endif %}>Corrugado Doble
+                            (Flauta BC)</option>
+                        <option value="Microcorrugado (Flauta E)" {% if product.material=='Microcorrugado (Flauta E)'
+                            %}selected{% endif %}>Microcorrugado (Flauta E)</option>
+                        <option value="Cartulina Sulfatada" {% if product.material=='Cartulina Sulfatada' %}selected{%
+                            endif %}>Cartulina Sulfatada</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ruta de Fabricación
+                        Estimada</label>
+                    <input name="manufacturing_route" value="{{ product.manufacturing_route }}"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                        placeholder="Ej: Corte > Impresión > Pegado" type="text" />
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estatus</label>
+                    <select name="status" required
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="Activo" {% if product.status=='Activo' %}selected{% endif %}>Activo</option>
+                        <option value="Inactivo" {% if product.status=='Inactivo' %}selected{% endif %}>Inactivo
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Technical Dimensions -->
+        <section>
+            <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <span class="material-symbols-rounded text-primary text-xl">square_foot</span>
+                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Dimensiones
+                    Técnicas (mm)</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Largo
+                        (L)</label>
+                    <div class="flex items-center justify-center gap-4">
+                        <button type="button" class="btn-step-down step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
+                        <input name="dimensions_l"
+                            class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
+                            type="number" value="{{ product.dimensions_l }}" />
+                        <button type="button" class="btn-step-up step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
+                    </div>
+                </div>
+                <div
+                    class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Ancho
+                        (A)</label>
+                    <div class="flex items-center justify-center gap-4">
+                        <button type="button" class="btn-step-down step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
+                        <input name="dimensions_a"
+                            class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
+                            type="number" value="{{ product.dimensions_a }}" />
+                        <button type="button" class="btn-step-up step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
+                    </div>
+                </div>
+                <div
+                    class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <label
+                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Alto
+                        (H)</label>
+                    <div class="flex items-center justify-center gap-4">
+                        <button type="button" class="btn-step-down step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
+                        <input name="dimensions_h"
+                            class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
+                            type="number" value="{{ product.dimensions_h }}" />
+                        <button type="button" class="btn-step-up step-btn"
+                            class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end gap-6 pt-10 border-t border-slate-100 dark:border-slate-800">
+            <a href="/productos"
+                class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar
+                Edición</a>
+            <button type="submit"
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
+                Actualizar Especificación
+            </button>
+        </div>
+    </form>
+</div>
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-step-down').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepDown();
+    }));
+    document.querySelectorAll('.btn-step-up').forEach(b => b.addEventListener('click', function() {
+        this.parentNode.querySelector('input').stepUp();
+    }));
+});
+</script>
+{% endblock %}
