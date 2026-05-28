@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional, List
-from sqlalchemy import func
+from sqlalchemy import func, extract
 import models
 from database import get_db
 from services import visit_service, pagination as pg
@@ -30,8 +30,8 @@ async def visitas_lista(
 
     now = datetime.datetime.now(datetime.UTC)
     total_month = db.query(func.count(models.TechnicalVisit.id)).filter(
-        func.strftime('%m', models.TechnicalVisit.date) == f"{now.month:02d}",
-        func.strftime('%Y', models.TechnicalVisit.date) == str(now.year)
+        extract('month', models.TechnicalVisit.date) == now.month,
+        extract('year', models.TechnicalVisit.date) == now.year
     ).scalar() or 0
     pendientes = db.query(func.count(models.TechnicalVisit.id)).filter(
         models.TechnicalVisit.status == VisitStatus.PROGRAMADA.value

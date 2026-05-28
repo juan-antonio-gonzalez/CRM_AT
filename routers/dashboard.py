@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, extract
 import models
 from database import get_db
 from enums import RelevamientoStatus, VisitStatus
@@ -35,14 +35,16 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
     ).count()
     survey_progress = (completed_surveys / total_machines * 100) if total_machines > 0 else 0
 
-    visits_by_month = db.query(
-        func.strftime('%Y-%m', models.TechnicalVisit.date).label('month'),
-        func.count(models.TechnicalVisit.id).label('count')
-    ).filter(
+    # Fetch raw dates and group in Python for cross-DB compatibility
+    recent_visits = db.query(models.TechnicalVisit.date).filter(
         models.TechnicalVisit.date >= six_months_ago
-    ).group_by('month').order_by('month').all()
+    ).all()
+    visits_by_month_map = {}
+    for (d,) in recent_visits:
+        if d:
+            key = d.strftime("%Y-%m")
+            visits_by_month_map[key] = visits_by_month_map.get(key, 0) + 1
 
-    visits_by_month_map = {r.month: r.count for r in visits_by_month}
     chart_months_labels = []
     chart_visits_data = []
     for i in range(5, -1, -1):
