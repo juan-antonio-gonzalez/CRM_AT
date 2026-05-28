@@ -191,9 +191,14 @@ def init_db():
 
 @app.on_event("startup")
 def on_startup():
-    alembic_cfg = AlembicConfig("alembic.ini")
-    command.upgrade(alembic_cfg, "head")
-    init_db()
+    try:
+        alembic_cfg = AlembicConfig("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+        init_db()
+        logger.info("Startup complete: DB migrations and seed data ready")
+    except Exception as e:
+        logger.error("Startup failed: %s", e, exc_info=True)
+        raise
 
 from routers import auth as auth_router
 from routers import dashboard as dashboard_router

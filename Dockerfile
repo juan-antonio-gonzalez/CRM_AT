@@ -44,9 +44,4 @@ EXPOSE 7860
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/')" || exit 1
 
-CMD gunicorn main:app \
-    --worker-class uvicorn.workers.UvicornWorker \
-    --bind "0.0.0.0:${PORT}" \
-    --workers 1 \
-    --timeout 120 \
-    --forwarded-allow-ips='*'
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT} --log-level debug"]
