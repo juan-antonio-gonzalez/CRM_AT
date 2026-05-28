@@ -27,7 +27,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN addgroup --system app && adduser --system --ingroup app app
+RUN addgroup --system app && adduser --system --ingroup app app && chown app:app /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libpq5 && \
@@ -36,6 +36,8 @@ RUN apt-get update && \
 COPY --from=builder /venv /venv
 
 COPY --chown=app:app . .
+
+RUN mkdir -p /app/data /app/static/uploads/visitas && chown -R app:app /app
 
 USER app
 
