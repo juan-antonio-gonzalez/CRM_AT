@@ -26,7 +26,7 @@ def main():
     import os
     port = int(os.environ.get("PORT", "7860"))
     print(f"Starting server on port {port}...")
-    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info", proxy_headers=True, forwarded_allow_ips='*')
 
 
 if __name__ == "__main__":
