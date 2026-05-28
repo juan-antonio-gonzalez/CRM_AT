@@ -43,16 +43,31 @@ def upgrade() -> None:
 
     # Seed data from existing customers
     conn = op.get_bind()
-    conn.execute(sa.text("""
-        INSERT OR IGNORE INTO client_names (name)
-        SELECT DISTINCT name FROM customers WHERE name IS NOT NULL AND name != ''
-        ORDER BY name
-    """))
-    conn.execute(sa.text("""
-        INSERT OR IGNORE INTO plant_names (name)
-        SELECT DISTINCT plant FROM customers WHERE plant IS NOT NULL AND plant != ''
-        ORDER BY plant
-    """))
+    dialect = conn.dialect.name
+    if dialect == "sqlite":
+        conn.execute(sa.text("""
+            INSERT OR IGNORE INTO client_names (name)
+            SELECT DISTINCT name FROM customers WHERE name IS NOT NULL AND name != ''
+            ORDER BY name
+        """))
+        conn.execute(sa.text("""
+            INSERT OR IGNORE INTO plant_names (name)
+            SELECT DISTINCT plant FROM customers WHERE plant IS NOT NULL AND plant != ''
+            ORDER BY plant
+        """))
+    else:
+        conn.execute(sa.text("""
+            INSERT INTO client_names (name)
+            SELECT DISTINCT name FROM customers WHERE name IS NOT NULL AND name != ''
+            ORDER BY name
+            ON CONFLICT (name) DO NOTHING
+        """))
+        conn.execute(sa.text("""
+            INSERT INTO plant_names (name)
+            SELECT DISTINCT plant FROM customers WHERE plant IS NOT NULL AND plant != ''
+            ORDER BY plant
+            ON CONFLICT (name) DO NOTHING
+        """))
 
 
 def downgrade() -> None:

@@ -41,18 +41,25 @@ def upgrade() -> None:
 
     # Seed data from existing technical_visits + defaults
     conn = op.get_bind()
+    dialect = conn.dialect.name
+    if dialect == "sqlite":
+        insert_sql = "INSERT OR IGNORE INTO visit_types (name) VALUES (:name)"
+        insert_sql2 = "INSERT OR IGNORE INTO distributor_plants (name) VALUES (:name)"
+    else:
+        insert_sql = "INSERT INTO visit_types (name) VALUES (:name) ON CONFLICT (name) DO NOTHING"
+        insert_sql2 = "INSERT INTO distributor_plants (name) VALUES (:name) ON CONFLICT (name) DO NOTHING"
     visit_types = conn.execute(sa.text("SELECT DISTINCT visit_type FROM technical_visits WHERE visit_type IS NOT NULL AND visit_type != ''")).fetchall()
     for (name,) in visit_types:
-        conn.execute(sa.text("INSERT OR IGNORE INTO visit_types (name) VALUES (:name)"), {"name": name})
+        conn.execute(sa.text(insert_sql), {"name": name})
     dist_plants = conn.execute(sa.text("SELECT DISTINCT distributor_plant FROM technical_visits WHERE distributor_plant IS NOT NULL AND distributor_plant != ''")).fetchall()
     for (name,) in dist_plants:
-        conn.execute(sa.text("INSERT OR IGNORE INTO distributor_plants (name) VALUES (:name)"), {"name": name})
+        conn.execute(sa.text(insert_sql2), {"name": name})
     # Default visit types
     for name in ["Reclamos", "Capacitaciones", "Agenda", "Prueba industrial", "Seguimiento", "Cortesía"]:
-        conn.execute(sa.text("INSERT OR IGNORE INTO visit_types (name) VALUES (:name)"), {"name": name})
+        conn.execute(sa.text(insert_sql), {"name": name})
     # Default distributor plants
     for name in ["Bernal", "Suárez", "Sunchales", "Laferrere"]:
-        conn.execute(sa.text("INSERT OR IGNORE INTO distributor_plants (name) VALUES (:name)"), {"name": name})
+        conn.execute(sa.text(insert_sql2), {"name": name})
     # ### end Alembic commands ###
 
 
