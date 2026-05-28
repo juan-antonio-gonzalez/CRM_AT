@@ -5,8 +5,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from sqlalchemy.orm import Session
-from alembic.config import Config as AlembicConfig
-from alembic import command
 
 import models
 from database import SessionLocal, engine
@@ -191,14 +189,8 @@ def init_db():
 
 @app.on_event("startup")
 def on_startup():
-    try:
-        alembic_cfg = AlembicConfig("alembic.ini")
-        command.upgrade(alembic_cfg, "head")
-        init_db()
-        logger.info("Startup complete: DB migrations and seed data ready")
-    except Exception as e:
-        logger.error("Startup failed: %s", e, exc_info=True)
-        raise
+    # Migrations and seed data are handled by run.py before the server starts.
+    logger.info("App ready")
 
 from routers import auth as auth_router
 from routers import dashboard as dashboard_router
