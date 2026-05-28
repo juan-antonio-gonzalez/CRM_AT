@@ -23,7 +23,7 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/venv/bin:$PATH" \
-    PORT=8000
+    PORT=7860
 
 WORKDIR /app
 
@@ -39,16 +39,14 @@ COPY --chown=app:app . .
 
 USER app
 
-EXPOSE 8000
+EXPOSE 7860
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:$PORT/')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/')" || exit 1
 
 CMD gunicorn main:app \
     --worker-class uvicorn.workers.UvicornWorker \
     --bind "0.0.0.0:${PORT}" \
-    --workers 4 \
-    --max-requests 1000 \
-    --max-requests-jitter 50 \
+    --workers 1 \
     --timeout 120 \
     --forwarded-allow-ips='*'
