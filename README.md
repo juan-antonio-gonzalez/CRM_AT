@@ -1,3 +1,12 @@
+---
+title: AT APP
+emoji: 🏭
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # APP_AT
 
 Aplicación de gestión de visitas técnicas, seguimiento de planes de acción y relevamientos.
