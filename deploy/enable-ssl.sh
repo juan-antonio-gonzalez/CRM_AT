@@ -59,17 +59,51 @@ CERT_DIR="/etc/letsencrypt/live/${DOMAIN}"
 # ── 3. Apuntar el vhost al certificado real ─────────────────────────────────
 log "Actualizando el vhost para usar el certificado de Let's Encrypt"
 cp "$VHOST" "${VHOST}.bak-$(date +%Y%m%d-%H%M%S)"
-sed -i \
-  -e "s|ssl_certificate     /etc/ssl/crm-at/fullchain.pem;|ssl_certificate     ${CERT_DIR}/fullchain.pem;|" \
-  -e "s|ssl_certificate_key /etc/ssl/crm-at/privkey.pem;|ssl_certificate_key ${CERT_DIR}/privkey.pem;|" \
-  "$VHOST"
+# Al incluir options-ssl-nginx.conf hay que quitar del vhost las directivas TLS
+# que ese archivo ya define (ssl_protocols, ssl_ciphers, ssl_session_*): si se
+# repiten, Nginx aborta con "directive is duplicate" y el sitio no recarga.
+python3 - "$VHOST" "$CERT_DIR" <<'PYEOF'
+import re
+import sys
 
-if ! grep -q "options-ssl-nginx.conf" "$VHOST"; then
-  # Reutilizar la configuración TLS que administra Certbot en este servidor.
-  sed -i "s|ssl_session_timeout 10m;|ssl_session_timeout 10m;\n    include /etc/letsencrypt/options-ssl-nginx.conf;\n    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;|" "$VHOST"
+vhost, cert_dir = sys.argv[1], sys.argv[2]
+with open(vhost, encoding="utf-8") as fh:
+    out = fh.read()
+
+# Apuntar al certificado emitido.
+out = re.sub(r"ssl_certificate\s+[^\n;]+;",
+             f"ssl_certificate     {cert_dir}/fullchain.pem;", out, count=1)
+out = re.sub(r"ssl_certificate_key\s+[^\n;]+;",
+             f"ssl_certificate_key {cert_dir}/privkey.pem;", out, count=1)
+
+# Quitar las directivas que el archivo de Certbot redefine.
+for pattern in (
+    r"^[ \t]*ssl_protocols[^\n]*\n",
+    r"^[ \t]*ssl_ciphers[^\n]*\n",
+    r"^[ \t]*ssl_session_cache[^\n]*\n",
+    r"^[ \t]*ssl_session_timeout[^\n]*\n",
+):
+    out = re.sub(pattern, "", out, flags=re.MULTILINE)
+
+# Incluir la configuración TLS de Certbot, una sola vez.
+if "options-ssl-nginx.conf" not in out:
+    anchor = f"ssl_certificate_key {cert_dir}/privkey.pem;"
+    out = out.replace(
+        anchor,
+        anchor
+        + "\n    include /etc/letsencrypt/options-ssl-nginx.conf;"
+        + "\n    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;",
+        1,
+    )
+
+with open(vhost, "w", encoding="utf-8") as fh:
+    fh.write(out)
+PYEOF
+
+if ! nginx -t; then
+  cp "$(ls -t "${VHOST}".bak-* | head -1)" "$VHOST"
+  die "Configuración inválida; se restauró el respaldo."
 fi
-
-nginx -t || { cp "${VHOST}.bak-"* "$VHOST" 2>/dev/null; die "Configuración inválida; se restauró el respaldo."; }
 systemctl reload nginx
 
 # ── 4. Renovación automática ────────────────────────────────────────────────
