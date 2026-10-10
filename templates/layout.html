@@ -43,26 +43,30 @@
         <div id="sidebarOverlay"
             class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden lg:hidden"></div>
         <!-- Side Navigation Bar -->
+        {# La barra no tenía scroll: con 19 enlaces el contenido se desbordaba y el
+           `overflow-hidden` del contenedor lo recortaba sin barra, así que los
+           últimos grupos del menú quedaban inalcanzables. Ahora el logo y el
+           perfil quedan fijos y sólo el menú se desplaza. #}
         <aside id="sidebarNav"
-            class="fixed inset-y-0 left-0 z-50 w-56 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between p-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
+            class="fixed inset-y-0 left-0 z-50 w-56 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
             {% block sidebar %}
-            <div class="flex flex-col gap-4">
-                <!-- Logo Section -->
-                <a href="/" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-                    <div
-                        class="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                        <span class="material-symbols-rounded text-lg" aria-hidden="true">package_2</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <h1
-                            class="text-slate-900 dark:text-white text-xs font-black leading-tight uppercase tracking-widest">
-                            CRM-AT</h1>
-                        <p class="text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase leading-tight">Gestión Operativa</p>
-                    </div>
-                </a>
+            <!-- Logo Section (fijo) -->
+            <a href="/" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0">
+                <div
+                    class="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">package_2</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1
+                        class="text-slate-900 dark:text-white text-xs font-black leading-tight uppercase tracking-widest">
+                        CRM-AT</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase leading-tight">Gestión Operativa</p>
+                </div>
+            </a>
 
-                <!-- Navigation Groups -->
-                <nav class="flex flex-col gap-3" aria-label="Navegación principal">
+            <!-- Navigation Groups (con scroll) -->
+            <nav class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto mt-4 -mr-1 pr-1"
+                aria-label="Navegación principal">
                     <!-- Group: Análisis -->
                     <div class="flex flex-col gap-0.5">
                         <span
@@ -168,10 +172,9 @@
                         </a>
                     </div>
                 </nav>
-            </div>
 
-            <!-- Profile Section -->
-            <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+            <!-- Profile Section (fijo abajo) -->
+            <div class="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
                 <div class="flex items-center justify-between">
                     <a href="/auth/perfil" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity flex-1 min-w-0">
                         <div

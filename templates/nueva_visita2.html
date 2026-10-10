@@ -93,29 +93,130 @@
 .ska-firma-input { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; width: 100%; padding: 6px 0; font-size: 0.85rem; }
 
 @media print {
-    html, body { height: auto !important; overflow: visible !important; background: white !important; }
-    body > div { height: auto !important; overflow: visible !important; display: block !important; }
-    main { overflow: visible !important; height: auto !important; display: block !important; background: white !important; }
-    .ska-body { background: white; }
-    .ska-container { box-shadow: none; padding: 15px; width: 100%; max-width: 100%; margin: 0; min-height: auto; }
-    .no-print { display: none !important; }
-    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group { border: none !important; padding: 2px 0; background: transparent !important; box-shadow: none !important; }
-    .ska-textarea, .ska-rich-text, textarea.ska-textarea {
-        overflow: visible !important; height: auto !important; min-height: auto !important; max-height: none !important;
-        resize: none !important; line-height: 1.3 !important;
+    /* ── Página ─────────────────────────────────────────────────────────────
+       Sin @page el navegador usa sus márgenes por defecto y no numera las
+       hojas. Al agregarlo, el contenido largo se reparte en varias hojas. */
+    @page { size: A4 portrait; margin: 12mm 12mm 16mm 12mm; }
+
+    html, body {
+        height: auto !important; min-height: 0 !important;
+        overflow: visible !important; background: #fff !important;
     }
-    .ska-section-title { border-bottom: 1px solid #000; }
-    .ska-table th { background-color: #eee !important; }
-    .ska-img-slot { border: 1px solid #ccc; border-style: solid; }
-    .ska-img-slot input { display: none; }
-    .ska-actions, .ska-btn { display: none !important; }
-    .ska-table { page-break-inside: auto; }
-    .ska-card { page-break-inside: auto; }
-    .ska-table td { page-break-inside: avoid; }
-    .ska-table tbody tr { page-break-inside: avoid; }
-    .ska-part-row { border-bottom: 1px solid #eee; padding-bottom: 3px; margin-bottom: 3px; }
-    .ska-obj-item input[type="checkbox"] { -webkit-appearance: checkbox; appearance: auto; width: auto; height: auto; border: none; background: transparent; }
+    body > div, .ska-body, main {
+        height: auto !important; min-height: 0 !important;
+        overflow: visible !important; display: block !important; background: #fff !important;
+    }
+    .ska-container {
+        box-shadow: none !important; width: 100% !important; max-width: 100% !important;
+        margin: 0 !important; padding: 0 !important; min-height: 0 !important;
+        border-radius: 0 !important;
+    }
+    .no-print, .ska-actions, .ska-btn, .ska-editor-toolbar, .ska-btn-del { display: none !important; }
+
+    /* ── CAMPOS COMPLETOS ───────────────────────────────────────────────────
+       La causa principal de que se cortara el texto: los textarea se crean con
+       rows="1" y overflow:hidden, así que el navegador los imprime con una sola
+       línea de alto y todo lo demás se pierde. En impresión se neutraliza el
+       recorte y la altura fija. */
+    textarea, .ska-textarea, input.ska-input, .ska-select {
+        overflow: visible !important;
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        resize: none !important;
+        white-space: pre-wrap !important;
+        field-sizing: content;
+    }
+    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group {
+        border: none !important; padding: 2px 0 !important;
+        background: transparent !important; box-shadow: none !important;
+    }
+    .ska-rich-text, .ska-editor-content {
+        min-height: 0 !important; height: auto !important;
+        overflow: visible !important; max-height: none !important;
+    }
+    .ska-editor-wrapper, .ska-editor-content {
+        overflow: visible !important; height: auto !important;
+        border: none !important;
+    }
+    /* El contenido del editor enriquecido sale como HTML: se evita que una
+       palabra larga (una URL, un código) desborde su celda. */
+    .ska-editor-content * { max-width: 100% !important; overflow-wrap: anywhere; }
+
+    /* Se respeta el texto tal como se cargó: los saltos de línea se conservan y
+       las palabras se parten sólo si no entran de ninguna manera. */
+    .ska-body, .ska-body * { overflow-wrap: break-word; }
+
+    /* ── QUE NADA SE CORTE NI SE ROMPA MAL ───────────────────────────────── */
+    .ska-section-title { border-bottom: 1px solid #000 !important; break-after: avoid-page; page-break-after: avoid; }
+    .ska-card { break-inside: auto; page-break-inside: auto; }
+    .ska-table { break-inside: auto; page-break-inside: auto; }
+    /* El encabezado de una tabla debe repetirse si la tabla sigue en otra hoja. */
+    .ska-table thead { display: table-header-group; }
+    .ska-table tfoot { display: table-footer-group; }
+    .ska-table tr, .ska-table td, .ska-table th {
+        break-inside: avoid; page-break-inside: avoid;
+        overflow-wrap: break-word; word-break: normal; hyphens: none;
+    }
+    /* Los bloques de texto largos SÍ pueden repartirse entre hojas; el título
+       de arriba es lo que no debe quedar solo al final de una. */
+    .ska-part-row { break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #eee; }
+    .ska-obj-item { break-inside: avoid; page-break-inside: avoid; }
+    .anexo-block { break-inside: auto; page-break-inside: auto; }
+    .ska-firma-input { border: none !important; border-bottom: 1px solid #000 !important; width: 100%; }
+
+    /* ── IMÁGENES Y ANEXOS ────────────────────────────────────────────────── */
+    .ska-img-slot { border: 1px solid #ccc !important; break-inside: avoid; page-break-inside: avoid; }
+    .ska-img-slot input { display: none !important; }
+    img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+
+    /* Un anexo sin texto y sin fotos no debe generar una hoja en blanco: sale
+       con su título y cuatro casillas vacías, que es basura impresa. */
+    .anexo-block[data-empty="true"] { display: none !important; }
+    .ska-rich-text:empty::before { content: "" !important; }
+
+    /* Las cuatro casillas de "EVIDENCIA FOTOGRÁFICA" sólo tienen sentido si hay
+       fotos. Sin fotos ocupaban media hoja con el ícono 📷 de marcador. */
+    .ska-img-slot:not(.has-img) { display: none !important; }
+    .ska-img-slot.has-img { border: none !important; }
+    .ska-img-upload-area { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }
+    .ska-img-slot.has-img img {
+        display: block !important;
+        max-width: 100% !important;
+        max-height: 110mm !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+    /* El texto del editor enriquecido puede traer tablas propias: sus filas
+       tampoco deben partirse. */
+    .ska-editor-content table { width: 100% !important; border-collapse: collapse !important; }
+    .ska-editor-content tr, .ska-editor-content td, .ska-editor-content th {
+        break-inside: avoid; page-break-inside: avoid;
+    }
+
+    /* Los checkbox de objetivos deben seguir viéndose como casillas. */
+    .ska-obj-item input[type="checkbox"] {
+        -webkit-appearance: checkbox !important; appearance: auto !important;
+        width: auto !important; height: auto !important;
+        border: none !important; background: transparent !important;
+    }
+
+    .ska-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .ska-header { break-after: avoid; page-break-after: avoid; }
+    .ska-part-group { break-inside: avoid; page-break-inside: avoid; }
 }
+
+/* ── Sangría de hojas adicionales ──────────────────────────────────────────
+   Cuando el texto de un campo excede la hoja, la continuación arranca en la
+   hoja siguiente sin repetir el encabezado, así que se agrega un margen extra
+   para que no quede pegado al borde. */
+@media print {
+    .ska-textarea, .ska-rich-text, .ska-editor-content { orphans: 2; widows: 2; }
+    .ska-card > .ska-section-title + * { margin-top: 4px; }
+}
+
 </style>
 
 <div class="ska-body">
@@ -399,6 +500,10 @@ var anexoCounter = 0;
 document.addEventListener('input', function(e) {
     if (e.target.tagName === 'TEXTAREA' || e.target.classList.contains('ska-rich-text')) {
         autoResize(e.target);
+        if (e.target.classList.contains('ska-editor-content')) {
+            marcarAnexoVacio(e.target);
+            renumerarAnexos();
+        }
     }
 });
 
@@ -406,6 +511,25 @@ function autoResize(el) {
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = (el.scrollHeight + 2) + 'px';
+}
+
+// ── Anexos ──────────────────────────────────────────────────────────────────
+// Un anexo sin texto y sin fotos no debe imprimirse: generaba una hoja con el
+// título y cuatro casillas vacías. El bloque se marca como vacío y el CSS de
+// impresión lo omite.
+function anexoEstaVacio(el) {
+    var texto = (el.textContent || '').replace(/\u00a0/g, ' ').trim();
+    var tieneImagen = el.querySelector('img') !== null;
+    return texto === '' && !tieneImagen;
+}
+
+function marcarAnexoVacio(el) {
+    if (!el) return;
+    var bloque = el.closest('.anexo-block');
+    if (!bloque) return;
+    var tieneFoto = bloque.querySelector('.ska-img-slot.has-img') !== null;
+    var texto = (el.textContent || '').replace(/\u00a0/g, ' ').trim();
+    bloque.dataset.empty = (texto === '' && !tieneFoto) ? 'true' : 'false';
 }
 
 // Event delegation for all data-action clicks
@@ -419,7 +543,7 @@ document.addEventListener('click', function(e) {
     else if (action === 'add-anexo') addAnexo();
     else if (action === 'del-participant') btn.closest('.ska-part-row').remove();
     else if (action === 'del-row') btn.closest('tr').remove();
-    else if (action === 'del-anexo') { showConfirmModal(null, '¿Eliminar este anexo y sus datos?', { title: '¿Eliminar Anexo?', buttonText: 'Eliminar', icon: 'delete_forever', onConfirm: function() { btn.closest('.anexo-block').remove(); } }); }
+    else if (action === 'del-anexo') { showConfirmModal(null, '¿Eliminar este anexo y sus datos?', { title: '¿Eliminar Anexo?', buttonText: 'Eliminar', icon: 'delete_forever', onConfirm: function() { btn.closest('.anexo-block').remove(); renumerarAnexos(); } }); }
     else if (action === 'upload-img') { var t = btn.dataset.targetId; if (t) document.getElementById(t).click(); }
     else if (action === 'print') window.print();
 });
@@ -430,6 +554,43 @@ document.addEventListener('change', function(e) {
         loadImage(e.target, e.target.dataset.previewId);
     }
 });
+
+// ── Preparación para imprimir ───────────────────────────────────────────────
+// Los textarea se redimensionan por JS para que entren en pantalla, y guardan la
+// altura calculada en un estilo en línea. Al imprimir, esa altura fija recorta el
+// texto que no entra: el navegador imprime una sola línea y el resto se pierde.
+// Acá se libera la altura antes de imprimir y se restaura después, así el informe
+// sale completo. `field-sizing: content` en el CSS hace lo mismo en navegadores
+// que lo soportan; esto cubre al resto.
+(function () {
+    var alturasPrevias = [];
+
+    function alturaTexto(el) {
+        if (el.tagName === 'TEXTAREA') {
+            // scrollHeight abarca el contenido completo, aunque esté recortado.
+            return Math.max(24, el.scrollHeight + 2) + 'px';
+        }
+        return 'auto';
+    }
+
+    window.addEventListener('beforeprint', function () {
+        alturasPrevias = [];
+        document.querySelectorAll('textarea').forEach(function (el) {
+            alturasPrevias.push([el, el.style.height, el.rows]);
+            el.style.height = 'auto';
+            // rows=1 es lo que hace que el navegador reserve una sola línea.
+            el.rows = Math.max(1, (el.value || '').split('\n').length + 1);
+        });
+    });
+
+    window.addEventListener('afterprint', function () {
+        alturasPrevias.forEach(function (par) {
+            par[0].style.height = par[1];
+            par[0].rows = par[2];
+        });
+        alturasPrevias = [];
+    });
+})();
 
 function addParticipant(type) {
     var list = document.getElementById(type + '-list');
@@ -469,7 +630,10 @@ function addRow(id) {
 function addAnexo(savedData) {
     anexoCounter++;
     var id = anexoCounter;
-    var title = 'ANEXO ' + toRoman(id) + ': DESARROLLO';
+    // El número se asigna después, según la posición visible: si se usa el
+    // contador interno, un anexo vacío en el medio deja huecos y el informe
+    // termina numerando "ANEXO III" cuando sólo hay dos.
+    var title = 'ANEXO: DESARROLLO';
     var container = document.createElement('div');
     container.className = 'anexo-block';
     container.dataset.idx = id;
@@ -484,9 +648,14 @@ function addAnexo(savedData) {
         var hasImg = savedData && savedData.images && savedData.images[i-1];
         var imgSrc = hasImg ? savedData.images[i-1] : '';
         var fid = 'f_' + id + '_' + i;
+        // Sin foto no se emite el <img>: un src vacío hace que el navegador
+        // muestre el ícono de imagen rota.
+        var imgTag = hasImg
+            ? '<img id="prev_' + id + '_' + i + '" src="' + imgSrc + '" alt="Evidencia fotográfica ' + i + '">'
+            : '';
         imgsHtml += '<div class="ska-img-slot ' + (hasImg ? 'has-img' : '') + '" data-action="upload-img" data-target-id="' + fid + '">' +
             '<div class="ska-placeholder">📷 ' + i + '</div>' +
-            '<img id="prev_' + id + '_' + i + '" src="' + imgSrc + '">' +
+            imgTag +
             '<input type="file" id="' + fid + '" accept="image/*" data-action="load-img" data-preview-id="prev_' + id + '_' + i + '">' +
             '</div>';
     }
@@ -507,7 +676,7 @@ function addAnexo(savedData) {
         '</div>';
 
     container.innerHTML = '<div class="ska-card">' +
-        '<div class="ska-section-title">' + title + '</div>' +
+        '<div class="ska-section-title"><span class="anexo-titulo">' + title + '</span></div>' +
         '<div class="ska-editor-wrapper">' +
         tbHtml +
         '<div class="ska-rich-text ska-editor-content" contenteditable="true">' + htmlContent + '</div>' +
@@ -517,9 +686,14 @@ function addAnexo(savedData) {
         '<button type="button" class="ska-btn-del no-print" style="margin-top:8px;color:red;" data-action="del-anexo">×</button>' +
         '</div>';
     document.getElementById('anexos-container').appendChild(container);
+    marcarAnexoVacio(container.querySelector('.ska-rich-text'));
+    renumerarAnexos();
 
     if (savedData && savedData.html) {
-        setTimeout(function() { autoResize(container.querySelector('.ska-rich-text')); }, 50);
+        setTimeout(function() {
+            autoResize(container.querySelector('.ska-rich-text'));
+            marcarAnexoVacio(container.querySelector('.ska-rich-text'));
+        }, 50);
     }
 }
 
@@ -533,6 +707,20 @@ function loadImage(input, prevId) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+// ── Numeración de anexos ────────────────────────────────────────────────
+// Los anexos se numeran por su posición VISIBLE (I, II, III...). Si se usa el
+// contador interno, un anexo vacío en el medio deja huecos y el informe numera
+// "ANEXO III" cuando el usuario sólo ve dos.
+function renumerarAnexos() {
+    var visibles = 0;
+    document.querySelectorAll('#anexos-container .anexo-block').forEach(function (bloque) {
+        if (bloque.dataset.empty === 'true') return;
+        visibles++;
+        var titulo = bloque.querySelector('.anexo-titulo');
+        if (titulo) titulo.textContent = 'ANEXO ' + toRoman(visibles) + ': DESARROLLO';
+    });
 }
 
 function toRoman(num) {
@@ -730,6 +918,9 @@ function restoreData(data) {
     if (!document.getElementById('anexos-container').children.length) addAnexo();
     setTimeout(function() {
         document.querySelectorAll('.ska-rich-text, .ska-textarea').forEach(autoResize);
+        // Recalcular los anexos vacíos una vez restaurado todo el contenido.
+        document.querySelectorAll('.anexo-block .ska-editor-content').forEach(marcarAnexoVacio);
+        renumerarAnexos();
     }, 100);
 }
 
