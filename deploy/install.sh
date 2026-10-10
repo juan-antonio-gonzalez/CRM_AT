@@ -188,6 +188,15 @@ chmod 750 "$APP_DIR" "${APP_DIR}/static/uploads"
 chown root:"${APP_USER}" "$ENV_FILE"
 chmod 640 "$ENV_FILE"
 
+# Nginx runs as www-data and must be able to traverse APP_DIR (mode 750, owned by
+# APP_USER, otherwise every static file returns 403) and read the static tree.
+if id -u www-data >/dev/null 2>&1; then
+  usermod -aG "$APP_USER" www-data || warn "No se pudo agregar www-data al grupo ${APP_USER}"
+fi
+find "$APP_DIR" -type d -exec chmod o+x {} + 2>/dev/null || true
+find "$APP_DIR/static" -type d -exec chmod o+rx {} + 2>/dev/null || true
+find "$APP_DIR/static" -type f -exec chmod o+r {} + 2>/dev/null || true
+
 # ── 7. Migraciones y sembrado ───────────────────────────────────────────────
 log "Aplicando migraciones y sembrando datos iniciales"
 cd "$APP_DIR"
@@ -228,12 +237,27 @@ fi
 
 # ── 9. Nginx ────────────────────────────────────────────────────────────────
 log "Configurando Nginx"
-sed -e "s|server 127.0.0.1:8020;|server 127.0.0.1:${APP_PORT};|" \
-    -e "s|server_name ejemplo.com www.ejemplo.com;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
-    -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
-    "${SCRIPT_DIR}/nginx-crm-at.conf" > "/etc/nginx/sites-available/${APP_NAME}"
+LE_CERT="/etc/letsencrypt/live/${DOMAIN}"
+EXISTING_VHOST="/etc/nginx/sites-available/${APP_NAME}"
 
-ln -sf "/etc/nginx/sites-available/${APP_NAME}" "/etc/nginx/sites-enabled/${APP_NAME}"
+if [[ -f "${EXISTING_VHOST}" ]] && grep -q "letsencrypt/live" "${EXISTING_VHOST}"; then
+  # A Let's Encrypt certificate is already wired up. Regenerating from the
+  # template would silently revert it to the self-signed one, so keep the file
+  # and only refresh the port and paths.
+  log "Se conserva el vhost existente (ya usa Let's Encrypt)"
+  sed -i -e "s|server 127.0.0.1:[0-9]*;|server 127.0.0.1:${APP_PORT};|" \
+         -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
+         "$EXISTING_VHOST"
+else
+  sed -e "s|server 127.0.0.1:8020;|server 127.0.0.1:${APP_PORT};|" \
+      -e "s|server_name ejemplo.com www.ejemplo.com 203.0.113.10;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
+      -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
+      "${SCRIPT_DIR}/nginx-crm-at.conf" > "$EXISTING_VHOST"
+fi
+
+mkdir -p /var/www/certbot/.well-known/acme-challenge
+
+ln -sf "$EXISTING_VHOST" "/etc/nginx/sites-enabled/${APP_NAME}"
 
 # NOTE: pre-existing sites are deliberately left untouched. This server already
 # serves other applications (e.g. otro-sitio.com) and removing the 'default' site
@@ -243,23 +267,18 @@ nginx -t || die "La configuración de Nginx es inválida."
 systemctl reload nginx
 
 # ── 10. HTTPS ───────────────────────────────────────────────────────────────
+# El certificado autofirmado de la plantilla hace que la aplicación sea usable de
+# inmediato. Let's Encrypt requiere que el dominio resuelva al servidor; cuando
+# eso ocurra, `deploy/enable-ssl.sh` (o --ssl con el DNS ya correcto) lo cambia.
 if [[ $WANT_SSL -eq 1 ]]; then
-  log "Emitiendo certificado Let's Encrypt para ${DOMAIN}"
-  if ! command -v certbot >/dev/null 2>&1; then
-    apt-get install -y -qq certbot python3-certbot-nginx
-  fi
   if getent hosts "$DOMAIN" >/dev/null 2>&1; then
-    CERTBOT_ARGS=(--nginx -d "$DOMAIN" --non-interactive --agree-tos --redirect)
-    if [[ -n "${LETSENCRYPT_EMAIL:-}" ]]; then
-      CERTBOT_ARGS+=(-m "$LETSENCRYPT_EMAIL")
-    else
-      CERTBOT_ARGS+=(--register-unsafely-without-email)
-    fi
-    certbot "${CERTBOT_ARGS[@]}" || warn "Certbot falló; revisá el DNS de ${DOMAIN}."
-    sed -i "s|^COOKIE_SECURE=.*|COOKIE_SECURE=true|" "$ENV_FILE"
-    systemctl restart "${APP_NAME}"
+    log "Emitiendo certificado Let's Encrypt para ${DOMAIN}"
+    LETSENCRYPT_EMAIL="${LETSENCRYPT_EMAIL:-}" \
+      bash "${SCRIPT_DIR}/enable-ssl.sh" || warn "No se pudo emitir el certificado."
   else
-    warn "El dominio ${DOMAIN} no resuelve todavía. Se omite el certificado."
+    warn "El dominio ${DOMAIN} todavía no resuelve a este servidor."
+    warn "Se mantiene el certificado provisional autofirmado."
+    warn "Cuando corrijas el DNS ejecutá:  sudo LETSENCRYPT_EMAIL=tucorreo bash deploy/enable-ssl.sh"
   fi
 fi
 
