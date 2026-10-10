@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI):
     missing column and made a broken production schema look healthy locally.
     """
     rev = _schema_revision()
-    logger.info("Base de datos: %s", "SQLite" if settings.is_sqlite else "PostgreSQL")
+    logger.info("Base de datos: PostgreSQL")
     logger.info("Revision de esquema (alembic): %s", rev)
     if rev in ("sin migraciones", "desconocida"):
         logger.warning(

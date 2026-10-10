@@ -112,6 +112,13 @@ su - postgres -c "psql -c \"ALTER ROLE ${DB_USER} WITH PASSWORD '${DB_PASSWORD}'
 # Permisos sobre el esquema público (PostgreSQL 15+ ya no lo da por defecto).
 su - postgres -c "psql -d ${DB_NAME} -c \"GRANT ALL ON SCHEMA public TO ${DB_USER};\"" >/dev/null
 
+# Base aparte para la suite de pruebas. Las pruebas exigen que el nombre termine
+# en '_test' antes de borrar tablas, justamente para no tocar datos reales.
+TEST_DB_NAME="${DB_NAME}_test"
+su - postgres -c "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='${TEST_DB_NAME}'\"" | grep -q 1 \
+  || su - postgres -c "psql -c \"CREATE DATABASE ${TEST_DB_NAME} OWNER ${DB_USER};\"" >/dev/null
+su - postgres -c "psql -d ${TEST_DB_NAME} -c \"GRANT ALL ON SCHEMA public TO ${DB_USER};\"" >/dev/null
+
 # ── 4. Código ───────────────────────────────────────────────────────────────
 # A deployment is "in place" when APP_DIR already holds this application, which
 # is true both for a git clone and for an rsync'd copy. Checking only for .git

@@ -117,6 +117,9 @@ def upgrade() -> None:
             sa.Column("inactivated_at", sa.DateTime(), nullable=True),
         )
         op.create_index("ix_contact_names_name", "contact_names", ["name"], unique=True)
+        # Los modelos declaran `id` con index=True, así que el índice tiene que
+        # existir para que el esquema coincida con ellos (tests/test_schema.py).
+        op.create_index("ix_contact_names_id", "contact_names", ["id"])
         insp = _inspector()
 
     if "member_sectors" not in existing_tables:
@@ -130,6 +133,7 @@ def upgrade() -> None:
             sa.Column("inactivated_at", sa.DateTime(), nullable=True),
         )
         op.create_index("ix_member_sectors_name", "member_sectors", ["name"], unique=True)
+        op.create_index("ix_member_sectors_id", "member_sectors", ["id"])
         insp = _inspector()
 
     if "meeting_minutes" not in existing_tables:
@@ -146,6 +150,7 @@ def upgrade() -> None:
             sa.Column("created_at", sa.DateTime(), nullable=True),
             sa.Column("updated_at", sa.DateTime(), nullable=True),
         )
+        op.create_index("ix_meeting_minutes_id", "meeting_minutes", ["id"])
         insp = _inspector()
 
     # 2. Soft-delete column family ---------------------------------------------

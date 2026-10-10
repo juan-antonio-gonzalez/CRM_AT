@@ -45,7 +45,9 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            render_as_batch=True,
+            # Comparar también los tipos de columna, no solo su existencia: sin
+            # esto, un cambio de tipo en un modelo pasaba desapercibido.
+            compare_type=True,
         )
 
         with context.begin_transaction():

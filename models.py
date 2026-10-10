@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Text, Boolean, ForeignKey, JSON, DateTime
+from sqlalchemy import Column, Integer, String, Float, Text, Boolean, ForeignKey, JSON, DateTime, Index
 from sqlalchemy.orm import relationship, validates
 from database import Base
 from enums import TrackingStatus, SurveyStatus, RelevamientoStatus, CustomerStatus, ProductStatus
@@ -45,6 +45,11 @@ class Product(Base):
     inactivated_by_id = Column(Integer, nullable=True)
     inactivated_at = Column(DateTime, nullable=True)
 
+    __table_args__ = (
+        Index("ix_products_is_active_name", "is_active", "name"),
+    )
+
+
 class Customer(Base):
     """
     Entidad fundamental que representa a los clientes comerciales.
@@ -72,6 +77,11 @@ class Customer(Base):
     inactivated_by_id = Column(Integer, nullable=True)
     inactivated_at = Column(DateTime, nullable=True)
     
+
+    __table_args__ = (
+        Index("ix_customers_is_active_name", "is_active", "name"),
+    )
+
     # Relationships
     machines = relationship("Machine", back_populates="customer")
 
@@ -93,6 +103,11 @@ class TechnicalVisit2(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
+    __table_args__ = (
+        Index("ix_technical_visits_2_fecha_status", "fecha", "status"),
+        Index("ix_technical_visits_2_status_fecha", "status", "fecha"),
+    )
+
 class TechnicalSurveyV2(Base):
     """
     Nueva versión (V2) del formulario de relevamiento técnico.
@@ -112,6 +127,13 @@ class TechnicalSurveyV2(Base):
     inactivated_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+
+    __table_args__ = (
+        Index("ix_technical_surveys_2_customer_id", "customer_id"),
+        Index("ix_technical_surveys_2_machine_id", "machine_id"),
+        Index("ix_technical_surveys_2_status_fecha", "status", "fecha"),
+    )
 
     customer = relationship("Customer")
     machine = relationship("Machine")
@@ -138,6 +160,12 @@ class Machine(Base):
     inactivation_reason = Column(Text, nullable=True)
     inactivated_by_id = Column(Integer, nullable=True)
     inactivated_at = Column(DateTime, nullable=True)
+
+
+    __table_args__ = (
+        Index("ix_machines_customer_id", "customer_id"),
+        Index("ix_machines_is_active_serial", "is_active", "serial_number"),
+    )
 
     # Relationships
     customer = relationship("Customer", back_populates="machines")
@@ -181,6 +209,11 @@ class TechnicalSurvey(Base):
     machine_name_backup = Column(String, nullable=True)
     machine_serial_backup = Column(String, nullable=True)
 
+
+    __table_args__ = (
+        Index("ix_technical_surveys_machine_id", "machine_id"),
+    )
+
     machine = relationship("Machine", back_populates="surveys")
 
 class TrashItem(Base):
@@ -195,6 +228,10 @@ class TrashItem(Base):
     deleted_at = Column(DateTime, default=datetime.datetime.utcnow)
     restored_at = Column(DateTime, nullable=True)
     restored_by = Column(Integer, nullable=True)
+
+    __table_args__ = (
+        Index("ix_trash_items_restored_entity_deleted", "restored_at", "entity_type", "deleted_at"),
+    )
 
 class BaseCatalogMixin:
     is_active = Column(Boolean, default=True)
@@ -355,6 +392,12 @@ class ATAssignment(Base):
     inactivated_by_id = Column(Integer, nullable=True)
     inactivated_at = Column(DateTime, nullable=True)
 
+    __table_args__ = (
+        Index("ix_at_assignments_customer_valid_to", "customer_name", "valid_to"),
+        Index("ix_at_assignments_advisor_valid_to", "technical_advisor", "valid_to"),
+        Index("ix_at_assignments_inactivated_by_id", "inactivated_by_id"),
+    )
+
 class InfrastructureSurvey(Base):
     """
     Relevamiento especializado para el área de Infraestructura y Logística.
@@ -381,6 +424,11 @@ class InfrastructureSurvey(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
+
+    __table_args__ = (
+        Index("ix_infrastructure_surveys_customer_id", "customer_id"),
+    )
+
     customer = relationship("Customer")
 
 class ActionPlanTracking(Base):
@@ -398,9 +446,20 @@ class ActionPlanTracking(Base):
     observations = Column(Text, nullable=True)
     source_visit_id = Column(Integer, nullable=True)
     is_active = Column(Boolean, default=True)
+    # El resto de la familia de soft-delete. La migración de reconciliación ya
+    # las había agregado a la base, pero faltaban acá, así que los modelos y el
+    # esquema no coincidían (lo detecta tests/test_schema.py).
+    inactivation_reason = Column(Text, nullable=True)
+    inactivated_by_id = Column(Integer, nullable=True)
+    inactivated_at = Column(DateTime, nullable=True)
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    __table_args__ = (
+        Index("ix_action_plan_tracking_active_created", "is_active", "created_at"),
+        Index("ix_action_plan_tracking_source_visit_id", "source_visit_id"),
+    )
 
 
 class MeetingMinutes(Base):
@@ -416,3 +475,8 @@ class MeetingMinutes(Base):
     inactivated_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    __table_args__ = (
+        Index("ix_meeting_minutes_status_fecha", "status", "fecha"),
+    )
+

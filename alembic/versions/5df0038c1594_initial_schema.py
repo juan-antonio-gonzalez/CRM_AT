@@ -37,9 +37,8 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('action_plan_tracking', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_action_plan_tracking_customer_name'), ['customer_name'], unique=False)
-        batch_op.create_index(batch_op.f('ix_action_plan_tracking_id'), ['id'], unique=False)
+    op.create_index('ix_action_plan_tracking_customer_name', 'action_plan_tracking', ['customer_name'])
+    op.create_index('ix_action_plan_tracking_id', 'action_plan_tracking', ['id'])
 
     op.create_table('at_assignments',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -51,18 +50,16 @@ def upgrade() -> None:
     sa.Column('attention_observations', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('at_assignments', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_at_assignments_customer_name'), ['customer_name'], unique=True)
-        batch_op.create_index(batch_op.f('ix_at_assignments_id'), ['id'], unique=False)
+    op.create_index('ix_at_assignments_customer_name', 'at_assignments', ['customer_name'], unique=True)
+    op.create_index('ix_at_assignments_id', 'at_assignments', ['id'])
 
     op.create_table('commercial_advisors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('commercial_advisors', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_commercial_advisors_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_commercial_advisors_name'), ['name'], unique=True)
+    op.create_index('ix_commercial_advisors_id', 'commercial_advisors', ['id'])
+    op.create_index('ix_commercial_advisors_name', 'commercial_advisors', ['name'], unique=True)
 
     op.create_table('customers',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -82,36 +79,32 @@ def upgrade() -> None:
     sa.Column('premium_visits', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('customers', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_customers_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_customers_name'), ['name'], unique=False)
+    op.create_index('ix_customers_id', 'customers', ['id'])
+    op.create_index('ix_customers_name', 'customers', ['name'])
 
     op.create_table('designers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('designers', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_designers_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_designers_name'), ['name'], unique=True)
+    op.create_index('ix_designers_id', 'designers', ['id'])
+    op.create_index('ix_designers_name', 'designers', ['name'], unique=True)
 
     op.create_table('industrial_sectors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('industrial_sectors', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_industrial_sectors_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_industrial_sectors_name'), ['name'], unique=True)
+    op.create_index('ix_industrial_sectors_id', 'industrial_sectors', ['id'])
+    op.create_index('ix_industrial_sectors_name', 'industrial_sectors', ['name'], unique=True)
 
     op.create_table('machine_types',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('machine_types', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_machine_types_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_machine_types_name'), ['name'], unique=True)
+    op.create_index('ix_machine_types_id', 'machine_types', ['id'])
+    op.create_index('ix_machine_types_name', 'machine_types', ['name'], unique=True)
 
     op.create_table('products',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -126,19 +119,17 @@ def upgrade() -> None:
     sa.Column('last_modified', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('products', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_products_et_number'), ['et_number'], unique=True)
-        batch_op.create_index(batch_op.f('ix_products_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_products_name'), ['name'], unique=False)
+    op.create_index('ix_products_et_number', 'products', ['et_number'], unique=True)
+    op.create_index('ix_products_id', 'products', ['id'])
+    op.create_index('ix_products_name', 'products', ['name'])
 
     op.create_table('technical_advisors',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('technical_advisors', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_technical_advisors_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_technical_advisors_name'), ['name'], unique=True)
+    op.create_index('ix_technical_advisors_id', 'technical_advisors', ['id'])
+    op.create_index('ix_technical_advisors_name', 'technical_advisors', ['name'], unique=True)
 
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -154,19 +145,17 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('users', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_users_email'), ['email'], unique=True)
-        batch_op.create_index(batch_op.f('ix_users_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_users_username'), ['username'], unique=True)
+    op.create_index('ix_users_email', 'users', ['email'], unique=True)
+    op.create_index('ix_users_id', 'users', ['id'])
+    op.create_index('ix_users_username', 'users', ['username'], unique=True)
 
     op.create_table('visit_topics',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('visit_topics', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_visit_topics_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_visit_topics_name'), ['name'], unique=True)
+    op.create_index('ix_visit_topics_id', 'visit_topics', ['id'])
+    op.create_index('ix_visit_topics_name', 'visit_topics', ['name'], unique=True)
 
     op.create_table('infrastructure_surveys',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -184,8 +173,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('infrastructure_surveys', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_infrastructure_surveys_id'), ['id'], unique=False)
+    op.create_index('ix_infrastructure_surveys_id', 'infrastructure_surveys', ['id'])
 
     op.create_table('machines',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -201,9 +189,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('machines', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_machines_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_machines_serial_number'), ['serial_number'], unique=True)
+    op.create_index('ix_machines_id', 'machines', ['id'])
+    op.create_index('ix_machines_serial_number', 'machines', ['serial_number'], unique=True)
 
     op.create_table('technical_visits',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -228,8 +215,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('technical_visits', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_technical_visits_id'), ['id'], unique=False)
+    op.create_index('ix_technical_visits_id', 'technical_visits', ['id'])
 
     op.create_table('technical_surveys',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -243,8 +229,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['machine_id'], ['machines.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('technical_surveys', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_technical_surveys_id'), ['id'], unique=False)
+    op.create_index('ix_technical_surveys_id', 'technical_surveys', ['id'])
 
     # ### end Alembic commands ###
 
@@ -252,78 +237,113 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    with op.batch_alter_table('technical_surveys', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_technical_surveys_id'))
+    if _indice_existe('technical_surveys', 'ix_technical_surveys_id'):
+        op.drop_index('ix_technical_surveys_id', table_name='technical_surveys')
 
     op.drop_table('technical_surveys')
-    with op.batch_alter_table('technical_visits', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_technical_visits_id'))
+    if _indice_existe('technical_visits', 'ix_technical_visits_id'):
+        op.drop_index('ix_technical_visits_id', table_name='technical_visits')
 
-    op.drop_table('technical_visits')
-    with op.batch_alter_table('machines', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_machines_serial_number'))
-        batch_op.drop_index(batch_op.f('ix_machines_id'))
+    if _tabla_existe('technical_visits'):
+        op.drop_table('technical_visits')
+    if _indice_existe('machines', 'ix_machines_serial_number'):
+        op.drop_index('ix_machines_serial_number', table_name='machines')
+    if _indice_existe('machines', 'ix_machines_id'):
+        op.drop_index('ix_machines_id', table_name='machines')
 
     op.drop_table('machines')
-    with op.batch_alter_table('infrastructure_surveys', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_infrastructure_surveys_id'))
+    if _indice_existe('infrastructure_surveys', 'ix_infrastructure_surveys_id'):
+        op.drop_index('ix_infrastructure_surveys_id', table_name='infrastructure_surveys')
 
     op.drop_table('infrastructure_surveys')
-    with op.batch_alter_table('visit_topics', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_visit_topics_name'))
-        batch_op.drop_index(batch_op.f('ix_visit_topics_id'))
+    if _indice_existe('visit_topics', 'ix_visit_topics_name'):
+        op.drop_index('ix_visit_topics_name', table_name='visit_topics')
+    if _indice_existe('visit_topics', 'ix_visit_topics_id'):
+        op.drop_index('ix_visit_topics_id', table_name='visit_topics')
 
     op.drop_table('visit_topics')
-    with op.batch_alter_table('users', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_users_username'))
-        batch_op.drop_index(batch_op.f('ix_users_id'))
-        batch_op.drop_index(batch_op.f('ix_users_email'))
+    if _indice_existe('users', 'ix_users_username'):
+        op.drop_index('ix_users_username', table_name='users')
+    if _indice_existe('users', 'ix_users_id'):
+        op.drop_index('ix_users_id', table_name='users')
+    if _indice_existe('users', 'ix_users_email'):
+        op.drop_index('ix_users_email', table_name='users')
 
     op.drop_table('users')
-    with op.batch_alter_table('technical_advisors', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_technical_advisors_name'))
-        batch_op.drop_index(batch_op.f('ix_technical_advisors_id'))
+    if _indice_existe('technical_advisors', 'ix_technical_advisors_name'):
+        op.drop_index('ix_technical_advisors_name', table_name='technical_advisors')
+    if _indice_existe('technical_advisors', 'ix_technical_advisors_id'):
+        op.drop_index('ix_technical_advisors_id', table_name='technical_advisors')
 
     op.drop_table('technical_advisors')
-    with op.batch_alter_table('products', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_products_name'))
-        batch_op.drop_index(batch_op.f('ix_products_id'))
-        batch_op.drop_index(batch_op.f('ix_products_et_number'))
+    if _indice_existe('products', 'ix_products_name'):
+        op.drop_index('ix_products_name', table_name='products')
+    if _indice_existe('products', 'ix_products_id'):
+        op.drop_index('ix_products_id', table_name='products')
+    if _indice_existe('products', 'ix_products_et_number'):
+        op.drop_index('ix_products_et_number', table_name='products')
 
     op.drop_table('products')
-    with op.batch_alter_table('machine_types', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_machine_types_name'))
-        batch_op.drop_index(batch_op.f('ix_machine_types_id'))
+    if _indice_existe('machine_types', 'ix_machine_types_name'):
+        op.drop_index('ix_machine_types_name', table_name='machine_types')
+    if _indice_existe('machine_types', 'ix_machine_types_id'):
+        op.drop_index('ix_machine_types_id', table_name='machine_types')
 
     op.drop_table('machine_types')
-    with op.batch_alter_table('industrial_sectors', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_industrial_sectors_name'))
-        batch_op.drop_index(batch_op.f('ix_industrial_sectors_id'))
+    if _indice_existe('industrial_sectors', 'ix_industrial_sectors_name'):
+        op.drop_index('ix_industrial_sectors_name', table_name='industrial_sectors')
+    if _indice_existe('industrial_sectors', 'ix_industrial_sectors_id'):
+        op.drop_index('ix_industrial_sectors_id', table_name='industrial_sectors')
 
     op.drop_table('industrial_sectors')
-    with op.batch_alter_table('designers', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_designers_name'))
-        batch_op.drop_index(batch_op.f('ix_designers_id'))
+    if _indice_existe('designers', 'ix_designers_name'):
+        op.drop_index('ix_designers_name', table_name='designers')
+    if _indice_existe('designers', 'ix_designers_id'):
+        op.drop_index('ix_designers_id', table_name='designers')
 
     op.drop_table('designers')
-    with op.batch_alter_table('customers', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_customers_name'))
-        batch_op.drop_index(batch_op.f('ix_customers_id'))
+    if _indice_existe('customers', 'ix_customers_name'):
+        op.drop_index('ix_customers_name', table_name='customers')
+    if _indice_existe('customers', 'ix_customers_id'):
+        op.drop_index('ix_customers_id', table_name='customers')
 
     op.drop_table('customers')
-    with op.batch_alter_table('commercial_advisors', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_commercial_advisors_name'))
-        batch_op.drop_index(batch_op.f('ix_commercial_advisors_id'))
+    if _indice_existe('commercial_advisors', 'ix_commercial_advisors_name'):
+        op.drop_index('ix_commercial_advisors_name', table_name='commercial_advisors')
+    if _indice_existe('commercial_advisors', 'ix_commercial_advisors_id'):
+        op.drop_index('ix_commercial_advisors_id', table_name='commercial_advisors')
 
     op.drop_table('commercial_advisors')
-    with op.batch_alter_table('at_assignments', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_at_assignments_id'))
-        batch_op.drop_index(batch_op.f('ix_at_assignments_customer_name'))
+    if _indice_existe('at_assignments', 'ix_at_assignments_id'):
+        op.drop_index('ix_at_assignments_id', table_name='at_assignments')
+    if _indice_existe('at_assignments', 'ix_at_assignments_customer_name'):
+        op.drop_index('ix_at_assignments_customer_name', table_name='at_assignments')
 
     op.drop_table('at_assignments')
-    with op.batch_alter_table('action_plan_tracking', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_action_plan_tracking_id'))
-        batch_op.drop_index(batch_op.f('ix_action_plan_tracking_customer_name'))
+    if _indice_existe('action_plan_tracking', 'ix_action_plan_tracking_id'):
+        op.drop_index('ix_action_plan_tracking_id', table_name='action_plan_tracking')
+    if _indice_existe('action_plan_tracking', 'ix_action_plan_tracking_customer_name'):
+        op.drop_index('ix_action_plan_tracking_customer_name', table_name='action_plan_tracking')
 
     op.drop_table('action_plan_tracking')
     # ### end Alembic commands ###
+
+
+def _tabla_existe(nombre: str) -> bool:
+    """Indica si una tabla existe.
+
+    Necesario en el downgrade: la migración de reconciliación elimina
+    ``technical_visits`` (tabla huérfana que ningún modelo usa), así que al
+    revertir hay pasos que intentan tocar una tabla que ya no está.
+    """
+    from sqlalchemy import inspect
+    return nombre in inspect(op.get_bind()).get_table_names()
+
+
+def _indice_existe(tabla: str, nombre: str) -> bool:
+    """Indica si un índice existe sobre una tabla existente."""
+    from sqlalchemy import inspect
+    insp = inspect(op.get_bind())
+    if tabla not in insp.get_table_names():
+        return False
+    return nombre in {i["name"] for i in insp.get_indexes(tabla)}

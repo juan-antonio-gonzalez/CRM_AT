@@ -15,7 +15,10 @@ class Settings(BaseSettings):
     debug: bool = False
     secret_key: str = "change-me-in-production"
 
-    database_url: str = "sqlite:///./industrial_bi.db"
+    # PostgreSQL es el único motor soportado: es el que corre en el servidor, y
+    # mantener un segundo motor (SQLite) en desarrollo hacía que los errores que
+    # ese motor permisivo ocultaba aparecieran recién en producción.
+    database_url: str = "postgresql://crm_at:crm_at@127.0.0.1:5432/crm_at"
     cors_origins: list[str] = ["*"]
 
     log_level: str = "INFO"
@@ -32,18 +35,14 @@ class Settings(BaseSettings):
     def database_url_resolved(self) -> str:
         """Normalise the database URL.
 
-        ``postgres://`` is what Heroku/Neon/Render hand out, but SQLAlchemy only
-        understands ``postgresql://``. Neon also appends ``?sslmode=require``,
-        which psycopg2 accepts, so the query string is preserved.
+        ``postgres://`` is what some providers hand out, but SQLAlchemy only
+        understands ``postgresql://``. A query string such as
+        ``?sslmode=require`` is preserved.
         """
         url = (self.database_url or "").strip()
         if url.startswith("postgres://"):
             url = "postgresql://" + url[len("postgres://"):]
         return url
-
-    @property
-    def is_sqlite(self) -> bool:
-        return self.database_url_resolved.startswith("sqlite")
 
 
 settings = Settings()

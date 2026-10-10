@@ -1,29 +1,32 @@
-"""Schema integrity tests.
+"""Pruebas de integridad del esquema.
 
-These exist because the project shipped for months with migrations that did not
-build a runnable schema: ``alembic upgrade head`` produced a database missing 23
-tables' worth of soft-delete columns, and ``Base.metadata.create_all()`` at
-startup silently hid it. Any of these tests would have caught that.
+Existen porque el proyecto estuvo mucho tiempo con migraciones que no construían
+un esquema ejecutable: ``alembic upgrade head`` producía una base sin las
+columnas de soft-delete de 23 tablas, y ``Base.metadata.create_all()`` en el
+arranque lo ocultaba. Cualquiera de estas pruebas lo habría detectado.
+
+Corren contra PostgreSQL, que es el único motor soportado. El esquema se
+construye con la cadena de migraciones (ver ``conftest.py``), así que estas
+pruebas comparan lo que produce Alembic contra lo que declaran los modelos.
 """
 
 import os
 import subprocess
 import sys
 
-import pytest
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import inspect, text
 
-import models
+import models  # noqa: F401  (registra las tablas en Base.metadata)
 from database import Base
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def _run_alembic_upgrade(db_path: str) -> subprocess.CompletedProcess:
+def _run_alembic(*args: str) -> subprocess.CompletedProcess:
+    """Ejecutar alembic contra la base de pruebas."""
     env = dict(os.environ)
-    env["DATABASE_URL"] = f"sqlite:///{db_path}"
     return subprocess.run(
-        [sys.executable, "-m", "alembic", "upgrade", "head"],
+        [sys.executable, "-m", "alembic", *args],
         cwd=REPO_ROOT,
         env=env,
         capture_output=True,
@@ -32,87 +35,120 @@ def _run_alembic_upgrade(db_path: str) -> subprocess.CompletedProcess:
 
 
 def test_models_metadata_is_populated():
-    """Importing models must register every table on Base.metadata.
+    """Importar los modelos debe registrar todas las tablas en Base.metadata.
 
-    A surprising number of things silently depend on this; the test suite itself
-    previously ran create_all() against an empty metadata and created no tables.
+    Bastantes cosas dependen de esto en silencio; la propia suite llegó a correr
+    create_all() sobre una metadata vacía y no creaba ninguna tabla.
     """
     assert len(Base.metadata.tables) >= 28
-    for expected in ("users", "customers", "machines", "products", "trash_items",
+    for esperada in ("users", "customers", "machines", "products", "trash_items",
                      "at_assignments", "action_plan_tracking", "meeting_minutes"):
-        assert expected in Base.metadata.tables, f"falta la tabla {expected} en metadata"
+        assert esperada in Base.metadata.tables, f"falta la tabla {esperada} en metadata"
 
 
-def test_migrations_produce_the_model_schema(tmp_path):
-    """`alembic upgrade head` must yield exactly the schema the models declare.
+def test_engine_is_postgresql(test_engine):
+    """El único motor soportado es PostgreSQL."""
+    assert test_engine.dialect.name == "postgresql", (
+        f"las pruebas deben correr contra PostgreSQL, no {test_engine.dialect.name}"
+    )
 
-    This is the regression test for the schema drift bug.
+
+def test_migrations_produce_the_model_schema(test_engine):
+    """``alembic upgrade head`` debe producir exactamente el esquema de los modelos.
+
+    Esta es la prueba de regresión de la deriva de esquema.
     """
-    db_path = str(tmp_path / "migrated.db")
-    result = _run_alembic_upgrade(db_path)
-    assert result.returncode == 0, (
-        f"alembic upgrade head falló:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+    insp = inspect(test_engine)
+
+    migradas = set(insp.get_table_names()) - {"alembic_version"}
+    modeladas = set(Base.metadata.tables)
+
+    assert migradas == modeladas, (
+        f"tablas solo en migraciones: {sorted(migradas - modeladas)}; "
+        f"tablas solo en modelos: {sorted(modeladas - migradas)}"
     )
 
-    engine = create_engine(f"sqlite:///{db_path}")
-    insp = inspect(engine)
+    faltantes = []
+    for tabla in sorted(modeladas):
+        columnas_migradas = {c["name"] for c in insp.get_columns(tabla)}
+        columnas_modelo = {c.name for c in Base.metadata.tables[tabla].columns}
+        ausentes = columnas_modelo - columnas_migradas
+        if ausentes:
+            faltantes.append((tabla, sorted(ausentes)))
 
-    migrated_tables = set(insp.get_table_names()) - {"alembic_version"}
-    model_tables = set(Base.metadata.tables)
-
-    assert migrated_tables == model_tables, (
-        f"tablas solo en migraciones: {sorted(migrated_tables - model_tables)}; "
-        f"tablas solo en modelos: {sorted(model_tables - migrated_tables)}"
+    assert not faltantes, (
+        f"columnas declaradas en los modelos y ausentes tras migrar: {faltantes}"
     )
 
-    missing = []
-    for table in sorted(model_tables):
-        migrated_cols = {c["name"] for c in insp.get_columns(table)}
-        model_cols = {c.name for c in Base.metadata.tables[table].columns}
-        absent = model_cols - migrated_cols
-        if absent:
-            missing.append((table, sorted(absent)))
 
-    assert not missing, f"columnas declaradas en modelos y ausentes tras migrar: {missing}"
-    engine.dispose()
+def test_soft_delete_columns_exist_after_migration(test_engine):
+    """La familia de columnas de soft-delete debe existir donde se usa."""
+    insp = inspect(test_engine)
+    tablas = set(insp.get_table_names())
 
-
-def test_soft_delete_columns_exist_after_migration(tmp_path):
-    """The soft-delete column family must exist on the tables that use it."""
-    db_path = str(tmp_path / "softdelete.db")
-    assert _run_alembic_upgrade(db_path).returncode == 0
-
-    engine = create_engine(f"sqlite:///{db_path}")
-    insp = inspect(engine)
-    tables = set(insp.get_table_names())
-
-    for table in ("customers", "products", "machines", "at_assignments",
+    for tabla in ("customers", "products", "machines", "at_assignments",
                   "action_plan_tracking", "technical_visits_2", "technical_surveys_2"):
-        assert table in tables, f"falta la tabla {table}"
-        cols = {c["name"] for c in insp.get_columns(table)}
-        for col in ("is_active", "inactivation_reason", "inactivated_by_id", "inactivated_at"):
-            assert col in cols, f"{table}.{col} ausente tras migrate"
-    engine.dispose()
+        assert tabla in tablas, f"falta la tabla {tabla}"
+        columnas = {c["name"] for c in insp.get_columns(tabla)}
+        for columna in ("is_active", "inactivation_reason",
+                        "inactivated_by_id", "inactivated_at"):
+            assert columna in columnas, f"{tabla}.{columna} ausente tras migrar"
 
 
-def test_at_assignments_customer_name_is_not_unique(tmp_path):
-    """at_assignments keeps version rows per customer, so the index must not be unique."""
-    db_path = str(tmp_path / "unique.db")
-    assert _run_alembic_upgrade(db_path).returncode == 0
-
-    engine = create_engine(f"sqlite:///{db_path}")
-    insp = inspect(engine)
-    for idx in insp.get_indexes("at_assignments"):
-        if (idx.get("column_names") or []) == ["customer_name"]:
-            assert not idx.get("unique"), "ix_at_assignments_customer_name no debe ser unique"
-    engine.dispose()
+def test_at_assignments_customer_name_is_not_unique(test_engine):
+    """at_assignments guarda versiones por cliente: el índice no debe ser único."""
+    insp = inspect(test_engine)
+    for indice in insp.get_indexes("at_assignments"):
+        if (indice.get("column_names") or []) == ["customer_name"]:
+            assert not indice.get("unique"), (
+                "ix_at_assignments_customer_name no debe ser único: la aplicación "
+                "guarda una fila por versión y por cliente"
+            )
 
 
-def test_foreign_keys_are_enforced_on_sqlite():
-    """The application engine must turn PRAGMA foreign_keys ON."""
-    from database import engine
+def test_foreign_keys_are_declared(test_engine):
+    """Las claves foráneas declaradas en los modelos deben existir en la base.
 
-    if not str(engine.url).startswith("sqlite"):
-        pytest.skip("solo aplica a SQLite")
-    with engine.connect() as conn:
-        assert conn.execute(text("PRAGMA foreign_keys")).scalar() == 1
+    PostgreSQL las aplica siempre, a diferencia de SQLite, donde quedaban
+    desactivadas y permitían guardar filas huérfanas.
+    """
+    insp = inspect(test_engine)
+
+    esperadas = {
+        "machines": {"customers"},
+        "technical_surveys": {"machines"},
+        "technical_surveys_2": {"customers", "machines"},
+        "infrastructure_surveys": {"customers"},
+    }
+
+    for tabla, destinos in esperadas.items():
+        reales = {
+            fk["referred_table"]
+            for fk in insp.get_foreign_keys(tabla)
+            if fk.get("referred_table")
+        }
+        assert destinos <= reales, (
+            f"{tabla} debería referenciar {sorted(destinos)} y referencia {sorted(reales)}"
+        )
+
+
+def test_alembic_reports_a_single_head():
+    """La cadena de migraciones no debe tener ramas ni múltiples cabezas."""
+    resultado = _run_alembic("heads")
+    assert resultado.returncode == 0, resultado.stderr
+    cabezas = [linea for linea in resultado.stdout.splitlines() if linea.strip()]
+    assert len(cabezas) == 1, f"se esperaba una sola cabeza de migraciones: {cabezas}"
+
+
+def test_models_and_migrations_are_in_sync_for_autogenerate():
+    """Un autogenerate no debería detectar cambios pendientes.
+
+    Sirve como red de seguridad: si alguien modifica un modelo y olvida la
+    migración, esto lo detecta.
+    """
+    resultado = _run_alembic("check")
+    assert resultado.returncode == 0, (
+        "hay diferencias entre los modelos y las migraciones:\n"
+        f"{resultado.stdout}\n{resultado.stderr}\n"
+        "Generá la migración faltante con: alembic revision --autogenerate"
+    )

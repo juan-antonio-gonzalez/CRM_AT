@@ -1,18 +1,16 @@
-"""Pytest configuration.
+"""Configuración de pytest.
 
-Important: the test database URL is forced **before** any project module is
-imported. ``database.py`` builds the SQLAlchemy engine at import time, so
-patching ``settings.database_url`` from a fixture was too late — the engine had
-already been bound to the real ``industrial_bi.db``, and running the suite wrote
-to the developer's database. Here we set the environment variable first, which
-``config.Settings`` picks up when it is first instantiated.
+Dos decisiones importantes viven acá:
 
-Which database is used:
+1. **La URL de la base de pruebas se fuerza antes de importar cualquier módulo
+   del proyecto.** ``database.py`` construye el engine al importarse, así que
+   parchear ``settings.database_url`` desde un fixture llegaba tarde: el engine
+   ya estaba apuntando a la base real y correr las pruebas escribía en ella.
 
-* If ``DATABASE_URL`` is **not** set, tests run on a throwaway SQLite file.
-* If ``DATABASE_URL`` **is** set (as CI does for the PostgreSQL job), tests run
-  against that server using a ``<name>_test`` database, so the same suite also
-  validates PostgreSQL behaviour — where the SQLite-only bugs did not appear.
+2. **Sólo se soporta PostgreSQL.** Se toma ``DATABASE_URL`` del entorno y se
+   apunta a una base cuyo nombre termina en ``_test``, que se reconstruye con
+   ``alembic upgrade head``. Así las pruebas ejercitan exactamente el motor y el
+   esquema que corren en el servidor.
 """
 
 import os
@@ -20,32 +18,35 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-USE_SQLITE = not os.environ.get("DATABASE_URL")
+if not os.environ.get("DATABASE_URL"):
+    # Un valor por defecto cómodo para desarrollo local. La comprobación de
+    # abajo garantiza que nunca se use una base que no sea de pruebas.
+    os.environ["DATABASE_URL"] = "postgresql://crm_at:crm_at@127.0.0.1:5432/crm_at_test"
 
-if USE_SQLITE:
-    # Must happen before importing anything that touches config/database.
-    TEST_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_test_crm_at.db")
-    TEST_DATABASE_URL = f"sqlite:///{TEST_DB_PATH}"
-    os.environ["DATABASE_URL"] = TEST_DATABASE_URL
-else:
-    TEST_DB_PATH = None
 
-    def _pg_test_url(url: str) -> str:
-        """Point a postgres URL at a dedicated _test database."""
-        base, _, query = url.partition("?")
-        head, sep, dbname = base.rpartition("/")
-        if not sep or not dbname:
-            return url
-        test_db = dbname if dbname.endswith("_test") else f"{dbname}_test"
-        return f"{head}/{test_db}" + (f"?{query}" if query else "")
+def _pg_test_url(url: str) -> str:
+    """Apuntar una URL de PostgreSQL a una base dedicada de pruebas."""
+    base, _, query = url.partition("?")
+    head, sep, dbname = base.rpartition("/")
+    if not sep or not dbname:
+        return url
+    test_db = dbname if dbname.endswith("_test") else f"{dbname}_test"
+    return f"{head}/{test_db}" + (f"?{query}" if query else "")
 
-    TEST_DATABASE_URL = _pg_test_url(os.environ["DATABASE_URL"])
-    os.environ["DATABASE_URL"] = TEST_DATABASE_URL
 
-# Safety net: never point the destructive test fixtures at a real database.
-if not (TEST_DATABASE_URL.startswith("sqlite") or "_test" in TEST_DATABASE_URL):
+TEST_DATABASE_URL = _pg_test_url(os.environ["DATABASE_URL"])
+os.environ["DATABASE_URL"] = TEST_DATABASE_URL
+
+# Red de seguridad: los fixtures borran todas las tablas, así que jamás deben
+# apuntar a una base real.
+if "_test" not in TEST_DATABASE_URL:
     raise RuntimeError(
-        "Por seguridad, la URL de pruebas debe ser SQLite o contener '_test'. "
+        "Por seguridad, el nombre de la base de pruebas debe terminar en '_test'. "
+        f"Recibido: {TEST_DATABASE_URL}"
+    )
+if TEST_DATABASE_URL.startswith("sqlite"):
+    raise RuntimeError(
+        "SQLite ya no está soportado. Las pruebas corren contra PostgreSQL. "
         f"Recibido: {TEST_DATABASE_URL}"
     )
 
@@ -55,67 +56,23 @@ os.environ.setdefault("ADMIN_PASSWORD", "admin123")
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
-from sqlalchemy import create_engine, event, text  # noqa: E402
+from sqlalchemy import create_engine, text  # noqa: E402
 from sqlalchemy.orm import sessionmaker  # noqa: E402
 
 from database import Base, get_db  # noqa: E402
-import models  # noqa: E402,F401  (registers every table on Base.metadata)
+import models  # noqa: E402,F401  (registra todas las tablas en Base.metadata)
 
 
 def _make_engine():
-    if not USE_SQLITE:
-        return create_engine(TEST_DATABASE_URL, pool_pre_ping=True)
-
-    from sqlalchemy.pool import StaticPool
-
-    engine = create_engine(
-        TEST_DATABASE_URL,
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-
-    @event.listens_for(engine, "connect")
-    def _fk_on(dbapi_connection, _record):
-        cur = dbapi_connection.cursor()
-        cur.execute("PRAGMA foreign_keys=ON")
-        cur.close()
-
-    return engine
-
-
-@pytest.fixture(scope="session")
-def test_engine():
-    """The test database engine.
-
-    On PostgreSQL the schema is built by **running the migrations**, not by
-    ``create_all``: that is what catches SQLite-only DDL and drift between the
-    migration chain and the ORM models on the engine we actually deploy.
-    """
-    if USE_SQLITE and os.path.exists(TEST_DB_PATH):
-        os.remove(TEST_DB_PATH)
-
-    engine = _make_engine()
-
-    if USE_SQLITE:
-        Base.metadata.drop_all(bind=engine)
-        Base.metadata.create_all(bind=engine)
-    else:
-        _apply_migrations()
-
-    yield engine
-    engine.dispose()
-    if USE_SQLITE and TEST_DB_PATH:
-        for suffix in ("", "-wal", "-shm"):
-            path = TEST_DB_PATH + suffix
-            if os.path.exists(path):
-                os.remove(path)
+    return create_engine(TEST_DATABASE_URL, pool_pre_ping=True)
 
 
 def _apply_migrations() -> None:
-    """Run alembic upgrade head against a clean test database."""
+    """Correr ``alembic upgrade head`` sobre una base de pruebas limpia."""
     import subprocess
 
-    # Start from an empty schema so the migration chain really runs from zero.
+    # Empezar con el esquema vacío para que la cadena de migraciones corra
+    # realmente desde cero.
     engine = _make_engine()
     with engine.begin() as conn:
         conn.execute(text("DROP SCHEMA public CASCADE"))
@@ -139,15 +96,29 @@ def _apply_migrations() -> None:
 
 
 @pytest.fixture(scope="session")
+def test_engine():
+    """El engine de la base de pruebas.
+
+    El esquema se construye **corriendo las migraciones**, no con
+    ``create_all``: eso es lo que detecta la deriva entre la cadena de
+    migraciones y los modelos.
+    """
+    engine = _make_engine()
+    _apply_migrations()
+    yield engine
+    engine.dispose()
+
+
+@pytest.fixture(scope="session")
 def app_module(test_engine):
-    """Import the app only after the test engine exists."""
+    """Importar la aplicación recién después de que exista el engine de pruebas."""
     import main
     return main
 
 
 @pytest.fixture
 def db_session(test_engine):
-    """A session for direct data setup and assertions."""
+    """Una sesión para preparar datos y hacer aserciones directamente."""
     TestSession = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
     session = TestSession()
     try:
@@ -159,24 +130,15 @@ def db_session(test_engine):
 
 @pytest.fixture(autouse=True)
 def _clean_tables(test_engine):
-    """Start every test with empty tables.
+    """Empezar cada prueba con las tablas vacías.
 
-    Dialect-aware: ``PRAGMA`` is SQLite-only, and the earlier unconditional use
-    of it broke every PostgreSQL test at teardown.
+    ``TRUNCATE ... RESTART IDENTITY CASCADE`` limpia todo de una pasada y
+    reinicia las secuencias, así que los ids son predecibles en cada prueba.
     """
     yield
-    dialect = test_engine.dialect.name
+    tables = ", ".join(f'"{t.name}"' for t in Base.metadata.sorted_tables)
     with test_engine.begin() as conn:
-        if dialect == "sqlite":
-            conn.execute(text("PRAGMA foreign_keys=OFF"))
-            for table in reversed(Base.metadata.sorted_tables):
-                conn.execute(text(f'DELETE FROM "{table.name}"'))
-            conn.execute(text("PRAGMA foreign_keys=ON"))
-        else:
-            # PostgreSQL: TRUNCATE ... CASCADE clears everything in one pass and
-            # resets the identity sequences so ids stay predictable per test.
-            tables = ", ".join(f'"{t.name}"' for t in Base.metadata.sorted_tables)
-            conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
+        conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
 
 
 @pytest.fixture
@@ -220,7 +182,7 @@ def seed_admin(db_session):
 
 @pytest.fixture
 def admin_cookie(client, db_session, seed_admin):
-    """Log in as admin and return the session cookie."""
+    """Iniciar sesión como admin y devolver la cookie de sesión."""
     from enums import CustomerStatus, ProductStatus
     import models
 

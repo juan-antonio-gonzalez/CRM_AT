@@ -33,15 +33,35 @@ def upgrade() -> None:
         sa.Column('restored_by', sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('trash_items', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_trash_items_id'), ['id'], unique=False)
-        batch_op.create_index(batch_op.f('ix_trash_items_entity_type'), ['entity_type'], unique=False)
+    op.create_index('ix_trash_items_id', 'trash_items', ['id'])
+    op.create_index('ix_trash_items_entity_type', 'trash_items', ['entity_type'])
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    with op.batch_alter_table('trash_items', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_trash_items_entity_type'))
-        batch_op.drop_index(batch_op.f('ix_trash_items_id'))
+    if _indice_existe('trash_items', 'ix_trash_items_entity_type'):
+        op.drop_index('ix_trash_items_entity_type', table_name='trash_items')
+    if _indice_existe('trash_items', 'ix_trash_items_id'):
+        op.drop_index('ix_trash_items_id', table_name='trash_items')
 
     op.drop_table('trash_items')
+
+
+def _tabla_existe(nombre: str) -> bool:
+    """Indica si una tabla existe.
+
+    Hace falta en el downgrade: la migración de reconciliación elimina
+    ``technical_visits`` (tabla huérfana que ningún modelo usa), así que al
+    revertir hay pasos que intentan tocar objetos que ya no están.
+    """
+    from sqlalchemy import inspect
+    return nombre in inspect(op.get_bind()).get_table_names()
+
+
+def _indice_existe(tabla: str, nombre: str) -> bool:
+    """Indica si un índice existe sobre una tabla existente."""
+    from sqlalchemy import inspect
+    insp = inspect(op.get_bind())
+    if tabla not in insp.get_table_names():
+        return False
+    return nombre in {i["name"] for i in insp.get_indexes(tabla)}

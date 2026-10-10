@@ -177,20 +177,16 @@ conserva 14 días. Las instrucciones de restauración están al final del script
 
 ---
 
-## 5. Alternativa: Docker
+## 5. Por qué no se usa Docker
 
-El repositorio incluye `Dockerfile` y `docker-compose.yml`, pero **el VPS no
-tiene Docker instalado**. Si preferís ese camino:
+El repositorio tuvo un `Dockerfile` y un `docker-compose.yml`, pero ya no están
+versionados. El despliegue real usa PostgreSQL y Nginx nativos del servidor, y
+mantener dos caminos de despliegue solo agregaba divergencia: el
+`docker-compose.yml` levantaba su propio PostgreSQL en un contenedor, distinto
+del que realmente se respalda.
 
-```bash
-apt-get install -y docker.io docker-compose-plugin
-docker compose up -d --build
-```
-
-`docker-compose.yml` levanta su propio PostgreSQL en un contenedor, así que es
-una vía independiente del PostgreSQL del sistema. Para producción se recomienda
-la instalación nativa de la sección 2 (menos capas, y aprovecha el PostgreSQL que
-ya está corriendo y respaldado).
+Si en algún momento querés dockerizar el proyecto, hay que volver a crear esos
+archivos; no están en el repositorio.
 
 ---
 
@@ -233,7 +229,7 @@ Eso abre el navegador para autorizar el permiso adicional. Después:
 
 ```bash
 git add .github/workflows/ci.yml
-git commit -m "CI: compila plantillas y prueba SQLite y PostgreSQL"
+git commit -m "CI: compila plantillas, migra y prueba sobre PostgreSQL"
 git push origin main
 ```
 
