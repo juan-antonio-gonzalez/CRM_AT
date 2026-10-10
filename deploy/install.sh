@@ -26,7 +26,29 @@ DOMAIN="ejemplo.com"
 ALT_DOMAIN="www.ejemplo.com"
 REPO_URL="https://github.com/juan-antonio-gonzalez/CRM_AT.git"
 WANT_SSL=0
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Locate the deployment templates (crm-at.service, nginx-crm-at.conf). The script
+# may have been copied elsewhere (e.g. /tmp) before being run as root, so fall
+# back to a deploy/ directory next to the current working directory.
+_resolve_script_dir() {
+  local candidate
+  for candidate in \
+    "${PWD}/deploy" \
+    "${PWD}" \
+    "$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" \
+    "/var/www/crm_at/deploy"; do
+    if [[ -n "$candidate" && -f "${candidate}/crm-at.service" ]]; then
+      printf '%s' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+if ! SCRIPT_DIR="$(_resolve_script_dir)"; then
+  printf '\033[1;31m[x] No se encontró crm-at.service. Ejecutá el script desde el repositorio: sudo bash deploy/install.sh\033[0m\n' >&2
+  exit 1
+fi
 SOURCE_DIR="$(dirname "$SCRIPT_DIR")"
 
 # ── Parseo de argumentos ────────────────────────────────────────────────────
@@ -91,7 +113,15 @@ su - postgres -c "psql -c \"ALTER ROLE ${DB_USER} WITH PASSWORD '${DB_PASSWORD}'
 su - postgres -c "psql -d ${DB_NAME} -c \"GRANT ALL ON SCHEMA public TO ${DB_USER};\"" >/dev/null
 
 # ── 4. Código ───────────────────────────────────────────────────────────────
-if [[ -d "${SOURCE_DIR}/.git" && "${SOURCE_DIR}" != "${APP_DIR}" ]]; then
+# A deployment is "in place" when APP_DIR already holds this application, which
+# is true both for a git clone and for an rsync'd copy. Checking only for .git
+# made the script try to `git clone` on top of an existing rsync'd directory and
+# fail with "destination path already exists and is not an empty directory".
+_is_app_dir() {
+  [[ -f "${APP_DIR}/main.py" && -f "${APP_DIR}/requirements.txt" ]]
+}
+
+if [[ "${SOURCE_DIR}" != "${APP_DIR}" && -d "${SOURCE_DIR}/.git" ]]; then
   log "Copiando el código desde ${SOURCE_DIR}"
   mkdir -p "$APP_DIR"
   # --delete mantiene el destino igual al origen, excluyendo datos locales.
@@ -100,6 +130,8 @@ if [[ -d "${SOURCE_DIR}/.git" && "${SOURCE_DIR}" != "${APP_DIR}" ]]; then
     --exclude '__pycache__' --exclude 'node_modules' \
     --exclude '*.db' --exclude '.env' \
     "${SOURCE_DIR}/" "${APP_DIR}/"
+elif _is_app_dir && [[ ! -d "${APP_DIR}/.git" ]]; then
+  log "Se usa el código ya presente en ${APP_DIR} (copia sin repositorio git)"
 elif [[ ! -d "${APP_DIR}/.git" ]]; then
   log "Clonando ${REPO_URL}"
   git clone --depth 1 "$REPO_URL" "$APP_DIR"
@@ -171,10 +203,14 @@ sudo -u "$APP_USER" env DATABASE_URL="$DATABASE_URL" ADMIN_USERNAME="${ADMIN_USE
 
 # ── 8. Servicio systemd ─────────────────────────────────────────────────────
 log "Instalando el servicio systemd"
+# La Description del archivo dice "CRM-AT"; hay que reemplazarla sin distinguir
+# mayúsculas o la unidad queda con un nombre distinto al del archivo.
 sed -e "s|/var/www/crm_at|${APP_DIR}|g" \
     -e "s|/etc/crm-at/crm-at.env|${ENV_FILE}|g" \
     -e "s|^User=crmat|User=${APP_USER}|" \
     -e "s|^Group=crmat|Group=${APP_USER}|" \
+    -e "s|Description=CRM-AT|Description=${APP_NAME}|I" \
+    -e "s|^SyslogIdentifier=crm-at|SyslogIdentifier=${APP_NAME}|I" \
     "${SCRIPT_DIR}/crm-at.service" > "/etc/systemd/system/${APP_NAME}.service"
 
 systemctl daemon-reload
