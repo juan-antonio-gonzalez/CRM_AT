@@ -9,44 +9,78 @@ propio virtual host, así que no interfiere con lo que ya está corriendo.
 
 ---
 
-## 1. Antes de empezar: apuntar el DNS
+## 0. Estado actual: ya desplegado
 
-Let's Encrypt valida que el dominio resuelva a la IP del servidor. Si esto no
-está hecho, el certificado falla (la aplicación igual funciona por HTTP).
+La aplicación **está corriendo en el VPS** desde esta sesión:
 
-El dominio `ejemplo.com` **todavía no apunta al VPS**. Hoy resuelve así:
+| Dato | Valor |
+|---|---|
+| URL | `https://203.0.113.10` (certificado provisional) |
+| Usuario | `admin` |
+| Contraseña | `FcVMozag3fIvX1tW` — **cambiala en `/auth/perfil`** |
+| Servicio | `systemctl status CRM-AT` |
+| Logs | `journalctl -u CRM-AT -f` |
+| Config | `/etc/crm-at/crm-at.env` |
+| Código | `/var/www/crm_at` |
+| Base de datos | PostgreSQL local, base `crm_at`, usuario `crm_at` |
+| Puerto interno | `127.0.0.1:8020` |
 
-| Dominio | Resuelve a | Estado |
-|---|---|---|
-| `otro-sitio.com` | `203.0.113.10` | ✅ correcto (es la IP del VPS) |
-| `ejemplo.com` | `2.57.91.91` | ❌ nameservers de parking de Hostinger |
+El certificado es **autofirmado**, así que el navegador muestra una advertencia
+que hay que aceptar. Se reemplaza por uno de Let's Encrypt en cuanto se corrija
+el DNS (sección 1).
 
-**Qué hacer** (panel de Hostinger → Dominios → `ejemplo.com` → DNS / Nameservers):
+### Pendiente único: el registro DNS
 
-1. Si los nameservers siguen en `nebula.dns-parking.com` / `aurora.dns-parking.com`,
-   cambialos a los de Hostinger (`ns1.dns-parking.com` y `ns2.dns-parking.com` ya
-   son suyos, así que basta con editar la **zona DNS**).
-2. En la zona DNS de `ejemplo.com`, creá o corregí:
+`ejemplo.com` sigue apuntando a `2.57.91.91` (parking de Hostinger) en lugar de
+al VPS (`203.0.113.10`). La zona DNS **ya está administrada por Hostinger**
+(nameservers `nebula.dns-parking.com` / `aurora.dns-parking.com`, TTL de 50 s),
+así que es un cambio de un solo registro que propaga en minutos:
 
-   | Tipo | Nombre | Valor | TTL |
-   |------|--------|-------|-----|
-   | A | `@` | `203.0.113.10` | 3600 |
-   | A | `www` | `203.0.113.10` | 3600 |
-
-3. Verificá la propagación desde tu máquina (puede tardar de minutos a horas):
+1. Panel de Hostinger → Dominios → `ejemplo.com` → **DNS / Nameservers**.
+2. En la zona DNS, editá el registro **A** de `@` y poné `203.0.113.10`.
+   Hacé lo mismo con el de `www`.
+3. Verificá desde tu máquina:
 
    ```bash
-   dig +short ejemplo.com
-   # debe devolver 203.0.113.10
+   dig +short ejemplo.com     # debe devolver 203.0.113.10
    ```
 
-> Alternativa sin tocar DNS: usar `crm.otro-sitio.com`, que ya apunta al VPS porque
-> `otro-sitio.com` está bien configurado:
-> `sudo bash deploy/install.sh --domain crm.otro-sitio.com`
+4. En cuanto resuelva, cambiá el certificado (un comando):
+
+   ```bash
+   ssh root@203.0.113.10
+   cd /var/www/crm_at
+   sudo LETSENCRYPT_EMAIL=tu@correo.com bash deploy/enable-ssl.sh
+   ```
+
+Ese script verifica el DNS antes de tocar nada, emite el certificado con el
+método webroot (el desafío ACME ya está funcionando), apunta el vhost al
+certificado real, habilita la renovación automática y deja la aplicación en
+`https://ejemplo.com` sin advertencias.
 
 ---
 
-## 2. Instalación (un solo comando)
+## 1. Reinstalar o actualizar
+
+El despliegue nativo (PostgreSQL y Nginx del propio servidor) es el que está en
+uso. Para actualizar el código:
+
+```bash
+# Desde tu máquina
+rsync -a --delete --exclude '.git' --exclude '.venv*' --exclude '__pycache__' \
+  --exclude 'node_modules' --exclude '*.db' --exclude '.env' \
+  ~/ruta/al/proyecto/ root@203.0.113.10:/var/www/crm_at/
+
+# En el servidor
+ssh root@203.0.113.10
+cd /var/www/crm_at && sudo bash deploy/install.sh
+```
+
+El instalador es idempotente: reinstala dependencias si hace falta, aplica
+migraciones nuevas, **no** pisa las credenciales existentes y **no** revierte el
+certificado si ya está usando Let's Encrypt.
+
+## 2. Detalle de la instalación (un solo comando)
 
 Copiá el proyecto al servidor y ejecutá el instalador. Desde tu máquina:
 
