@@ -119,17 +119,49 @@ def _html(raiz: str = None) -> str:
 
 
 def _pdf(html: str) -> None:
+    """Imprime el HTML a PDF con Chrome headless.
+
+    Chrome no termina de salir después de escribir el PDF: quedan procesos
+    ayudantes que mantienen vivos los descriptores, así que esperar al proceso se
+    cuelga indefinidamente. Se espera en cambio a que aparezca el archivo y
+    después se mata el grupo completo.
+    """
+    import signal
+    import time
+
     with open(SALIDA, "w", encoding="utf-8") as fh:
         fh.write(html)
     if os.path.exists(PDF):
         os.remove(PDF)
-    # Chrome se invoca aquí y no desde Python: hacerlo con subprocess.run se
-    # queda esperando indefinidamente en este entorno.
-    subprocess.run([
-        CHROME, "--headless=new", "--disable-gpu", "--no-sandbox",
-        "--user-data-dir=/tmp/chrome-crm-at", "--no-pdf-header-footer",
-        "--virtual-time-budget=5000", f"--print-to-pdf={PDF}", f"file://{SALIDA}",
-    ], capture_output=True, text=True, timeout=60)
+
+    proceso = subprocess.Popen(
+        [
+            CHROME, "--headless=new", "--disable-gpu", "--no-sandbox",
+            "--disable-dev-shm-usage", "--no-first-run", "--no-default-browser-check",
+            # Un directorio de datos único por corrida: reutilizarlo hace que
+            # Chrome encuentre el bloqueo del proceso anterior y se quede esperando.
+            f"--user-data-dir={tempfile.gettempdir()}/chrome-crm-at-{os.getpid()}",
+            "--no-pdf-header-footer", "--virtual-time-budget=5000",
+            f"--print-to-pdf={PDF}", f"file://{SALIDA}",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    try:
+        for _ in range(400):  # hasta 40 segundos
+            if os.path.exists(PDF) and os.path.getsize(PDF) > 0:
+                time.sleep(0.5)  # dejar que termine de escribir
+                return
+            if proceso.poll() is not None and os.path.exists(PDF):
+                return
+            time.sleep(0.1)
+    finally:
+        try:
+            os.killpg(os.getpgid(proceso.pid), signal.SIGKILL)
+        except (ProcessLookupError, PermissionError):
+            pass
+        proceso.wait(timeout=10)
 
 
 # Las fuentes del PDF usan ligaduras tipográficas (fi -> U+FB01): visualmente es
