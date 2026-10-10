@@ -178,7 +178,37 @@ ya está corriendo y respaldado).
 
 ---
 
-## 7. Resolución de problemas
+## 7. Subir el CI a GitHub (requiere un paso manual)
+
+El workflow de CI (`.github/workflows/ci.yml`) **está en tu copia local pero
+todavía no se subió**, porque el token de GitHub configurado no tiene el permiso
+`workflow` que GitHub exige para crear o modificar archivos de Actions:
+
+```
+! [remote rejected] main -> main (refusing to allow an OAuth App to create or
+  update workflow `.github/workflows/ci.yml` without `workflow` scope)
+```
+
+El token actual tiene los permisos `gist`, `read:org` y `repo`. Para habilitarlo:
+
+```bash
+gh auth refresh --hostname github.com --scopes workflow
+```
+
+Eso abre el navegador para autorizar el permiso adicional. Después:
+
+```bash
+git add .github/workflows/ci.yml
+git commit -m "CI: compila plantillas y prueba SQLite y PostgreSQL"
+git push origin main
+```
+
+Si preferís no dar ese permiso, podés borrar el archivo; no afecta al
+funcionamiento de la aplicación, solo se pierde la verificación automática.
+
+---
+
+## 8. Resolución de problemas
 
 **El servicio no arranca**
 
