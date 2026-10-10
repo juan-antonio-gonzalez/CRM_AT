@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}KPIs Calidad | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex items-center gap-3">
+    <div class="flex flex-col">
+        <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">KPIs Calidad</h2>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Indicadores de Calidad y Asistencia Técnica</p>
+    </div>
+    <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
+        <p class="text-[8px] font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
+        <p class="text-[11px] font-bold text-slate-700 dark:text-slate-200">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-7xl mx-auto space-y-6 animate-fade-in pb-10">
+        <form method="GET" action="/kpi-calidad" class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-col w-20">
+                <label for="anio" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Año</label>
+                <select name="anio" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 text-xs font-bold" id="anio">
+                    <option value="">Todos</option>
+                    {% for y in available_years %}
+                    <option value="{{ y }}" {% if filters.anio == y %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col w-20">
+                <label for="mes" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Mes</label>
+                <select name="mes" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 text-xs font-bold" id="mes">
+                    <option value="">Todos</option>
+                    {% for m in months %}
+                    <option value="{{ m[0] }}" {% if filters.mes == m[0] %}selected{% endif %}>{{ m[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col min-w-[160px]">
+                <label for="at" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">AT</label>
+                <select name="at" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="at">
+                    <option value="">Todos</option>
+                    {% for a in advisors %}
+                    <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col min-w-[160px]">
+                <label for="cliente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                <select name="cliente" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
+                    <option value="">Todos</option>
+                    {% for c in customer_list %}
+                    <option value="{{ c.id }}" {% if filters.cliente == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col min-w-[160px]">
+                <label for="tema" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Tema</label>
+                <select name="tema" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="tema">
+                    <option value="">Todos</option>
+                    {% set all_temas = visitas.all_temas_calidad + visitas.all_temas_asistencia %}
+                    {% set unique_temas = all_temas|unique|list|sort %}
+                    {% for t in unique_temas %}
+                    <option value="{{ t }}" {% if filters.tema == t %}selected{% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col min-w-[150px]">
+                <label for="tipo-producto" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Tipo Producto</label>
+                <select name="tipo_producto" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="tipo-producto">
+                    <option value="">Todos</option>
+                    {% for tp in visitas.all_tipos_producto %}
+                    <option value="{{ tp }}" {% if filters.tipo_producto == tp %}selected{% endif %}>{{ tp }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col min-w-[150px]">
+                <label for="planta" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Planta</label>
+                <select name="planta" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="planta">
+                    <option value="">Todos</option>
+                    {% for p in visitas.all_plantas %}
+                    <option value="{{ p }}" {% if filters.planta == p %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
+            <a href="/kpi-calidad" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-2 py-1.5">Limpiar</a>
+        </div>
+    </form>
+    <div class="grid grid-cols-1 gap-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+                <h4 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Punto 7 — Asistencia Técnica</h4>
+                <span id="totalRegistros" class="text-[10px] font-bold text-indigo-600 bg-indigo-500/10 px-2 py-1 rounded-lg">{{ visitas.total_asistencia }} registros</span>
+            </div>
+
+            <div class="flex-1 relative h-[350px]">
+                <canvas id="asistenciaChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/chart.umd.min.js') }}"></script>
+<script nonce="{{ request.state.script_nonce }}">
+(function() {
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#94a3b8';
+
+    var barColors = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'];
+    var chartInstance = null;
+
+    function getChartColors(dark) {
+        return {
+            gridColor: dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+            tooltipBg: dark ? '#1e293b' : '#ffffff',
+            tooltipTitle: dark ? '#ffffff' : '#1e293b',
+            tooltipBorder: dark ? '#334155' : '#e2e8f0',
+            legendColor: dark ? '#e2e8f0' : '#475569',
+            textColor: dark ? '#cbd5e1' : '#64748b',
+        };
+    }
+
+    function renderChart(labels, data) {
+        const isDark = document.documentElement.classList.contains('dark');
+        const colors = getChartColors(isDark);
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(document.getElementById('asistenciaChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Registros',
+                    data: data,
+                    backgroundColor: labels.map(function(_, i) { return barColors[i % barColors.length]; }),
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: colors.gridColor },
+                        ticks: { font: { size: 10 }, color: colors.textColor }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 9, weight: 'bold' }, color: colors.textColor }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Registros: ' + context.parsed.x;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    renderChart({{ visitas.asistencia_labels | tojson }}, {{ visitas.asistencia_data | tojson }});
+
+    document.addEventListener('themechange', function(e) {
+        if (chartInstance) {
+            const colors = getChartColors(e.detail.dark);
+            if (chartInstance.options.scales) {
+                Object.values(chartInstance.options.scales).forEach(function(scale) {
+                    if (scale.grid) scale.grid.color = colors.gridColor;
+                    if (scale.ticks) scale.ticks.color = colors.textColor;
+                });
+            }
+            if (chartInstance.options.plugins && chartInstance.options.plugins.tooltip) {
+                var t = chartInstance.options.plugins.tooltip;
+                t.backgroundColor = colors.tooltipBg;
+                t.titleColor = colors.tooltipTitle;
+                t.borderColor = colors.tooltipBorder;
+            }
+            chartInstance.update('none');
+        }
+    });
+})();
+</script>
+{% endblock %}

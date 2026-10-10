@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List, Optional
@@ -6,8 +7,17 @@ from enums import RelevamientoStatus, CustomerStatus
 from utils import calculate_relevo_status
 
 
-def list_customers(db: Session, q: str = None):
+def list_customers(db: Session, q: str = None, include_inactive: bool = False):
+    """List customers.
+
+    ``include_inactive`` defaults to False because this helper feeds the
+    customer selectors in the visit/minute/survey forms — a soft-deleted
+    customer must not be selectable there. Administrative views (organigrama,
+    papelera) pass True explicitly.
+    """
     query = db.query(models.Customer)
+    if not include_inactive:
+        query = query.filter(models.Customer.is_active.is_(True))
     if q:
         query = query.filter(
             (models.Customer.name.ilike(f"%{q}%")) |
@@ -15,24 +25,43 @@ def list_customers(db: Session, q: str = None):
             (models.Customer.industry_sector.ilike(f"%{q}%")) |
             (models.Customer.city.ilike(f"%{q}%"))
         )
-    return query.all()
+    return query.order_by(models.Customer.name).all()
 
 
-def get_customer_stats(customers: list):
+def get_customer_stats(db: Session, base_query=None) -> dict:
+    """Aggregate relevamiento counts over the *whole* filtered set.
+
+    This used to receive the already-paginated list, so the totals described at
+    most one page of rows and changed as the user paged.
+    """
+    from sqlalchemy import func, case
+
+    query = base_query if base_query is not None else db.query(models.Customer)
+    query = query.filter(models.Customer.is_active.is_(True))
+    rows = query.with_entities(
+        func.count(models.Customer.id),
+        func.sum(case((models.Customer.relevamiento_status == RelevamientoStatus.EN_PROCESO.value, 1), else_=0)),
+        func.sum(case((models.Customer.relevamiento_status == RelevamientoStatus.COMPLETADO.value, 1), else_=0)),
+        func.sum(case((models.Customer.relevamiento_status == RelevamientoStatus.PENDIENTE.value, 1), else_=0)),
+    ).one()
     return {
-        "total": len(customers),
-        "en_relevamiento": sum(1 for c in customers if c.relevamiento_status == RelevamientoStatus.EN_PROCESO.value),
-        "completados": sum(1 for c in customers if c.relevamiento_status == RelevamientoStatus.COMPLETADO.value),
-        "pendientes": sum(1 for c in customers if c.relevamiento_status == RelevamientoStatus.PENDIENTE.value)
+        "total": int(rows[0] or 0),
+        "en_relevamiento": int(rows[1] or 0),
+        "completados": int(rows[2] or 0),
+        "pendientes": int(rows[3] or 0),
     }
 
 
 def get_distinct_customer_names(db: Session):
-    return [r.name for r in db.query(models.Customer.name).distinct().order_by(models.Customer.name).all() if r.name]
+    return [r.name for r in db.query(models.Customer.name)
+            .filter(models.Customer.is_active.is_(True))
+            .distinct().order_by(models.Customer.name).all() if r.name]
 
 
 def get_distinct_plant_names(db: Session):
-    return [r.plant for r in db.query(models.Customer.plant).distinct().order_by(models.Customer.plant).all() if r.plant]
+    return [r.plant for r in db.query(models.Customer.plant)
+            .filter(models.Customer.is_active.is_(True))
+            .distinct().order_by(models.Customer.plant).all() if r.plant]
 
 
 def create_customer(db: Session, name: str, plant: str, industry_sector: str,
@@ -40,20 +69,24 @@ def create_customer(db: Session, name: str, plant: str, industry_sector: str,
                     designer: str, address: str, city: str,
                     status: str = None, relevamiento_status: str = None,
                     member_name: List[str] = None, member_role: List[str] = None,
-                    member_email: List[str] = None, member_phone: List[str] = None,
+                    member_phone: List[str] = None,
+                    member_reports_to: List[str] = None,
+                    member_sector: List[str] = None,
                     observations: str = ""):
     member_name = member_name or []
     member_role = member_role or []
-    member_email = member_email or []
     member_phone = member_phone or []
+    member_reports_to = member_reports_to or []
+    member_sector = member_sector or []
 
     team = []
     for i, n in enumerate(member_name):
         if n.strip():
             p = member_phone[i] if i < len(member_phone) else ''
             r = member_role[i] if i < len(member_role) else ''
-            e = member_email[i] if i < len(member_email) else ''
-            team.append({"name": n, "role": r, "email": e, "phone": p})
+            rt = member_reports_to[i] if i < len(member_reports_to) else ''
+            s = member_sector[i] if i < len(member_sector) else ''
+            team.append({"name": n, "role": r, "phone": p, "reports_to": rt, "sector": s})
 
     form_data = {
         "name": name, "plant": plant, "industry_sector": industry_sector,
@@ -71,6 +104,23 @@ def create_customer(db: Session, name: str, plant: str, industry_sector: str,
         client_team=team, observations=observations
     )
     db.add(new_customer)
+    db.flush()
+
+    existing_at = db.query(models.ATAssignment).filter(
+        models.ATAssignment.customer_name == name,
+        models.ATAssignment.valid_to.is_(None)
+    ).first()
+    if not existing_at:
+        at_assignment = models.ATAssignment(
+            customer_name=name,
+            technical_advisor=technical_advisor,
+            standard_visits=0,
+            premium_visits=0,
+            status="Activo",
+            valid_from=datetime.datetime.utcnow(),
+        )
+        db.add(at_assignment)
+
     db.commit()
     return new_customer
 
@@ -87,23 +137,27 @@ def update_customer(db: Session, customer_id: int, name: str, plant: str,
                     technical_advisor: str, designer: str, address: str,
                     city: str, status: str, relevamiento_status: Optional[str],
                     member_name: List[str], member_role: List[str],
-                    member_email: List[str], member_phone: List[str],
+                    member_phone: List[str],
+                    member_reports_to: List[str],
+                    member_sector: List[str],
                     observations: str):
     customer = get_customer(db, customer_id)
     old_name = customer.name
 
     member_name = member_name or []
     member_role = member_role or []
-    member_email = member_email or []
     member_phone = member_phone or []
+    member_reports_to = member_reports_to or []
+    member_sector = member_sector or []
 
     team = []
     for i, n in enumerate(member_name):
         if n.strip():
             p = member_phone[i] if i < len(member_phone) else ''
             r = member_role[i] if i < len(member_role) else ''
-            e = member_email[i] if i < len(member_email) else ''
-            team.append({"name": n, "role": r, "email": e, "phone": p})
+            rt = member_reports_to[i] if i < len(member_reports_to) else ''
+            s = member_sector[i] if i < len(member_sector) else ''
+            team.append({"name": n, "role": r, "phone": p, "reports_to": rt, "sector": s})
 
     form_data = {
         "name": name, "plant": plant, "industry_sector": industry_sector,
@@ -132,34 +186,6 @@ def update_customer(db: Session, customer_id: int, name: str, plant: str,
 
     db.commit()
     return customer
-
-
-def delete_customer(db: Session, customer_id: int, user_id: int = None, username: str = None):
-    customer = get_customer(db, customer_id)
-    from services.trash_service import move_to_trash
-    move_to_trash(db, "customer", customer_id, {
-        "name": customer.name, "plant": customer.plant,
-        "industry_sector": customer.industry_sector,
-        "assigned_commercial": customer.assigned_commercial,
-        "technical_advisor": customer.technical_advisor,
-        "designer": customer.designer,
-        "address": customer.address, "city": customer.city,
-        "status": customer.status,
-        "observations": customer.observations,
-        "client_team": customer.client_team,
-    }, user_id, username, customer.name)
-    visits = db.query(models.TechnicalVisit).filter(models.TechnicalVisit.customer_id == customer_id).all()
-    for v in visits:
-        v.customer_name_backup = customer.name
-        v.customer_id = None
-    machines = db.query(models.Machine).filter(models.Machine.customer_id == customer_id).all()
-    for m in machines:
-        m.customer_id = None
-    infra_surveys = db.query(models.InfrastructureSurvey).filter(models.InfrastructureSurvey.customer_id == customer_id).all()
-    for s in infra_surveys:
-        s.customer_id = None
-    db.delete(customer)
-    db.commit()
 
 
 def get_customer_plants(db: Session, customer_name: str):

@@ -9,21 +9,21 @@
         </div>
         <a href="/auth/register"
             class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
-            <span class="material-symbols-rounded text-lg">person_add</span>
+            <span class="material-symbols-rounded text-lg" aria-hidden="true">person_add</span>
             Nuevo Usuario
         </a>
     </div>
 
     {% if success %}
-    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-semibold mb-6">
-        <span class="material-symbols-rounded text-lg">check_circle</span>
+    <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-semibold mb-6">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">check_circle</span>
         <span>{{ success }}</span>
     </div>
     {% endif %}
 
     {% if error %}
-    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold mb-6">
-        <span class="material-symbols-rounded text-lg">error</span>
+    <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold mb-6">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
         <span>{{ error }}</span>
     </div>
     {% endif %}
@@ -33,12 +33,12 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/50">
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Rol</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</th>
-                        <th class="text-right px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Acciones</th>
+                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Usuario</th>
+                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Nombre</th>
+                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Email</th>
+                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Rol</th>
+                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="text-right px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -71,14 +71,14 @@
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                     <button type="submit"
                                         class="p-2 rounded-lg text-slate-400 hover:text-{{ 'red' if u.is_active else 'emerald' }}-500 transition-colors border border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
-                                        title="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario">
-                                        <span class="material-symbols-rounded text-lg">{{ 'block' if u.is_active else 'check_circle' }}</span>
+                                        title="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario" aria-label="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario">
+                                        <span class="material-symbols-rounded text-lg" aria-hidden="true">{{ 'block' if u.is_active else 'check_circle' }}</span>
                                     </button>
                                 </form>
-                                <button data-user-id="{{ u.id }}" data-username="{{ u.username }}" class="btn-show-reset"
-                                    class="p-2 rounded-lg text-slate-400 hover:text-amber-500 transition-colors border border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
-                                    title="Resetear contraseña">
-                                    <span class="material-symbols-rounded text-lg">key</span>
+                                <button data-user-id="{{ u.id }}" data-username="{{ u.username }}" class="btn-show-reset p-2 rounded-lg text-slate-400 hover:text-amber-500 transition-colors border border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                                    
+                                    title="Resetear contraseña" aria-label="Resetear contraseña">
+                                    <span class="material-symbols-rounded text-lg" aria-hidden="true">key</span>
                                 </button>
                             </div>
                         </td>
@@ -91,20 +91,20 @@
 </div>
 
 <!-- Reset Password Modal -->
-<div id="resetModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
+<div id="resetModal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
     <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-8 w-full max-w-md mx-4 animate-fade-in">
         <div class="flex items-center gap-3 mb-6">
-            <span class="material-symbols-rounded text-amber-500 text-2xl">key</span>
+            <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">key</span>
             <div>
-                <h3 class="text-lg font-black text-slate-900 dark:text-white">Resetear Contraseña</h3>
+                <h3 id="reset-modal-title" class="text-lg font-black text-slate-900 dark:text-white">Resetear Contraseña</h3>
                 <p class="text-sm text-slate-500 dark:text-slate-400 font-medium" id="resetUserLabel">Usuario:</p>
             </div>
         </div>
         <form method="POST" id="resetForm">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="space-y-2 mb-6">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
-                <input type="password" name="new_password" required minlength="6"
+                <label for="reset-new-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
+                <input id="reset-new-password" type="password" name="new_password" required minlength="6"
                     class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                     placeholder="Mínimo 6 caracteres" />
             </div>

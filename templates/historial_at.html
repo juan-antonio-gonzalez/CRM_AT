@@ -1,0 +1,293 @@
+{% extends "layout.html" %}
+{% block title %}Historial de Asignación AT{% endblock %}
+{% block header_extra %}
+<div class="flex items-center gap-4 ml-4 min-w-0">
+    <a href="/control-at"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all shrink-0"
+        title="Control de Asignación AT" aria-label="Control de Asignación AT">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col min-w-0">
+        <h2 class="text-sm sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight truncate">Historial de Asignación AT</h2>
+        <p class="hidden lg:block text-xs text-slate-500 dark:text-slate-400 font-medium">Registro histórico de períodos, cambios de AT y visitas fuera de cronograma.</p>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <!-- Indicadores -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">history</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Períodos</p>
+                <p class="text-xl font-black text-slate-900 dark:text-white">{{ indicadores.asignaciones }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-emerald-500 text-xl" aria-hidden="true">check_circle</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Vigentes</p>
+                <p class="text-xl font-black text-emerald-600">{{ indicadores.vigentes }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                <span class="material-symbols-rounded text-slate-500 text-xl" aria-hidden="true">lock_clock</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Cerrados</p>
+                <p class="text-xl font-black text-slate-600 dark:text-slate-300">{{ indicadores.cerrados }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-blue-500 text-xl" aria-hidden="true">assignment</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Estándar</p>
+                <p class="text-xl font-black text-blue-600">{{ indicadores.std }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-purple-500 text-xl" aria-hidden="true">workspace_premium</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Premium</p>
+                <p class="text-xl font-black text-purple-600">{{ indicadores.prem }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-amber-500 text-xl" aria-hidden="true">event_busy</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Fuera de Cronograma</p>
+                <p class="text-xl font-black text-amber-600">{{ indicadores.fuera_cronograma }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form method="GET" action="/historial-at" class="flex flex-wrap items-end justify-between gap-4">
+            <div class="flex flex-col gap-1 flex-1 max-w-xs">
+                <label for="filtro-cliente" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <input id="filtro-cliente" type="text" name="cliente" value="{{ filters.cliente }}"
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary"
+                    placeholder="Buscar cliente...">
+            </div>
+            <div class="flex flex-col gap-1 flex-1 max-w-xs">
+                <label for="filtro-at" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">AT</label>
+                <select id="filtro-at" name="at"
+                    class="form-select w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                    <option value="">Todos</option>
+                    {% for a in at_list %}
+                    <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col gap-1 w-40">
+                <label for="filtro-desde" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Desde</label>
+                <input id="filtro-desde" type="date" name="desde" value="{{ filters.desde or '' }}"
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary">
+            </div>
+            <div class="flex flex-col gap-1 w-40">
+                <label for="filtro-hasta" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Hasta</label>
+                <input id="filtro-hasta" type="date" name="hasta" value="{{ filters.hasta or '' }}"
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary">
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit"
+                    class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1" aria-label="Buscar">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">search</span>
+                </button>
+                <a href="/historial-at"
+                    class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Distribución por estatus / AT / cliente -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+                <p class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Por Estatus</p>
+            </div>
+            <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
+                {% for st, cant in por_status %}
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{{ st }}</span>
+                    <span class="text-xs font-black text-slate-900 dark:text-white">{{ cant }}</span>
+                </div>
+                {% endfor %}
+                {% if not por_status %}<p class="text-xs text-slate-400">Sin datos.</p>{% endif %}
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+                <p class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Períodos por AT</p>
+            </div>
+            <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
+                {% for a, cant in por_at %}
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{{ a }}</span>
+                    <span class="text-xs font-black text-slate-900 dark:text-white">{{ cant }}</span>
+                </div>
+                {% endfor %}
+                {% if not por_at %}<p class="text-xs text-slate-400">Sin datos.</p>{% endif %}
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+                <p class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Períodos por Cliente</p>
+            </div>
+            <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
+                {% for c, cant in por_cliente %}
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">{{ c }}</span>
+                    <span class="text-xs font-black text-slate-900 dark:text-white">{{ cant }}</span>
+                </div>
+                {% endfor %}
+                {% if not por_cliente %}<p class="text-xs text-slate-400">Sin datos.</p>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-rounded text-slate-400 text-xl" aria-hidden="true">history</span>
+                <p class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Historial de Asignaciones</p>
+            </div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ filters.desde or 'Inicio' }} → {{ filters.hasta or 'Hoy' }}</span>
+        </div>
+        {% if historial %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Estatus</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Premium</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Inicio</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Fin</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for h in historial %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-3 text-sm font-bold text-slate-900 dark:text-white">{{ h.customer_name }}</td>
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400">{{ h.technical_advisor or '—' }}</td>
+                        <td class="px-6 py-3">
+                            {% if h.status == 'Inactivo' %}
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-wider">Inactivo</span>
+                            {% elif h.status == 'Fuera de cronograma' %}
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-wider">Fuera de Cronograma</span>
+                            {% elif h.status == 'Cliente' %}
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider">Cliente</span>
+                            {% else %}
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-wider">Prospecto</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400 text-right">{{ h.standard_visits or 0 }}</td>
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400 text-right">{{ h.premium_visits or 0 }}</td>
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400">{{ h.valid_from.strftime('%d/%m/%Y') if h.valid_from else '—' }}</td>
+                        <td class="px-6 py-3 text-sm">
+                            {% if h.valid_to %}
+                            <span class="text-slate-500">{{ h.valid_to.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider">Vigente</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-3 text-right">
+                            <form method="POST" action="/historial-at/eliminar/{{ h.id }}"
+                                class="delete-periodo-form" data-confirm="¿Eliminar este período de {{ h.customer_name }}? Esta acción no se puede deshacer.">
+                                <button type="submit"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-[10px] font-black uppercase tracking-wider">
+                                    <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="px-6 py-10 text-center">
+            <p class="text-sm text-slate-500">No hay períodos registrados en el rango seleccionado.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Visitas fuera de cronograma -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="flex items-center gap-2 px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+            <span class="material-symbols-rounded text-amber-500 text-xl" aria-hidden="true">event_busy</span>
+            <p class="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest">Visitas Fuera de Cronograma</p>
+            {% if fuadera %}
+            <span class="ml-auto text-[10px] font-black text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-lg">{{ fuadera|length }}</span>
+            {% endif %}
+        </div>
+        {% if fuadera %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Motivo</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for f in fuadera %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400">{{ f.fecha }}</td>
+                        <td class="px-6 py-3 text-sm font-bold text-slate-900 dark:text-white">{{ f.cliente }}{% if f.plant %}<br><span class="text-[11px] text-slate-400 font-normal">{{ f.plant }}</span>{% endif %}</td>
+                        <td class="px-6 py-3 text-sm text-slate-600 dark:text-slate-400">{{ f.at or '—' }}</td>
+                        <td class="px-6 py-3">
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-wider">{{ f.motivo }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="px-6 py-10 text-center">
+            <p class="text-sm text-slate-500">No hay visitas fuera de cronograma en el rango seleccionado.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-periodo-form').forEach(function(f) {
+        f.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showConfirmModal(this, this.dataset.confirm, {
+                title: '¿Eliminar Período?',
+                buttonText: 'Eliminar',
+                icon: 'delete_forever'
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -10,8 +10,8 @@
     <!-- Top Nav / Header -->
     <div class="flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-4 rounded-2xl border border-slate-200 dark:border-slate-800 sticky top-4 z-50 shadow-sm">
         <div class="flex items-center gap-4">
-            <a href="/relevamiento-infraestructura" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
-                <span class="material-symbols-rounded">arrow_back</span>
+            <a href="/relevamiento-infraestructura" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors" aria-label="Volver al listado">
+                <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
             </a>
             <div>
                 <h1 class="text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">
@@ -27,11 +27,11 @@
                 <option value="Completado" {% if survey and survey.status == "Completado" %}selected{% endif %}>Completado</option>
             </select>
             <button type="button" id="btn-infra-preview" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
-                <span class="material-symbols-rounded !text-sm">visibility</span>
+                <span class="material-symbols-rounded !text-sm" aria-hidden="true">visibility</span>
                 <span class="hidden sm:inline">Previsualizar</span>
             </button>
             <button type="submit" class="bg-primary text-white text-[10px] font-black uppercase px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
-                <span class="material-symbols-rounded !text-sm">save</span>
+                <span class="material-symbols-rounded !text-sm" aria-hidden="true">save</span>
                 <span class="hidden sm:inline">Guardar</span>
             </button>
         </div>
@@ -41,13 +41,13 @@
     <section class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="p-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20">
             <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary">analytics</span>
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">analytics</span>
                 1. Información General
             </h3>
         </div>
         <div class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Cliente</label>
+                <label for="customer_name_select" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Cliente</label>
                 <select id="customer_name_select" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20">
                     <option value="">Seleccionar cliente...</option>
                     {% for name in unique_customer_names %}
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Planta / Sede</label>
+                <label for="plant_select" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Planta / Sede</label>
                 <select id="plant_select" name="customer_id" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20">
                     <option value="">Seleccione un cliente primero</option>
                 </select>
@@ -64,12 +64,12 @@
                 <input type="hidden" name="plant" id="hidden_plant" value="{{ survey.plant if survey else '' }}">
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Fecha</label>
-                <input name="date" value="{{ survey.date.strftime('%Y-%m-%d') if survey and survey.date else '' }}" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="date"/>
+                <label for="date" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Fecha</label>
+                <input name="date" value="{{ survey.date.strftime('%Y-%m-%d') if survey and survey.date else '' }}" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="date" id="date"/>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Asistente Técnico</label>
-                <select name="technical_advisor" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20">
+                <label for="technical-advisor" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Asistente Técnico</label>
+                <select name="technical_advisor" required class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" id="technical-advisor">
                     <option value="">Seleccionar...</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor.name }}" {% if survey and survey.technical_advisor == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
@@ -83,7 +83,7 @@
     <section class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="p-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20">
             <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary">inventory_2</span>
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">inventory_2</span>
                 2. Almacenamiento
             </h3>
         </div>
@@ -93,36 +93,36 @@
                 <h4 class="text-xs font-black text-primary uppercase tracking-widest border-l-4 border-primary pl-3">Insumos</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Medidas Rack/Depósito</label>
-                        <input name="measures_insumos" value="{{ survey.storage_data.get('measures_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 2.5m x 1.2m" type="text"/>
+                        <label for="measures-insumos" class="text-sm font-semibold">Medidas Rack/Depósito</label>
+                        <input name="measures_insumos" value="{{ survey.storage_data.get('measures_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 2.5m x 1.2m" type="text" id="measures-insumos"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Humedad/Temperatura</label>
-                        <input name="temp_insumos" value="{{ survey.storage_data.get('temp_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 20°C" type="text"/>
+                        <label for="temp-insumos" class="text-sm font-semibold">Humedad/Temperatura</label>
+                        <input name="temp_insumos" value="{{ survey.storage_data.get('temp_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 20°C" type="text" id="temp-insumos"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Tiempo Almacenamiento</label>
-                        <input name="time_insumos" value="{{ survey.storage_data.get('time_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 30 días" type="text"/>
+                        <label for="time-insumos" class="text-sm font-semibold">Tiempo Almacenamiento</label>
+                        <input name="time_insumos" value="{{ survey.storage_data.get('time_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 30 días" type="text" id="time-insumos"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Pallet sobre pallet</label>
-                        <input name="pop_insumos" value="{{ survey.storage_data.get('pop_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 2 niveles" type="text"/>
+                        <label for="pop-insumos" class="text-sm font-semibold">Pallet sobre pallet</label>
+                        <input name="pop_insumos" value="{{ survey.storage_data.get('pop_insumos', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: 2 niveles" type="text" id="pop-insumos"/>
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
-                    <div class="flex gap-4">
+                    <label id="criticidad-del-sector" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
+                    <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector">
                         {% for crit in ['Baja', 'Media', 'Alta'] %}
-                        <label class="flex-1 cursor-pointer">
-                            <input class="sr-only peer" name="crit_insumos" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_insumos') == crit %}checked{% endif %}/>
+                        <label for="crit-insumos{{ loop.index }}" class="flex-1 cursor-pointer">
+                            <input class="sr-only peer" name="crit_insumos" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_insumos') == crit %}checked{% endif %} id="crit-insumos{{ loop.index }}"/>
                             <div class="text-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
                         </label>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones Insumos</label>
-                    <textarea name="obs_insumos" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2">{{ survey.storage_data.get('obs_insumos', '') if survey else '' }}</textarea>
+                    <label for="obs-insumos" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones Insumos</label>
+                    <textarea name="obs_insumos" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="obs-insumos">{{ survey.storage_data.get('obs_insumos', '') if survey else '' }}</textarea>
                 </div>
             </div>
             <hr class="border-slate-100 dark:border-slate-800" />
@@ -131,28 +131,28 @@
                 <h4 class="text-xs font-black text-primary uppercase tracking-widest border-l-4 border-primary pl-3">Producto Terminado</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Medidas Rack/Depósito</label>
-                        <input name="measures_finished" value="{{ survey.storage_data.get('measures_finished', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                        <label for="measures-finished" class="text-sm font-semibold">Medidas Rack/Depósito</label>
+                        <input name="measures_finished" value="{{ survey.storage_data.get('measures_finished', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="measures-finished"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold">Humedad/Temperatura</label>
-                        <input name="temp_finished" value="{{ survey.storage_data.get('temp_finished', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                        <label for="temp-finished" class="text-sm font-semibold">Humedad/Temperatura</label>
+                        <input name="temp_finished" value="{{ survey.storage_data.get('temp_finished', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="temp-finished"/>
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
-                    <div class="flex gap-4">
+                    <label id="criticidad-del-sector-2" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
+                    <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector-2">
                         {% for crit in ['Baja', 'Media', 'Alta'] %}
-                        <label class="flex-1 cursor-pointer">
-                            <input class="sr-only peer" name="crit_finished" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_finished') == crit %}checked{% endif %}/>
+                        <label for="crit-finished{{ loop.index }}" class="flex-1 cursor-pointer">
+                            <input class="sr-only peer" name="crit_finished" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_finished') == crit %}checked{% endif %} id="crit-finished{{ loop.index }}"/>
                             <div class="text-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
                         </label>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
-                    <textarea name="obs_finished" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2">{{ survey.storage_data.get('obs_finished', '') if survey else '' }}</textarea>
+                    <label for="obs-finished" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
+                    <textarea name="obs_finished" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="obs-finished">{{ survey.storage_data.get('obs_finished', '') if survey else '' }}</textarea>
                 </div>
             </div>
         </div>
@@ -162,22 +162,22 @@
     <section class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="p-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20">
             <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary">package</span>
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">package</span>
                 3. Empaque
             </h3>
         </div>
         <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
-                <label class="text-sm font-semibold">Tipo de Empaque</label>
-                <input name="pkg_type" value="{{ survey.packaging_data.get('type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: Primario" type="text"/>
+                <label for="pkg-type" class="text-sm font-semibold">Tipo de Empaque</label>
+                <input name="pkg_type" value="{{ survey.packaging_data.get('type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: Primario" type="text" id="pkg-type"/>
             </div>
             <div class="space-y-2">
-                <label class="text-sm font-semibold">Material de Empaque</label>
-                <input name="pkg_material" value="{{ survey.packaging_data.get('material', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: Film PE" type="text"/>
+                <label for="pkg-material" class="text-sm font-semibold">Material de Empaque</label>
+                <input name="pkg_material" value="{{ survey.packaging_data.get('material', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: Film PE" type="text" id="pkg-material"/>
             </div>
             <div class="md:col-span-2 space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones Empaque</label>
-                <textarea name="pkg_obs" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2">{{ survey.packaging_data.get('obs', '') if survey else '' }}</textarea>
+                <label for="pkg-obs" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones Empaque</label>
+                <textarea name="pkg_obs" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="pkg-obs">{{ survey.packaging_data.get('obs', '') if survey else '' }}</textarea>
             </div>
         </div>
     </section>
@@ -186,47 +186,47 @@
     <section class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="p-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20">
             <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary">package_2</span>
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">package_2</span>
                 4. Paletizado
             </h3>
         </div>
         <div class="p-8 space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Tipo Paletizado</label>
-                    <input name="pal_type" value="{{ survey.palletizing_data.get('type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="pal-type" class="text-sm font-semibold">Tipo Paletizado</label>
+                    <input name="pal_type" value="{{ survey.palletizing_data.get('type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="pal-type"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Tipo Pallet</label>
-                    <input name="pal_pallet_type" value="{{ survey.palletizing_data.get('pallet_type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="pal-pallet-type" class="text-sm font-semibold">Tipo Pallet</label>
+                    <input name="pal_pallet_type" value="{{ survey.palletizing_data.get('pallet_type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="pal-pallet-type"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Pzas Recibo</label>
-                    <input name="pal_pieces" value="{{ survey.palletizing_data.get('pieces', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="pal-pieces" class="text-sm font-semibold">Pzas Recibo</label>
+                    <input name="pal_pieces" value="{{ survey.palletizing_data.get('pieces', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="pal-pieces"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Alto Máx (mm)</label>
-                    <input name="pal_height" value="{{ survey.palletizing_data.get('height', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="pal-height" class="text-sm font-semibold">Alto Máx (mm)</label>
+                    <input name="pal_height" value="{{ survey.palletizing_data.get('height', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="pal-height"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Patrón</label>
-                    <input name="pal_pattern" value="{{ survey.palletizing_data.get('pattern', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="pal-pattern" class="text-sm font-semibold">Patrón</label>
+                    <input name="pal_pattern" value="{{ survey.palletizing_data.get('pattern', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="pal-pattern"/>
                 </div>
             </div>
             <div class="space-y-3">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
-                <div class="flex gap-4">
+                <label id="criticidad-del-sector-3" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Criticidad del Sector</label>
+                <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector-3">
                     {% for crit in ['Baja', 'Media', 'Alta'] %}
-                    <label class="flex-1 cursor-pointer">
-                        <input class="sr-only peer" name="pal_crit" value="{{ crit }}" type="radio" {% if survey and survey.palletizing_data.get('crit') == crit %}checked{% endif %}/>
+                    <label for="pal-crit{{ loop.index }}" class="flex-1 cursor-pointer">
+                        <input class="sr-only peer" name="pal_crit" value="{{ crit }}" type="radio" {% if survey and survey.palletizing_data.get('crit') == crit %}checked{% endif %} id="pal-crit{{ loop.index }}"/>
                         <div class="text-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
                     </label>
                     {% endfor %}
                 </div>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
-                <textarea name="pal_obs" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2">{{ survey.palletizing_data.get('obs', '') if survey else '' }}</textarea>
+                <label for="pal-obs" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
+                <textarea name="pal_obs" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="pal-obs">{{ survey.palletizing_data.get('obs', '') if survey else '' }}</textarea>
             </div>
         </div>
     </section>
@@ -235,39 +235,39 @@
     <section class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="p-8 border-b border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20">
             <h3 class="text-xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary">local_shipping</span>
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">local_shipping</span>
                 5. Logística
             </h3>
         </div>
         <div class="p-8 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Tipo Vehículo</label>
-                    <input name="log_veh_type" value="{{ survey.logistics_data.get('veh_type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="log-veh-type" class="text-sm font-semibold">Tipo Vehículo</label>
+                    <input name="log_veh_type" value="{{ survey.logistics_data.get('veh_type', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="log-veh-type"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Canal de Venta</label>
-                    <input name="log_channel" value="{{ survey.logistics_data.get('channel', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="log-channel" class="text-sm font-semibold">Canal de Venta</label>
+                    <input name="log_channel" value="{{ survey.logistics_data.get('channel', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="log-channel"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold">Frec. Reposición</label>
-                    <input name="log_freq" value="{{ survey.logistics_data.get('freq', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text"/>
+                    <label for="log-freq" class="text-sm font-semibold">Frec. Reposición</label>
+                    <input name="log_freq" value="{{ survey.logistics_data.get('freq', '') if survey else '' }}" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="text" id="log-freq"/>
                 </div>
             </div>
             <div class="space-y-3">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Criticidad Logística</label>
-                <div class="flex gap-4">
+                <label id="criticidad-logistica" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Criticidad Logística</label>
+                <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-logistica">
                     {% for crit in ['Baja', 'Media', 'Alta'] %}
-                    <label class="flex-1 cursor-pointer">
-                        <input class="sr-only peer" name="log_crit_dist" value="{{ crit }}" type="radio" {% if survey and survey.logistics_data.get('crit_dist') == crit %}checked{% endif %}/>
+                    <label for="log-crit-dist{{ loop.index }}" class="flex-1 cursor-pointer">
+                        <input class="sr-only peer" name="log_crit_dist" value="{{ crit }}" type="radio" {% if survey and survey.logistics_data.get('crit_dist') == crit %}checked{% endif %} id="log-crit-dist{{ loop.index }}"/>
                         <div class="text-center p-3 rounded-xl border border-slate-200 dark:border-slate-800 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
                     </label>
                     {% endfor %}
                 </div>
             </div>
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
-                <textarea name="log_obs_dist" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2">{{ survey.logistics_data.get('obs_dist', '') if survey else '' }}</textarea>
+                <label for="log-obs-dist" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</label>
+                <textarea name="log_obs_dist" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="log-obs-dist">{{ survey.logistics_data.get('obs_dist', '') if survey else '' }}</textarea>
             </div>
         </div>
     </section>

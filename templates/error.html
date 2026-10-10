@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% set code = status_code|default(500)|int %}
+{% set code_titles = {
+    400: 'Solicitud incorrecta',
+    401: 'No autenticado',
+    403: 'Acceso denegado',
+    404: 'Página no encontrada',
+    405: 'Método no permitido',
+    408: 'Tiempo de espera agotado',
+    409: 'Conflicto con el estado actual',
+    413: 'Contenido demasiado grande',
+    422: 'Datos no procesables',
+    429: 'Demasiadas solicitudes',
+    500: 'Error interno del servidor',
+    502: 'Puerta de enlace incorrecta',
+    503: 'Servicio no disponible',
+    504: 'Tiempo de espera de la puerta de enlace'
+} %}
+{% set code_messages = {
+    400: 'La solicitud no pudo ser procesada. Revisá los datos enviados e intentá nuevamente.',
+    401: 'Necesitás iniciar sesión para ver esta página.',
+    403: 'No tenés permisos suficientes para acceder a este recurso.',
+    404: 'La página o el recurso que buscás no existe o fue movido.',
+    405: 'La acción solicitada no está permitida en esta dirección.',
+    408: 'La operación tardó demasiado. Volvé a intentarlo.',
+    409: 'La operación entra en conflicto con el estado actual del registro.',
+    413: 'El contenido enviado supera el tamaño permitido.',
+    422: 'Los datos enviados no son válidos. Revisalos e intentá otra vez.',
+    429: 'Hiciste demasiadas solicitudes seguidas. Esperá unos segundos.',
+    500: 'Ocurrió un error inesperado en el servidor. El equipo fue notificado.',
+    502: 'El servidor recibió una respuesta inválida de un servicio externo.',
+    503: 'El servicio no está disponible en este momento. Intentá más tarde.',
+    504: 'Un servicio externo no respondió a tiempo. Intentá más tarde.'
+} %}
+{% set code_icons = {
+    401: 'lock',
+    403: 'block',
+    404: 'search_off',
+    429: 'hourglass_top',
+    500: 'report',
+    502: 'cloud_off',
+    503: 'cloud_off',
+    504: 'schedule'
+} %}
+
+{% set heading = code_titles.get(code, 'Algo salió mal') %}
+{% set detail = message|default('', true) %}
+{% if not detail %}
+{% set detail = code_messages.get(code, 'No pudimos completar la operación solicitada.') %}
+{% endif %}
+
+{% block title %}{{ code }} · {{ heading }} | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Error {{ code }}</h2>
+    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">{{ heading }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto flex items-center justify-center py-10 lg:py-20 animate-fade-in">
+    <section role="alert" aria-labelledby="error-title"
+        class="w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 lg:p-12 text-center space-y-6">
+
+        <div class="size-20 rounded-3xl bg-primary/5 dark:bg-primary/10 flex items-center justify-center text-primary mx-auto"
+            aria-hidden="true">
+            <span class="material-symbols-rounded text-[44px]" aria-hidden="true">{{ code_icons.get(code, 'error') }}</span>
+        </div>
+
+        <p class="text-6xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tighter leading-none"
+            aria-hidden="true">{{ code }}</p>
+
+        <div class="space-y-2">
+            <h1 id="error-title"
+                class="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                {{ heading }}
+            </h1>
+            <p class="text-sm lg:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl mx-auto">
+                {{ detail }}
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <a href="/"
+                class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/20 transition-all">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">home</span>
+                Volver al inicio
+            </a>
+            {% if request.state.user %}
+            <a href="/auth/perfil"
+                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                Ir a mi perfil
+            </a>
+            {% else %}
+            <a href="/auth/login"
+                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                Iniciar sesión
+            </a>
+            {% endif %}
+        </div>
+
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest pt-2">
+            Si el problema persiste, contactá al administrador del sistema.
+        </p>
+    </section>
+</div>
+{% endblock %}

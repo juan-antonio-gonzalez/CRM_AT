@@ -17,9 +17,10 @@
         class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-xl shadow-sm">
         <form method="GET" action="/clientes" class="flex flex-col sm:flex-row sm:items-center gap-3">
             <div class="relative flex-1">
+                <label for="clientes-q" class="sr-only">Buscar cliente por empresa, planta o sector</label>
                 <span
-                    class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                <input name="q" value="{{ q or '' }}"
+                    class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" aria-hidden="true">search</span>
+                <input id="clientes-q" name="q" value="{{ q or '' }}"
                     class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg focus:ring-1 focus:ring-primary/50 text-xs text-slate-900 dark:text-white placeholder:text-slate-500 dark:text-slate-400"
                     placeholder="Buscar empresa, planta, sector..." type="text" />
             </div>
@@ -29,9 +30,14 @@
             {% endif %}
             <button type="submit"
                 class="bg-slate-900 dark:bg-primary text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
+            <a href="/clientes/exportar-excel"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-emerald-600/20">
+                <span class="material-symbols-rounded text-sm" aria-hidden="true">download</span>
+                <span class="whitespace-nowrap">Exportar Excel</span>
+            </a>
             <button type="button" id="btn-nuevo-cliente"
                 class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-primary/10">
-                <span class="material-symbols-rounded text-sm">person_add</span>
+                <span class="material-symbols-rounded text-sm" aria-hidden="true">person_add</span>
                 <span class="whitespace-nowrap">Nuevo Cliente</span>
             </button>
         </form>
@@ -63,16 +69,16 @@
             <table class="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                     <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Empresa / Sector</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ubicación</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Equipo</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Status</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Empresa / Sector</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Ubicación</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Equipo</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Status</th>
+                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     {% for customer in customers %}
-                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group{{ ' opacity-60' if not customer.is_active else '' }}">
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
                                 <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-black text-[10px] border border-primary/10">
@@ -80,6 +86,9 @@
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-slate-900 dark:text-white">{{ customer.name }}</span>
+                                    {% if not customer.is_active %}
+                                    <span class="text-[9px] font-black text-red-500 uppercase tracking-tighter mt-0.5">INACTIVO</span>
+                                    {% endif %}
                                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
                                 </div>
                             </div>
@@ -104,34 +113,48 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 text-center">
+                            {% if not customer.is_active %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300">
+                                Inactivo
+                            </span>
+                            {% else %}
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase {% if customer.relevamiento_status == 'Completado' %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300{% elif customer.relevamiento_status == 'En Proceso' %}bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400{% else %}bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400{% endif %}">
                                 {{ customer.relevamiento_status }}
                             </span>
+                            {% endif %}
                         </td>
                         <td class="px-4 py-3 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="/cliente-reporte/{{ customer.id }}"
                                     class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
-                                    title="Ver Reporte">
-                                    <span class="material-symbols-rounded text-[18px]">visibility</span>
+                                    title="Ver Reporte" aria-label="Ver Reporte">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">visibility</span>
                                 </a>
+                                {% if customer.is_active %}
                                  <button type="button"
                                          class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700"
                                          title="Editar Cliente"
                                          data-customer-id="{{ customer.id }}"
-                                         data-action="edit">
-                                     <span class="material-symbols-rounded text-[18px]">edit</span>
+                                         data-action="edit" aria-label="Editar Cliente">
+                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">edit</span>
                                  </button>
-                                <form action="/eliminar-cliente/{{ customer.id }}" method="POST"
-                                    class="inline delete-customer-form"
-                                    data-confirm="¿Estás seguro de que deseas eliminar el registro de {{ customer.name }}?">
-                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                    <button type="submit"
-                                        class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
-                                        title="Eliminar Cliente">
-                                        <span class="material-symbols-rounded text-[18px]">delete</span>
-                                    </button>
-                                </form>
+                                <button type="button"
+                                    class="btn-deactivate-customer p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Desactivar Cliente"
+                                    data-customer-id="{{ customer.id }}"
+                                    data-customer-name="{{ customer.name }}" aria-label="Desactivar Cliente">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">block</span>
+                                </button>
+                                {% else %}
+                                {% if request.state.user and request.state.user.get('role') == 'admin' %}
+                                <button type="button"
+                                    class="btn-reactivate-customer p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Reactivar Cliente"
+                                    data-customer-id="{{ customer.id }}" aria-label="Reactivar Cliente">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">check_circle</span>
+                                </button>
+                                {% endif %}
+                                {% endif %}
                             </div>
                         </td>
                     </tr>
@@ -190,17 +213,17 @@
 
 <!-- Modal Nuevo Cliente -->
 <div id="nuevoClienteModal"
-    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="nuevoClienteModal-title">
     <div
         class="bg-white dark:bg-slate-900 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
         <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl">person_add</span>
-                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Registro de Cuenta</h3>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">person_add</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="nuevoClienteModal-title">Registro de Cuenta</h3>
             </div>
             <button type="button" id="btn-close-nuevo-cliente"
-                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
-                <span class="material-symbols-rounded">close</span>
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
         {% set modal_suffix = 'modal' %}
@@ -220,17 +243,17 @@
 
  <!-- Modal Editar Cliente -->
  <div id="editarClienteModal"
-      class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="editarClienteModal-title">
      <div
          class="bg-white dark:bg-slate-900 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
           <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
               <div class="flex items-center gap-3">
-                  <span class="material-symbols-rounded text-primary text-xl">edit</span>
-                  <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Editar Cliente</h3>
+                  <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">edit</span>
+                  <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="editarClienteModal-title">Editar Cliente</h3>
               </div>
               <button type="button" id="btn-close-editar-cliente"
-                  class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
-                  <span class="material-symbols-rounded">close</span>
+                  class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                  <span class="material-symbols-rounded" aria-hidden="true">close</span>
               </button>
           </div>
           <div id="editarClienteModalContent"
@@ -241,22 +264,22 @@
  </div>
 
  <!-- Auxiliary Management Modal -->
- <div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+ <div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
       <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-slate-200 dark:border-slate-800">
          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
              <h3 id="manageEntityTitle" class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Gestionar</h3>
              <button type="button" id="manageEntityCloseBtn"
-                 class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-                 <span class="material-symbols-rounded text-lg">close</span>
+                 class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" aria-label="Cerrar">
+                 <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
              </button>
          </div>
          <div class="p-6 space-y-4">
              <div class="flex gap-2">
-                 <input id="manageEntityInput" type="text" placeholder="Nuevo elemento..."
+                 <input id="manageEntityInput" type="text" aria-label="Nombre del nuevo elemento" placeholder="Nuevo elemento..."
                      class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
                  <button id="manageEntityAddBtn" type="button"
                      class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
-                     <span class="material-symbols-rounded text-lg">add</span>
+                     <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                      Agregar
                  </button>
              </div>
@@ -271,8 +294,30 @@
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
     // ── Quick-add: create auxiliary entity inline ──
+    function getTeamNameOptions() {
+        let html = '';
+        document.querySelectorAll('.team-name-select option').forEach(opt => {
+            if (opt.value) {
+                const val = opt.value.replace(/['"]/g, '&quot;');
+                html += `<option value="${val}">${val}</option>`;
+            }
+        });
+        return html;
+    }
+
+    function getTeamSectorOptions() {
+        let html = '';
+        document.querySelectorAll('.team-sector-select option').forEach(opt => {
+            if (opt.value) {
+                const val = opt.value.replace(/['"]/g, '&quot;');
+                html += `<option value="${val}">${val}</option>`;
+            }
+        });
+        return html;
+    }
+
     function closeAllPopovers() {
-        document.querySelectorAll('.quick-add-popover').forEach(p => p.classList.add('hidden'));
+        document.querySelectorAll('.quick-add-popover, .team-add-name-popover, .team-add-sector-popover').forEach(p => p.classList.add('hidden'));
     }
 
     function setupQuickAddHandlers(scope) {
@@ -379,7 +424,7 @@
 
     // Close popover on click outside
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.quick-add-popover') && !e.target.closest('.quick-add-btn')) {
+        if (!e.target.closest('.quick-add-popover') && !e.target.closest('.quick-add-btn') && !e.target.closest('.team-add-name-popover') && !e.target.closest('.team-add-name-btn') && !e.target.closest('.team-add-sector-popover') && !e.target.closest('.team-add-sector-btn')) {
             closeAllPopovers();
         }
     });
@@ -389,11 +434,167 @@
         if (e.key === 'Escape') closeAllPopovers();
     });
 
+    // ── Quick-add contact name from team table ──
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.team-add-name-btn');
+        if (!btn) return;
+        e.stopPropagation();
+        const popover = btn.parentElement.querySelector('.team-add-name-popover');
+        if (!popover) return;
+        popover.classList.toggle('hidden');
+        if (!popover.classList.contains('hidden')) {
+            popover.querySelector('.team-add-name-input').value = '';
+            popover.querySelector('.team-add-name-input').focus();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const confirmBtn = e.target.closest('.team-add-name-confirm');
+        if (!confirmBtn) return;
+        const popover = confirmBtn.closest('.team-add-name-popover');
+        const input = popover.querySelector('.team-add-name-input');
+        const name = input.value.trim();
+        if (!name) return;
+
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '...';
+
+        const params = new URLSearchParams();
+        params.append('name', name);
+        params.append('csrf_token', getCsrfToken());
+
+        fetch('/configuracion/add/contact-name', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+            body: params
+        })
+        .then(r => {
+            if (r.ok) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                document.querySelectorAll('.team-name-select, .team-reports-select').forEach(sel => {
+                    const clone = opt.cloneNode(true);
+                    sel.appendChild(clone);
+                });
+                input.value = '';
+                popover.classList.add('hidden');
+            } else {
+                alert('Error al crear el contacto');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error de conexión');
+        })
+        .finally(() => {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Crear';
+        });
+    });
+
+    // ── Quick-add sector from team table ──
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.team-add-sector-btn');
+        if (!btn) return;
+        e.stopPropagation();
+        const popover = btn.parentElement.querySelector('.team-add-sector-popover');
+        if (!popover) return;
+        popover.classList.toggle('hidden');
+        if (!popover.classList.contains('hidden')) {
+            popover.querySelector('.team-add-sector-input').value = '';
+            popover.querySelector('.team-add-sector-input').focus();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        const confirmBtn = e.target.closest('.team-add-sector-confirm');
+        if (!confirmBtn) return;
+        const popover = confirmBtn.closest('.team-add-sector-popover');
+        const input = popover.querySelector('.team-add-sector-input');
+        const name = input.value.trim();
+        if (!name) return;
+
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '...';
+
+        const params = new URLSearchParams();
+        params.append('name', name);
+        params.append('csrf_token', getCsrfToken());
+
+        fetch('/configuracion/add/member-sector', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+            body: params
+        })
+        .then(r => {
+            if (r.ok) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                document.querySelectorAll('.team-sector-select').forEach(sel => {
+                    const clone = opt.cloneNode(true);
+                    sel.appendChild(clone);
+                });
+                input.value = '';
+                popover.classList.add('hidden');
+            } else {
+                alert('Error al crear el sector');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error de conexión');
+        })
+        .finally(() => {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Crear';
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll('.delete-customer-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                showConfirmModal(this, this.dataset.confirm);
+
+        document.querySelectorAll('.btn-deactivate-customer').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var customerId = this.dataset.customerId;
+                var customerName = this.dataset.customerName;
+                openDeactivateModal(function(reason) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/desactivar-cliente/' + customerId, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            location.reload();
+                        } else {
+                            alert('Error al desactivar: ' + xhr.responseText);
+                        }
+                    };
+                    xhr.send(JSON.stringify({ reason: reason }));
+                });
+            });
+        });
+
+        document.querySelectorAll('.btn-reactivate-customer').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                showConfirmModal(null, '¿Reactivar este cliente?', {
+                    title: '¿Reactivar Cliente?',
+                    buttonText: 'Reactivar',
+                    type: 'success',
+                    icon: 'undo',
+                    onConfirm: function() {
+                        var customerId = btn.dataset.customerId;
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/reactivar-cliente/' + customerId, true);
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                location.reload();
+                            } else {
+                                alert('Error al reactivar: ' + xhr.responseText);
+                            }
+                        };
+                        xhr.send();
+                    }
+                });
             });
         });
 
@@ -422,36 +623,67 @@
 
         document.getElementById('btn-add-team-row-modal').addEventListener('click', function() {
             const tbody = document.querySelector('#teamTable-modal tbody');
+            const nameOpts = getTeamNameOptions();
+            const sectorOpts = getTeamSectorOptions();
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="px-3 py-2"><input name="member_name"
-                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                    placeholder="Nombre..." type="text" /></td>
-                <td class="px-3 py-2"><input name="member_role"
-                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                    placeholder="Cargo..." type="text" /></td>
-                <td class="px-3 py-2"><input name="member_email"
-                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                    placeholder="email@ejemplo.com" type="text" /></td>
-                <td class="px-3 py-2"><input name="member_phone"
-                    class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                    placeholder="Teléfono..." type="text" /></td>
+                <td class="px-3 py-2">
+                    <div class="relative flex gap-1">
+                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <option value="">SELECCIONAR...</option>
+                            ${nameOpts}
+                        </select>
+                        <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
+                            <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
+                        </button>
+                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-3 py-2">
+                    <select name="member_reports_to" aria-label="Reporta a" class="team-reports-select w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white">
+                        <option value="">(NINGUNO)</option>
+                        ${nameOpts}
+                    </select>
+                </td>
+                <td class="px-3 py-2">
+                    <div class="relative flex gap-1">
+                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <option value="">SELECCIONAR...</option>
+                            ${sectorOpts}
+                        </select>
+                        <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
+                            <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
+                        </button>
+                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-3 py-2"><input name="member_role" aria-label="Cargo del integrante"
+                        class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                        placeholder="Cargo..." type="text" oninput="this.value = this.value.toUpperCase()" /></td>
+                <td class="px-3 py-2"><input name="member_phone" aria-label="Teléfono del integrante"
+                        class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                        placeholder="Teléfono..." type="text" /></td>
                 <td class="px-3 py-2 text-center">
-                    <button type="button" class="btn-remove-team-row-modal p-2 text-slate-300 hover:text-red-500 transition-colors">
-                        <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                    <button type="button" class="btn-remove-team-row-modal p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
+                        <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete_sweep</span>
                     </button>
                 </td>`;
             tbody.appendChild(row);
-            row.querySelectorAll('input[type="text"]').forEach(inp => {
-                inp.addEventListener('input', function() {
-                    this.value = this.value.toUpperCase();
-                });
-            });
             row.querySelector('.btn-remove-team-row-modal').addEventListener('click', function() {
                 const tr = this.closest('tr');
                 const tb = tr.parentElement;
                 if (tb.rows.length > 1) tr.remove();
-                else tr.querySelectorAll('input').forEach(i => i.value = '');
+                else tr.querySelectorAll('input, select').forEach(i => { if (i.tagName === 'SELECT') i.selectedIndex = 0; else i.value = ''; });
             });
         });
 
@@ -460,7 +692,7 @@
                 const tr = this.closest('tr');
                 const tb = tr.parentElement;
                 if (tb.rows.length > 1) tr.remove();
-                else tr.querySelectorAll('input').forEach(i => i.value = '');
+                else tr.querySelectorAll('input, select').forEach(i => { if (i.tagName === 'SELECT') i.selectedIndex = 0; else i.value = ''; });
             });
         });
 
@@ -485,7 +717,7 @@
                  if (teamTable) {
                      const rows = teamTable.querySelectorAll('tr');
                      for (const row of rows) {
-                         const nameInput = row.querySelector('input[name="member_name"]');
+                         const nameInput = row.querySelector('select[name="member_name"]');
                          const roleInput = row.querySelector('input[name="member_role"]');
                          if (nameInput && roleInput && 
                              nameInput.value.trim() !== '' && 
@@ -508,7 +740,8 @@
                          document.getElementById('btn-add-team-row-modal').click();
                          const firstRow = teamTable.querySelector('tr');
                          if (firstRow) {
-                             firstRow.querySelector('input[name="member_name"]').focus();
+                             const sel = firstRow.querySelector('select[name="member_name"]');
+                             if (sel) sel.focus();
                          }
                      } else if (observations) {
                          observations.focus();
@@ -544,7 +777,7 @@
           document.body.style.overflow = 'hidden';
           
           // Show loading state
-          editModalContent.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded">hourglass_top</span> <p class="mt-2">Cargando datos del cliente...</p></div>';
+          editModalContent.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded" aria-hidden="true">hourglass_top</span> <p class="mt-2">Cargando datos del cliente...</p></div>';
           
            // Fetch the edit form
            fetch(`/editar-cliente/${customerId}`, {
@@ -558,7 +791,7 @@
                   initializeEditModalScripts();
               })
               .catch(error => {
-                  editModalContent.innerHTML = '<div class="text-center py-8 text-red-500"><span class="material-symbols-rounded">error</span> <p class="mt-2">Error al cargar el formulario de edición</p></div>';
+                  editModalContent.innerHTML = '<div class="text-center py-8 text-red-500"><span class="material-symbols-rounded" aria-hidden="true">error</span> <p class="mt-2">Error al cargar el formulario de edición</p></div>';
                   console.error('Error loading edit form:', error);
               });
       }
@@ -593,80 +826,110 @@
                });
            });
            
-           // Handle team row addition in edit modal
-           document.getElementById('btn-add-team-row-edit')?.addEventListener('click', function() {
-               const tbody = document.querySelector('#teamTable-edit tbody');
-               const newRow = document.createElement('tr');
-               newRow.className = "divide-y divide-slate-100 dark:divide-slate-800";
-               newRow.innerHTML = `
-               <td class="px-3 py-2"><input name="member_name"
-                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                       placeholder="Nombre..." type="text" /></td>
-               <td class="px-3 py-2"><input name="member_role"
-                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                       placeholder="Cargo..." type="text" /></td>
-               <td class="px-3 py-2"><input name="member_email"
-                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                       placeholder="email@ejemplo.com" type="text" /></td>
-               <td class="px-3 py-2"><input name="member_phone"
-                       class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
-                       placeholder="Teléfono..." type="text" /></td>
-               <td class="px-3 py-2 text-center">
-                   <button type="button" class="btn-remove-team-row-edit p-2 text-slate-300 hover:text-red-500 transition-colors">
-                       <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
-                   </button>
-               </td>
-           `;
-               tbody.appendChild(newRow);
-               
-               // Apply uppercase to new inputs
-               newRow.querySelectorAll('input[type="text"]').forEach(inp => {
-                   inp.addEventListener('input', function() {
-                       this.value = this.value.toUpperCase();
-                   });
-               });
-               
-               // Bind click handler on the delete button for the new row
-               newRow.querySelector('.btn-remove-team-row-edit').addEventListener('click', function() {
-                   const row = this.closest('tr');
-                   const tbody = row.parentElement;
-                   if (tbody.rows.length > 1) {
-                       row.remove();
-                   } else {
-                       row.querySelectorAll('input').forEach(i => i.value = '');
-                   }
-               });
-           });
-           
-           // Handle team row removal in edit modal (existing rows)
-           document.querySelectorAll('.btn-remove-team-row-edit').forEach(button => {
-               button.addEventListener('click', function() {
-                   const row = this.closest('tr');
-                   const tbody = row.parentElement;
-                   if (tbody.rows.length > 1) {
-                       row.remove();
-                   } else {
-                       row.querySelectorAll('input').forEach(i => i.value = '');
-                   }
-               });
-           });
+             // Handle team row addition in edit modal
+             document.getElementById('btn-add-team-row-edit')?.addEventListener('click', function() {
+                 const tbody = document.querySelector('#teamTable-edit tbody');
+                 const nameOpts = getTeamNameOptions();
+                 const sectorOpts = getTeamSectorOptions();
+                 const newRow = document.createElement('tr');
+                 newRow.innerHTML = `
+                <td class="px-3 py-2">
+                    <div class="relative flex gap-1">
+                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <option value="">SELECCIONAR...</option>
+                            ${nameOpts}
+                        </select>
+                        <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
+                            <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
+                        </button>
+                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-3 py-2">
+                    <select name="member_reports_to" aria-label="Reporta a" class="team-reports-select w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white">
+                        <option value="">(NINGUNO)</option>
+                        ${nameOpts}
+                    </select>
+                </td>
+                <td class="px-3 py-2">
+                    <div class="relative flex gap-1">
+                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <option value="">SELECCIONAR...</option>
+                            ${sectorOpts}
+                        </select>
+                        <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
+                            <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
+                        </button>
+                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-3 py-2"><input name="member_role" aria-label="Cargo del integrante"
+                        class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                        placeholder="Cargo..." type="text" oninput="this.value = this.value.toUpperCase()" /></td>
+                <td class="px-3 py-2"><input name="member_phone" aria-label="Teléfono del integrante"
+                        class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0"
+                        placeholder="Teléfono..." type="text" /></td>
+                <td class="px-3 py-2 text-center">
+                    <button type="button" class="btn-remove-team-row-edit p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
+                        <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete_sweep</span>
+                    </button>
+                </td>
+            `;
+                tbody.appendChild(newRow);
+                
+                // Bind click handler on the delete button for the new row
+                newRow.querySelector('.btn-remove-team-row-edit').addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const tbody = row.parentElement;
+                    if (tbody.rows.length > 1) {
+                        row.remove();
+                    } else {
+                        row.querySelectorAll('input, select').forEach(i => { if (i.tagName === 'SELECT') i.selectedIndex = 0; else i.value = ''; });
+                    }
+                });
+            });
+            
+            // Handle team row removal in edit modal (existing rows)
+            document.querySelectorAll('.btn-remove-team-row-edit').forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const tbody = row.parentElement;
+                    if (tbody.rows.length > 1) {
+                        row.remove();
+                    } else {
+                        row.querySelectorAll('input, select').forEach(i => { if (i.tagName === 'SELECT') i.selectedIndex = 0; else i.value = ''; });
+                    }
+                });
+            });
           
            // Handle form submission in edit modal — no client-side blocking,
            // the server handles empty teams fine for existing customers
           
-          // Deduplicate select options in edit modal
-          document.querySelectorAll('#editarClienteModal select').forEach(select => {
-              const seen = new Set();
-              Array.from(select.options).forEach(opt => {
-                  const val = opt.value.trim().toLowerCase();
-                  if (val && seen.has(val)) {
-                      opt.remove();
-                  } else if (val) {
-                      seen.add(val);
-                  }
-              });
-          });
-      }
+           // Deduplicate select options in edit modal
+           document.querySelectorAll('#editarClienteModal select').forEach(select => {
+               const seen = new Set();
+               Array.from(select.options).forEach(opt => {
+                   const val = opt.value.trim().toLowerCase();
+                   if (val && seen.has(val)) {
+                       opt.remove();
+                   } else if (val) {
+                       seen.add(val);
+                   }
+               });
+           });
+
+
+       }
       
       // Close modal on close button click
       document.getElementById('btn-close-editar-cliente')?.addEventListener('click', closeEditModal);
@@ -720,38 +983,44 @@
                 div.innerHTML = `
                     <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${item.name}</span>
                     <button type="button" class="text-slate-400 hover:text-red-500 p-1 transition-colors"
-                        data-delete-entity-id="${item.id}" data-delete-entity-type="${entityType}">
-                        <span class="material-symbols-rounded text-sm">delete</span>
+                        data-delete-entity-id="${item.id}" data-delete-entity-type="${entityType}" aria-label="Eliminar elemento">
+                        <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                     </button>`;
                 list.appendChild(div);
             });
             list.querySelectorAll('[data-delete-entity-id]').forEach(btn => {
-                btn.addEventListener('click', async function() {
+                btn.addEventListener('click', function() {
                     const id = this.dataset.deleteEntityId;
                     const type = this.dataset.deleteEntityType;
-                    if (!confirm('¿Eliminar este elemento?')) return;
-                    try {
-                        const params = new URLSearchParams();
-                        params.append('csrf_token', getCsrfToken());
-                        const resp = await fetch(`/configuracion/delete/${type}/${id}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: params
-                        });
-                        if (resp.ok) {
-                            loadManageEntityList(type);
-                            const select = getSelectForEntity(type);
-                            if (select) {
-                                const opt = select.querySelector(`option[value="${this.closest('.flex').querySelector('span').textContent}"]`);
-                                if (opt) opt.remove();
+                    showConfirmModal(null, '¿Eliminar este elemento?', {
+                        title: '¿Eliminar Elemento?',
+                        buttonText: 'Eliminar',
+                        icon: 'delete_forever',
+                        onConfirm: async function() {
+                            try {
+                                const params = new URLSearchParams();
+                                params.append('csrf_token', getCsrfToken());
+                                const resp = await fetch(`/configuracion/delete/${type}/${id}`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: params
+                                });
+                                if (resp.ok) {
+                                    loadManageEntityList(type);
+                                    const select = getSelectForEntity(type);
+                                    if (select) {
+                                        const opt = select.querySelector(`option[value="${btn.closest('.flex').querySelector('span').textContent}"]`);
+                                        if (opt) opt.remove();
+                                    }
+                                } else {
+                                    alert('Error al eliminar');
+                                }
+                            } catch (err) {
+                                console.error(err);
+                                alert('Error de conexión');
                             }
-                        } else {
-                            alert('Error al eliminar');
                         }
-                    } catch (err) {
-                        console.error(err);
-                        alert('Error de conexión');
-                    }
+                    });
                 });
             });
         } catch (err) {

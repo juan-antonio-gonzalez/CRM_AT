@@ -1,15 +1,14 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
 from services import machine_service, pagination as pg
+from templating import templates
 
 router = APIRouter(tags=["machinery"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/maquinaria", response_class=HTMLResponse)
@@ -22,7 +21,8 @@ async def list_machinery(
     per_page: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    query = db.query(models.Machine)
+    # joinedload: the template reads machine.customer per row (avoids N+1).
+    query = db.query(models.Machine).options(joinedload(models.Machine.customer))
 
     customers_raw = db.query(models.Customer).order_by(models.Customer.name).all()
     assigned_advisors = db.query(models.Customer.technical_advisor).filter(
@@ -78,7 +78,7 @@ async def list_machinery(
     if cliente_id:
         selected_customer = db.query(models.Customer).filter(models.Customer.id == cliente_id).first()
 
-    return templates.TemplateResponse("maquinaria.html", {
+    return templates.TemplateResponse(request, 'maquinaria.html', {
         "request": request,
         "machines": machines,
         "customers": customers_for_dropdown,
@@ -122,7 +122,7 @@ async def edit_machine_form(machine_id: int, request: Request, db: Session = Dep
         customers_with_same_name = db.query(models.Customer).filter(models.Customer.name == current_customer.name).all()
         current_plants = [{"id": c.id, "name": c.plant} for c in customers_with_same_name if c.plant]
 
-    return templates.TemplateResponse("editar_maquinaria.html", {
+    return templates.TemplateResponse(request, 'editar_maquinaria.html', {
         "request": request,
         "machine": machine,
         "unique_customer_names": unique_customer_names,
@@ -145,7 +145,7 @@ async def edit_machine_partial(machine_id: int, request: Request, db: Session = 
         customers_with_same_name = db.query(models.Customer).filter(models.Customer.name == current_customer.name).all()
         current_plants = [{"id": c.id, "name": c.plant} for c in customers_with_same_name if c.plant]
 
-    return templates.TemplateResponse("_editar_maquinaria_partial.html", {
+    return templates.TemplateResponse(request, '_editar_maquinaria_partial.html', {
         "request": request,
         "machine": machine,
         "unique_customer_names": unique_customer_names,

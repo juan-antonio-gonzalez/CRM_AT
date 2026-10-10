@@ -28,7 +28,7 @@ def create_product(db: Session, name: str, et_number: str, material: str,
         name=name, et_number=et_number, material=material,
         manufacturing_route=manufacturing_route,
         dimensions_l=dimensions_l, dimensions_a=dimensions_a, dimensions_h=dimensions_h,
-        status=status or ProductStatus.ACTIVO.value, last_modified="Hoy"
+        status=status or ProductStatus.ACTIVO.value
     )
     db.add(new_product)
     db.commit()
@@ -69,7 +69,8 @@ def delete_product(db: Session, product_id: int, user_id: int = None, username: 
         "dimensions_l": product.dimensions_l,
         "dimensions_a": product.dimensions_a,
         "dimensions_h": product.dimensions_h,
-        "status": product.status, "last_modified": product.last_modified,
+        "status": product.status,
+        "is_active": product.is_active,
     }, user_id, username, product.name)
     db.delete(product)
     db.commit()
@@ -94,8 +95,7 @@ def create_product_api(db: Session, et_number: str, description: str, material: 
     if existing:
         return {"status": "exists", "message": "El producto ya existe en la biblioteca"}
     new_product = models.Product(
-        et_number=et_number, name=description, material=material,
-        last_modified=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        et_number=et_number, name=description, material=material
     )
     db.add(new_product)
     db.commit()

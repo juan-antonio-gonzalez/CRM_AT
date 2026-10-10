@@ -85,7 +85,7 @@
         <div class="flex items-center gap-4">
             <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                 <a href="/relevamiento" class="hover:text-primary transition-colors">Relevamiento Técnico</a>
-                <span class="material-symbols-rounded text-sm">chevron_right</span>
+                <span class="material-symbols-rounded text-sm" aria-hidden="true">chevron_right</span>
                 <span class="text-slate-900 dark:text-slate-100">Vista Previa #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</span>
             </nav>
         </div>
@@ -93,18 +93,18 @@
             {% if survey and survey.status != 'Completado' %}
             <a href="/relevamiento?edit_machine={{ machine.id }}"
                 class="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors text-sm font-bold mr-2">
-                <span class="material-symbols-rounded text-[20px]">edit</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                 Volver a Edición
             </a>
             {% endif %}
             <button style="cursor:pointer" data-print-btn
                 class="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-semibold">
-                <span class="material-symbols-rounded text-[20px]">print</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">print</span>
                 Imprimir
             </button>
             <button style="cursor:pointer" data-print-btn
                 class="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-primary/90 rounded-lg transition-colors text-sm font-bold shadow-sm">
-                <span class="material-symbols-rounded text-[20px]">download</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">download</span>
                 Descargar PDF
             </button>
         </div>
@@ -120,7 +120,7 @@
             <div class="flex justify-between items-start border-b-2 border-slate-100 dark:border-slate-800 pb-8">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-white shrink-0">
-                        <span class="material-symbols-rounded text-3xl">fact_check</span>
+                        <span class="material-symbols-rounded text-3xl" aria-hidden="true">fact_check</span>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">Aplicación AT</h2>
@@ -164,7 +164,7 @@
             <!-- Section: Machine Specs -->
             <section class="mt-4 page-break-inside-avoid">
                 <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
-                    <span class="material-symbols-rounded align-middle mr-1 text-base">precision_manufacturing</span> Especificaciones de la Máquina
+                    <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">precision_manufacturing</span> Especificaciones de la Máquina
                 </h4>
                 <div class="grid grid-cols-2 gap-4">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Máquina (Marca y Modelo):</span> {{ machine.brand }} {{ machine.model }}</p>
@@ -188,7 +188,7 @@
             <!-- Station E1: Alimentación -->
             <section class="mt-4 page-break-inside-avoid">
                 <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
-                    <span class="material-symbols-rounded align-middle mr-1 text-base">input</span> Estación 1: Alimentación (Feeder)
+                    <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">input</span> Estación 1: Alimentación (Feeder)
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Toma de Cajas:</span> {{ survey_data.get('e1_toma_cajas', '-') }}</p>
@@ -224,7 +224,7 @@
             <!-- Station E2: Formado y Escuadrado -->
             <section class="mt-4 page-break-inside-avoid">
                 <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
-                    <span class="material-symbols-rounded align-middle mr-1 text-base">square_foot</span> Estación 2: Formado y Escuadrado
+                    <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">square_foot</span> Estación 2: Formado y Escuadrado
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Formado:</span> {{ survey_data.get('e2_tipo_formado', '-') }}</p>
@@ -261,7 +261,7 @@
             <!-- Station E3: Sistema de Cierre -->
             <section class="mt-4 page-break-inside-avoid">
                 <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
-                    <span class="material-symbols-rounded align-middle mr-1 text-base">handyman</span> Estación 3: Sistema de Cierre
+                    <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">handyman</span> Estación 3: Sistema de Cierre
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Cierre:</span> {{ survey_data.get('e3_tipo_cierre', '-') }}</p>
@@ -318,15 +318,15 @@
             {% if team_names %}
             <section class="mt-4 page-break-inside-avoid">
                 <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">
-                    <span class="material-symbols-rounded align-middle mr-1 text-base">group</span> Equipo de Relevamiento
+                    <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">group</span> Equipo de Relevamiento
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm border-collapse">
                         <thead>
                             <tr class="border-b border-slate-200 dark:border-slate-700">
-                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Nombre</th>
-                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Cargo</th>
-                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2">Observaciones</th>
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2" scope="col">Nombre</th>
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2" scope="col">Cargo</th>
+                                <th class="text-left font-semibold text-slate-600 dark:text-slate-400 pb-2" scope="col">Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>

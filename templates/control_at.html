@@ -1,0 +1,593 @@
+{% extends "layout.html" %}
+{% block title %}Control de Asignación AT{% endblock %}
+{% block header_extra %}
+<div class="hidden lg:flex items-center gap-4 ml-4">
+    <a href="/dashboard"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
+        title="Volver al Dashboard" aria-label="Volver al Dashboard">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight">Control de Asignación AT</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Seguimiento de visitas técnicas asignadas y realizadas por cliente.</p>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">business</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Clientes</p>
+                <p class="text-xl font-black text-slate-900 dark:text-white">{{ kpi.total_clientes }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-blue-500 text-xl" aria-hidden="true">assignment</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Estándar</p>
+                <p class="text-xl font-black text-blue-600">{{ kpi.total_std }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-purple-500 text-xl" aria-hidden="true">workspace_premium</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Premium</p>
+                <p class="text-xl font-black text-purple-600">{{ kpi.total_prem }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-emerald-500 text-xl" aria-hidden="true">summarize</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Visitas Asignadas</p>
+                <p class="text-xl font-black text-emerald-600">{{ kpi.total_vis_sum }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-teal-500 text-xl" aria-hidden="true">check_circle</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Finalizada</p>
+                <p class="text-xl font-black text-teal-600">{{ kpi.realizadas_sum }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-amber-500 text-xl" aria-hidden="true">hourglass_empty</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Pendiente</p>
+                <p class="text-xl font-black text-amber-600">{{ kpi.pendientes_sum }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
+                <span class="material-symbols-rounded text-orange-500 text-xl" aria-hidden="true">schedule</span>
+            </div>
+            <div>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Fuera de Cronograma</p>
+                <p class="text-xl font-black text-orange-600">{{ kpi.fuera_cronograma }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance</p>
+            <div class="flex items-baseline gap-2 mt-1">
+                <p class="text-3xl font-black text-sky-600">{{ kpi.avance_pct }}%</p>
+                <span class="text-2xl">
+                    {% if kpi.avance_pct > 100 %}🤩
+                    {% elif kpi.avance_pct >= 100 %}😊
+                    {% elif kpi.avance_pct >= 50 %}😐
+                    {% else %}😟
+                    {% endif %}
+                </span>
+            </div>
+            <div class="mt-3 h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500" style="width: {{ kpi.avance_pct if kpi.avance_pct <= 100 else 100 }}%"></div>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form id="filter-form" method="GET" action="/control-at" class="flex items-end justify-between gap-4">
+            <div class="flex flex-col gap-1 flex-1 max-w-xs">
+                <label for="cliente" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <input type="text" name="cliente" value="{{ filters.cliente }}"
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary"
+                    placeholder="Buscar cliente..." id="cliente">
+            </div>
+            <div class="flex flex-col gap-1 flex-1 max-w-xs">
+                <label for="at" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">AT</label>
+                <select name="at"
+                    class="form-select w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary" id="at">
+                    <option value="">Todos</option>
+                    {% for a in at_list %}
+                    <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col gap-1 w-32">
+                <label for="estandar" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estándar</label>
+                <input type="number" name="estandar" value="{{ filters.estandar or '' }}" min="0" placeholder="Cant."
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary" id="estandar">
+            </div>
+            <div class="flex flex-col gap-1 w-32">
+                <label for="premium" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Premium</label>
+                <input type="number" name="premium" value="{{ filters.premium or '' }}" min="0" placeholder="Cant."
+                    class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary" id="premium">
+            </div>
+            <div class="flex flex-col gap-1 w-40">
+                <label for="status" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                <select name="status"
+                    class="form-select w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary" id="status">
+                    <option value="">Todos</option>
+                    <option value="Activo" {% if filters.status == 'Activo' %}selected{% endif %}>Activo</option>
+                    <option value="Inactivo" {% if filters.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+                    <option value="Fuera de Cronograma" {% if filters.status == 'Fuera de Cronograma' %}selected{% endif %}>Fuera de Cronograma</option>
+                </select>
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit"
+                    class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1" aria-label="Buscar">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">search</span>
+                </button>
+                <a href="/control-at"
+                    class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
+            <button type="button" id="btn-nueva-asignacion"
+                class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
+                Nueva Asignación
+            </button>
+        </div>
+        {% if rows %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left" id="tabla-control-at">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Total</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for r in rows %}
+                    {% set std = r.standard_visits or 0 %}
+                    {% set prem = r.premium_visits or 0 %}
+                    {% set total_vis = std + prem %}
+                    {% set realizadas = visit_counts.get(r.customer_id, 0) %}
+                    {% set pendientes = total_vis - realizadas %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                        data-assignment-id="{{ r.assignment_id or '' }}"
+                        data-customer-name="{{ r.name }}"
+                        data-at="{{ r.technical_advisor or '' }}"
+                        data-estandar="{{ std }}"
+                        data-premium="{{ prem }}"
+                        data-estado="{{ r.status or 'Activo' }}"
+                        data-realizadas="{{ realizadas }}"
+                        data-pendientes="{{ pendientes }}"
+                        data-valid-from="{{ r.valid_from.strftime('%Y-%m-%d') if r.valid_from else '' }}"
+                        data-valid-to="{{ r.valid_to.strftime('%Y-%m-%d') if r.valid_to else '' }}">
+                        <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">{{ r.name }}<br><span class="text-[11px] text-slate-400 font-normal">{{ r.plant or '—' }}</span></td>
+                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{{ r.technical_advisor or '—' }}</td>
+                        <td class="px-6 py-4 text-center">
+                            {% set est = r.status or 'Activo' %}
+                            {% if est == 'Activo' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 uppercase">
+                                <span class="size-1.5 bg-emerald-500 rounded-full"></span>Activo
+                            </span>
+                            {% elif est == 'Fuera de Cronograma' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 uppercase">
+                                <span class="size-1.5 bg-amber-500 rounded-full"></span>Fuera de Cronograma
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 uppercase">
+                                <span class="size-1.5 bg-slate-400 rounded-full"></span>Inactivo
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 text-right">{{ std }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 text-right">{{ prem }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white text-right">{{ total_vis }}</td>
+                        <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{{ r.valid_from.strftime('%d/%m/%Y') if r.valid_from else '—' }}</td>
+                        <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">{% if r.valid_to %}{{ r.valid_to.strftime('%d/%m/%Y') }}{% else %}<span class="text-slate-300 dark:text-slate-600">—</span>{% endif %}</td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                {% if r.assignment_id %}
+                                <button type="button"
+                                    class="btn-edit-asignacion p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Editar" aria-label="Editar">
+                                    <span class="material-symbols-rounded text-[16px]" aria-hidden="true">edit</span>
+                                </button>
+                                <button type="button"
+                                    class="btn-delete-asignacion p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Eliminar"
+                                    data-id="{{ r.assignment_id }}"
+                                    data-name="{{ r.name }}" aria-label="Eliminar">
+                                    <span class="material-symbols-rounded text-[16px]" aria-hidden="true">delete</span>
+                                </button>
+                                {% else %}
+                                <button type="button"
+                                    class="btn-create-asignacion p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    title="Crear asignación"
+                                    data-customer="{{ r.name }}" aria-label="Crear asignación">
+                                    <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if total_pages > 1 %}
+        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Página {{ page }} de {{ total_pages }}
+            </div>
+            <div class="flex items-center gap-1">
+                {% if page > 1 %}
+                <a href="?page={{ page - 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Anterior</a>
+                {% else %}
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Anterior</span>
+                {% endif %}
+                {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                    <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">{{ p }}</span>
+                    {% elif p >= page - 2 and p <= page + 2 %}
+                    <a href="?page={{ p }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
+                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/50 flex items-center justify-center transition-colors">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page * per_page < total %}
+                <a href="?page={{ page + 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Siguiente</a>
+                {% else %}
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Siguiente</span>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="px-6 py-3 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+            <span class="text-[11px] font-bold text-slate-500">{{ total }} cliente{{ 's' if total != 1 else '' }}</span>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="px-6 py-16 text-center">
+            <span class="material-symbols-rounded text-4xl text-slate-300 dark:text-slate-600 mb-3" aria-hidden="true">ssid_chart</span>
+            <p class="text-sm text-slate-500">No se encontraron clientes con los filtros aplicados.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Assignment Modal -->
+<div id="asignacion-modal-container" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    <div id="asignacion-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="p-6 space-y-5">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="modal-title">Nueva Asignación</h3>
+                    <button type="button" id="modal-close" class="p-1 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
+                        <span class="material-symbols-rounded" aria-hidden="true">close</span>
+                    </button>
+                </div>
+                <input type="hidden" id="edit-assignment-id" value="">
+                <div class="space-y-4">
+                    <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Realizadas</label>
+                            <p id="modal-realizadas" class="text-sm font-bold text-emerald-600 mt-0.5">0</p>
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</label>
+                            <p id="modal-pendientes" class="text-sm font-bold text-amber-600 mt-0.5">0</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="modal-cliente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                        <select id="modal-cliente" class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                            <option value="">Seleccionar cliente...</option>
+                            {% for c in customer_names %}
+                            <option value="{{ c }}">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="modal-at" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AT Asignado</label>
+                        <select id="modal-at" class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                            <option value="">Seleccionar AT...</option>
+                            {% for a in advisors %}
+                            <option value="{{ a }}">{{ a }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="modal-estandar" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visitas Estándar</label>
+                            <input type="number" id="modal-estandar" value="0" min="0"
+                                class="form-input w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        </div>
+                        <div>
+                            <label for="modal-premium" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visitas Premium</label>
+                            <input type="number" id="modal-premium" value="0" min="0"
+                                class="form-input w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="modal-estado" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                        <select id="modal-estado" class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                            <option value="Fuera de Cronograma">Fuera de Cronograma</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="modal-valid-from" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vigente desde</label>
+                            <input type="date" id="modal-valid-from"
+                                class="form-input w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        </div>
+                        <div>
+                            <label for="modal-valid-to" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vigente hasta</label>
+                            <input type="date" id="modal-valid-to"
+                                class="form-input w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="modal-cancel"
+                        class="flex-1 px-5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        Cancelar
+                    </button>
+                    <button type="button" id="modal-save"
+                        class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary/20">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal-container" class="fixed inset-0 z-[110] hidden" role="dialog" aria-modal="true" aria-labelledby="delete-modal-container-title">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    <div id="delete-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xs hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="p-6 space-y-5">
+                <div class="flex items-center gap-4">
+                    <div class="size-12 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded text-red-500 text-2xl" aria-hidden="true">delete_forever</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5" id="delete-message">¿Estás seguro?</p>
+                    </div>
+                </div>
+                <input type="hidden" id="delete-assignment-id" value="">
+                <input type="hidden" id="delete-csrf" value="{{ request.state.csrf_token or '' }}">
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="delete-cancel"
+                        class="flex-1 px-5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        Cancelar
+                    </button>
+                    <button type="button" id="delete-confirm"
+                        class="flex-1 px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-red-500/20">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+var modalContainer = document.getElementById('asignacion-modal-container');
+var modal = document.getElementById('asignacion-modal');
+
+function toDateStr(d) {
+    if (!d) return '';
+    var dt = new Date(d);
+    return dt.getFullYear() + '-' +
+        String(dt.getMonth() + 1).padStart(2, '0') + '-' +
+        String(dt.getDate()).padStart(2, '0');
+}
+
+function openModal(title, data) {
+    var infoBlock = document.getElementById('modal-info');
+    document.getElementById('modal-title').textContent = title;
+    if (data) {
+        document.getElementById('edit-assignment-id').value = data.id || '';
+        document.getElementById('modal-cliente').value = data.cliente || '';
+        document.getElementById('modal-at').value = data.at || '';
+        document.getElementById('modal-estandar').value = data.estandar || 0;
+        document.getElementById('modal-premium').value = data.premium || 0;
+        document.getElementById('modal-estado').value = data.estado || 'Activo';
+        document.getElementById('modal-valid-from').value = data.validFrom || '';
+        document.getElementById('modal-valid-to').value = data.validTo || '';
+        if (data.id) {
+            infoBlock.classList.remove('hidden');
+            document.getElementById('modal-realizadas').textContent = data.realizadas || 0;
+            document.getElementById('modal-pendientes').textContent = data.pendientes || 0;
+        } else {
+            infoBlock.classList.add('hidden');
+        }
+    } else {
+        infoBlock.classList.add('hidden');
+        document.getElementById('edit-assignment-id').value = '';
+        document.getElementById('modal-cliente').value = '';
+        document.getElementById('modal-at').value = '';
+        document.getElementById('modal-estandar').value = 0;
+        document.getElementById('modal-premium').value = 0;
+        document.getElementById('modal-estado').value = 'Activo';
+        document.getElementById('modal-valid-from').value = '';
+        document.getElementById('modal-valid-to').value = '';
+    }
+    modalContainer.classList.remove('hidden');
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    modal.classList.add('hidden');
+    modalContainer.classList.add('hidden');
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+modalContainer.addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+document.getElementById('btn-nueva-asignacion').addEventListener('click', function() {
+    openModal('Nueva Asignación', null);
+});
+
+document.querySelectorAll('.btn-create-asignacion').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var customer = this.dataset.customer;
+        openModal('Nueva Asignación', { cliente: customer, at: '', estandar: 0, premium: 0 });
+    });
+});
+
+document.querySelectorAll('.btn-edit-asignacion').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var tr = this.closest('tr');
+        openModal('Editar Asignación', {
+            id: tr.dataset.assignmentId,
+            cliente: tr.dataset.customerName,
+            at: tr.dataset.at,
+            estandar: tr.dataset.estandar,
+            premium: tr.dataset.premium,
+            estado: tr.dataset.estado,
+            realizadas: tr.dataset.realizadas,
+            pendientes: tr.dataset.pendientes,
+            validFrom: tr.dataset.validFrom,
+            validTo: tr.dataset.validTo,
+        });
+    });
+});
+
+document.getElementById('modal-save').addEventListener('click', function() {
+    var id = document.getElementById('edit-assignment-id').value;
+    var cliente = document.getElementById('modal-cliente').value;
+    var at = document.getElementById('modal-at').value;
+    var estandar = parseInt(document.getElementById('modal-estandar').value) || 0;
+    var premium = parseInt(document.getElementById('modal-premium').value) || 0;
+    var estado = document.getElementById('modal-estado').value;
+
+    if (!cliente) { alert('Debe seleccionar un cliente.'); return; }
+    if (!at) { alert('Debe seleccionar un AT.'); return; }
+
+    var validFrom = document.getElementById('modal-valid-from').value;
+    var validTo = document.getElementById('modal-valid-to').value;
+
+    var url, payload;
+    if (id) {
+        url = '/api/customers/' + id + '/update-kpis';
+        payload = JSON.stringify({
+            name: cliente, at: at, standard_visits: estandar, premium_visits: premium,
+            status: estado, valid_from: validFrom || null, valid_to: validTo || null
+        });
+    } else {
+        url = '/api/customers/quick-create';
+        payload = JSON.stringify({
+            name: cliente, at: at, status: estado,
+            valid_from: validFrom || null, valid_to: validTo || null
+        });
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            if (!id) {
+                var resp = JSON.parse(xhr.responseText);
+                var newId = resp.id;
+                var xhr2 = new XMLHttpRequest();
+                xhr2.open('POST', '/api/customers/' + newId + '/update-kpis', true);
+                xhr2.setRequestHeader('Content-Type', 'application/json');
+                xhr2.onload = function() { location.reload(); };
+                xhr2.send(JSON.stringify({ name: cliente, at: at, standard_visits: estandar, premium_visits: premium, status: estado, valid_from: validFrom || null, valid_to: validTo || null, reason: 'create' }));
+            } else {
+                location.reload();
+            }
+        } else {
+            alert('Error al guardar.');
+        }
+    };
+    xhr.send(payload);
+});
+
+function openDeleteModal(id, name) {
+    document.getElementById('delete-assignment-id').value = id;
+    document.getElementById('delete-message').textContent = '¿Eliminar asignación AT para "' + name + '"?';
+    document.getElementById('delete-modal-container').classList.remove('hidden');
+    document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.add('hidden');
+    document.getElementById('delete-modal-container').classList.add('hidden');
+}
+
+document.getElementById('delete-cancel').addEventListener('click', closeDeleteModal);
+document.getElementById('delete-modal-container').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+
+document.getElementById('delete-confirm').addEventListener('click', function() {
+    var id = document.getElementById('delete-assignment-id').value;
+    var csrf = document.getElementById('delete-csrf').value;
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/eliminar-asignacion/' + id + '?redirect=/control-at';
+    var csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrf_token';
+    csrfInput.value = csrf;
+    form.appendChild(csrfInput);
+    document.body.appendChild(form);
+    form.submit();
+});
+
+document.querySelectorAll('.btn-delete-asignacion').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        openDeleteModal(this.dataset.id, this.dataset.name);
+    });
+});
+</script>
+{% endblock %}

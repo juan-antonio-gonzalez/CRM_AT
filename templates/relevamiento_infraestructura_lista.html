@@ -11,39 +11,34 @@
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     
     <!-- Filters -->
-    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <form method="GET" action="/relevamiento-infraestructura" class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div class="flex-1 flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
-                <select name="cliente" class="filter-submit"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+    <form method="GET" action="/relevamiento-infraestructura" class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-col min-w-[200px]">
+                <label for="cliente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                <select name="cliente" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
                     <option value="{{ c.id }}" {% if selected_customer_id == c.id %}selected{% endif %}>{{ c.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="flex-1 flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
-                <select name="asistente" class="filter-submit"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+            <div class="flex flex-col min-w-[200px]">
+                <label for="asistente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
+                <select name="asistente" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor.name }}" {% if selected_asistente == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit"
-                class="px-6 py-2 bg-slate-900 dark:bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
-                Filtrar
-            </button>
-            <a href="/relevamiento-infraestructura/nuevo"
-                class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
-                <span class="material-symbols-rounded !text-base">add_circle</span>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
+            <a href="/relevamiento-infraestructura" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-2 py-1.5">Limpiar</a>
+            <a href="/relevamiento-infraestructura/nuevo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
                 Nuevo Relevamiento
             </a>
-        </form>
-    </div>
+        </div>
+    </form>
 
     <!-- Indicators -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -71,11 +66,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente / Planta</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Asistente Técnico</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Fecha</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Cliente / Planta</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Asistente Técnico</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50 dark:divide-slate-800">
@@ -113,13 +108,13 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2 transition-opacity">
-                                <a href="/relevamiento-infraestructura/{{ s.id }}" class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700" title="Editar Relevamiento">
-                                    <span class="material-symbols-rounded text-[20px]">edit</span>
+                                <a href="/relevamiento-infraestructura/{{ s.id }}" class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700" title="Editar Relevamiento" aria-label="Editar Relevamiento">
+                                    <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                                 </a>
-                                <form action="/relevamiento-infraestructura/eliminar/{{ s.id }}" method="POST" class="inline delete-infra-form" data-confirm="¿Estás seguro de que deseas eliminar permanentemente este relevamiento de infraestructura de {{ s.customer.name }} - {{ s.plant }}?" class="inline">
+                                <form action="/relevamiento-infraestructura/eliminar/{{ s.id }}" method="POST" class="inline delete-infra-form" data-confirm="¿Estás seguro de que deseas eliminar permanentemente este relevamiento de infraestructura de {{ s.customer.name }} - {{ s.plant }}?">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                    <button type="submit" class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-rose-500 transition-all border border-slate-100 dark:border-slate-700" title="Eliminar Relevamiento">
-                                        <span class="material-symbols-rounded text-[20px]">delete</span>
+                                    <button type="submit" class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-rose-500 transition-all border border-slate-100 dark:border-slate-700" title="Eliminar Relevamiento" aria-label="Eliminar Relevamiento">
+                                        <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete</span>
                                     </button>
                                 </form>
                             </div>
@@ -130,7 +125,7 @@
                     <tr>
                         <td colspan="5" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center gap-3">
-                                <span class="material-symbols-rounded text-4xl text-slate-200">contract_edit</span>
+                                <span class="material-symbols-rounded text-4xl text-slate-200" aria-hidden="true">contract_edit</span>
                                 <p class="text-sm font-bold text-slate-400">No hay relevamientos registrados</p>
                                 <a href="/relevamiento-infraestructura/nuevo" class="text-xs font-bold text-primary hover:underline">Crear el primero</a>
                             </div>
@@ -143,10 +138,11 @@
     </div>
 </div>
 
+{% endblock %}
+
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.filter-submit').forEach(s => s.addEventListener('change', function() { this.form.submit(); }));
     document.querySelectorAll('.delete-infra-form').forEach(f => f.addEventListener('submit', function(e) {
         e.preventDefault();
         showConfirmModal(this, this.dataset.confirm);
@@ -154,4 +150,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 {% endblock %}
-{% endblock %}
+

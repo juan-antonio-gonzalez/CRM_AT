@@ -1,15 +1,14 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
 from services import product_service, pagination as pg
+from templating import templates
 
 router = APIRouter(tags=["products"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/productos", response_class=HTMLResponse)
@@ -38,7 +37,7 @@ async def list_products(
     page, per_page, offset = pg.paginate(page, per_page)
     products = query.order_by(models.Product.name).offset(offset).limit(per_page).all()
 
-    return templates.TemplateResponse("productos.html", {
+    return templates.TemplateResponse(request, 'productos.html', {
         "request": request,
         "products": products,
         "pagination": pg.build_pagination(page, per_page, total),
@@ -49,7 +48,7 @@ async def list_products(
 
 @router.get("/nuevo-producto", response_class=HTMLResponse)
 async def new_product_form(request: Request):
-    return templates.TemplateResponse("nuevo_producto.html", {"request": request, "active_page": "productos"})
+    return templates.TemplateResponse(request, 'nuevo_producto.html', {"request": request, "active_page": "productos"})
 
 
 @router.post("/nuevo-producto")
@@ -72,7 +71,7 @@ async def create_product(
 @router.get("/editar-producto/{product_id}", response_class=HTMLResponse)
 async def edit_product_form(product_id: int, request: Request, db: Session = Depends(get_db)):
     product = product_service.get_product(db, product_id)
-    return templates.TemplateResponse("editar_producto.html", {"request": request, "product": product, "active_page": "productos"})
+    return templates.TemplateResponse(request, 'editar_producto.html', {"request": request, "product": product, "active_page": "productos"})
 
 
 @router.post("/editar-producto/{product_id}")

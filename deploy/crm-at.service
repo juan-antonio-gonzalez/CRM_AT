@@ -1,0 +1,35 @@
+[Unit]
+Description=CRM-AT (FastAPI + Jinja2) — gestión de visitas técnicas
+Documentation=https://github.com/juan-antonio-gonzalez/CRM_AT
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=crmat
+Group=crmat
+WorkingDirectory=/var/www/crm_at
+
+# Las credenciales viven fuera del repositorio.
+EnvironmentFile=/etc/crm-at/crm-at.env
+
+# run.py aplica las migraciones, siembra el admin inicial y levanta uvicorn.
+ExecStart=/var/www/crm_at/.venv/bin/python run.py
+
+Restart=always
+RestartSec=5
+
+# Endurecimiento básico del servicio.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/crm_at/static/uploads /var/www/crm_at/alembic
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=crm-at
+
+[Install]
+WantedBy=multi-user.target

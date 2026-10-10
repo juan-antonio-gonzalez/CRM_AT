@@ -53,7 +53,7 @@
                                 class="w-full bg-slate-50 dark:bg-slate-800 border border-emerald-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
                                 placeholder="45" type="number" value="{{ survey_data.get('maquinaria_capacidad', '45') }}" />
                             <div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 mt-1">
-                                <span class="material-symbols-rounded text-xs">check_circle</span>
+                                <span class="material-symbols-rounded text-xs" aria-hidden="true">check_circle</span>
                                 <span class="text-[10px] font-medium">Valor dentro del rango óptimo (10-100)</span>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                             <span class="size-1.5 bg-emerald-500 rounded-full"></span>
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estación 1: Alimentación (Feeder)</span>
                         </div>
-                        <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                     </summary>
                     <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="space-y-1.5">
@@ -178,7 +178,7 @@
                                             class="peer sr-only" name="criticidad_e1" value="{{ val }}" type="radio" />
                                         <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                             <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                            <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                            <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                         </div>
                                     </label>
                                     {% endfor %}
@@ -230,7 +230,7 @@
                         <span class="size-1.5 bg-emerald-500 rounded-full"></span>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estaci&oacute;n 2: Formado y Escuadrado</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="space-y-1.5">
@@ -245,8 +245,8 @@
                                 <option value="{{ ft.name }}" {% if survey_data.get('e2_tipo_formado') == ft.name %}selected{% endif %}>{{ ft.name }}</option>
                                 {% endfor %}
                             </select>
-                            <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all self-end" data-entity="formado" data-select="e2_tipo_formado" title="Agregar nuevo tipo de formado">
-                                <span class="material-symbols-rounded text-lg">add</span>
+                            <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all self-end" data-entity="formado" data-select="e2_tipo_formado" title="Agregar nuevo tipo de formado" aria-label="Agregar nuevo tipo de formado">
+                                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                             </button>
                             <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
@@ -268,8 +268,8 @@
                                 <option value="{{ ct.name }}" {% if survey_data.get('e2_cierre_inferior') == ct.name %}selected{% endif %}>{{ ct.name }}</option>
                                 {% endfor %}
                             </select>
-                            <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all self-end" data-entity="cierre-inferior" data-select="e2_cierre_inferior" title="Agregar nuevo tipo de cierre inferior">
-                                <span class="material-symbols-rounded text-lg">add</span>
+                            <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all self-end" data-entity="cierre-inferior" data-select="e2_cierre_inferior" title="Agregar nuevo tipo de cierre inferior" aria-label="Agregar nuevo tipo de cierre inferior">
+                                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                             </button>
                             <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
@@ -316,7 +316,7 @@
                                         class="peer sr-only" name="criticidad_e2" value="{{ val }}" type="radio" />
                                     <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                         <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                        <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                        <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                     </div>
                                 </label>
                                 {% endfor %}
@@ -366,7 +366,7 @@
                         <span class="size-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></span>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estaci&oacute;n 3: Sistema de Cierre</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 space-y-3">
                     <div class="space-y-1.5">
@@ -386,7 +386,7 @@
                                     class="peer sr-only" name="criticidad_e3" value="{{ val }}" type="radio" />
                                 <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                     <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                    <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                    <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                 </div>
                             </label>
                             {% endfor %}
@@ -442,7 +442,7 @@
                                     class="w-full bg-slate-50 dark:bg-slate-800 border border-amber-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
                                     placeholder="160-180°C" type="text" title="Temperatura del adhesivo en °C. Rango recomendado: 160-180°C" />
                                 <div class="flex items-center gap-1 text-amber-600 dark:text-amber-400 mt-1">
-                                    <span class="material-symbols-rounded text-xs">warning</span>
+                                    <span class="material-symbols-rounded text-xs" aria-hidden="true">warning</span>
                                     <span class="text-[10px] font-medium">Cerca del l&iacute;mite m&aacute;ximo (180°C)</span>
                                 </div>
                             </div>
@@ -456,7 +456,7 @@
                                 <input name="e3_presion_aire" value="{{ survey_data.get('e3_presion_aire', '8.5') }}"
                                     class="w-full bg-slate-50 dark:bg-slate-800 border border-rose-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-rose-500/10 transition-all font-bold" step="0.1" type="number" />
                                 <div class="flex items-center gap-1 text-rose-600 dark:text-rose-400 mt-1">
-                                    <span class="material-symbols-rounded text-xs">error</span>
+                                    <span class="material-symbols-rounded text-xs" aria-hidden="true">error</span>
                                     <span class="text-[10px] font-medium">Presi&oacute;n excede el rango (M&aacute;x 7.0 bar)</span>
                                 </div>
                             </div>
@@ -534,7 +534,7 @@
                     </div>
                     <button type="button" id="add-team-row"
                         class="flex items-center gap-1.5 text-[10px] font-black text-primary uppercase tracking-widest hover:opacity-80 transition-all">
-                        <span class="material-symbols-rounded text-[16px]">add_circle</span>
+                        <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span>
                         A&ntilde;adir Integrante
                     </button>
                 </div>
@@ -544,10 +544,10 @@
                     <table class="w-full text-left border-collapse" id="teamTable">
                         <thead>
                             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Nombre Completo</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Cargo / Funci&oacute;n</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Acciones</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Nombre Completo</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cargo / Funci&oacute;n</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Observaciones</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
@@ -564,7 +564,7 @@
                                     <td class="px-4 py-2"><input name="team_role" value="{{ team_roles[i] if i < team_roles|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" value="{{ team_obs[i] if i < team_obs|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><span class="material-symbols-rounded text-[18px]">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -574,7 +574,7 @@
                                     <td class="px-4 py-2"><input name="team_role" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><span class="material-symbols-rounded text-[18px]">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -605,7 +605,7 @@
         <div class="flex justify-end gap-4 pt-4">
             <button type="button" id="btn-preview-survey"
                 class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 border-2 border-indigo-600 rounded-xl transition-all flex items-center gap-2">
-                <span class="material-symbols-rounded text-base">visibility</span>
+                <span class="material-symbols-rounded text-base" aria-hidden="true">visibility</span>
                 Previsualizar Informe
             </button>
             <button type="button" data-submit-survey="false"
@@ -621,12 +621,12 @@
 </form>
 
 <!-- Auxiliary Management Modal -->
-<div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+<div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
     <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-slate-200 dark:border-slate-800">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
             <h3 id="manageEntityTitle" class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Gestionar</h3>
-            <button type="button" onclick="document.getElementById('manageEntityModal').classList.add('hidden')" class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
-                <span class="material-symbols-rounded text-lg">close</span>
+            <button type="button" onclick="document.getElementById('manageEntityModal').classList.add('hidden')" class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" aria-label="Cerrar">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
             </button>
         </div>
         <div class="p-6 space-y-4">
@@ -635,7 +635,7 @@
                     class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
                 <button id="manageEntityAddBtn" type="button"
                     class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-lg">add</span>
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     Agregar
                 </button>
             </div>

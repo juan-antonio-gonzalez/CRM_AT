@@ -1,102 +1,146 @@
 from fastapi import APIRouter, Request, Depends, Query
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract
 import models
 from database import get_db
-from enums import RelevamientoStatus, VisitStatus
+from services import dashboard_service
 import datetime
-import json
+from templating import templates
+from services.utils import month_date_range
 
 router = APIRouter(tags=["dashboard"])
-templates = Jinja2Templates(directory="templates")
+
+
+@router.get("/kpi-calidad", response_class=HTMLResponse)
+async def kpi_calidad(
+    request: Request,
+    db: Session = Depends(get_db),
+    at: str = Query("", alias="at"),
+    cliente: str = Query("", alias="cliente"),
+    anio: str = Query("", alias="anio"),
+    mes: str = Query("", alias="mes"),
+    tema: str = Query("", alias="tema"),
+    tipo_producto: str = Query("", alias="tipo_producto"),
+    planta: str = Query("", alias="planta"),
+):
+    today = datetime.datetime.now(datetime.UTC)
+
+    fecha_desde = ""
+    fecha_desde, fecha_hasta = month_date_range(anio, mes)
+
+    visitas = dashboard_service.get_visitas_stats(
+        db, today, at=at, cliente=cliente,
+        fecha_desde=fecha_desde, fecha_hasta=fecha_hasta,
+        tema=tema, impacto="",
+        tipo_producto=tipo_producto, planta=planta,
+    )
+
+    clientes = (
+        db.query(models.Customer.id, models.Customer.name)
+        .order_by(models.Customer.name)
+        .all()
+    )
+    advisors = (
+        db.query(models.TechnicalAdvisor.name)
+        .order_by(models.TechnicalAdvisor.name)
+        .all()
+    )
+    years = sorted(
+        db.query(models.TechnicalVisit2.fecha)
+        .filter(models.TechnicalVisit2.fecha != "")
+        .distinct()
+        .all()
+    )
+    available_years = sorted(set(f[:4] for (f,) in years if f and len(f) >= 4))
+    months = [
+        ("01", "Enero"), ("02", "Febrero"), ("03", "Marzo"),
+        ("04", "Abril"), ("05", "Mayo"), ("06", "Junio"),
+        ("07", "Julio"), ("08", "Agosto"), ("09", "Septiembre"),
+        ("10", "Octubre"), ("11", "Noviembre"), ("12", "Diciembre"),
+    ]
+
+    resp = templates.TemplateResponse(request, 'kpi_calidad.html', {
+        "request": request,
+        "active_page": "kpi_calidad",
+        "today": today,
+        "visitas": visitas,
+        "filters": {
+            "at": at,
+            "cliente": cliente,
+            "anio": anio,
+            "mes": mes,
+            "tema": tema,
+            "tipo_producto": tipo_producto,
+            "planta": planta,
+        },
+        "advisors": [a[0] for a in advisors],
+        "customer_list": clientes,
+        "available_years": available_years,
+        "months": months,
+    })
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 
 @router.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request, db: Session = Depends(get_db)):
-    total_customers = db.query(models.Customer).count()
-    total_visits = db.query(models.TechnicalVisit).count()
-
+async def dashboard(
+    request: Request,
+    at: str = Query("", alias="at"),
+    cliente: str = Query("", alias="cliente"),
+    anio: str = Query("", alias="anio"),
+    mes: str = Query("", alias="mes"),
+    db: Session = Depends(get_db)
+):
     today = datetime.datetime.now(datetime.UTC)
-    six_months_ago = today - datetime.timedelta(days=180)
 
-    visit_stats = db.query(
-        func.count(models.TechnicalVisit.id).filter(models.TechnicalVisit.date >= six_months_ago).label('total_recent'),
-        func.count(models.TechnicalVisit.id).filter(
-            models.TechnicalVisit.date >= six_months_ago,
-            models.TechnicalVisit.status == VisitStatus.FINALIZADA.value
-        ).label('completed_recent'),
-    ).first()
+    fecha_desde = ""
+    fecha_desde, fecha_hasta = month_date_range(anio, mes)
 
-    total_machines = db.query(models.Machine).count()
-    completed_surveys = db.query(models.Machine).filter(
-        models.Machine.relevamiento_status == RelevamientoStatus.COMPLETADO.value
-    ).count()
-    survey_progress = (completed_surveys / total_machines * 100) if total_machines > 0 else 0
+    clientes = dashboard_service.get_clientes_stats(db, at=at)
+    visitas = dashboard_service.get_visitas_stats(db, today, at=at, cliente=cliente, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta)
+    maquinas = dashboard_service.get_maquinas_stats(db, at=at, cliente=cliente)
+    minutas = dashboard_service.get_minutas_stats(db, at=at, cliente=cliente)
 
-    # Fetch raw dates and group in Python for cross-DB compatibility
-    recent_visits = db.query(models.TechnicalVisit.date).filter(
-        models.TechnicalVisit.date >= six_months_ago
-    ).all()
-    visits_by_month_map = {}
-    for (d,) in recent_visits:
-        if d:
-            key = d.strftime("%Y-%m")
-            visits_by_month_map[key] = visits_by_month_map.get(key, 0) + 1
+    advisors = (
+        db.query(models.TechnicalAdvisor.name)
+        .order_by(models.TechnicalAdvisor.name)
+        .all()
+    )
+    customer_list = (
+        db.query(models.Customer.id, models.Customer.name)
+        .order_by(models.Customer.name)
+        .all()
+    )
+    years = sorted(
+        db.query(models.TechnicalVisit2.fecha)
+        .filter(models.TechnicalVisit2.fecha != "")
+        .distinct()
+        .all()
+    )
+    available_years = sorted(set(f[:4] for (f,) in years if f and len(f) >= 4))
 
-    chart_months_labels = []
-    chart_visits_data = []
-    for i in range(5, -1, -1):
-        month_date = today.replace(day=1) - datetime.timedelta(days=i*30)
-        month_key = month_date.strftime("%Y-%m")
-        chart_months_labels.append(month_date.strftime("%b %y"))
-        chart_visits_data.append(visits_by_month_map.get(month_key, 0))
+    months = [
+        ("01", "Enero"), ("02", "Febrero"), ("03", "Marzo"),
+        ("04", "Abril"), ("05", "Mayo"), ("06", "Junio"),
+        ("07", "Julio"), ("08", "Agosto"), ("09", "Septiembre"),
+        ("10", "Octubre"), ("11", "Noviembre"), ("12", "Diciembre"),
+    ]
 
-    visit_types_raw = db.query(
-        models.TechnicalVisit.visit_type,
-        func.count(models.TechnicalVisit.id)
-    ).group_by(models.TechnicalVisit.visit_type).all()
-    visit_types_labels = [vt[0] or "Otros" for vt in visit_types_raw]
-    visit_types_data = [vt[1] for vt in visit_types_raw]
-
-    all_visits = db.query(models.TechnicalVisit.topics).all()
-    topics_count = {}
-    for v_topics in all_visits:
-        topics_list = v_topics[0]
-        if topics_list and isinstance(topics_list, list):
-            for t in topics_list:
-                topics_count[t] = topics_count.get(t, 0) + 1
-        elif topics_list and isinstance(topics_list, str):
-            try:
-                t_list = json.loads(topics_list)
-                for t in t_list:
-                    topics_count[t] = topics_count.get(t, 0) + 1
-            except:
-                topics_count[topics_list] = topics_count.get(topics_list, 0) + 1
-
-    sorted_topics = sorted(topics_count.items(), key=lambda x: x[1], reverse=True)[:5]
-    chart_topics_labels = [t[0] for t in sorted_topics]
-    chart_topics_data = [t[1] for t in sorted_topics]
-
-    return templates.TemplateResponse("dashboard.html", {
+    return templates.TemplateResponse(request, 'dashboard.html', {
         "request": request,
         "active_page": "dashboard",
-        "stats": {
-            "total_customers": total_customers,
-            "total_visits": total_visits,
-            "completed_visits": visit_stats.completed_recent if visit_stats else 0,
-            "survey_progress": round(survey_progress, 1),
-            "total_machines": total_machines
-        },
-        "charts": {
-            "months": chart_months_labels,
-            "visits_data": chart_visits_data,
-            "visit_types_labels": visit_types_labels,
-            "visit_types_data": visit_types_data,
-            "topics_labels": chart_topics_labels,
-            "topics_data": chart_topics_data
-        }
+        "today": today,
+        "clientes": clientes,
+        "visitas": visitas,
+        "maquinas": maquinas,
+        "minutas": minutas,
+        "advisors": [a[0] for a in advisors],
+        "customer_list": customer_list,
+        "available_years": available_years,
+        "months": months,
+        "filters": {"at": at, "cliente": cliente, "anio": anio, "mes": mes},
     })
 
 
@@ -117,7 +161,7 @@ async def global_search(request: Request, q: str = Query(...), db: Session = Dep
         (models.Machine.model.ilike(f"%{q}%"))
     ).limit(5).all()
 
-    return templates.TemplateResponse("layout.html", {
+    return templates.TemplateResponse(request, 'layout.html', {
         "request": request,
         "search_results": {
             "customers": customers,

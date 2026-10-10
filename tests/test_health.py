@@ -5,16 +5,15 @@ def test_imports():
     import logger
     import security
     from enums import (
-        VisitStatus, TrackingStatus, SurveyStatus,
+        TrackingStatus, SurveyStatus,
         RelevamientoStatus, CustomerStatus, ProductStatus
     )
-    assert VisitStatus.PROGRAMADA.value == "Programada"
     assert TrackingStatus.FINALIZADO.value == "Finalizado"
 
 
 def test_models_import():
     from models import (
-        Product, Customer, Machine, TechnicalVisit,
+        Product, Customer, Machine, TechnicalVisit2,
         User, ATAssignment, TechnicalSurvey, InfrastructureSurvey,
         ActionPlanTracking, TechnicalAdvisor, Designer,
         CommercialAdvisor, IndustrialSector, MachineType, VisitTopic,

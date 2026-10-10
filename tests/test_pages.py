@@ -3,7 +3,7 @@ import pytest
 
 @pytest.mark.parametrize('path', [
     '/', '/productos', '/clientes', '/maquinaria',
-    '/visitas', '/agenda', '/seguimiento-plan', '/configuracion',
+    '/visitas2', '/seguimiento-plan', '/configuracion',
     '/kpis-at',
 ])
 def test_page_render(client, admin_cookie, path):
@@ -21,8 +21,8 @@ def test_new_customer_form(client, admin_cookie):
     assert r.status_code == 200
 
 
-def test_visitas_nueva(client, admin_cookie):
-    r = client.get('/visitas/nueva', headers={'Cookie': admin_cookie})
+def test_visitas2_nueva(client, admin_cookie):
+    r = client.get('/visitas2/nueva', headers={'Cookie': admin_cookie})
     assert r.status_code == 200
 
 

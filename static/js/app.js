@@ -57,9 +57,11 @@
 
   // ── Confirm Modal ──
   let currentFormToSubmit = null;
+  let currentConfirmCallback = null;
 
   function showConfirmModal(form, message, options = {}) {
     currentFormToSubmit = form;
+    currentConfirmCallback = typeof options.onConfirm === 'function' ? options.onConfirm : null;
     const title = options.title || '¿Confirmar Acción?';
     const buttonText = options.buttonText || 'Confirmar';
     const type = options.type || 'danger';
@@ -93,6 +95,7 @@
     document.getElementById('confirmModal').classList.remove('flex');
     document.getElementById('confirmModal').classList.add('hidden');
     currentFormToSubmit = null;
+    currentConfirmCallback = null;
   }
 
   // ── Dark Mode ──
@@ -210,7 +213,7 @@
     inp1.autocomplete = 'off';
     td1.appendChild(inp1);
     const pred = document.createElement('div');
-    pred.className = 'predictions-container absolute left-0 right-0 top-full mt-1 bg-white dark:bg-slate-800 border border-neutral-border dark:border-slate-700 rounded-lg shadow-xl z-50 hidden max-h-48 overflow-y-auto';
+    pred.className = 'predictions-container absolute left-0 right-0 top-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-50 hidden max-h-48 overflow-y-auto';
     td1.appendChild(pred);
     tr.appendChild(td1);
     for (const [name, cls, placeholder] of [['material_desc', 'desc-input', 'Descripción...'], ['material_tipo', 'mat-input', 'Material...'], ['material_obs', '', 'Notas...']]) {
@@ -267,6 +270,66 @@
     return tr;
   }
 
+  // ── Global confirmation bridge for [data-confirm] ──
+  // Any <form data-confirm="...">, or any anchor/button carrying data-confirm,
+  // is routed through the single global confirm modal. Previously each page
+  // hand-rolled its own delete modal (or bound a per-class submit handler), and
+  // four templates used data-confirm with nothing listening for it at all — so
+  // those destructive actions fired with no confirmation.
+  function initConfirmBridge() {
+    const confirmMessageFor = (el) => el.getAttribute('data-confirm');
+
+    // Form submission: intercept in the capture phase, before any inline
+    // handler can submit the form.
+    document.addEventListener('submit', (e) => {
+      const form = e.target && e.target.closest ? e.target.closest('form[data-confirm]') : null;
+      if (!form) return;
+      // Skip when the submission was already approved by the modal.
+      if (form.dataset.confirmed === 'true') return;
+      e.preventDefault();
+      e.stopPropagation();
+      showConfirmModal(form, confirmMessageFor(form), { title: 'Confirmar acción' });
+    }, true);
+
+    // Anchor/button that is not the submitter of a data-confirm form.
+    document.addEventListener('click', (e) => {
+      const el = e.target && e.target.closest ? e.target.closest('[data-confirm]') : null;
+      if (!el || el.tagName === 'FORM') return;
+      if (el.tagName !== 'A' && el.tagName !== 'BUTTON') return;
+      const form = el.form || (el.closest ? el.closest('form') : null);
+      if (form && form.hasAttribute('data-confirm')) return; // the submit listener owns it
+      e.preventDefault();
+      showConfirmModal(null, confirmMessageFor(el), {
+        title: 'Confirmar acción',
+        onConfirm: () => {
+          if (form) {
+            form.dataset.confirmed = 'true';
+            form.submit();
+          } else if (el.tagName === 'A' && el.getAttribute('href')) {
+            window.location.href = el.getAttribute('href');
+          }
+        },
+      });
+    });
+  }
+
+  // ── Keep the mobile nav trigger's expanded state in sync ──
+  function initMobileNavState() {
+    const btn = document.getElementById('btnMobileMenu');
+    const sidebar = document.getElementById('sidebarNav');
+    if (!btn || !sidebar) return;
+    const sync = () => {
+      btn.setAttribute(
+        'aria-expanded',
+        sidebar.classList.contains('-translate-x-full') ? 'false' : 'true'
+      );
+    };
+    if (window.MutationObserver) {
+      new MutationObserver(sync).observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+    }
+    sync();
+  }
+
   // ── Migrate inline onclicks to listeners ──
   function initEventDelegation() {
     // Close modal via Esc key
@@ -279,9 +342,20 @@
 
     // Confirm modal action
     document.getElementById('confirmModalAction')?.addEventListener('click', () => {
-      if (currentFormToSubmit) {
-        currentFormToSubmit.submit();
+      if (currentConfirmCallback) {
+        const cb = currentConfirmCallback;
         closeConfirmModal();
+        cb();
+        return;
+      }
+      if (currentFormToSubmit) {
+        const form = currentFormToSubmit;
+        // Mark as approved so the [data-confirm] capture listener lets this
+        // submission through, then clear it so a later attempt asks again.
+        form.dataset.confirmed = 'true';
+        closeConfirmModal();
+        form.submit();
+        setTimeout(() => { delete form.dataset.confirmed; }, 0);
       }
     });
 
@@ -417,6 +491,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initEventDelegation();
+    initConfirmBridge();
+    initMobileNavState();
 
     // Confirm modal cancel button (CSP-safe)
     document.getElementById('btnCancelConfirm')?.addEventListener('click', closeConfirmModal);

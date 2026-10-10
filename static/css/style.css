@@ -20,6 +20,21 @@ body {
     animation: fadeIn 0.4s ease-out forwards;
 }
 
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-zoom-in {
+    animation: zoomIn 0.3s ease-out forwards;
+}
+
 /* Glassmorphism effects */
 .glass {
     background: rgba(255, 255, 255, 0.7);
@@ -73,9 +88,206 @@ body {
     background: rgba(26, 87, 219, 0.4);
 }
 
-/* Focus styles — using outline instead of box-shadow to avoid conflict with Tailwind ring */
+/* ------------------------------------------------------------------
+   Focus styles
+   Keep an always-visible focus indicator for keyboard users. These use
+   `outline` so they never clash with the Tailwind `focus:ring-*`
+   box-shadow rings used by inline editors.
+   ------------------------------------------------------------------ */
+:focus-visible {
+    outline: 2px solid #1a57db;
+    outline-offset: 1px;
+}
+
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-    outline: 2px solid transparent;
+    outline: 2px solid #1a57db;
+    outline-offset: 1px;
+}
+
+/* Dark surfaces need a lighter outline to stay perceptible. */
+.dark :focus-visible,
+.dark input:focus-visible,
+.dark select:focus-visible,
+.dark textarea:focus-visible {
+    outline-color: #7ba2f7;
+}
+
+/* Never show the ring for mouse users who explicitly asked for the
+   default behaviour, but always keep it for keyboard navigation. */
+@media (prefers-reduced-motion: no-preference) {
+    :focus-visible {
+        transition: outline-offset 0.1s ease-in;
+    }
+}
+
+/* ------------------------------------------------------------------
+   Inline validation state (toggled by window.validateField in app.js)
+   ------------------------------------------------------------------ */
+.field-invalid {
+    border-color: #fca5a5 !important;
+    background-color: #fef2f2 !important;
+    outline: 2px solid #ef4444 !important;
+    outline-offset: 0;
+}
+
+.dark .field-invalid {
+    border-color: #b91c1c !important;
+    background-color: rgba(127, 29, 29, 0.25) !important;
+    outline-color: #ef4444 !important;
+}
+
+.field-invalid:focus-visible {
+    outline: 2px solid #dc2626 !important;
+    outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------
+   Print / PDF helpers
+   ------------------------------------------------------------------ */
+
+/* `.no-print` elements stay visible on screen and are hidden by the
+   `@media print` block at the bottom of this file. */
+
+/* Force a page break before an element (and after it when stacked). */
+.page-break {
+    break-after: page;
+    page-break-after: always;
+}
+
+/* Keep an element (and its box) on a single printed page. */
+.page-break-inside-avoid,
+.avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+/* Screen-only "paper" simulation used by the report previews. */
+.pdf-page {
+    background: #fff;
+    color: #0f172a;
+}
+
+.dark .pdf-page {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.pdf-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide scrollbars on horizontal scroll containers while keeping them
+   scrollable (keyboard and touch still work). */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+@media print {
+    @page {
+        margin: 1.5cm;
+    }
+
+    /* The app shell pins height/overflow, which truncates printed pages. */
+    html,
+    body,
+    main {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        max-height: none !important;
+    }
+
+    html,
+    body {
+        max-width: none !important;
+        background: #fff !important;
+    }
+
+    /* Neutralise the shell chrome. */
+    #sidebarNav,
+    #sidebar,
+    #sidebarOverlay,
+    #btnMobileMenu,
+    #toastContainer,
+    #confirmModal,
+    #deactivate-modal-container,
+    .no-print {
+        display: none !important;
+    }
+
+    .flex,
+    .flex-1,
+    .h-full,
+    .overflow-hidden,
+    .overflow-y-auto {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Report "paper" becomes the real page. */
+    .pdf-page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        height: auto !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .pdf-shadow,
+    .glass {
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .page-break {
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .page-break-inside-avoid,
+    .avoid-break {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    table {
+        width: 100% !important;
+        page-break-inside: auto;
+    }
+
+    tr,
+    img,
+    section {
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        overflow-wrap: break-word !important;
+    }
 }

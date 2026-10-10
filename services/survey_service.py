@@ -95,16 +95,19 @@ def save_relevamiento(db: Session, machine_id: int, data_dict: dict, is_finalize
     return survey
 
 
-def list_infrastructure_surveys(db: Session, cliente: int = None, asistente: str = None):
+def list_infrastructure_surveys(db: Session, cliente: int = None, asistente: str = None,
+                                 page: int = 1, per_page: int = 10):
     query = db.query(models.InfrastructureSurvey)
     if cliente:
         query = query.filter(models.InfrastructureSurvey.customer_id == cliente)
     if asistente:
         query = query.filter(models.InfrastructureSurvey.technical_advisor == asistente)
-    surveys = query.order_by(models.InfrastructureSurvey.updated_at.desc()).all()
+    total = query.count()
+    page, per_page, offset = pg.paginate(page, per_page)
+    surveys = query.order_by(models.InfrastructureSurvey.updated_at.desc()).offset(offset).limit(per_page).all()
     customers = db.query(models.Customer).order_by(models.Customer.name).all()
     advisors = db.query(models.TechnicalAdvisor).order_by(models.TechnicalAdvisor.name).all()
-    return surveys, customers, advisors
+    return surveys, customers, advisors, pg.build_pagination(page, per_page, total)
 
 
 def save_infrastructure_survey(db: Session, form_data: dict, survey_id: int = None):

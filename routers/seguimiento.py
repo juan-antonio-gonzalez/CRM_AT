@@ -1,22 +1,27 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import get_db
 from services import tracking_service
+from templating import templates
 
 router = APIRouter(tags=["seguimiento"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/seguimiento-plan", response_class=HTMLResponse)
-async def seguimiento_plan_lista(request: Request, db: Session = Depends(get_db)):
-    trackings = tracking_service.list_trackings(db)
-    total_tareas, finalizadas, pendientes, en_curso = tracking_service.get_tracking_stats(trackings)
+async def seguimiento_plan_lista(
+    request: Request,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    trackings, pagination = tracking_service.paginate_trackings(db, page, per_page)
+    total_tareas, finalizadas, pendientes, en_curso = tracking_service.get_tracking_stats(db)
 
-    return templates.TemplateResponse("seguimiento_plan.html", {
+    return templates.TemplateResponse(request, 'seguimiento_plan.html', {
         "request": request,
         "trackings": trackings,
+        "pagination": pagination,
         "active_page": "seguimiento",
         "total_tareas": total_tareas,
         "finalizadas": finalizadas,

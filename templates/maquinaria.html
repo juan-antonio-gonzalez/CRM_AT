@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Inventario de Maquinaria | CRM-AT{% endblock %}
+{% block title %}Biblioteca de Máquinas | CRM-AT{% endblock %}
 
 {% block header_extra %}
 <div class="flex flex-col">
@@ -20,63 +20,48 @@
 
     {% if selected_customer or selected_asistente or q %}
     <div class="flex items-center gap-2 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-        <span class="material-symbols-rounded text-base">filter_alt</span>
+        <span class="material-symbols-rounded text-base" aria-hidden="true">filter_alt</span>
         Mostrando equipos filtrados
         <a href="/maquinaria" class="ml-2 text-[10px] uppercase tracking-wider hover:text-primary underline">Limpiar filtros</a>
     </div>
     {% endif %}
 
-    <!-- Client Filter -->
-    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <form method="GET" action="/maquinaria" class="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div class="flex-1 flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
-                <select name="cliente" class="filter-submit"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+    <!-- Filters -->
+    <form method="GET" action="/maquinaria" class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="flex flex-col min-w-[200px]">
+                <label for="cliente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                <select name="cliente" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
                     <option value="{{ c.id }}" {% if selected_customer_id == c.id %}selected{% endif %}>{{ c.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="flex-1 flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
-                <select name="asistente" class="filter-submit"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+            <div class="flex flex-col min-w-[200px]">
+                <label for="asistente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
+                <select name="asistente" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor.name }}" {% if selected_asistente == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="flex-[1.5] flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Buscar Equipo</label>
+            <div class="flex flex-col min-w-[200px]">
+                <label for="q" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Buscar Equipo</label>
                 <div class="relative">
-                    <span
-                        class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-                    <input name="q" value="{{ q or '' }}"
-                        class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
-                        placeholder="N° de serie, marca o modelo..." type="text" />
+                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-lg" aria-hidden="true">search</span>
+                    <input name="q" value="{{ q or '' }}" placeholder="N° de serie, marca o modelo..." class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold" id="q">
                 </div>
             </div>
-            <button type="submit"
-                class="px-6 py-2 bg-slate-900 dark:bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
-                Buscar
-            </button>
-            <button type="button"
-                id="btn-new-machine"
-                class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
-                <span class="material-symbols-rounded !text-base">add_circle</span>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
+            <a href="/maquinaria" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-2 py-1.5">Limpiar</a>
+            <button type="button" id="btn-new-machine" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
                 Nueva Máquina
             </button>
-            {% if selected_customer_id or q %}
-            <a href="/maquinaria"
-                class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
-                Limpiar
-            </a>
-            {% endif %}
-        </form>
-    </div>
+        </div>
+    </form>
 
     <!-- Indicators -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -105,16 +90,16 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">N° Serie</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Maquinaria / Modelo</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Cliente</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Planta</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Asistente</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Tipo</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Línea</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Estado</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap">Relevamiento</th>
-                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right whitespace-nowrap">Acciones</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">N° Serie</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Maquinaria / Modelo</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Cliente</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Planta</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Asistente</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Tipo</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Línea</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Estado</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Relevamiento</th>
+                        <th class="px-2 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right whitespace-nowrap" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -181,17 +166,17 @@
                             <div class="flex justify-end gap-1 transition-opacity">
                                 <button type="button" data-edit-machine="{{ machine.id }}"
                                     class="p-1 text-slate-400 hover:text-primary transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 btn-edit-machine"
-                                    title="Editar Máquina">
-                                    <span class="material-symbols-rounded !text-[14px]">edit</span>
+                                    title="Editar Máquina" aria-label="Editar Máquina">
+                                    <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">edit</span>
                                 </button>
                                 <form action="/eliminar-maquinaria/{{ machine.id }}" method="POST"
                                     class="inline delete-machine-form2" data-confirm="¿Eliminar el equipo {{ machine.brand }} {{ machine.model}}?"
-                                    class="inline">
+                                    >
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
                                         class="p-1 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
-                                        title="Eliminar Máquina">
-                                        <span class="material-symbols-rounded !text-[14px]">delete</span>
+                                        title="Eliminar Máquina" aria-label="Eliminar Máquina">
+                                        <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">delete</span>
                                     </button>
                                 </form>
                             </div>
@@ -261,24 +246,24 @@
 
 <!-- New Machine Modal -->
 <div id="newMachineModal"
-    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="newMachineModal-title">
     <div
         class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
         <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl">precision_manufacturing</span>
-                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Nueva Máquina</h3>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="newMachineModal-title">Nueva Máquina</h3>
             </div>
             <button type="button" id="btn-close-new-machine-modal"
-                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
-                <span class="material-symbols-rounded">close</span>
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
         <form action="/nuevo-maquinaria" method="POST" class="p-6 space-y-5 max-h-[calc(100vh-16rem)] overflow-y-auto">
             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente *</label>
+                    <label for="client_select" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente *</label>
                     <select id="client_select" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccionar cliente...</option>
@@ -288,7 +273,7 @@
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta *</label>
+                    <label for="plant_select" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta *</label>
                     <select id="plant_select" name="customer_id" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccione un cliente primero</option>
@@ -298,9 +283,9 @@
             </div>
 
             <div class="space-y-1.5">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Máquina *</label>
+                <label for="machine-type" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Máquina *</label>
                 <select name="machine_type" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold" id="machine-type">
                     <option value="">Seleccionar tipo...</option>
                     {% for type in machine_types %}
                     <option value="{{ type.name }}">{{ type.name }}</option>
@@ -310,31 +295,31 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">N° de Serie *</label>
+                    <label for="serial-number" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">N° de Serie *</label>
                     <input name="serial_number" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
-                        placeholder="SN-XXXXX" type="text" oninput="this.value = this.value.toUpperCase()" />
+                        placeholder="SN-XXXXX" type="text" oninput="this.value = this.value.toUpperCase()"  id="serial-number"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca *</label>
+                    <label for="brand" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca *</label>
                     <input name="brand" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
-                        placeholder="Ej: ATLAS COPCO" type="text" oninput="this.value = this.value.toUpperCase()" />
+                        placeholder="Ej: ATLAS COPCO" type="text" oninput="this.value = this.value.toUpperCase()"  id="brand"/>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo *</label>
+                    <label for="model-name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo *</label>
                     <input name="model_name" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
-                        placeholder="Ej: GA 37VSD" type="text" oninput="this.value = this.value.toUpperCase()" />
+                        placeholder="Ej: GA 37VSD" type="text" oninput="this.value = this.value.toUpperCase()"  id="model-name"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
+                    <label for="line" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
                     <input name="line"
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
-                        placeholder="Ej: LÍNEA 1" type="text" oninput="this.value = this.value.toUpperCase()" />
+                        placeholder="Ej: LÍNEA 1" type="text" oninput="this.value = this.value.toUpperCase()"  id="line"/>
                 </div>
             </div>
 
@@ -352,22 +337,22 @@
 
 <!-- Edit Machine Modal -->
 <div id="editMachineModal"
-    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto">
+    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="editMachineModal-title">
     <div
         class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all my-8">
         <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
             <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl">precision_manufacturing</span>
-                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Editar Máquina</h3>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="editMachineModal-title">Editar Máquina</h3>
             </div>
             <button type="button" id="btn-close-edit-machine-modal"
-                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
-                <span class="material-symbols-rounded">close</span>
+                class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
         <div id="editMachineModalContent">
             <div class="text-center py-12 text-slate-400">
-                <span class="material-symbols-rounded text-3xl mb-2">hourglass_top</span>
+                <span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span>
                 <p class="text-sm font-bold">Cargando datos del equipo...</p>
             </div>
         </div>
@@ -429,7 +414,7 @@
         const content = document.getElementById('editMachineModalContent');
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        content.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-3xl mb-2">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
+        content.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
         fetch(`/editar-maquinaria/${machineId}/partial`)
             .then(response => response.text())
             .then(html => {
@@ -437,7 +422,7 @@
                 initializeEditMachineForm();
             })
             .catch(error => {
-                content.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-3xl mb-2">error</span><p class="text-sm font-bold">Error al cargar los datos del equipo.</p></div>';
+                content.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">error</span><p class="text-sm font-bold">Error al cargar los datos del equipo.</p></div>';
             });
     }
 
@@ -493,9 +478,6 @@
     }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Filters auto-submit
-    document.querySelectorAll('.filter-submit').forEach(s => s.addEventListener('change', function() { this.form.submit(); }));
-
     // New Machine Modal
     document.getElementById('btn-new-machine')?.addEventListener('click', openNewMachineModal);
     document.getElementById('btn-close-new-machine-modal')?.addEventListener('click', closeNewMachineModal);

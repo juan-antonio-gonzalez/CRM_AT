@@ -5,21 +5,17 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Iniciar Sesión | CRM-AT</title>
     <link href="{{ url_for('static', path='/css/tailwind.css') }}" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .material-symbols-rounded { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; vertical-align: middle; line-height: 1; }
-    </style>
+    <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
 </head>
 <body class="h-full bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
-    <div id="toastContainer" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
+    <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="min-h-full flex items-center justify-center p-6">
         <div class="w-full max-w-md">
             <div class="text-center mb-10">
                 <div class="size-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/20 mx-auto mb-4">
-                    <span class="material-symbols-rounded text-3xl">package_2</span>
+                    <span class="material-symbols-rounded text-3xl" aria-hidden="true">package_2</span>
                 </div>
                 <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">CRM-AT</h1>
                 <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Gestión Operativa</p>
@@ -29,27 +25,27 @@
                 <h2 class="text-lg font-black text-slate-900 dark:text-white mb-6">Iniciar Sesión</h2>
 
                 {% if error %}
-                <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold mb-6">
-                    <span class="material-symbols-rounded text-lg">error</span>
+                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold mb-6">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
                     <span>{{ error }}</span>
                 </div>
                 {% endif %}
 
                 <form method="POST" action="/auth/login" class="space-y-5" id="loginForm">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario o Correo</label>
+                        <label for="login-username" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario o Correo</label>
                         <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">person</span>
-                            <input name="username" required
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">person</span>
+                            <input id="login-username" name="username" required
                                 class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="usuario@ejemplo.com" />
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
+                        <label for="login-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
                         <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">lock</span>
-                            <input name="password" type="password" required
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">lock</span>
+                            <input id="login-password" name="password" type="password" required
                                 class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="••••••••" />
                         </div>

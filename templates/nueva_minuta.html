@@ -1,0 +1,541 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header_extra %}
+<div class="hidden lg:flex items-center gap-4 ml-4">
+    <a href="/minutas"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
+        title="Volver al listado" aria-label="Volver al listado">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight">{{ title }}</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Complete los datos del acta de reunión.</p>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<style nonce="{{ request.state.script_nonce }}">
+:root { --primary: #0f4c81; --bg: #f4f6f8; --card: #ffffff; --border: #d1d5db; --text: #1f2937; --muted: #6b7280; --accent: #10b981; --danger: #ef4444; }
+.ska-body { font-size: 14px; background: var(--bg); color: var(--text); line-height: 1.5; }
+.ska-body * { box-sizing: border-box; margin: 0; padding: 0; }
+.ska-container { max-width: 210mm; margin: 0 auto; background: var(--card); padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 297mm; border-radius: 4px; }
+.ska-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+.ska-header h1 { font-size: 1.3rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.ska-header .meta { font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; margin-top: 4px; }
+.ska-rev-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin: 10px 0; background: #f9fafb; }
+.ska-rev-table th, .ska-rev-table td { border: 1px solid var(--border); padding: 4px 6px; text-align: left; }
+.ska-rev-table th { background: #e5e7eb; font-weight: 600; }
+.ska-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.ska-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+.ska-card { border: 1px solid var(--border); padding: 12px; border-radius: 4px; background: #fff; margin-bottom: 12px; }
+.ska-section-title { font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); margin-bottom: 8px; padding-bottom: 3px; font-size: 0.9rem; text-transform: uppercase; }
+.ska-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+.ska-input, .ska-select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; }
+.ska-input:focus, .ska-select:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 2px rgba(15,76,129,0.15); }
+.ska-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; resize: none; overflow: hidden; min-height: 60px; line-height: 1.4; }
+.ska-textarea:focus { border-color: var(--primary); outline: none; }
+.ska-rich-text { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; min-height: 100px; line-height: 1.4; overflow: hidden; }
+.ska-rich-text:focus { border-color: var(--primary); outline: none; }
+.ska-rich-text:empty::before { content: "Escriba aquí el desarrollo de la reunión..."; color: #9ca3af; }
+.ska-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 8px; }
+.ska-table th, .ska-table td { border: 1px solid var(--border); padding: 4px; text-align: left; vertical-align: top; }
+.ska-table th { background: #e5e7eb; font-weight: 600; color: #374151; }
+.ska-table td input, .ska-table td textarea, .ska-table td select { border: none; background: transparent; padding: 2px; width: 100%; height: 100%; min-height: 20px; }
+.ska-part-group { background: #f9fafb; padding: 8px; border-radius: 4px; border: 1px solid var(--border); margin-bottom: 8px; }
+.ska-part-row { display: grid; grid-template-columns: 1fr 22px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.ska-agenda-row { display: grid; grid-template-columns: 2fr 1fr 1fr 22px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.ska-btn { padding: 7px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+.ska-btn-primary { background: var(--primary); color: white; }
+.ska-btn-primary:hover { background: #0a355c; }
+.ska-btn-outline { background: white; border: 1px solid var(--border); color: #374151; }
+.ska-btn-outline:hover { background: #f3f4f6; }
+.ska-btn-success { background: var(--accent); color: white; }
+.ska-btn-del { background: transparent; color: var(--danger); padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; border: none; }
+.ska-actions { position: sticky; bottom: 0; background: rgba(255,255,255,0.98); padding: 12px 15px; margin-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(5px); z-index: 10; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+.ska-firma-input { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; width: 100%; padding: 6px 0; font-size: 0.85rem; }
+@media print {
+    html, body { height: auto !important; overflow: visible !important; background: white !important; }
+    body > div { height: auto !important; overflow: visible !important; display: block !important; }
+    main { overflow: visible !important; height: auto !important; display: block !important; background: white !important; }
+    .ska-body { background: white; padding: 0; }
+    .ska-container { box-shadow: none; padding: 15px; width: 100%; max-width: 100%; margin: 0; min-height: auto; }
+    .no-print { display: none !important; }
+    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group { border: none !important; padding: 2px 0; background: transparent !important; box-shadow: none !important; }
+    .ska-textarea, .ska-rich-text, textarea.ska-textarea { overflow: visible !important; height: auto !important; min-height: auto !important; max-height: none !important; resize: none !important; line-height: 1.3 !important; }
+    .ska-table td textarea { height: auto !important; min-height: auto !important; }
+    .ska-section-title { border-bottom: 1px solid #000; }
+    .ska-table th { background-color: #eee !important; }
+    .ska-actions, .ska-btn { display: none !important; }
+    .ska-table { page-break-inside: auto; }
+    .ska-card { page-break-inside: auto; }
+    .ska-table td { page-break-inside: avoid; }
+    .ska-part-row, .ska-agenda-row, .ska-agenda-header { border-bottom: 1px solid #eee; padding-bottom: 3px; margin-bottom: 3px; }
+    .ska-agenda-header { border-bottom: 2px solid #000; }
+    .ska-table tbody tr { page-break-inside: avoid; }
+}
+</style>
+
+<div class="ska-body">
+<div class="ska-container">
+    <form id="minuta-form" method="POST" action="{{ action_url }}">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <input type="hidden" name="form_data" id="form-data-input" value="">
+        <input type="hidden" name="status" id="status-input" value="">
+
+        <header class="ska-header">
+            <h1>Minuta de Reunión de Equipo</h1>
+            <div class="meta">
+                <span>Código: SKA-MIN-FO-001 Rev. Nº: 1</span>
+                <span>Hoja Nº: 1 de 1</span>
+                {% if minuta %}
+                <span style="color:var(--primary);font-weight:700;">Nº Minuta: #{{ minuta.id }}</span>
+                {% endif %}
+            </div>
+            <table class="ska-rev-table">
+                <tr><th scope="col">Nivel</th><th scope="col">Fecha</th><th scope="col">Descripción del Cambio</th></tr>
+                <tr><td>0</td><td>11/06/2026</td><td>Emisión del formulario</td></tr>
+                <tr><td>1</td><td>11/06/2026</td><td>Versión inicial</td></tr>
+            </table>
+        </header>
+
+        <div class="ska-grid-3">
+            <div class="ska-card">
+                <label for="fecha" class="ska-label">1. FECHA:</label>
+                <input type="date" id="fecha" class="ska-input" required>
+            </div>
+            <div class="ska-card">
+                <label for="horaInicio" class="ska-label">2. HORA INICIO:</label>
+                <input type="time" id="horaInicio" class="ska-input" required>
+            </div>
+            <div class="ska-card">
+                <label for="horaFin" class="ska-label">3. HORA FIN:</label>
+                <input type="time" id="horaFin" class="ska-input" required>
+            </div>
+        </div>
+
+        <div class="ska-grid-2">
+            <div class="ska-card">
+                <label for="lugar" class="ska-label">4. LUGAR / MODALIDAD:</label>
+                <input type="text" id="lugar" class="ska-input" placeholder="Ej: Sala de reuniones / Virtual" required>
+            </div>
+            <div class="ska-card">
+                <label for="tipoReunion" class="ska-label">5. TIPO DE REUNIÓN:</label>
+                    <select id="tipoReunion" class="ska-select" required>
+                        <option value="">Seleccione...</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Extraordinaria">Extraordinaria</option>
+                    <option value="Seguimiento">Seguimiento</option>
+                    <option value="Planificación">Planificación</option>
+                    <option value="Resolución de problemas">Resolución de problemas</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ska-card">
+            <label for="objetivo" class="ska-label">6. OBJETIVO DE LA REUNIÓN:</label>
+            <textarea id="objetivo" class="ska-textarea" rows="2" placeholder="Describa el propósito principal de la reunión" required></textarea>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">7. PARTICIPANTES</div>
+            <div class="ska-grid-2">
+                <div>
+                    <label class="ska-label" style="margin-bottom:5px">PRESENTES:</label>
+                    <div id="presentes-list"></div>
+                    <button type="button" class="ska-btn ska-btn-outline no-print" data-action="add-presente">+ Presente</button>
+                </div>
+                <div>
+                    <label class="ska-label" style="margin-bottom:5px">AUSENTES:</label>
+                    <div id="ausentes-list"></div>
+                    <button type="button" class="ska-btn ska-btn-outline no-print" data-action="add-ausente">+ Ausente</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">8. AGENDA / ORDEN DEL DÍA</div>
+            <div class="ska-agenda-row ska-agenda-header" style="font-weight:700;font-size:0.75rem;color:var(--muted);margin-bottom:4px;">
+                <span>TEMA</span>
+                <span>RESPONSABLE</span>
+                <span>TIEMPO (min)</span>
+                <span class="no-print"></span>
+            </div>
+            <div id="agenda-list"></div>
+            <button type="button" class="ska-btn ska-btn-outline ska-btn-add no-print" data-action="add-agenda">+ Agregar Tema</button>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">9. DESARROLLO DE LA REUNIÓN</div>
+            <div class="ska-rich-text" contenteditable="true" id="desarrollo" style="overflow:hidden;min-height:100px"></div>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">10. ACUERDOS Y DECISIONES</div>
+            <table class="ska-table">
+                <thead>
+                    <tr>
+                        <th style="width:5%" scope="col">#</th>
+                        <th style="width:45%" scope="col">ACUERDO / DECISIÓN</th>
+                        <th style="width:30%" scope="col">OBSERVACIONES</th>
+                        <th class="no-print" style="width:20px" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="acuerdos-tb"></tbody>
+            </table>
+            <button type="button" class="ska-btn ska-btn-outline no-print" style="margin-top:6px;font-size:0.75rem;" data-action="add-acuerdo">+ Agregar Acuerdo</button>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">11. TAREAS ASIGNADAS</div>
+            <table class="ska-table">
+                <thead>
+                    <tr>
+                        <th style="width:5%" scope="col">#</th>
+                        <th style="width:35%" scope="col">TAREA / ACCIÓN</th>
+                        <th style="width:20%" scope="col">RESPONSABLE</th>
+                        <th style="width:15%" scope="col">PLAZO</th>
+                        <th style="width:15%" scope="col">ESTADO</th>
+                        <th class="no-print" style="width:20px" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="tareas-tb"></tbody>
+            </table>
+            <button type="button" class="ska-btn ska-btn-outline no-print" style="margin-top:6px;font-size:0.75rem;" data-action="add-tarea">+ Agregar Tarea</button>
+        </div>
+
+        <div class="ska-grid-2">
+            <div class="ska-card">
+                <label for="proximaReunion" class="ska-label">12. PRÓXIMA REUNIÓN:</label>
+                <input type="date" id="proximaReunion" class="ska-input" required>
+            </div>
+            <div class="ska-card">
+                <label for="redactor" class="ska-label">13. REDACTÓ MINUTA:</label>
+                <input type="text" id="redactor" class="ska-input" placeholder="Nombre y Apellido" required>
+            </div>
+        </div>
+
+        <div style="margin-top:35px;padding-top:10px;border-top:1px solid #ccc;">
+            <label for="firma" class="ska-label">FIRMA RESPONSABLE:</label>
+            <input type="text" id="firma" class="ska-firma-input" placeholder="Nombre y Apellido" required>
+        </div>
+
+        <div class="ska-actions no-print">
+            <div class="status"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                {% if minuta and minuta.status == "Finalizado" %}
+                <button type="button" class="ska-btn ska-btn-success" data-action="print">📄 Generar PDF</button>
+                {% else %}
+                <button type="submit" class="ska-btn ska-btn-primary">💾 Guardar</button>
+                <button type="button" class="ska-btn ska-btn-success" data-action="print" disabled style="opacity:0.4;cursor:not-allowed;">📄 Generar PDF</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Save confirmation modal -->
+    <div id="confirm-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-container-title">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
+        <div id="confirm-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div class="px-12 py-16 text-center space-y-8">
+                    <div class="size-24 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
+                        <span class="material-symbols-rounded text-5xl" aria-hidden="true">save</span>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="confirm-modal-container-title">¿Guardar cambios?</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm">Se guardarán los datos de la minuta.</p>
+                    </div>
+                    <div class="flex flex-col gap-3 w-full pb-8">
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20" id="modal-save-finalize">Guardar y finalizar</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest transition-all" id="modal-save-draft">Guardar como borrador</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest transition-all" id="modal-cancel">Volver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+function addParticipant(type) {
+    var list = document.getElementById(type + '-list');
+    var div = document.createElement('div');
+    div.className = 'ska-part-row';
+    div.innerHTML = '<input type="text" class="ska-input" placeholder="Nombre y Apellido"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+    div.querySelector('[data-action="del-participant"]').addEventListener('click', function() { div.remove(); });
+    list.appendChild(div);
+}
+
+function addAgendaItem() {
+    var list = document.getElementById('agenda-list');
+    var div = document.createElement('div');
+    div.className = 'ska-agenda-row';
+    div.innerHTML = '<textarea class="ska-textarea" rows="1" placeholder="Tema" style="overflow:hidden"></textarea><textarea class="ska-textarea" rows="1" placeholder="Responsable" style="overflow:hidden"></textarea><input type="text" class="ska-input" placeholder="Tiempo (min)"><button type="button" class="ska-btn-del no-print" data-action="del-agenda">×</button>';
+    div.querySelector('[data-action="del-agenda"]').addEventListener('click', function() { div.remove(); });
+    div.querySelectorAll('textarea').forEach(autoResize);
+    list.appendChild(div);
+}
+
+function addAcuerdo() {
+    var tbody = document.getElementById('acuerdos-tb');
+    var tr = document.createElement('tr');
+    var num = tbody.children.length + 1;
+    tr.innerHTML = '<td>' + num + '</td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden"></textarea></td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden"></textarea></td><td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+    tr.querySelector('[data-action="del-row"]').addEventListener('click', function() { tr.remove(); renumberAcuerdos(); });
+    tr.querySelectorAll('textarea').forEach(autoResize);
+    tbody.appendChild(tr);
+}
+
+function renumberAcuerdos() {
+    document.querySelectorAll('#acuerdos-tb tr').forEach(function(tr, i) {
+        tr.querySelector('td').textContent = i + 1;
+    });
+}
+
+function addTarea() {
+    var tbody = document.getElementById('tareas-tb');
+    var tr = document.createElement('tr');
+    var num = tbody.children.length + 1;
+    tr.innerHTML = '<td>' + num + '</td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden"></textarea></td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden"></textarea></td><td><input type="date" class="ska-input"></td><td><select class="ska-input"><option value="Pendiente">Pendiente</option><option value="En progreso">En progreso</option><option value="Completada">Completada</option></select></td><td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+    tr.querySelector('[data-action="del-row"]').addEventListener('click', function() { tr.remove(); renumberTareas(); });
+    tr.querySelectorAll('textarea').forEach(autoResize);
+    tbody.appendChild(tr);
+}
+
+function renumberTareas() {
+    document.querySelectorAll('#tareas-tb tr').forEach(function(tr, i) {
+        tr.querySelector('td').textContent = i + 1;
+    });
+}
+
+function escHtml(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function autoResize(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+}
+
+function serializeForm() {
+    var presentes = [];
+    document.querySelectorAll('#presentes-list .ska-part-row').forEach(function(r) {
+        var inp = r.querySelector('input');
+        presentes.push({ nombre: inp ? inp.value : '' });
+    });
+    var ausentes = [];
+    document.querySelectorAll('#ausentes-list .ska-part-row').forEach(function(r) {
+        var inp = r.querySelector('input');
+        ausentes.push({ nombre: inp ? inp.value : '' });
+    });
+    var agenda = [];
+    document.querySelectorAll('#agenda-list .ska-agenda-row').forEach(function(r) {
+        var inputs = r.querySelectorAll('input');
+        agenda.push({ tema: inputs[0].value, responsable: inputs[1].value, tiempo: inputs[2].value });
+    });
+    var acuerdos = [];
+    document.querySelectorAll('#acuerdos-tb tr').forEach(function(tr) {
+        var textareas = tr.querySelectorAll('textarea');
+        acuerdos.push({ acuerdo: textareas[0].value, observaciones: textareas[1].value });
+    });
+    var tareas = [];
+    document.querySelectorAll('#tareas-tb tr').forEach(function(tr) {
+        var textarea = tr.querySelector('textarea');
+        var inputs = tr.querySelectorAll('input, select');
+        tareas.push({ tarea: textarea.value, responsable: inputs[0].value, plazo: inputs[1].value, estado: inputs[2].value });
+    });
+
+    return {
+        fecha: document.getElementById('fecha').value,
+        horaInicio: document.getElementById('horaInicio').value,
+        horaFin: document.getElementById('horaFin').value,
+        lugar: document.getElementById('lugar').value,
+        tipoReunion: document.getElementById('tipoReunion').value,
+        objetivo: document.getElementById('objetivo').value,
+        desarrollo: document.getElementById('desarrollo').innerHTML,
+        proximaReunion: document.getElementById('proximaReunion').value,
+        redactor: document.getElementById('redactor').value,
+        firma: document.getElementById('firma').value,
+        presentes: presentes,
+        ausentes: ausentes,
+        agenda: agenda,
+        acuerdos: acuerdos,
+        tareas: tareas
+    };
+}
+
+function restoreData(data) {
+    if (!data) return;
+    document.getElementById('fecha').value = data.fecha || '';
+    document.getElementById('horaInicio').value = data.horaInicio || '';
+    document.getElementById('horaFin').value = data.horaFin || '';
+    document.getElementById('lugar').value = data.lugar || '';
+    document.getElementById('tipoReunion').value = data.tipoReunion || '';
+    document.getElementById('objetivo').value = data.objetivo || '';
+    document.getElementById('desarrollo').innerHTML = data.desarrollo || '';
+    document.getElementById('proximaReunion').value = data.proximaReunion || '';
+    document.getElementById('redactor').value = data.redactor || '';
+    document.getElementById('firma').value = data.firma || '';
+
+    document.getElementById('presentes-list').innerHTML = '';
+    document.getElementById('ausentes-list').innerHTML = '';
+    (data.presentes || []).forEach(function(p) {
+        var div = document.createElement('div');
+        div.className = 'ska-part-row';
+        div.innerHTML = '<input type="text" class="ska-input" value="' + escHtml(p.nombre || '') + '"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+        div.querySelector('[data-action="del-participant"]').addEventListener('click', function() { div.remove(); });
+        document.getElementById('presentes-list').appendChild(div);
+    });
+    (data.ausentes || []).forEach(function(p) {
+        var div = document.createElement('div');
+        div.className = 'ska-part-row';
+        div.innerHTML = '<input type="text" class="ska-input" value="' + escHtml(p.nombre || '') + '"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+        div.querySelector('[data-action="del-participant"]').addEventListener('click', function() { div.remove(); });
+        document.getElementById('ausentes-list').appendChild(div);
+    });
+    if (!document.getElementById('presentes-list').children.length) addParticipant('presentes');
+    if (!document.getElementById('ausentes-list').children.length) addParticipant('ausentes');
+
+    document.getElementById('agenda-list').innerHTML = '';
+    (data.agenda || []).forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'ska-agenda-row';
+        div.innerHTML = '<textarea class="ska-textarea" rows="1" placeholder="Tema" style="overflow:hidden">' + escHtml(item.tema || '') + '</textarea><textarea class="ska-textarea" rows="1" placeholder="Responsable" style="overflow:hidden">' + escHtml(item.responsable || '') + '</textarea><input type="text" class="ska-input" placeholder="Tiempo (min)" value="' + escHtml(item.tiempo || '') + '"><button type="button" class="ska-btn-del no-print" data-action="del-agenda">×</button>';
+        div.querySelector('[data-action="del-agenda"]').addEventListener('click', function() { div.remove(); });
+        div.querySelectorAll('textarea').forEach(autoResize);
+        document.getElementById('agenda-list').appendChild(div);
+    });
+    if (!document.getElementById('agenda-list').children.length) addAgendaItem();
+
+    document.getElementById('acuerdos-tb').innerHTML = '';
+    (data.acuerdos || []).forEach(function(a, i) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + (i + 1) + '</td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden">' + escHtml(a.acuerdo || '') + '</textarea></td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden">' + escHtml(a.observaciones || '') + '</textarea></td><td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+        tr.querySelector('[data-action="del-row"]').addEventListener('click', function() { tr.remove(); renumberAcuerdos(); });
+        tr.querySelectorAll('textarea').forEach(autoResize);
+        document.getElementById('acuerdos-tb').appendChild(tr);
+    });
+    if (!document.getElementById('acuerdos-tb').children.length) addAcuerdo();
+
+    document.getElementById('tareas-tb').innerHTML = '';
+    (data.tareas || []).forEach(function(t, i) {
+        var tr = document.createElement('tr');
+        var estadoOpts = '<option value="Pendiente">Pendiente</option><option value="En progreso">En progreso</option><option value="Completada">Completada</option>';
+        var estadoSel = (t.estado === 'En progreso' ? 'En progreso' : t.estado === 'Completada' ? 'Completada' : 'Pendiente');
+        var estadoHtml = estadoOpts.replace('value="' + estadoSel + '"', 'value="' + estadoSel + '" selected');
+        tr.innerHTML = '<td>' + (i + 1) + '</td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden">' + escHtml(t.tarea || '') + '</textarea></td><td><textarea class="ska-textarea" rows="1" style="overflow:hidden">' + escHtml(t.responsable || '') + '</textarea></td><td><input type="date" class="ska-input" value="' + escHtml(t.plazo || '') + '"></td><td><select class="ska-input">' + estadoHtml + '</select></td><td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+        tr.querySelector('[data-action="del-row"]').addEventListener('click', function() { tr.remove(); renumberTareas(); });
+        tr.querySelectorAll('textarea').forEach(autoResize);
+        document.getElementById('tareas-tb').appendChild(tr);
+    });
+    if (!document.getElementById('tareas-tb').children.length) addTarea();
+
+    setTimeout(function() {
+        document.querySelectorAll('.ska-textarea, .ska-rich-text, #desarrollo').forEach(autoResize);
+    }, 100);
+}
+
+function disableForm() {
+    document.querySelectorAll('#minuta-form input, #minuta-form textarea, #minuta-form select').forEach(function(el) {
+        el.disabled = true;
+    });
+    document.querySelectorAll('#minuta-form [contenteditable]').forEach(function(el) {
+        el.contentEditable = 'false';
+    });
+    document.querySelectorAll('#minuta-form .ska-btn-outline, #minuta-form .ska-btn-del, #minuta-form [data-action]').forEach(function(el) {
+        if (el.getAttribute('data-action') !== 'print') el.style.display = 'none';
+    });
+}
+
+// Event listeners
+document.addEventListener('input', function(e) {
+    if (e.target.tagName === 'TEXTAREA' || e.target.classList.contains('ska-input') || e.target.classList.contains('ska-select') || e.target.getAttribute('contenteditable') === 'true') {
+        autoResize(e.target);
+    }
+});
+
+document.addEventListener('click', function(e) {
+    var action = e.target.closest('[data-action]');
+    if (!action) return;
+    var act = action.dataset.action;
+    if (act === 'add-presente') addParticipant('presentes');
+    else if (act === 'add-ausente') addParticipant('ausentes');
+    else if (act === 'add-agenda') addAgendaItem();
+    else if (act === 'add-acuerdo') addAcuerdo();
+    else if (act === 'add-tarea') addTarea();
+    else if (act === 'print') window.print();
+});
+
+// Save confirmation modal
+var pendingFormData = null;
+
+document.getElementById('minuta-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = e.target;
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    pendingFormData = serializeForm();
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    container.classList.remove('hidden');
+    modal.classList.remove('hidden');
+});
+
+function closeConfirmModal() {
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    modal.classList.add('hidden');
+    container.classList.add('hidden');
+}
+
+document.getElementById('modal-cancel').addEventListener('click', closeConfirmModal);
+
+document.getElementById('modal-save-finalize').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'Finalizado';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'Finalizado';
+        document.getElementById('minuta-form').submit();
+    }
+});
+
+document.getElementById('modal-save-draft').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'Borrador';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'Borrador';
+        document.getElementById('minuta-form').submit();
+    }
+});
+
+document.getElementById('confirm-modal-container').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirmModal();
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+    addParticipant('presentes');
+    addParticipant('ausentes');
+    addAgendaItem();
+    addAcuerdo();
+    addTarea();
+
+    {% if form_data %}
+    restoreData({{ form_data|tojson }});
+    {% endif %}
+
+    {% if minuta and minuta.status == "Finalizado" %}
+    disableForm();
+    {% endif %}
+});
+</script>
+{% endblock %}

@@ -1,33 +1,18 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 import models
 from database import get_db
 from services import survey_service
+from templating import templates
 
 router = APIRouter(tags=["relevamiento"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/relevamiento", response_class=HTMLResponse)
-async def relevamiento_list(
-    request: Request,
-    cliente: Optional[str] = Query(None),
-    asistente: Optional[str] = Query(None),
-    edit_machine: Optional[int] = Query(None),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(10, ge=1, le=100),
-    db: Session = Depends(get_db)
-):
-    result = survey_service.list_surveys(db, cliente, asistente, page, per_page)
-    return templates.TemplateResponse("relevamiento_lista.html", {
-        "request": request,
-        **result,
-        "edit_machine": edit_machine,
-        "active_page": "relevamiento"
-    })
+async def relevamiento_list():
+    return RedirectResponse(url="/relevamiento2", status_code=303)
 
 
 @router.get("/relevamiento/{machine_id}/ver", response_class=HTMLResponse)
@@ -36,7 +21,7 @@ async def relevamiento_view(machine_id: int, request: Request, db: Session = Dep
     customer = machine.customer
     survey_data = survey.data if survey else {}
 
-    return templates.TemplateResponse("relevamiento_ver.html", {
+    return templates.TemplateResponse(request, 'relevamiento_ver.html', {
         "request": request, "machine": machine, "customer": customer,
         "survey": survey, "survey_data": survey_data,
         "active_page": "relevamiento"
@@ -56,7 +41,7 @@ async def relevamiento_form(machine_id: int, request: Request, db: Session = Dep
     customers_raw = db.query(models.Customer).order_by(models.Customer.name).all()
     unique_customer_names = sorted(list(set([c.name for c in customers_raw])))
 
-    return templates.TemplateResponse("relevamiento.html", {
+    return templates.TemplateResponse(request, 'relevamiento.html', {
         "request": request, "machine": machine, "customer": customer,
         "survey": survey, "survey_data": survey_data,
         "advisors": advisors, "designers": designers,
@@ -81,7 +66,7 @@ async def relevamiento_partial(machine_id: int, request: Request, db: Session = 
     formado_types = db.query(models.FormadoType).order_by(models.FormadoType.name).all()
     inferior_closure_types = db.query(models.InferiorClosure).order_by(models.InferiorClosure.name).all()
 
-    return templates.TemplateResponse("_relevamiento_partial.html", {
+    return templates.TemplateResponse(request, '_relevamiento_partial.html', {
         "request": request, "machine": machine, "customer": customer,
         "survey": survey, "survey_data": survey_data,
         "advisors": advisors, "designers": designers,
@@ -114,7 +99,7 @@ async def relevamiento_reporte(request: Request, machine_id: int, db: Session = 
     customer = machine.customer
     survey_data = survey.data if survey else {}
 
-    return templates.TemplateResponse("relevamiento_reporte.html", {
+    return templates.TemplateResponse(request, 'relevamiento_reporte.html', {
         "request": request,
         "machine": machine,
         "customer": customer,

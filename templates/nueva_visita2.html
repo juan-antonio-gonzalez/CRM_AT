@@ -1,0 +1,886 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header_extra %}
+<div class="hidden lg:flex items-center gap-4 ml-4">
+    <a href="/visitas2"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
+        title="Volver al listado" aria-label="Volver al listado">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight">{{ title }}</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Registre los detalles de la visita técnica.</p>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<style nonce="{{ request.state.script_nonce }}">
+:root { --primary: #0f4c81; --bg: #f4f6f8; --card: #ffffff; --border: #d1d5db; --text: #1f2937; --muted: #6b7280; --accent: #10b981; --danger: #ef4444; }
+#tb-6 tr td:nth-child(2),
+#tb-7 tr td:nth-child(2) { min-width: 220px; }
+#tb-6 tr td:nth-child(2) select,
+#tb-7 tr td:nth-child(2) select { white-space: normal; word-break: break-word; overflow-wrap: break-word; }
+#tb-6 th:nth-child(4),
+#tb-7 th:nth-child(4) { line-height: 1.2; font-size: 0.65rem; }
+.ska-body { font-size: 14px; }
+.ska-body * { box-sizing: border-box; margin: 0; padding: 0; }
+.ska-body { background: var(--bg); color: var(--text); line-height: 1.5; }
+.ska-container { max-width: 210mm; margin: 0 auto; background: var(--card); padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 297mm; border-radius: 4px; }
+.ska-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+.ska-header h1 { font-size: 1.3rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.ska-header .meta { font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; margin-top: 4px; }
+.ska-rev-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin: 10px 0; background: #f9fafb; }
+.ska-rev-table th, .ska-rev-table td { border: 1px solid var(--border); padding: 4px 6px; text-align: left; }
+.ska-rev-table th { background: #e5e7eb; font-weight: 600; }
+
+.ska-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.ska-card { border: 1px solid var(--border); padding: 12px; border-radius: 4px; background: #fff; margin-bottom: 12px; }
+.ska-section-title { font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); margin-bottom: 8px; padding-bottom: 3px; font-size: 0.9rem; text-transform: uppercase; }
+.ska-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+.ska-input, .ska-select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; }
+.ska-input:focus, .ska-select:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 2px rgba(15,76,129,0.15); }
+
+.ska-textarea {
+    width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px;
+    font-size: 0.85rem; background: #f9fafb; transition: border 0.2s;
+    resize: none; overflow: hidden; min-height: 24px; line-height: 1.4;
+}
+.ska-textarea:focus { border-color: var(--primary); outline: none; }
+.ska-rich-text { min-height: 100px; font-size: 0.9rem; padding: 10px; }
+.ska-rich-text:empty::before { content: "Escriba aquí el desarrollo detallado..."; color: #9ca3af; }
+.ska-editor-wrapper { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.ska-editor-toolbar { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px 6px; background: #f1f5f9; border-bottom: 1px solid var(--border); align-items: center; }
+.ska-editor-toolbar button { background: transparent; border: none; padding: 4px 6px; border-radius: 3px; cursor: pointer; color: #475569; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.ska-editor-toolbar button:hover { background: #e2e8f0; color: var(--primary); }
+.ska-editor-toolbar button:active { background: #cbd5e1; }
+.ska-editor-toolbar .sep { width: 1px; height: 20px; background: #cbd5e1; margin: 0 4px; display: inline-block; }
+.ska-editor-content img { max-width: 100%; height: auto; border-radius: 3px; margin: 4px 0; }
+.ska-editor-content table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.8rem; }
+.ska-editor-content th, .ska-editor-content td { border: 1px solid var(--border); padding: 4px; vertical-align: top; }
+.ska-editor-content th { background: #e5e7eb; font-weight: 600; }
+
+.ska-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 8px; }
+.ska-table th, .ska-table td { border: 1px solid var(--border); padding: 4px; text-align: left; vertical-align: top; }
+.ska-table th { background: #e5e7eb; font-weight: 600; color: #374151; }
+.ska-table td input, .ska-table td textarea, .ska-table td select { border: none; background: transparent; padding: 2px; width: 100%; height: 100%; min-height: 20px; }
+
+.ska-part-group { background: #f9fafb; padding: 8px; border-radius: 4px; border: 1px solid var(--border); margin-bottom: 8px; }
+.ska-part-row { display: grid; grid-template-columns: 1fr 1fr 22px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.ska-obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.85rem; }
+.ska-obj-item { display: flex; align-items: center; gap: 6px; }
+.ska-obj-item input[type="checkbox"] { width: auto; }
+
+.ska-btn { padding: 7px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+.ska-btn-primary { background: var(--primary); color: white; }
+.ska-btn-primary:hover { background: #0a355c; }
+.ska-btn-outline { background: white; border: 1px solid var(--border); color: #374151; }
+.ska-btn-outline:hover { background: #f3f4f6; }
+.ska-btn-success { background: var(--accent); color: white; }
+.ska-btn-danger { background: var(--danger); color: white; }
+.ska-btn-del { background: transparent; color: var(--danger); padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; border: none; }
+.ska-btn-add-anexo { width: 100%; margin-top: 10px; justify-content: center; border-style: dashed; }
+
+.ska-img-upload-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.ska-img-slot { border: 2px dashed var(--border); border-radius: 4px; height: 130px; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative; background: #f9fafb; cursor: pointer; overflow: hidden; }
+.ska-img-slot:hover { border-color: var(--primary); background: #eff6ff; }
+.ska-img-slot input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.ska-img-slot img { width: 100%; height: 100%; object-fit: contain; display: none; }
+.ska-img-slot.has-img img { display: block; }
+.ska-img-slot.has-img .ska-placeholder { display: none; }
+.ska-placeholder { text-align: center; color: var(--muted); font-size: 0.75rem; padding: 5px; }
+
+.ska-actions { position: sticky; bottom: 0; background: rgba(255,255,255,0.98); padding: 12px 15px; margin-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(5px); z-index: 10; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+.ska-firma-input { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; width: 100%; padding: 6px 0; font-size: 0.85rem; }
+
+@media print {
+    html, body { height: auto !important; overflow: visible !important; background: white !important; }
+    body > div { height: auto !important; overflow: visible !important; display: block !important; }
+    main { overflow: visible !important; height: auto !important; display: block !important; background: white !important; }
+    .ska-body { background: white; }
+    .ska-container { box-shadow: none; padding: 15px; width: 100%; max-width: 100%; margin: 0; min-height: auto; }
+    .no-print { display: none !important; }
+    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group { border: none !important; padding: 2px 0; background: transparent !important; box-shadow: none !important; }
+    .ska-textarea, .ska-rich-text, textarea.ska-textarea {
+        overflow: visible !important; height: auto !important; min-height: auto !important; max-height: none !important;
+        resize: none !important; line-height: 1.3 !important;
+    }
+    .ska-section-title { border-bottom: 1px solid #000; }
+    .ska-table th { background-color: #eee !important; }
+    .ska-img-slot { border: 1px solid #ccc; border-style: solid; }
+    .ska-img-slot input { display: none; }
+    .ska-actions, .ska-btn { display: none !important; }
+    .ska-table { page-break-inside: auto; }
+    .ska-card { page-break-inside: auto; }
+    .ska-table td { page-break-inside: avoid; }
+    .ska-table tbody tr { page-break-inside: avoid; }
+    .ska-part-row { border-bottom: 1px solid #eee; padding-bottom: 3px; margin-bottom: 3px; }
+    .ska-obj-item input[type="checkbox"] { -webkit-appearance: checkbox; appearance: auto; width: auto; height: auto; border: none; background: transparent; }
+}
+</style>
+
+<div class="ska-body">
+<div class="ska-container">
+    <form id="visita-form" method="POST" action="{{ action_url }}">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <input type="hidden" name="form_data" id="form-data-input" value="">
+
+        <header class="ska-header">
+            <h1>Informe de Visita Técnica</h1>
+            <div class="meta">
+                <span>Código: SKA-DES-FO-001 Rev. Nº: 2</span>
+                <span>Hoja Nº: 4 de 4</span>
+                {% if visit %}
+                <span style="color:var(--primary);font-weight:700;">Nº Informe: #{{ visit.id }}</span>
+                {% endif %}
+            </div>
+            <table class="ska-rev-table">
+                <tr><th scope="col">Nivel</th><th scope="col">Fecha</th><th scope="col">Descripción del Cambio</th></tr>
+                <tr><td>0</td><td>14/01/2013</td><td>Emisión del formulario</td></tr>
+                <tr><td>1</td><td>06/11/2024</td><td>Modificación Estructura</td></tr>
+                <tr><td>2</td><td>15/11/2024</td><td>Modificación ítems de control y desarrollo. Agregado Anexo I</td></tr>
+            </table>
+        </header>
+
+        <div class="ska-card">
+            <div class="ska-section-title">1. CLIENTE</div>
+                <select id="cliente" class="ska-input" required>
+                    <option value="">— Seleccionar Cliente —</option>
+                {% for c in clientes %}
+                <option value="{{ c.id }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">ASISTENTE TÉCNICO (AT)</div>
+            <div class="ska-grid-2">
+                <div>
+                    <select id="at-select" class="ska-input" required>
+                        <option value="">— Seleccionar AT —</option>
+                    {% for t in tecnicos %}
+                    <option value="{{ t.name }}">{{ t.name }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+                <div>
+                    <select id="planta-distribuidora" class="ska-input">
+                        <option value="">— Planta Distribuidora —</option>
+                    {% for d in distribuidoras %}
+                    <option value="{{ d.name }}">{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="ska-card">
+            <div class="ska-section-title">2. PARTICIPANTES</div>
+            <div class="ska-grid-2">
+                <div>
+                    <label class="ska-label" style="margin-bottom:5px">SWA:</label>
+                    <div id="swa-list"></div>
+                    <button type="button" class="ska-btn ska-btn-outline no-print" data-action="add-swa">+ SWA</button>
+                </div>
+                <div>
+                    <label class="ska-label" style="margin-bottom:5px">CLIENTE:</label>
+                    <div id="cli-list"></div>
+                    <button type="button" class="ska-btn ska-btn-outline no-print" data-action="add-cli">+ CLIENTE</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ska-grid-2">
+            <div class="ska-card">
+                <label for="fecha" class="ska-label">3. FECHA:</label>
+                <input type="date" id="fecha" class="ska-input">
+            </div>
+            <div class="ska-card">
+                <label class="ska-label">4. OBJETIVO:</label>
+                <div class="ska-obj-grid">
+                    <label for="obj" class="ska-obj-item"><input type="checkbox" name="obj" value="Visita programada" id="obj"> Visita programada</label>
+                    <label for="obj-2" class="ska-obj-item"><input type="checkbox" name="obj" value="Análisis No conformidad" id="obj-2"> Análisis No conformidad</label>
+                    <label for="obj-3" class="ska-obj-item"><input type="checkbox" name="obj" value="Seguimiento" id="obj-3"> Seguimiento</label>
+                    <label for="obj-4" class="ska-obj-item"><input type="checkbox" name="obj" value="Solicitud del cliente" id="obj-4"> Solicitud del cliente</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="ska-grid-2">
+            <div class="ska-card">
+                <label id="tipo-de-producto" class="ska-label">TIPO DE PRODUCTO:</label>
+                <div class="ska-obj-grid" role="radiogroup" aria-labelledby="tipo-de-producto">
+                    <label for="tipo-producto" class="ska-obj-item"><input type="radio" name="tipo_producto" value="CAJA" id="tipo-producto"> CAJA</label>
+                    <label for="tipo-producto-2" class="ska-obj-item"><input type="radio" name="tipo_producto" value="PLANCHA" id="tipo-producto-2"> PLANCHA</label>
+                    <label for="tipo-producto-3" class="ska-obj-item"><input type="radio" name="tipo_producto" value="BANDEJA" id="tipo-producto-3"> BANDEJA</label>
+                </div>
+            </div>
+            <div class="ska-card">
+                <label id="planta-5" class="ska-label">PLANTA:</label>
+                <div class="ska-obj-grid" role="radiogroup" aria-labelledby="planta-5">
+                    <label for="planta" class="ska-obj-item"><input type="radio" name="planta" value="LAFERRERE" id="planta"> LAFERRERE</label>
+                    <label for="planta-2" class="ska-obj-item"><input type="radio" name="planta" value="BERNAL" id="planta-2"> BERNAL</label>
+                    <label for="planta-3" class="ska-obj-item"><input type="radio" name="planta" value="C. SUÀREZ" id="planta-3"> C. SUÀREZ</label>
+                    <label for="planta-4" class="ska-obj-item"><input type="radio" name="planta" value="SUNCHALES" id="planta-4"> SUNCHALES</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="dynamic-tables"></div>
+        <div id="anexos-container"></div>
+        <button type="button" class="ska-btn ska-btn-outline ska-btn-add-anexo no-print" data-action="add-anexo">+ Agregar Anexo</button>
+
+        <div style="margin-top: 35px; padding-top: 10px; border-top: 1px solid #ccc;">
+            <label for="firma" class="ska-label">FIRMA A.T.:</label>
+            <input type="text" id="firma" placeholder="Nombre y Apellido" class="ska-firma-input">
+        </div>
+
+        <div class="ska-actions no-print">
+            <div class="status"></div>
+            <input type="hidden" id="status-input" name="status" value="">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                {% if visit and visit.status in ("Finalizado", "Cancelado") %}
+                <button type="button" class="ska-btn ska-btn-success" data-action="print">📄 Generar PDF</button>
+                {% else %}
+                <button type="submit" class="ska-btn ska-btn-primary">💾 Guardar</button>
+                <button type="button" class="ska-btn ska-btn-success" data-action="print" disabled style="opacity:0.4;cursor:not-allowed;">📄 Generar PDF</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Save confirmation modal -->
+    <div id="confirm-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-container-title">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
+        <div id="confirm-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div class="px-12 py-16 text-center space-y-8">
+                    <div class="size-24 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
+                        <span class="material-symbols-rounded text-5xl" aria-hidden="true">save</span>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="confirm-modal-container-title">¿Guardar cambios?</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm">Se guardarán los datos del informe y se actualizarán las tareas del plan de acción.</p>
+                    </div>
+                    <div class="flex flex-col gap-3 w-full pb-8">
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20" id="modal-save-finalize">Guardar y finalizar</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20" id="modal-save-programado">Guardar como programado</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest transition-all" id="modal-save-edit">Guardar y seguir editando</button>
+                        <div class="flex gap-3 w-full">
+                        {% if visit and visit.status not in ("Finalizado", "Cancelado") %}
+                        <button type="button" class="flex-1 px-5 py-2.5 rounded-xl border border-red-200 dark:border-red-800 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 font-bold text-xs uppercase tracking-widest transition-all" id="modal-cancel-visit">Cancelar visita</button>
+                        {% endif %}
+                        <button type="button" class="flex-1 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest transition-all" id="modal-cancel">Volver</button>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal insertar tabla -->
+<div id="table-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="table-modal-container-title">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-sm">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+            <div class="flex flex-col items-center text-center gap-4">
+                <div class="size-16 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary mb-2">
+                    <span class="material-symbols-rounded text-[32px]" aria-hidden="true">table</span>
+                </div>
+                <h3 id="table-modal-container-title" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Insertar Tabla</h3>
+                <div class="flex gap-4 w-full">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <label for="table-rows" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Filas</label>
+                        <input type="number" id="table-rows" min="1" max="20" value="3"
+                            class="form-input w-full h-[38px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl text-sm text-center focus:ring-primary focus:border-primary">
+                    </div>
+                    <div class="flex flex-col gap-1 flex-1">
+                        <label for="table-cols" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Columnas</label>
+                        <input type="number" id="table-cols" min="1" max="10" value="3"
+                            class="form-input w-full h-[38px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl text-sm text-center focus:ring-primary focus:border-primary">
+                    </div>
+                </div>
+                <div class="flex gap-3 w-full mt-4">
+                    <button type="button" id="table-modal-cancel"
+                        class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        Cancelar
+                    </button>
+                    <button type="button" id="table-modal-ok"
+                        class="flex-1 px-6 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all">
+                        Insertar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+// Tables config
+var tablesConfig = [
+    { id: 5, name: '5. SEGUIMIENTO ÚLTIMAS VISITAS / NO CONFORMIDADES', cols: ['FECHA','PEDIDO','TEMA','SITUACIÓN ACTUAL'], types: ['date','text','textarea','textarea'] },
+    { id: 6, name: '6. CALIDAD: CONSULTAS / NO CONFORMIDADES', cols: ['PEDIDO','TEMA','SITUACIÓN ACTUAL'], types: ['text','select','textarea'] },
+    { id: 7, name: '7. ASISTENCIA TÉCNICA (Sólo oportunidades)', cols: ['PEDIDO','TEMA','SITUACIÓN ACTUAL'], types: ['text','select','textarea'] },
+    { id: 8, name: '8. CONCLUSIONES', cols: ['PEDIDO','TEMA','ACCIÓN'], types: ['text','textarea','textarea'] },
+    { id: 9, name: '9. ACCIONES', cols: ['ET','ACCIÓN','RESPONSABLE','PLAZO'], types: ['text','textarea','text','text'] }
+];
+
+var temasCalidad = [
+    {% for t in temas_calidad %}
+    "{{ t.name }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+var calidadAT = [
+    {% for t in calidad_at %}
+    "{{ t.name }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+var anexoCounter = 0;
+
+// Auto-resize
+document.addEventListener('input', function(e) {
+    if (e.target.tagName === 'TEXTAREA' || e.target.classList.contains('ska-rich-text')) {
+        autoResize(e.target);
+    }
+});
+
+function autoResize(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight + 2) + 'px';
+}
+
+// Event delegation for all data-action clicks
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.dataset.action;
+    if (action === 'add-swa') addParticipant('swa');
+    else if (action === 'add-cli') addParticipant('cli');
+    else if (action === 'add-row') addRow(parseInt(btn.dataset.tableId));
+    else if (action === 'add-anexo') addAnexo();
+    else if (action === 'del-participant') btn.closest('.ska-part-row').remove();
+    else if (action === 'del-row') btn.closest('tr').remove();
+    else if (action === 'del-anexo') { showConfirmModal(null, '¿Eliminar este anexo y sus datos?', { title: '¿Eliminar Anexo?', buttonText: 'Eliminar', icon: 'delete_forever', onConfirm: function() { btn.closest('.anexo-block').remove(); } }); }
+    else if (action === 'upload-img') { var t = btn.dataset.targetId; if (t) document.getElementById(t).click(); }
+    else if (action === 'print') window.print();
+});
+
+// Event delegation for file inputs
+document.addEventListener('change', function(e) {
+    if (e.target.dataset.action === 'load-img') {
+        loadImage(e.target, e.target.dataset.previewId);
+    }
+});
+
+function addParticipant(type) {
+    var list = document.getElementById(type + '-list');
+    var div = document.createElement('div');
+    div.className = 'ska-part-row';
+    div.innerHTML = '<input type="text" class="ska-input" placeholder="Nombre y Apellido"><input type="text" class="ska-input" placeholder="Responsabilidad"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+    list.appendChild(div);
+}
+
+function addRow(id) {
+    var t = tablesConfig.find(function(x) { return x.id === id; });
+    var tr = document.createElement('tr');
+    var colsHtml = '';
+    for (var i = 0; i < t.types.length; i++) {
+        var type = t.types[i];
+        if (type === 'textarea') {
+            colsHtml += '<td><textarea class="ska-textarea" rows="1"></textarea></td>';
+        } else if (type === 'select') {
+            var opts = '<option value="">—</option>';
+            var optionsList = (id === 6) ? temasCalidad : (id === 7) ? calidadAT : [];
+            for (var k = 0; k < optionsList.length; k++) {
+                opts += '<option value="' + escHtml(optionsList[k]) + '">' + escHtml(optionsList[k]) + '</option>';
+            }
+            colsHtml += '<td><select class="ska-input">' + opts + '</select></td>';
+        } else {
+            colsHtml += '<td><input type="' + type + '" class="ska-input"></td>';
+        }
+    }
+    tr.innerHTML = colsHtml + '<td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+    document.getElementById('tb-' + id).appendChild(tr);
+    var tas = tr.querySelectorAll('textarea');
+    for (var j = 0; j < tas.length; j++) {
+        autoResize(tas[j]);
+    }
+}
+
+function addAnexo(savedData) {
+    anexoCounter++;
+    var id = anexoCounter;
+    var title = 'ANEXO ' + toRoman(id) + ': DESARROLLO';
+    var container = document.createElement('div');
+    container.className = 'anexo-block';
+    container.dataset.idx = id;
+
+    var htmlContent = '';
+    if (savedData && savedData.html) {
+        htmlContent = savedData.html;
+    }
+
+    var imgsHtml = '';
+    for (var i = 1; i <= 4; i++) {
+        var hasImg = savedData && savedData.images && savedData.images[i-1];
+        var imgSrc = hasImg ? savedData.images[i-1] : '';
+        var fid = 'f_' + id + '_' + i;
+        imgsHtml += '<div class="ska-img-slot ' + (hasImg ? 'has-img' : '') + '" data-action="upload-img" data-target-id="' + fid + '">' +
+            '<div class="ska-placeholder">📷 ' + i + '</div>' +
+            '<img id="prev_' + id + '_' + i + '" src="' + imgSrc + '">' +
+            '<input type="file" id="' + fid + '" accept="image/*" data-action="load-img" data-preview-id="prev_' + id + '_' + i + '">' +
+            '</div>';
+    }
+
+    var tbHtml = '<div class="ska-editor-toolbar no-print">' +
+        '<button type="button" data-cmd="bold" title="Negrita" aria-label="Negrita"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">format_bold</span></button>' +
+        '<button type="button" data-cmd="italic" title="Cursiva" aria-label="Cursiva"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">format_italic</span></button>' +
+        '<button type="button" data-cmd="underline" title="Subrayado" aria-label="Subrayado"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">format_underlined</span></button>' +
+        '<span class="sep"></span>' +
+        '<button type="button" data-cmd="formatBlock" data-val="h3" title="Título" aria-label="Título"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">title</span></button>' +
+        '<button type="button" data-cmd="formatBlock" data-val="p" title="Párrafo normal" aria-label="Párrafo normal"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">text_fields</span></button>' +
+        '<span class="sep"></span>' +
+        '<button type="button" data-cmd="insertUnorderedList" title="Lista con viñetas" aria-label="Lista con viñetas"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">format_list_bulleted</span></button>' +
+        '<button type="button" data-cmd="insertOrderedList" title="Lista numerada" aria-label="Lista numerada"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">format_list_numbered</span></button>' +
+        '<span class="sep"></span>' +
+        '<button type="button" data-cmd="insertTable" title="Insertar tabla" aria-label="Insertar tabla"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">table</span></button>' +
+        '<button type="button" data-cmd="insertImage" title="Insertar imagen en el texto" aria-label="Insertar imagen en el texto"><span class="material-symbols-rounded" style="font-size:18px;" aria-hidden="true">add_photo_alternate</span></button>' +
+        '</div>';
+
+    container.innerHTML = '<div class="ska-card">' +
+        '<div class="ska-section-title">' + title + '</div>' +
+        '<div class="ska-editor-wrapper">' +
+        tbHtml +
+        '<div class="ska-rich-text ska-editor-content" contenteditable="true">' + htmlContent + '</div>' +
+        '</div>' +
+        '<label class="ska-label" style="margin-top:12px;margin-bottom:6px;display:block;">EVIDENCIA FOTOGRÁFICA:</label>' +
+        '<div class="ska-img-upload-area">' + imgsHtml + '</div>' +
+        '<button type="button" class="ska-btn-del no-print" style="margin-top:8px;color:red;" data-action="del-anexo">×</button>' +
+        '</div>';
+    document.getElementById('anexos-container').appendChild(container);
+
+    if (savedData && savedData.html) {
+        setTimeout(function() { autoResize(container.querySelector('.ska-rich-text')); }, 50);
+    }
+}
+
+function loadImage(input, prevId) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = document.getElementById(prevId);
+            img.src = e.target.result;
+            img.parentElement.classList.add('has-img');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function toRoman(num) {
+    var map = {1:'I',2:'II',3:'III',4:'IV',5:'V',6:'VI',7:'VII',8:'VIII',9:'IX',10:'X'};
+    return map[num] || num;
+}
+
+document.getElementById('anexos-container').addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-cmd]');
+    if (!btn) return;
+    e.preventDefault();
+    var cmd = btn.dataset.cmd;
+    var val = btn.dataset.val || null;
+    if (cmd === 'insertTable') {
+        document.getElementById('table-rows').value = '3';
+        document.getElementById('table-cols').value = '3';
+        document.getElementById('table-modal-container').classList.remove('hidden');
+        document.getElementById('table-modal-container').classList.add('flex');
+        return;
+    }
+    if (cmd === 'insertImage') {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.style.display = 'none';
+        document.body.appendChild(input);
+        input.addEventListener('change', function() {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    document.execCommand('insertImage', false, ev.target.result);
+                    document.body.removeChild(input);
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                document.body.removeChild(input);
+            }
+        });
+        input.click();
+        return;
+    }
+    document.execCommand(cmd, false, val);
+    document.getElementById('anexos-container').querySelector('.ska-editor-content:focus-within');
+});
+
+function serializeForm() {
+    var anexosData = [];
+    document.querySelectorAll('.anexo-block').forEach(function(block) {
+        var idx = block.dataset.idx;
+        var html = block.querySelector('.ska-rich-text').innerHTML;
+        var imgs = [];
+        for (var i = 1; i <= 4; i++) {
+            var img = document.getElementById('prev_' + idx + '_' + i);
+            if (img && img.src && img.parentElement.classList.contains('has-img')) {
+                imgs.push(img.src);
+            } else {
+                imgs.push(null);
+            }
+        }
+        anexosData.push({ idx: parseInt(idx), html: html, images: imgs });
+    });
+
+    var selectedObj = [];
+    document.querySelectorAll('input[name="obj"]:checked').forEach(function(cb) {
+        selectedObj.push(cb.value);
+    });
+
+    var swa = [];
+    document.querySelectorAll('#swa-list .ska-part-row').forEach(function(r) {
+        var inputs = r.querySelectorAll('input');
+        swa.push({ n: inputs[0].value, r: inputs[1].value });
+    });
+
+    var cli = [];
+    document.querySelectorAll('#cli-list .ska-part-row').forEach(function(r) {
+        var inputs = r.querySelectorAll('input');
+        cli.push({ n: inputs[0].value, r: inputs[1].value });
+    });
+
+    var tables = {};
+    tablesConfig.forEach(function(t) {
+        tables[t.id] = [];
+        document.querySelectorAll('#tb-' + t.id + ' tr').forEach(function(tr) {
+            var inputs = tr.querySelectorAll('input, textarea, select');
+            var row = [];
+            inputs.forEach(function(i) { row.push(i.value); });
+            tables[t.id].push(row);
+        });
+    });
+
+    var clienteEl = document.getElementById('cliente');
+    var clienteVal = clienteEl.value;
+    var clienteText = clienteVal ? clienteEl.options[clienteEl.selectedIndex].text : '';
+
+    var atEl = document.getElementById('at-select');
+    var atVal = atEl ? atEl.value : '';
+
+    var plantaDistribuidoraEl = document.getElementById('planta-distribuidora');
+    var plantaDistribuidoraVal = plantaDistribuidoraEl ? plantaDistribuidoraEl.value : '';
+
+    var tipoProductoEl = document.querySelector('input[name="tipo_producto"]:checked');
+    var plantaEl = document.querySelector('input[name="planta"]:checked');
+
+    return {
+        fecha: document.getElementById('fecha').value,
+        objetivo: selectedObj,
+        firma: document.getElementById('firma').value,
+        swa: swa,
+        cli: cli,
+        tables: tables,
+        anexos: anexosData,
+        cliente_id: clienteVal,
+        cliente_nombre: clienteText,
+        at: atVal,
+        planta_distribuidora: plantaDistribuidoraVal,
+        tipo_producto: tipoProductoEl ? tipoProductoEl.value : '',
+        planta: plantaEl ? plantaEl.value : ''
+    };
+}
+
+function restoreData(data) {
+    if (!data) return;
+    document.getElementById('fecha').value = data.fecha || '';
+    document.getElementById('firma').value = data.firma || '';
+    if (data.tipo_producto) {
+        var tp = document.querySelector('input[name="tipo_producto"][value="' + data.tipo_producto + '"]');
+        if (tp) tp.checked = true;
+    }
+    if (data.planta) {
+        var pl = document.querySelector('input[name="planta"][value="' + data.planta + '"]');
+        if (pl) pl.checked = true;
+    }
+    if (data.cliente_id) document.getElementById('cliente').value = data.cliente_id;
+    if (data.at) document.getElementById('at-select').value = data.at;
+    if (data.planta_distribuidora) document.getElementById('planta-distribuidora').value = data.planta_distribuidora;
+    document.querySelectorAll('input[name="obj"]').forEach(function(cb) {
+        cb.checked = data.objetivo && data.objetivo.indexOf(cb.value) !== -1;
+    });
+
+    document.getElementById('swa-list').innerHTML = '';
+    document.getElementById('cli-list').innerHTML = '';
+    (data.swa || []).forEach(function(p) {
+        var d = document.createElement('div');
+        d.className = 'ska-part-row';
+        d.innerHTML = '<input type="text" class="ska-input" value="' + escHtml(p.n || '') + '"><input type="text" class="ska-input" value="' + escHtml(p.r || '') + '"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+        document.getElementById('swa-list').appendChild(d);
+    });
+    (data.cli || []).forEach(function(p) {
+        var d = document.createElement('div');
+        d.className = 'ska-part-row';
+        d.innerHTML = '<input type="text" class="ska-input" value="' + escHtml(p.n || '') + '"><input type="text" class="ska-input" value="' + escHtml(p.r || '') + '"><button type="button" class="ska-btn-del no-print" data-action="del-participant">×</button>';
+        document.getElementById('cli-list').appendChild(d);
+    });
+    if (!document.getElementById('swa-list').children.length) addParticipant('swa');
+    if (!document.getElementById('cli-list').children.length) addParticipant('cli');
+
+    tablesConfig.forEach(function(t) {
+        document.getElementById('tb-' + t.id).innerHTML = '';
+        (data.tables[t.id] || []).forEach(function(row) {
+            var tr = document.createElement('tr');
+            var colsHtml = '';
+            for (var i = 0; i < t.types.length; i++) {
+                var type = t.types[i];
+                var val = escHtml(row[i] || '');
+                if (type === 'textarea') {
+                    colsHtml += '<td><textarea class="ska-textarea" rows="1">' + val + '</textarea></td>';
+                } else if (type === 'select') {
+                    var opts = '<option value="">—</option>';
+                    var optionsList = (t.id === 6) ? temasCalidad : (t.id === 7) ? calidadAT : [];
+                    for (var k = 0; k < optionsList.length; k++) {
+                        var optVal = escHtml(optionsList[k]);
+                        var sel = (optionsList[k] === (row[i] || '')) ? ' selected' : '';
+                        opts += '<option value="' + optVal + '"' + sel + '>' + optVal + '</option>';
+                    }
+                    colsHtml += '<td><select class="ska-input">' + opts + '</select></td>';
+                } else {
+                    colsHtml += '<td><input type="' + type + '" class="ska-input" value="' + val + '"></td>';
+                }
+            }
+            tr.innerHTML = colsHtml + '<td class="no-print"><button type="button" class="ska-btn-del" data-action="del-row">×</button></td>';
+            document.getElementById('tb-' + t.id).appendChild(tr);
+        });
+        if (!document.getElementById('tb-' + t.id).children.length) addRow(t.id);
+        setTimeout(function() {
+            document.querySelectorAll('#tb-' + t.id + ' textarea').forEach(autoResize);
+        }, 50);
+    });
+
+    document.getElementById('anexos-container').innerHTML = '';
+    anexoCounter = 0;
+    (data.anexos || []).forEach(function(anx) {
+        anexoCounter = Math.max(anexoCounter, anx.idx);
+        addAnexo(anx);
+    });
+    if (!document.getElementById('anexos-container').children.length) addAnexo();
+    setTimeout(function() {
+        document.querySelectorAll('.ska-rich-text, .ska-textarea').forEach(autoResize);
+    }, 100);
+}
+
+function escHtml(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// Save confirmation modal
+var pendingFormData = null;
+
+document.getElementById('visita-form').addEventListener('submit', function(e) {
+    var errors = [];
+
+    // Validate cliente
+    if (!document.getElementById('cliente').value) {
+        errors.push('Debe seleccionar un cliente.');
+    }
+
+    // Validate AT
+    if (!document.getElementById('at-select').value) {
+        errors.push('Debe seleccionar un asistente técnico (AT).');
+    }
+
+    // Validate fecha
+    if (!document.getElementById('fecha').value) {
+        errors.push('La fecha es obligatoria.');
+    }
+
+    // Validate objetivo (at least one checkbox)
+    if (!document.querySelectorAll('input[name="obj"]:checked').length) {
+        errors.push('Debe seleccionar al menos un objetivo.');
+    }
+
+    // Validate SWA participants
+    var swaVals = [];
+    document.querySelectorAll('#swa-list .ska-part-row').forEach(function(r) {
+        var name = r.querySelector('input').value.trim();
+        if (name) swaVals.push(name);
+    });
+    if (!swaVals.length) {
+        errors.push('Debe agregar al menos un participante de SWA.');
+    }
+
+    // Validate CLIENTE participants
+    var cliVals = [];
+    document.querySelectorAll('#cli-list .ska-part-row').forEach(function(r) {
+        var name = r.querySelector('input').value.trim();
+        if (name) cliVals.push(name);
+    });
+    if (!cliVals.length) {
+        errors.push('Debe agregar al menos un participante del CLIENTE.');
+    }
+
+    if (errors.length) {
+        e.preventDefault();
+        document.querySelector('.status').innerHTML = '<div class="validation-error" style="color:var(--danger);font-size:0.85rem;margin-bottom:8px;">' +
+            errors.map(function(e) { return '⚠ ' + e }).join('<br>') +
+            '</div>';
+        return;
+    }
+
+    e.preventDefault();
+    pendingFormData = serializeForm();
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    container.classList.remove('hidden');
+    modal.classList.remove('hidden');
+});
+
+function closeConfirmModal() {
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    modal.classList.add('hidden');
+    container.classList.add('hidden');
+}
+
+document.getElementById('modal-cancel').addEventListener('click', closeConfirmModal);
+
+document.getElementById('modal-save-finalize').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'Finalizado';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'Finalizado';
+        document.getElementById('visita-form').submit();
+    }
+});
+
+document.getElementById('modal-save-programado').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'Programado';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'Programado';
+        document.getElementById('visita-form').submit();
+    }
+});
+
+document.getElementById('modal-save-edit').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'En proceso';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'En proceso';
+        document.getElementById('visita-form').submit();
+    }
+});
+
+var cancelVisitBtn = document.getElementById('modal-cancel-visit');
+if (cancelVisitBtn) {
+    cancelVisitBtn.addEventListener('click', function() {
+        closeConfirmModal();
+        if (pendingFormData) {
+            pendingFormData.status = 'Cancelado';
+            document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+            document.getElementById('status-input').value = 'Cancelado';
+            document.getElementById('visita-form').submit();
+        }
+    });
+}
+
+document.getElementById('confirm-modal-container').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirmModal();
+});
+
+function disableForm() {
+    document.querySelectorAll('#visita-form input, #visita-form textarea, #visita-form select').forEach(function(el) {
+        el.disabled = true;
+    });
+    document.querySelectorAll('#visita-form [contenteditable]').forEach(function(el) {
+        el.contentEditable = 'false';
+    });
+    document.querySelectorAll('#visita-form .ska-editor-toolbar button').forEach(function(el) {
+        el.disabled = true;
+        el.style.opacity = '0.4';
+        el.style.cursor = 'not-allowed';
+    });
+    document.querySelectorAll('#visita-form .ska-btn-outline, #visita-form .ska-btn-add-anexo, #visita-form .ska-btn-del, #visita-form [data-action="del-participant"]').forEach(function(el) {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll('#visita-form .status, #visita-form .ska-img-slot input[type="file"]').forEach(function(el) {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll('.anexo-block .ska-img-slot').forEach(function(el) {
+        el.style.cursor = 'default';
+    });
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+    addParticipant('swa');
+    addParticipant('cli');
+    tablesConfig.forEach(function(t) {
+        var div = document.createElement('div');
+        div.className = 'ska-card';
+        var colsHtml = '';
+        for (var i = 0; i < t.cols.length; i++) {
+            colsHtml += '<th scope="col">' + t.cols[i] + '</th>';
+        }
+        div.innerHTML = '<div class="ska-section-title">' + t.name + '</div>' +
+            '<table class="ska-table"><thead><tr>' + colsHtml + '<th class="no-print" style="width:20px" scope="col"></th></tr></thead>' +
+            '<tbody id="tb-' + t.id + '"></tbody></table>' +
+            '<button type="button" class="ska-btn ska-btn-outline no-print" style="margin-top:6px; font-size:0.75rem;" data-action="add-row" data-table-id="' + t.id + '">+ Agregar Fila</button>';
+        document.getElementById('dynamic-tables').appendChild(div);
+        addRow(t.id);
+    });
+
+    addAnexo();
+
+    {% if form_data %}
+    restoreData({{ form_data|tojson }});
+    {% endif %}
+
+    {% if visit and visit.status in ("Finalizado", "Cancelado") %}
+    disableForm();
+    {% endif %}
+});
+
+// Modal insertar tabla
+document.addEventListener('DOMContentLoaded', function() {
+    var tableModal = document.getElementById('table-modal-container');
+    function closeTableModal() {
+        tableModal.classList.remove('flex');
+        tableModal.classList.add('hidden');
+    }
+    document.getElementById('table-modal-cancel').addEventListener('click', closeTableModal);
+    document.getElementById('table-modal-ok').addEventListener('click', function() {
+        var rows = Math.max(1, parseInt(document.getElementById('table-rows').value) || 3);
+        var cols = Math.max(1, parseInt(document.getElementById('table-cols').value) || 3);
+        var tbl = '<table style="width:100%;border-collapse:collapse;margin:8px 0;"><tbody>';
+        for (var r = 0; r < rows; r++) {
+            tbl += '<tr>';
+            for (var c = 0; c < cols; c++) {
+                tbl += '<td style="border:1px solid #d1d5db;padding:4px;"><br></td>';
+            }
+            tbl += '</tr>';
+        }
+        tbl += '</tbody></table>';
+        document.execCommand('insertHTML', false, tbl);
+        closeTableModal();
+    });
+    tableModal.addEventListener('click', function(e) {
+        if (e.target === e.currentTarget) closeTableModal();
+    });
+});
+</script>
+{% endblock %}

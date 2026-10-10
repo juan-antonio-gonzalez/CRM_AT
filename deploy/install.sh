@@ -1,0 +1,265 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# CRM-AT — instalación / actualización en un VPS Ubuntu con PostgreSQL y Nginx.
+#
+# Uso:
+#   sudo bash deploy/install.sh                 # instala o actualiza
+#   sudo bash deploy/install.sh --ssl           # además emite el certificado
+#   sudo bash deploy/install.sh --domain otro.dominio
+#
+# El script es idempotente: se puede volver a ejecutar para actualizar.
+# Está pensado para convivir con otras aplicaciones del servidor: usa su propio
+# usuario de sistema, su propia base de datos, su propio puerto y su propio
+# vhost de Nginx.
+# ─────────────────────────────────────────────────────────────────────────────
+set -euo pipefail
+
+APP_NAME="crm-at"
+APP_DIR="/var/www/crm_at"
+APP_USER="crmat"
+ENV_DIR="/etc/crm-at"
+ENV_FILE="${ENV_DIR}/crm-at.env"
+DB_NAME="crm_at"
+DB_USER="crm_at"
+APP_PORT="8020"
+DOMAIN="ejemplo.com"
+ALT_DOMAIN="www.ejemplo.com"
+REPO_URL="https://github.com/juan-antonio-gonzalez/CRM_AT.git"
+WANT_SSL=0
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="$(dirname "$SCRIPT_DIR")"
+
+# ── Parseo de argumentos ────────────────────────────────────────────────────
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --ssl)    WANT_SSL=1; shift ;;
+    --domain) DOMAIN="$2"; shift 2 ;;
+    --port)   APP_PORT="$2"; shift 2 ;;
+    -h|--help)
+      sed -n '2,16p' "${BASH_SOURCE[0]}"; exit 0 ;;
+    *) echo "Opción desconocida: $1" >&2; exit 1 ;;
+  esac
+done
+
+log()  { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
+warn() { printf '\033[1;33m[!] %s\033[0m\n' "$*"; }
+die()  { printf '\033[1;31m[x] %s\033[0m\n' "$*" >&2; exit 1; }
+
+[[ $EUID -eq 0 ]] || die "Ejecutá este script como root (sudo bash deploy/install.sh)."
+
+# ── 1. Dependencias del sistema ─────────────────────────────────────────────
+log "Instalando dependencias del sistema"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+# python3-venv / python3-pip: en Ubuntu 26.04 el módulo venv no trae ensurepip.
+# build-essential + libjpeg/zlib: Pillow 11.1.0 no publica wheel para Python 3.14
+# y se compila desde fuente.
+apt-get install -y -qq \
+  python3 python3-venv python3-pip python3-dev \
+  build-essential zlib1g-dev libjpeg-dev libpq-dev \
+  postgresql-client nginx git curl ca-certificates
+
+# ── 2. Usuario de sistema ───────────────────────────────────────────────────
+if ! id -u "$APP_USER" >/dev/null 2>&1; then
+  log "Creando usuario de sistema ${APP_USER}"
+  adduser --system --group --home "$APP_DIR" --no-create-home "$APP_USER"
+else
+  log "El usuario ${APP_USER} ya existe"
+fi
+
+# ── 3. Base de datos ────────────────────────────────────────────────────────
+log "Configurando PostgreSQL"
+systemctl is-active --quiet postgresql || systemctl start postgresql
+
+DB_PASSWORD=""
+if [[ -f "$ENV_FILE" ]]; then
+  DB_PASSWORD="$(grep -oP '(?<=^DATABASE_URL=postgresql://'"$DB_USER"':)[^@]+' "$ENV_FILE" || true)"
+fi
+if [[ -z "$DB_PASSWORD" ]]; then
+  DB_PASSWORD="$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)"
+  log "Contraseña de base de datos generada"
+fi
+
+su - postgres -c "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='${DB_USER}'\"" | grep -q 1 \
+  || su - postgres -c "psql -c \"CREATE ROLE ${DB_USER} LOGIN PASSWORD '${DB_PASSWORD}';\""
+
+su - postgres -c "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='${DB_NAME}'\"" | grep -q 1 \
+  || su - postgres -c "psql -c \"CREATE DATABASE ${DB_NAME} OWNER ${DB_USER};\""
+
+su - postgres -c "psql -c \"ALTER ROLE ${DB_USER} WITH PASSWORD '${DB_PASSWORD}';\"" >/dev/null
+# Permisos sobre el esquema público (PostgreSQL 15+ ya no lo da por defecto).
+su - postgres -c "psql -d ${DB_NAME} -c \"GRANT ALL ON SCHEMA public TO ${DB_USER};\"" >/dev/null
+
+# ── 4. Código ───────────────────────────────────────────────────────────────
+if [[ -d "${SOURCE_DIR}/.git" && "${SOURCE_DIR}" != "${APP_DIR}" ]]; then
+  log "Copiando el código desde ${SOURCE_DIR}"
+  mkdir -p "$APP_DIR"
+  # --delete mantiene el destino igual al origen, excluyendo datos locales.
+  rsync -a --delete \
+    --exclude '.git' --exclude '.venv' --exclude '.venv-work' \
+    --exclude '__pycache__' --exclude 'node_modules' \
+    --exclude '*.db' --exclude '.env' \
+    "${SOURCE_DIR}/" "${APP_DIR}/"
+elif [[ ! -d "${APP_DIR}/.git" ]]; then
+  log "Clonando ${REPO_URL}"
+  git clone --depth 1 "$REPO_URL" "$APP_DIR"
+else
+  log "Actualizando el repositorio existente"
+  git -C "$APP_DIR" fetch --depth 1 origin main
+  git -C "$APP_DIR" reset --hard origin/main
+fi
+
+mkdir -p "${APP_DIR}/static/uploads" "${APP_DIR}/data" "$ENV_DIR"
+
+# ── 5. Entorno virtual de Python ────────────────────────────────────────────
+log "Creando entorno virtual e instalando dependencias de Python"
+if [[ ! -x "${APP_DIR}/.venv/bin/python" ]]; then
+  python3 -m venv "${APP_DIR}/.venv"
+fi
+"${APP_DIR}/.venv/bin/pip" install --quiet --upgrade pip wheel
+"${APP_DIR}/.venv/bin/pip" install --quiet -r "${APP_DIR}/requirements.txt"
+
+# ── 6. Variables de entorno ─────────────────────────────────────────────────
+if [[ ! -f "$ENV_FILE" ]]; then
+  log "Generando ${ENV_FILE}"
+  SECRET_KEY="$(openssl rand -base64 64 | tr -d '\n/+=' | cut -c1-64)"
+  ADMIN_PW="$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-16)"
+  cat > "$ENV_FILE" <<EOF
+APP_NAME="CRM-AT"
+DEBUG=false
+LOG_LEVEL=INFO
+SECRET_KEY=${SECRET_KEY}
+SESSION_EXPIRE_HOURS=24
+COOKIE_SECURE=$([[ $WANT_SSL -eq 1 ]] && echo true || echo false)
+CSRF_ENABLED=true
+DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@127.0.0.1:5432/${DB_NAME}
+HOST=127.0.0.1
+PORT=${APP_PORT}
+WEB_CONCURRENCY=2
+ADMIN_USERNAME=admin
+ADMIN_EMAIL=admin@${DOMAIN}
+ADMIN_PASSWORD=${ADMIN_PW}
+SEED_DEMO_DATA=false
+UPLOAD_DIR=static/uploads
+EOF
+  chmod 600 "$ENV_FILE"
+  ADMIN_PASSWORD_SHOWN="$ADMIN_PW"
+else
+  log "Se conserva ${ENV_FILE} existente"
+  # Mantener sincronizados puerto y URL de base por si cambiaron los argumentos.
+  sed -i "s|^PORT=.*|PORT=${APP_PORT}|" "$ENV_FILE"
+  sed -i "s|^DATABASE_URL=.*|DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@127.0.0.1:5432/${DB_NAME}|" "$ENV_FILE"
+fi
+
+chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+chmod 750 "$APP_DIR" "${APP_DIR}/static/uploads"
+chown root:"${APP_USER}" "$ENV_FILE"
+chmod 640 "$ENV_FILE"
+
+# ── 7. Migraciones y sembrado ───────────────────────────────────────────────
+log "Aplicando migraciones y sembrando datos iniciales"
+cd "$APP_DIR"
+set -a; # shellcheck disable=SC1090
+source "$ENV_FILE"; set +a
+sudo -u "$APP_USER" env DATABASE_URL="$DATABASE_URL" ADMIN_USERNAME="${ADMIN_USERNAME:-admin}" \
+  ADMIN_PASSWORD="${ADMIN_PASSWORD:-}" ADMIN_EMAIL="${ADMIN_EMAIL:-}" \
+  "${APP_DIR}/.venv/bin/python" -m alembic upgrade head
+
+sudo -u "$APP_USER" env DATABASE_URL="$DATABASE_URL" ADMIN_USERNAME="${ADMIN_USERNAME:-admin}" \
+  ADMIN_PASSWORD="${ADMIN_PASSWORD:-}" ADMIN_EMAIL="${ADMIN_EMAIL:-}" \
+  "${APP_DIR}/.venv/bin/python" main.py seed
+
+# ── 8. Servicio systemd ─────────────────────────────────────────────────────
+log "Instalando el servicio systemd"
+sed -e "s|/var/www/crm_at|${APP_DIR}|g" \
+    -e "s|/etc/crm-at/crm-at.env|${ENV_FILE}|g" \
+    -e "s|^User=crmat|User=${APP_USER}|" \
+    -e "s|^Group=crmat|Group=${APP_USER}|" \
+    "${SCRIPT_DIR}/crm-at.service" > "/etc/systemd/system/${APP_NAME}.service"
+
+systemctl daemon-reload
+systemctl enable "${APP_NAME}" >/dev/null
+systemctl restart "${APP_NAME}"
+
+sleep 3
+if systemctl is-active --quiet "${APP_NAME}"; then
+  log "El servicio ${APP_NAME} está activo"
+else
+  warn "El servicio no arrancó. Últimas líneas del log:"
+  journalctl -u "${APP_NAME}" -n 40 --no-pager || true
+  die "Revisá el log antes de continuar."
+fi
+
+# ── 9. Nginx ────────────────────────────────────────────────────────────────
+log "Configurando Nginx"
+sed -e "s|server 127.0.0.1:8020;|server 127.0.0.1:${APP_PORT};|" \
+    -e "s|server_name ejemplo.com www.ejemplo.com;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
+    -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
+    "${SCRIPT_DIR}/nginx-crm-at.conf" > "/etc/nginx/sites-available/${APP_NAME}"
+
+ln -sf "/etc/nginx/sites-available/${APP_NAME}" "/etc/nginx/sites-enabled/${APP_NAME}"
+
+# NOTE: pre-existing sites are deliberately left untouched. This server already
+# serves other applications (e.g. otro-sitio.com) and removing the 'default' site
+# could change which vhost answers requests with an unknown Host header.
+
+nginx -t || die "La configuración de Nginx es inválida."
+systemctl reload nginx
+
+# ── 10. HTTPS ───────────────────────────────────────────────────────────────
+if [[ $WANT_SSL -eq 1 ]]; then
+  log "Emitiendo certificado Let's Encrypt para ${DOMAIN}"
+  if ! command -v certbot >/dev/null 2>&1; then
+    apt-get install -y -qq certbot python3-certbot-nginx
+  fi
+  if getent hosts "$DOMAIN" >/dev/null 2>&1; then
+    CERTBOT_ARGS=(--nginx -d "$DOMAIN" --non-interactive --agree-tos --redirect)
+    if [[ -n "${LETSENCRYPT_EMAIL:-}" ]]; then
+      CERTBOT_ARGS+=(-m "$LETSENCRYPT_EMAIL")
+    else
+      CERTBOT_ARGS+=(--register-unsafely-without-email)
+    fi
+    certbot "${CERTBOT_ARGS[@]}" || warn "Certbot falló; revisá el DNS de ${DOMAIN}."
+    sed -i "s|^COOKIE_SECURE=.*|COOKIE_SECURE=true|" "$ENV_FILE"
+    systemctl restart "${APP_NAME}"
+  else
+    warn "El dominio ${DOMAIN} no resuelve todavía. Se omite el certificado."
+  fi
+fi
+
+# ── Resumen ─────────────────────────────────────────────────────────────────
+log "Instalación completa"
+cat <<EOF
+  Aplicación : ${APP_DIR}
+  Servicio   : systemctl status ${APP_NAME}
+  Logs       : journalctl -u ${APP_NAME} -f
+  Entorno    : ${ENV_FILE}
+  Base datos : ${DB_NAME} (usuario ${DB_USER})
+  Salud      : curl -s http://127.0.0.1:${APP_PORT}/health
+
+  URL pública: http$([[ $WANT_SSL -eq 1 ]] && echo s)://${DOMAIN}
+EOF
+
+if [[ -n "${ADMIN_PASSWORD_SHOWN:-}" ]]; then
+  cat <<EOF
+
+  ┌──────────────────────────────────────────────────────────────┐
+  │  CREDENCIALES DEL ADMINISTRADOR (anotalas ahora)             │
+  ├──────────────────────────────────────────────────────────────┤
+  │  Usuario : ${ADMIN_USERNAME:-admin}
+  │  Password: ${ADMIN_PASSWORD_SHOWN}
+  └──────────────────────────────────────────────────────────────┘
+  Cambiala desde /auth/perfil después del primer ingreso.
+EOF
+else
+  echo "  (Las credenciales del administrador ya existían; no se modificaron.)"
+fi
+
+if [[ $WANT_SSL -eq 0 ]]; then
+  cat <<EOF
+
+  Para habilitar HTTPS:
+    sudo LETSENCRYPT_EMAIL=tucorreo@dominio bash deploy/install.sh --ssl
+  (requiere que ${DOMAIN} resuelva a la IP de este servidor)
+EOF
+fi

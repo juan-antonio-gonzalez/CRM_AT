@@ -55,10 +55,10 @@ def upgrade() -> None:
     for (name,) in dist_plants:
         conn.execute(sa.text(insert_sql2), {"name": name})
     # Default visit types
-    for name in ["Reclamos", "Capacitaciones", "Agenda", "Prueba industrial", "Seguimiento", "Cortesía"]:
+    for name in ["RECLAMOS", "CAPACITACIONES", "AGENDA", "PRUEBA INDUSTRIAL", "SEGUIMIENTO", "CORTESÍA"]:
         conn.execute(sa.text(insert_sql), {"name": name})
     # Default distributor plants
-    for name in ["Bernal", "Suárez", "Sunchales", "Laferrere"]:
+    for name in ["BERNAL", "SUÁREZ", "SUNCHALES", "LAFERRERE"]:
         conn.execute(sa.text(insert_sql2), {"name": name})
     # ### end Alembic commands ###
 

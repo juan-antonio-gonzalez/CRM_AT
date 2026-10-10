@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 .venv/
+.venv-*/
 *.egg-info/
+.pytest_cache/
 
 # Environment
 .env
@@ -11,6 +13,15 @@ __pycache__/
 # Database
 *.db
 *.sqlite3
+*.db-wal
+*.db-shm
+
+# Runtime / data
+data/
+*.log
+static/uploads/**/*.jpg
+static/uploads/**/*.jpeg
+static/uploads/**/*.png
 
 # Node / Assets
 node_modules/
@@ -18,11 +29,6 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
-
-# Uploads (user files, not stored in git)
-static/uploads/visitas/*.jpg
-static/uploads/visitas/*.png
-static/uploads/visitas/*.jpeg
 
 # IDE
 .vscode/

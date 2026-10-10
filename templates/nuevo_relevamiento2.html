@@ -1,0 +1,1066 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header_extra %}
+<div class="hidden lg:flex items-center gap-4 ml-4">
+    <a href="/relevamiento2"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
+        title="Volver al listado" aria-label="Volver al listado">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight">{{ title }}</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Complete los datos del relevamiento técnico.</p>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<style nonce="{{ request.state.script_nonce }}">
+:root { --primary: #0f4c81; --bg: #f4f6f8; --card: #ffffff; --border: #d1d5db; --text: #1f2937; --muted: #6b7280; --accent: #10b981; --danger: #ef4444; }
+.ska-body { font-size: 14px; }
+.ska-body * { box-sizing: border-box; margin: 0; padding: 0; }
+.ska-body { background: var(--bg); color: var(--text); line-height: 1.5; }
+.ska-container { max-width: 210mm; margin: 0 auto; background: var(--card); padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 297mm; border-radius: 4px; }
+.ska-header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+.ska-header h1 { font-size: 1.3rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.ska-header .meta { font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; margin-top: 4px; }
+.ska-card { border: 1px solid var(--border); padding: 12px; border-radius: 4px; background: #fff; margin-bottom: 12px; }
+.ska-card-no-bg { border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 12px; }
+.ska-section-title { font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); margin-bottom: 8px; padding-bottom: 3px; font-size: 0.9rem; text-transform: uppercase; }
+.ska-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+.ska-input, .ska-select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; }
+.ska-input:focus, .ska-select:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 2px rgba(15,76,129,0.15); }
+.ska-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px; font-size: 0.85rem; background: #f9fafb; transition: border 0.2s; resize: vertical; min-height: 60px; line-height: 1.4; }
+.ska-textarea:focus { border-color: var(--primary); outline: none; }
+.ska-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.ska-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+.ska-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+.ska-obj-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+.ska-obj-item input[type="checkbox"], .ska-obj-item input[type="radio"] { width: auto; }
+.ska-btn { padding: 7px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+.ska-btn-primary { background: var(--primary); color: white; }
+.ska-btn-primary:hover { background: #0a355c; }
+.ska-btn-outline { background: white; border: 1px solid var(--border); color: #374151; }
+.ska-btn-outline:hover { background: #f3f4f6; }
+.ska-btn-success { background: var(--accent); color: white; }
+.ska-btn-info { background: #e5e7eb; color: #374151; }
+.ska-actions { position: sticky; bottom: 0; background: rgba(255,255,255,0.98); padding: 12px 15px; margin-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(5px); z-index: 10; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+.ska-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 8px; }
+.ska-table th, .ska-table td { border: 1px solid var(--border); padding: 4px; text-align: left; vertical-align: top; }
+.ska-table th { background: #e5e7eb; font-weight: 600; color: #374151; }
+.ska-table td input, .ska-table td textarea { border: none; background: transparent; padding: 2px; width: 100%; height: 100%; min-height: 20px; }
+.ska-grid-opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.85rem; }
+.ska-opt-card { border: 2px solid var(--border); border-radius: 8px; padding: 6px; text-align: center; cursor: pointer; font-size: 0.75rem; font-weight: 700; transition: all 0.2s; }
+.ska-opt-card input { display: none; }
+.ska-opt-card input:checked + .ska-opt-label { color: var(--primary); }
+.ska-opt-card:has(input:checked) { border-color: var(--primary); background: rgba(15,76,129,0.05); }
+.ska-opt-label { display: block; cursor: pointer; }
+.ska-opt-emerald:has(input:checked) { border-color: #10b981; background: rgba(16,185,129,0.05); }
+.ska-opt-emerald .ska-opt-label { color: #10b981; }
+.ska-opt-amber:has(input:checked) { border-color: #f59e0b; background: rgba(245,158,11,0.05); }
+.ska-opt-amber .ska-opt-label { color: #f59e0b; }
+.ska-opt-rose:has(input:checked) { border-color: #f43f5e; background: rgba(244,63,94,0.05); }
+.ska-opt-rose .ska-opt-label { color: #f43f5e; }
+
+.foto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
+.foto-upload-box { border: 2px dashed var(--border); border-radius: 8px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); font-size: 0.7rem; transition: all 0.2s; position: relative; overflow: hidden; background: #f9fafb; }
+.foto-upload-box:hover { border-color: var(--primary); color: var(--primary); }
+.foto-upload-box .material-symbols-rounded { font-size: 1.8rem; margin-bottom: 2px; }
+.foto-upload-box input[type="file"] { display: none; }
+.foto-preview { aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid var(--border); background: #f3f4f6; }
+.foto-preview img { width: 100%; height: 100%; object-fit: cover; }
+.foto-preview .foto-remove { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; line-height: 1; padding: 0; }
+.foto-preview .foto-remove:hover { background: rgba(239,68,68,0.8); }
+
+@media print {
+    .foto-grid { grid-template-columns: repeat(4, 1fr); break-inside: avoid; }
+    .foto-upload-box { display: none !important; }
+    .foto-preview img { max-width: 100%; height: auto; }
+    html, body { height: auto !important; overflow: visible !important; background: white !important; }
+    body > div { height: auto !important; overflow: visible !important; display: block !important; }
+    main { overflow: visible !important; height: auto !important; display: block !important; background: white !important; }
+    .ska-body { background: white; }
+    .ska-container { box-shadow: none; padding: 15px; width: 100%; max-width: 100%; margin: 0; min-height: auto; }
+    .no-print { display: none !important; }
+    .ska-input, .ska-select, .ska-textarea { border: none !important; padding: 2px 0; background: transparent !important; box-shadow: none !important; }
+    .ska-textarea, textarea.ska-textarea { overflow: visible !important; height: auto !important; min-height: auto !important; max-height: none !important; resize: none !important; line-height: 1.3 !important; }
+    .ska-section-title { border-bottom: 1px solid #000; }
+    .ska-actions, .ska-btn { display: none !important; }
+    .ska-card { page-break-inside: auto; }
+    .ska-table { page-break-inside: auto; }
+    .ska-table td { page-break-inside: avoid; }
+    .ska-table tbody tr { page-break-inside: avoid; }
+}
+</style>
+
+<div class="ska-body">
+<div class="ska-container">
+    <form id="survey-form" method="POST" action="{{ action_url }}">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <input type="hidden" name="form_data" id="form-data-input" value="">
+
+        <header class="ska-header">
+            <h1>Formulario de Relevamiento</h1>
+            <div class="meta">
+                <span>Información del Cliente — Datos del equipo relevado</span>
+                {% if survey %}
+                <span style="color:var(--primary);font-weight:700;">Nº: #{{ survey.id }}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- 1. Información del Cliente -->
+        <div class="ska-card">
+            <div class="ska-section-title">1. INFORMACIÓN DEL CLIENTE</div>
+            <div class="ska-grid-2">
+                <div>
+                    <label for="cliente" class="ska-label">CLIENTE</label>
+                    <select id="cliente" class="ska-input" required>
+                        <option value="">— Seleccionar Cliente —</option>
+                        {% for c in clientes %}
+                        <option value="{{ c.id }}" data-name="{{ c.name }}" data-plant="{{ c.plant or '' }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="planta" class="ska-label">PLANTA</label>
+                    <input type="text" id="planta" class="ska-input" readonly>
+                </div>
+                <div>
+                    <label for="maquina" class="ska-label">MÁQUINA / EQUIPO</label>
+                    <select id="maquina" class="ska-input" required>
+                        <option value="">— Seleccionar Máquina —</option>
+                        {% for m in maquinas %}
+                        <option value="{{ m.id }}" data-name="{{ m.brand }} {{ m.model }} ({{ m.serial_number }})" data-customer-id="{{ m.customer_id or '' }}">{{ m.brand }} {{ m.model }} — {{ m.serial_number }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="at-select" class="ska-label">ASISTENTE TÉCNICO (AT)</label>
+                    <select id="at-select" class="ska-input" required>
+                        <option value="">— Seleccionar AT —</option>
+                        {% for t in tecnicos %}
+                        <option value="{{ t.name }}">{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Especificaciones de Maquinaria -->
+        <div class="ska-card">
+            <div class="ska-section-title">2. ESPECIFICACIONES DE MAQUINARIA</div>
+            <div class="ska-grid-3">
+                <div>
+                    <label for="maq_capacidad" class="ska-label">VELOCIDAD OBJETIVO (CAJAS/MIN)</label>
+                    <input type="number" id="maq_capacidad" class="ska-input" placeholder="45" value="45">
+                </div>
+                <div>
+                    <label for="maq_ppm" class="ska-label">PPM PROMEDIO</label>
+                    <input type="number" id="maq_ppm" class="ska-input" placeholder="40" value="40">
+                </div>
+                <div>
+                    <label for="maq_formato_ppm" class="ska-label">TIPO DE CAJA</label>
+                    <select id="maq_formato_ppm" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        <option value="BANDEJA WA">BANDEJA WA</option>
+                        <option value="CAJA RSC">CAJA RSC</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label id="tipo-de-impresion" class="ska-label">TIPO DE IMPRESIÓN</label>
+                <div class="ska-grid-4" role="radiogroup" aria-labelledby="tipo-de-impresion">
+                    {% for letra in ['A','B','C','D'] %}
+                    <label for="tipo-impresion{{ loop.index }}" class="ska-obj-item">
+                        <input type="checkbox" name="tipo_impresion" value="Impresión {{ letra }}" id="tipo-impresion{{ loop.index }}">
+                        Impresión {{ letra }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label id="tipo-de-slotter" class="ska-label">TIPO DE SLOTTER</label>
+                <div class="flex gap-3" role="radiogroup" aria-labelledby="tipo-de-slotter">
+                    {% for val in ['Slotter Desplazado','Slotter Centrado'] %}
+                    <label for="tipo-slotter{{ loop.index }}" class="ska-obj-item">
+                        <input type="radio" name="tipo_slotter" value="{{ val }}" id="tipo-slotter{{ loop.index }}">
+                        {{ val }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label for="maq_obs" class="ska-label">OBSERVACIONES DE MAQUINARIA</label>
+                <textarea id="maq_obs" class="ska-textarea" rows="2" placeholder="Notas adicionales sobre la maquinaria..."></textarea>
+            </div>
+        </div>
+
+        <!-- 3. Fecha -->
+        <div class="ska-card">
+            <label for="fecha" class="ska-label">FECHA DEL RELEVAMIENTO</label>
+            <input type="date" id="fecha" class="ska-input" style="max-width:250px;">
+        </div>
+
+        <!-- 4. Estación 1: Alimentación / Feeder -->
+        <div class="ska-card">
+            <div class="ska-section-title">4. ESTACIÓN 1 — ALIMENTACIÓN / FEEDER</div>
+            <div class="ska-grid-3">
+                <div>
+                    <label for="e1_toma_cajas" class="ska-label">TOMA DE CAJAS</label>
+                    <select id="e1_toma_cajas" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        <option value="Horizontal">Horizontal</option>
+                        <option value="Vertical">Vertical</option>
+                        <option value="En ángulo">En ángulo</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="e1_tipo_vacio" class="ska-label">TIPO DE VACÍO</label>
+                    <select id="e1_tipo_vacio" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        <option value="Venturi">Venturi</option>
+                        <option value="Bomba de vacío">Bomba de vacío</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="e1_cant_ventosas" class="ska-label">CANT. VENTOSAS</label>
+                    <input type="number" id="e1_cant_ventosas" class="ska-input" value="4">
+                </div>
+            </div>
+            <div class="flex gap-4" style="margin-top:10px;">
+                <label for="e1_centerline" class="ska-obj-item"><input type="checkbox" id="e1_centerline"> Centerline</label>
+                <label for="e1_requires_sqt" class="ska-obj-item"><input type="checkbox" id="e1_requires_sqt"> Requiere SQT</label>
+            </div>
+            <div style="margin-top:10px;">
+                <label id="criticidad" class="ska-label">CRITICIDAD</label>
+                <div class="ska-grid-opts" role="radiogroup" aria-labelledby="criticidad">
+                    <label for="criticidad-e1" class="ska-opt-card ska-opt-emerald"><input type="radio" name="criticidad_e1" value="baja" checked id="criticidad-e1"><span class="ska-opt-label">● BAJA</span></label>
+                    <label for="criticidad-e1-2" class="ska-opt-card ska-opt-amber"><input type="radio" name="criticidad_e1" value="media" id="criticidad-e1-2"><span class="ska-opt-label">● MEDIA</span></label>
+                    <label for="criticidad-e1-3" class="ska-opt-card ska-opt-rose"><input type="radio" name="criticidad_e1" value="alta" id="criticidad-e1-3"><span class="ska-opt-label">● ALTA</span></label>
+                </div>
+            </div>
+            <div class="ska-grid-3" style="margin-top:10px;">
+                <div>
+                    <label for="e1_sqt_nominal" class="ska-label">SQT NOMINAL</label>
+                    <input type="text" id="e1_sqt_nominal" class="ska-input" placeholder="Auto-calculado..." readonly style="cursor:not-allowed;">
+                </div>
+                <div>
+                    <label for="e1_sqt_min" class="ska-label">SQT MÍNIMO</label>
+                    <input type="text" id="e1_sqt_min" class="ska-input" placeholder="Mínimo...">
+                </div>
+                <div>
+                    <label for="e1_sqt_max" class="ska-label">SQT MÁXIMO</label>
+                    <input type="text" id="e1_sqt_max" class="ska-input" placeholder="Máximo...">
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label for="e1_obs" class="ska-label">FODA — ESTACIÓN 1</label>
+                <textarea id="e1_obs" class="ska-textarea" rows="3" placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa..."></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label class="ska-label">FOTOS — ESTACIÓN 1 (máx. 4)</label>
+                <div class="foto-grid" id="fotos-grid-e1"></div>
+            </div>
+        </div>
+
+        <!-- 5. Estación 2: Formado y Escuadrado -->
+        <div class="ska-card">
+            <div class="ska-section-title">5. ESTACIÓN 2 — FORMADO Y ESCUADRADO</div>
+            <div class="ska-grid-3">
+                <div>
+                    <label for="e2_tipo_formado" class="ska-label">TIPO DE FORMADO</label>
+                    <select id="e2_tipo_formado" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        {% for ft in formado_types %}
+                        <option value="{{ ft.name }}">{{ ft.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="e2_cierre_inferior" class="ska-label">CIERRE INFERIOR</label>
+                    <select id="e2_cierre_inferior" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        {% for ct in closure_types %}
+                        <option value="{{ ct.name }}">{{ ct.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="e2_tipo_vacio" class="ska-label">TIPO DE VACÍO</label>
+                    <select id="e2_tipo_vacio" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        <option value="Venturi">Venturi</option>
+                        <option value="Bomba de vacío">Bomba de vacío</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label for="e2_ventosas" class="ska-label">CANT. VENTOSAS</label>
+                <input type="number" id="e2_ventosas" class="ska-input" value="2" style="max-width:120px;">
+            </div>
+            <div class="flex gap-4" style="margin-top:10px;">
+                <label for="e2_centerline" class="ska-obj-item"><input type="checkbox" id="e2_centerline"> Centerline</label>
+                <label for="e2_requires_sqt" class="ska-obj-item"><input type="checkbox" id="e2_requires_sqt"> Requiere SQT</label>
+            </div>
+            <div style="margin-top:10px;">
+                <label id="criticidad-2" class="ska-label">CRITICIDAD</label>
+                <div class="ska-grid-opts" role="radiogroup" aria-labelledby="criticidad-2">
+                    <label for="criticidad-e2" class="ska-opt-card ska-opt-emerald"><input type="radio" name="criticidad_e2" value="baja" checked id="criticidad-e2"><span class="ska-opt-label">● BAJA</span></label>
+                    <label for="criticidad-e2-2" class="ska-opt-card ska-opt-amber"><input type="radio" name="criticidad_e2" value="media" id="criticidad-e2-2"><span class="ska-opt-label">● MEDIA</span></label>
+                    <label for="criticidad-e2-3" class="ska-opt-card ska-opt-rose"><input type="radio" name="criticidad_e2" value="alta" id="criticidad-e2-3"><span class="ska-opt-label">● ALTA</span></label>
+                </div>
+            </div>
+            <div class="ska-grid-3" style="margin-top:10px;">
+                <div>
+                    <label for="e2_sqt_nominal" class="ska-label">SQT NOMINAL</label>
+                    <input type="text" id="e2_sqt_nominal" class="ska-input" placeholder="Auto-calculado..." readonly style="cursor:not-allowed;">
+                </div>
+                <div>
+                    <label for="e2_sqt_min" class="ska-label">SQT MÍNIMO</label>
+                    <input type="text" id="e2_sqt_min" class="ska-input" placeholder="Mínimo...">
+                </div>
+                <div>
+                    <label for="e2_sqt_max" class="ska-label">SQT MÁXIMO</label>
+                    <input type="text" id="e2_sqt_max" class="ska-input" placeholder="Máximo...">
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label for="e2_obs" class="ska-label">FODA — ESTACIÓN 2</label>
+                <textarea id="e2_obs" class="ska-textarea" rows="3" placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa..."></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label class="ska-label">FOTOS — ESTACIÓN 2 (máx. 4)</label>
+                <div class="foto-grid" id="fotos-grid-e2"></div>
+            </div>
+        </div>
+
+        <!-- 6. Estación 3: Sistema de Cierre -->
+        <div class="ska-card">
+            <div class="ska-section-title">6. ESTACIÓN 3 — SISTEMA DE CIERRE</div>
+            <div class="ska-grid-2">
+                <div>
+                    <label for="e3_tipo_cierre" class="ska-label">TIPO DE CIERRE</label>
+                    <select id="e3_tipo_cierre" class="ska-input">
+                        <option value="">— Seleccionar —</option>
+                        <option value="Hotmelt">Hotmelt</option>
+                        <option value="Cinta">Cinta</option>
+                    </select>
+                </div>
+                <div>
+                    <label id="criticidad-3" class="ska-label">CRITICIDAD</label>
+                    <div class="ska-grid-opts" role="radiogroup" aria-labelledby="criticidad-3">
+                        <label for="criticidad-e3" class="ska-opt-card ska-opt-emerald"><input type="radio" name="criticidad_e3" value="baja" checked id="criticidad-e3"><span class="ska-opt-label">● BAJA</span></label>
+                        <label for="criticidad-e3-2" class="ska-opt-card ska-opt-amber"><input type="radio" name="criticidad_e3" value="media" id="criticidad-e3-2"><span class="ska-opt-label">● MEDIA</span></label>
+                        <label for="criticidad-e3-3" class="ska-opt-card ska-opt-rose"><input type="radio" name="criticidad_e3" value="alta" id="criticidad-e3-3"><span class="ska-opt-label">● ALTA</span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-4" style="margin-top:10px;">
+                <label for="e3_requires_sqt" class="ska-obj-item"><input type="checkbox" id="e3_requires_sqt"> Requiere SQT</label>
+            </div>
+
+            <!-- Hotmelt sub-section -->
+            <div id="e3-hotmelt-section" style="margin-top:10px;display:none;">
+                <div class="ska-grid-3">
+                    <div>
+                        <label for="e3_marca_adhesivo" class="ska-label">MARCA ADHESIVO</label>
+                        <input type="text" id="e3_marca_adhesivo" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_proveedor" class="ska-label">PROVEEDOR</label>
+                        <input type="text" id="e3_proveedor" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_tipo_adhesivo" class="ska-label">TIPO ADHESIVO</label>
+                        <select id="e3_tipo_adhesivo" class="ska-input">
+                            <option value="Base EVA">Base EVA</option>
+                            <option value="Base metaloceno">Base metaloceno</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ska-grid-3" style="margin-top:10px;">
+                    <div>
+                        <label for="e3_tipo_colero" class="ska-label">TIPO COLERO</label>
+                        <select id="e3_tipo_colero" class="ska-input">
+                            <option value="Digital">Digital</option>
+                            <option value="Analógico">Analógico</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="e3_marca_colero" class="ska-label">MARCA COLERO</label>
+                        <input type="text" id="e3_marca_colero" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_temp" class="ska-label">TEMPERATURA (°C)</label>
+                        <input type="text" id="e3_temp" class="ska-input" value="178°C" placeholder="160-180°C">
+                    </div>
+                </div>
+                <div class="ska-grid-2" style="margin-top:10px;">
+                    <div>
+                        <label for="e3_gramos_caja" class="ska-label">GRAMOS / CAJA</label>
+                        <input type="number" id="e3_gramos_caja" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_presion_aire" class="ska-label">PRESIÓN AIRE (BAR)</label>
+                        <input type="number" id="e3_presion_aire" class="ska-input" value="8.5" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cinta sub-section -->
+            <div id="e3-cinta-section" style="margin-top:10px;display:none;">
+                <div class="ska-grid-3">
+                    <div>
+                        <label for="e3_tipo_cinta" class="ska-label">TIPO DE CINTA</label>
+                        <input type="text" id="e3_tipo_cinta" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_marca_cinta" class="ska-label">MARCA DE CINTA</label>
+                        <input type="text" id="e3_marca_cinta" class="ska-input">
+                    </div>
+                    <div>
+                        <label for="e3_cinta_cl" class="ska-obj-item" style="margin-top:24px;"><input type="checkbox" id="e3_cinta_cl"> Centerline</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SQT sub-section -->
+            <div id="e3-sqt-section" style="margin-top:10px;display:none;">
+                <div class="ska-grid-3">
+                    <div>
+                        <label for="e3_sqt_nominal" class="ska-label">SQT NOMINAL</label>
+                        <input type="text" id="e3_sqt_nominal" class="ska-input" placeholder="Auto-calculado..." readonly style="cursor:not-allowed;">
+                    </div>
+                    <div>
+                        <label for="e3_sqt_min" class="ska-label">SQT MÍNIMO</label>
+                        <input type="text" id="e3_sqt_min" class="ska-input" placeholder="Mínimo...">
+                    </div>
+                    <div>
+                        <label for="e3_sqt_max" class="ska-label">SQT MÁXIMO</label>
+                        <input type="text" id="e3_sqt_max" class="ska-input" placeholder="Máximo...">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <label for="e3_obs" class="ska-label">FODA — ESTACIÓN 3</label>
+                <textarea id="e3_obs" class="ska-textarea" rows="3" placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa..."></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label class="ska-label">FOTOS — ESTACIÓN 3 (máx. 4)</label>
+                <div class="foto-grid" id="fotos-grid-e3"></div>
+            </div>
+        </div>
+
+        <!-- 7. Equipo de Producción -->
+        <div class="ska-card">
+            <div class="ska-section-title">7. EQUIPO DE PRODUCCIÓN</div>
+            <table class="ska-table">
+                <thead>
+                    <tr>
+                        <th style="width:30%" scope="col">NOMBRE</th>
+                        <th style="width:25%" scope="col">CARGO</th>
+                        <th style="width:35%" scope="col">OBSERVACIONES</th>
+                        <th class="no-print" style="width:20px" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="team-tbody">
+                </tbody>
+            </table>
+            <button type="button" class="ska-btn ska-btn-outline no-print" style="margin-top:6px;font-size:0.75rem;" id="btn-add-team">+ Agregar Miembro</button>
+            <div style="margin-top:10px;">
+                <label for="relev_obs_equipo" class="ska-label">OBSERVACIONES DEL EQUIPO</label>
+                <textarea id="relev_obs_equipo" class="ska-textarea" rows="2" placeholder="Observaciones del equipo de relevamiento..."></textarea>
+            </div>
+        </div>
+
+        <!-- 8. Resumen Final -->
+        <div class="ska-card">
+            <div class="ska-section-title">8. RESUMEN FINAL Y OBSERVACIONES</div>
+            <textarea id="relev_obs_generales" class="ska-textarea" rows="4" placeholder="Conclusiones finales..."></textarea>
+            <div style="margin-top:15px;">
+                <label for="firma" class="ska-label">FIRMA A.T.:</label>
+                <input type="text" id="firma" class="ska-input" style="max-width:350px;border:none;border-bottom:1px solid #000;border-radius:0;background:transparent;" placeholder="Nombre y Apellido">
+            </div>
+        </div>
+
+        <div class="ska-actions no-print">
+            <div class="status"></div>
+            <input type="hidden" id="status-input" name="status" value="">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                {% if survey and survey.status == "Finalizado" %}
+                <button type="button" class="ska-btn ska-btn-success" data-action="print">📄 Generar PDF</button>
+                {% else %}
+                <button type="submit" class="ska-btn ska-btn-primary">💾 Guardar</button>
+                <button type="button" class="ska-btn ska-btn-success" data-action="print" disabled style="opacity:0.4;cursor:not-allowed;">📄 Generar PDF</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Save confirmation modal -->
+    <div id="confirm-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-container-title">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
+        <div id="confirm-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div class="px-12 py-16 text-center space-y-8">
+                    <div class="size-24 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
+                        <span class="material-symbols-rounded text-5xl" aria-hidden="true">save</span>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="confirm-modal-container-title">¿Guardar cambios?</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm">Se guardarán los datos del relevamiento.</p>
+                    </div>
+                    <div class="flex flex-col gap-3 w-full pb-8">
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20" id="modal-save-finalize">Guardar y finalizar</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest transition-all" id="modal-save-edit">Guardar y seguir editando</button>
+                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest transition-all" id="modal-cancel">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+// Cliente → auto-fill planta + cascading máquinas
+document.getElementById('cliente').addEventListener('change', function() {
+    var opt = this.options[this.selectedIndex];
+    document.getElementById('planta').value = opt && opt.dataset.plant ? opt.dataset.plant : '';
+    var customerId = this.value;
+    var maquinaSelect = document.getElementById('maquina');
+    var firstOpt = maquinaSelect.querySelector('option[value=""]');
+    for (var i = 0; i < maquinaSelect.options.length; i++) {
+        var o = maquinaSelect.options[i];
+        if (o.value === '') continue;
+        o.style.display = !customerId || o.dataset.customerId === customerId ? '' : 'none';
+    }
+    maquinaSelect.value = '';
+});
+
+// E3: Toggle hotmelt/cinta sections
+document.getElementById('e3_tipo_cierre').addEventListener('change', function() {
+    document.getElementById('e3-hotmelt-section').style.display = this.value === 'Hotmelt' ? 'block' : 'none';
+    document.getElementById('e3-cinta-section').style.display = this.value === 'Cinta' ? 'block' : 'none';
+});
+
+// E3: Toggle SQT section
+document.getElementById('e3_requires_sqt').addEventListener('change', function() {
+    document.getElementById('e3-sqt-section').style.display = this.checked ? 'block' : 'none';
+});
+
+// Team members
+var teamCounter = 0;
+document.getElementById('btn-add-team').addEventListener('click', function() {
+    teamCounter++;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><input type="text" class="ska-input" placeholder="Nombre..."></td>' +
+        '<td><input type="text" class="ska-input" placeholder="Cargo..."></td>' +
+        '<td><input type="text" class="ska-input" placeholder="Observaciones..."></td>' +
+        '<td class="no-print"><button type="button" class="ska-btn-del" data-action="del-team-row" style="background:transparent;color:var(--danger);padding:0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;border:none;">×</button></td>';
+    document.getElementById('team-tbody').appendChild(tr);
+});
+
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'del-team-row') {
+        btn.closest('tr').remove();
+    } else if (btn.dataset.action === 'print') {
+        window.print();
+    }
+});
+
+function serializeForm() {
+    var team = [];
+    document.querySelectorAll('#team-tbody tr').forEach(function(tr) {
+        var inputs = tr.querySelectorAll('input');
+        team.push({ name: inputs[0].value, role: inputs[1].value, obs: inputs[2].value });
+    });
+
+    var impresiones = [];
+    document.querySelectorAll('input[name="tipo_impresion"]:checked').forEach(function(cb) {
+        impresiones.push(cb.value);
+    });
+
+    var clienteEl = document.getElementById('cliente');
+    var clienteOpt = clienteEl.options[clienteEl.selectedIndex];
+    var clienteNombre = clienteOpt && clienteOpt.dataset.name || '';
+    var clientePlant = clienteOpt && clienteOpt.dataset.plant || '';
+
+    var maquinaEl = document.getElementById('maquina');
+    var maquinaOpt = maquinaEl.options[maquinaEl.selectedIndex];
+    var maquinaNombre = maquinaOpt && maquinaOpt.dataset.name || '';
+
+    return {
+        maquina_display: maquinaNombre,
+        maquina_serial: maquinaOpt && maquinaOpt.text.split(' — ')[1]?.trim() || '',
+        customer_id: clienteEl.value || null,
+        machine_id: maquinaEl.value || null,
+        cliente_nombre: clienteNombre,
+        cliente_planta: clientePlant,
+        maquina_nombre: maquinaNombre,
+        technical_advisor: document.getElementById('at-select').value,
+        maquinaria_capacidad: document.getElementById('maq_capacidad').value,
+        maquinaria_ppm: document.getElementById('maq_ppm').value,
+        maquinaria_formato_ppm: document.getElementById('maq_formato_ppm').value,
+        tipo_impresion: impresiones,
+        tipo_slotter: document.querySelector('input[name="tipo_slotter"]:checked')?.value || '',
+        maquinaria_obs: document.getElementById('maq_obs').value,
+        fecha: document.getElementById('fecha').value,
+        e1_toma_cajas: document.getElementById('e1_toma_cajas').value,
+        e1_tipo_vacio: document.getElementById('e1_tipo_vacio').value,
+        e1_cant_ventosas: document.getElementById('e1_cant_ventosas').value,
+        e1_centerline: document.getElementById('e1_centerline').checked ? 'on' : '',
+        e1_requires_sqt: document.getElementById('e1_requires_sqt').checked ? 'on' : '',
+        criticidad_e1: document.querySelector('input[name="criticidad_e1"]:checked')?.value || 'baja',
+        e1_sqt_nominal: document.getElementById('e1_sqt_nominal').value,
+        e1_sqt_min: document.getElementById('e1_sqt_min').value,
+        e1_sqt_max: document.getElementById('e1_sqt_max').value,
+        e1_obs: document.getElementById('e1_obs').value,
+        e2_tipo_formado: document.getElementById('e2_tipo_formado').value,
+        e2_cierre_inferior: document.getElementById('e2_cierre_inferior').value,
+        e2_tipo_vacio: document.getElementById('e2_tipo_vacio').value,
+        e2_ventosas: document.getElementById('e2_ventosas').value,
+        e2_centerline: document.getElementById('e2_centerline').checked ? 'on' : '',
+        e2_requires_sqt: document.getElementById('e2_requires_sqt').checked ? 'on' : '',
+        criticidad_e2: document.querySelector('input[name="criticidad_e2"]:checked')?.value || 'baja',
+        e2_sqt_nominal: document.getElementById('e2_sqt_nominal').value,
+        e2_sqt_min: document.getElementById('e2_sqt_min').value,
+        e2_sqt_max: document.getElementById('e2_sqt_max').value,
+        e2_obs: document.getElementById('e2_obs').value,
+        e3_tipo_cierre: document.getElementById('e3_tipo_cierre').value,
+        criticidad_e3: document.querySelector('input[name="criticidad_e3"]:checked')?.value || 'baja',
+        e3_requires_sqt: document.getElementById('e3_requires_sqt').checked ? 'on' : '',
+        e3_marca_adhesivo: document.getElementById('e3_marca_adhesivo').value,
+        e3_proveedor: document.getElementById('e3_proveedor').value,
+        e3_tipo_adhesivo: document.getElementById('e3_tipo_adhesivo').value,
+        e3_tipo_colero: document.getElementById('e3_tipo_colero').value,
+        e3_marca_colero: document.getElementById('e3_marca_colero').value,
+        e3_temp: document.getElementById('e3_temp').value,
+        e3_gramos_caja: document.getElementById('e3_gramos_caja').value,
+        e3_presion_aire: document.getElementById('e3_presion_aire').value,
+        e3_tipo_cinta: document.getElementById('e3_tipo_cinta').value,
+        e3_marca_cinta: document.getElementById('e3_marca_cinta').value,
+        e3_cinta_cl: document.getElementById('e3_cinta_cl').checked ? 'on' : '',
+        e3_sqt_nominal: document.getElementById('e3_sqt_nominal').value,
+        e3_sqt_min: document.getElementById('e3_sqt_min').value,
+        e3_sqt_max: document.getElementById('e3_sqt_max').value,
+        e3_obs: document.getElementById('e3_obs').value,
+        team: team,
+        relev_obs_equipo: document.getElementById('relev_obs_equipo').value,
+        relev_obs_generales: document.getElementById('relev_obs_generales').value,
+        firma: document.getElementById('firma').value,
+        fotos_e1: document.getElementById('fotos-grid-e1')._getFotos ? document.getElementById('fotos-grid-e1')._getFotos() : [],
+        fotos_e2: document.getElementById('fotos-grid-e2')._getFotos ? document.getElementById('fotos-grid-e2')._getFotos() : [],
+        fotos_e3: document.getElementById('fotos-grid-e3')._getFotos ? document.getElementById('fotos-grid-e3')._getFotos() : [],
+    };
+}
+
+function restoreData(data) {
+    if (!data) return;
+    if (data.customer_id) {
+        document.getElementById('cliente').value = data.customer_id;
+        // Trigger cascade filter
+        var evt = document.createEvent('Event');
+        evt.initEvent('change', true, true);
+        document.getElementById('cliente').dispatchEvent(evt);
+    }
+    if (data.machine_id) document.getElementById('maquina').value = data.machine_id;
+    if (data.cliente_planta) document.getElementById('planta').value = data.cliente_planta;
+    if (data.technical_advisor) document.getElementById('at-select').value = data.technical_advisor;
+    if (data.maquinaria_capacidad) document.getElementById('maq_capacidad').value = data.maquinaria_capacidad;
+    if (data.maquinaria_ppm) document.getElementById('maq_ppm').value = data.maquinaria_ppm;
+    if (data.maquinaria_formato_ppm) document.getElementById('maq_formato_ppm').value = data.maquinaria_formato_ppm;
+    if (data.maquinaria_obs) document.getElementById('maq_obs').value = data.maquinaria_obs;
+    if (data.fecha) document.getElementById('fecha').value = data.fecha;
+    if (data.firma) document.getElementById('firma').value = data.firma;
+
+    if (data.tipo_impresion) {
+        var imps = Array.isArray(data.tipo_impresion) ? data.tipo_impresion : [data.tipo_impresion];
+        document.querySelectorAll('input[name="tipo_impresion"]').forEach(function(cb) {
+            cb.checked = imps.indexOf(cb.value) !== -1;
+        });
+    }
+    if (data.tipo_slotter) {
+        var radio = document.querySelector('input[name="tipo_slotter"][value="' + data.tipo_slotter.replace(/"/g, '\\"') + '"]');
+        if (radio) radio.checked = true;
+    }
+
+    if (data.e1_toma_cajas) document.getElementById('e1_toma_cajas').value = data.e1_toma_cajas;
+    if (data.e1_tipo_vacio) document.getElementById('e1_tipo_vacio').value = data.e1_tipo_vacio;
+    if (data.e1_cant_ventosas) document.getElementById('e1_cant_ventosas').value = data.e1_cant_ventosas;
+    if (data.e1_centerline === 'on') document.getElementById('e1_centerline').checked = true;
+    if (data.e1_requires_sqt === 'on') document.getElementById('e1_requires_sqt').checked = true;
+    if (data.criticidad_e1) {
+        var r = document.querySelector('input[name="criticidad_e1"][value="' + data.criticidad_e1 + '"]');
+        if (r) r.checked = true;
+    }
+    if (data.e1_sqt_nominal) document.getElementById('e1_sqt_nominal').value = data.e1_sqt_nominal;
+    if (data.e1_sqt_min) document.getElementById('e1_sqt_min').value = data.e1_sqt_min;
+    if (data.e1_sqt_max) document.getElementById('e1_sqt_max').value = data.e1_sqt_max;
+    if (data.e1_obs) document.getElementById('e1_obs').value = data.e1_obs;
+
+    if (data.e2_tipo_formado) document.getElementById('e2_tipo_formado').value = data.e2_tipo_formado;
+    if (data.e2_cierre_inferior) document.getElementById('e2_cierre_inferior').value = data.e2_cierre_inferior;
+    if (data.e2_tipo_vacio) document.getElementById('e2_tipo_vacio').value = data.e2_tipo_vacio;
+    if (data.e2_ventosas) document.getElementById('e2_ventosas').value = data.e2_ventosas;
+    if (data.e2_centerline === 'on') document.getElementById('e2_centerline').checked = true;
+    if (data.e2_requires_sqt === 'on') document.getElementById('e2_requires_sqt').checked = true;
+    if (data.criticidad_e2) {
+        var r = document.querySelector('input[name="criticidad_e2"][value="' + data.criticidad_e2 + '"]');
+        if (r) r.checked = true;
+    }
+    if (data.e2_sqt_nominal) document.getElementById('e2_sqt_nominal').value = data.e2_sqt_nominal;
+    if (data.e2_sqt_min) document.getElementById('e2_sqt_min').value = data.e2_sqt_min;
+    if (data.e2_sqt_max) document.getElementById('e2_sqt_max').value = data.e2_sqt_max;
+    if (data.e2_obs) document.getElementById('e2_obs').value = data.e2_obs;
+
+    if (data.e3_tipo_cierre) {
+        document.getElementById('e3_tipo_cierre').value = data.e3_tipo_cierre;
+        document.getElementById('e3-hotmelt-section').style.display = data.e3_tipo_cierre === 'Hotmelt' ? 'block' : 'none';
+        document.getElementById('e3-cinta-section').style.display = data.e3_tipo_cierre === 'Cinta' ? 'block' : 'none';
+    }
+    if (data.criticidad_e3) {
+        var r = document.querySelector('input[name="criticidad_e3"][value="' + data.criticidad_e3 + '"]');
+        if (r) r.checked = true;
+    }
+    if (data.e3_requires_sqt === 'on') {
+        document.getElementById('e3_requires_sqt').checked = true;
+        document.getElementById('e3-sqt-section').style.display = 'block';
+    }
+    if (data.e3_marca_adhesivo) document.getElementById('e3_marca_adhesivo').value = data.e3_marca_adhesivo;
+    if (data.e3_proveedor) document.getElementById('e3_proveedor').value = data.e3_proveedor;
+    if (data.e3_tipo_adhesivo) document.getElementById('e3_tipo_adhesivo').value = data.e3_tipo_adhesivo;
+    if (data.e3_tipo_colero) document.getElementById('e3_tipo_colero').value = data.e3_tipo_colero;
+    if (data.e3_marca_colero) document.getElementById('e3_marca_colero').value = data.e3_marca_colero;
+    if (data.e3_temp) document.getElementById('e3_temp').value = data.e3_temp;
+    if (data.e3_gramos_caja) document.getElementById('e3_gramos_caja').value = data.e3_gramos_caja;
+    if (data.e3_presion_aire) document.getElementById('e3_presion_aire').value = data.e3_presion_aire;
+    if (data.e3_tipo_cinta) document.getElementById('e3_tipo_cinta').value = data.e3_tipo_cinta;
+    if (data.e3_marca_cinta) document.getElementById('e3_marca_cinta').value = data.e3_marca_cinta;
+    if (data.e3_cinta_cl === 'on') document.getElementById('e3_cinta_cl').checked = true;
+    if (data.e3_sqt_nominal) document.getElementById('e3_sqt_nominal').value = data.e3_sqt_nominal;
+    if (data.e3_sqt_min) document.getElementById('e3_sqt_min').value = data.e3_sqt_min;
+    if (data.e3_sqt_max) document.getElementById('e3_sqt_max').value = data.e3_sqt_max;
+    if (data.e3_obs) document.getElementById('e3_obs').value = data.e3_obs;
+
+    if (data.relev_obs_equipo) document.getElementById('relev_obs_equipo').value = data.relev_obs_equipo;
+    if (data.relev_obs_generales) document.getElementById('relev_obs_generales').value = data.relev_obs_generales;
+
+    if (data.fotos_e1 && document.getElementById('fotos-grid-e1')._setFotos)
+        document.getElementById('fotos-grid-e1')._setFotos(data.fotos_e1);
+    if (data.fotos_e2 && document.getElementById('fotos-grid-e2')._setFotos)
+        document.getElementById('fotos-grid-e2')._setFotos(data.fotos_e2);
+    if (data.fotos_e3 && document.getElementById('fotos-grid-e3')._setFotos)
+        document.getElementById('fotos-grid-e3')._setFotos(data.fotos_e3);
+
+    if (data.team) {
+        data.team.forEach(function(m) {
+            teamCounter++;
+            var tr = document.createElement('tr');
+            tr.innerHTML = '<td><input type="text" class="ska-input" value="' + escHtml(m.name || '') + '"></td>' +
+                '<td><input type="text" class="ska-input" value="' + escHtml(m.role || '') + '"></td>' +
+                '<td><input type="text" class="ska-input" value="' + escHtml(m.obs || '') + '"></td>' +
+                '<td class="no-print"><button type="button" class="ska-btn-del" data-action="del-team-row" style="background:transparent;color:var(--danger);padding:0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;border:none;">×</button></td>';
+            document.getElementById('team-tbody').appendChild(tr);
+        });
+    }
+}
+
+function escHtml(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ── Station validation logic ──
+function setupStation(station) {
+    var prefix = station.prefix;
+    var centerlineEl = document.getElementById(station.centerlineId);
+    var sqtEl = document.getElementById(station.sqtId);
+    var fodaEl = document.getElementById(prefix + '_obs');
+    var fodaLabel = fodaEl && fodaEl.previousElementSibling;
+    var sqtMinEl = document.getElementById(prefix + '_sqt_min');
+    var sqtMaxEl = document.getElementById(prefix + '_sqt_max');
+    var sqtNomEl = document.getElementById(prefix + '_sqt_nominal');
+
+    function updateStation() {
+        var clChecked = centerlineEl && centerlineEl.checked;
+        var sqtChecked = sqtEl && sqtEl.checked;
+        var active = clChecked || sqtChecked;
+
+        // FODA required
+        if (fodaEl) {
+            fodaEl.required = active;
+            fodaEl.style.borderColor = active ? '#ef4444' : '';
+            if (fodaLabel) {
+                var asterisk = fodaLabel.querySelector('.req-asterisk');
+                if (active) {
+                    if (!asterisk) {
+                        asterisk = document.createElement('span');
+                        asterisk.className = 'req-asterisk';
+                        asterisk.textContent = ' *';
+                        asterisk.style.color = '#ef4444';
+                        fodaLabel.appendChild(asterisk);
+                    }
+                } else {
+                    if (asterisk) asterisk.remove();
+                }
+            }
+        }
+
+        // Criticidad → alta
+        var radios = document.querySelectorAll('input[name="' + station.critName + '"]');
+        if (active) {
+            radios.forEach(function(r) { if (r.value === 'alta') r.checked = true; });
+        }
+
+        // SQT min/max required
+        if (sqtChecked) {
+            if (sqtMinEl) sqtMinEl.required = true;
+            if (sqtMaxEl) sqtMaxEl.required = true;
+        } else {
+            if (sqtMinEl) sqtMinEl.required = false;
+            if (sqtMaxEl) sqtMaxEl.required = false;
+        }
+    }
+
+    function calcNominal() {
+        if (!sqtNomEl) return;
+        if (sqtEl && sqtEl.checked && sqtMinEl && sqtMaxEl) {
+            var min = parseFloat(sqtMinEl.value);
+            var max = parseFloat(sqtMaxEl.value);
+            if (!isNaN(min) && !isNaN(max)) {
+                sqtNomEl.value = ((min + max) / 2).toFixed(1);
+                return;
+            }
+        }
+        sqtNomEl.value = '';
+    }
+
+    if (centerlineEl) centerlineEl.addEventListener('change', function() { updateStation(); });
+    if (sqtEl) sqtEl.addEventListener('change', function() { updateStation(); calcNominal(); });
+    if (sqtMinEl) sqtMinEl.addEventListener('input', calcNominal);
+    if (sqtMaxEl) sqtMaxEl.addEventListener('input', calcNominal);
+}
+
+// Configure E1
+setupStation({
+    prefix: 'e1',
+    centerlineId: 'e1_centerline',
+    sqtId: 'e1_requires_sqt',
+    critName: 'criticidad_e1',
+});
+// Configure E2
+setupStation({
+    prefix: 'e2',
+    centerlineId: 'e2_centerline',
+    sqtId: 'e2_requires_sqt',
+    critName: 'criticidad_e2',
+});
+// Configure E3 (centerline is e3_cinta_cl)
+setupStation({
+    prefix: 'e3',
+    centerlineId: 'e3_cinta_cl',
+    sqtId: 'e3_requires_sqt',
+    critName: 'criticidad_e3',
+});
+
+// ── Photo handling ──
+function setupFotoGrid(station) {
+    var grid = document.getElementById('fotos-grid-' + station);
+    if (!grid) return;
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+    input.style.display = 'none';
+    input.id = 'fotos-input-' + station;
+    grid.parentNode.appendChild(input);
+
+    var fotos = [];
+    var uploading = false;
+
+    function render() {
+        grid.innerHTML = '';
+        for (var i = 0; i < 4; i++) {
+            var slot = document.createElement('div');
+            if (fotos[i]) {
+                slot.className = 'foto-preview';
+                slot.innerHTML = '<img src="' + fotos[i].serverPath + '"><button type="button" class="foto-remove" data-idx="' + i + '">×</button>';
+                slot.querySelector('.foto-remove').addEventListener('click', function() {
+                    var idx = parseInt(this.dataset.idx);
+                    var old = fotos[idx];
+                    fotos.splice(idx, 1);
+                    if (old.serverPath && old.serverPath.startsWith('/static/uploads/')) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/eliminar-foto', true);
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.send(JSON.stringify({ path: old.serverPath }));
+                    }
+                    render();
+                });
+            } else if (!fotos[i] && fotos.length < 4 && !uploading) {
+                slot.className = 'foto-upload-box';
+                slot.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">add_photo_alternate</span><span>Foto</span>';
+                slot.addEventListener('click', function() { input.click(); });
+            } else if (!fotos[i] && fotos.length < 4 && uploading) {
+                slot.className = 'foto-upload-box';
+                slot.innerHTML = '<span style="font-size:0.7rem;color:var(--muted)">Subiendo...</span>';
+            }
+            grid.appendChild(slot);
+        }
+    }
+
+    input.addEventListener('change', function() {
+        uploading = true;
+        render();
+        var pending = [];
+        for (var i = 0; i < this.files.length && fotos.length + pending.length < 4; i++) {
+            pending.push(this.files[i]);
+        }
+        this.value = '';
+        var done = 0;
+        pending.forEach(function(file) {
+            var fd = new FormData();
+            fd.append('file', file);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload-foto', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var resp = JSON.parse(xhr.responseText);
+                    fotos.push({ serverPath: resp.path });
+                }
+                done++;
+                if (done === pending.length) {
+                    uploading = false;
+                    render();
+                }
+            };
+            xhr.onerror = function() {
+                done++;
+                if (done === pending.length) {
+                    uploading = false;
+                    render();
+                }
+            };
+            xhr.send(fd);
+        });
+        if (pending.length === 0) {
+            uploading = false;
+            render();
+        }
+    });
+
+    grid._getFotos = function() { return fotos.map(function(f) { return f.serverPath; }); };
+    grid._setFotos = function(paths) {
+        fotos = (paths || []).map(function(p) { return { serverPath: p }; });
+        render();
+    };
+
+    render();
+}
+
+setupFotoGrid('e1');
+setupFotoGrid('e2');
+setupFotoGrid('e3');
+
+// Save confirmation modal
+var pendingFormData = null;
+
+document.getElementById('survey-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    pendingFormData = serializeForm();
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    container.classList.remove('hidden');
+    modal.classList.remove('hidden');
+});
+
+function closeConfirmModal() {
+    var container = document.getElementById('confirm-modal-container');
+    var modal = document.getElementById('confirm-modal');
+    modal.classList.add('hidden');
+    container.classList.add('hidden');
+}
+
+document.getElementById('modal-cancel').addEventListener('click', closeConfirmModal);
+
+document.getElementById('modal-save-finalize').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'Finalizado';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'Finalizado';
+        document.getElementById('survey-form').submit();
+    }
+});
+
+document.getElementById('modal-save-edit').addEventListener('click', function() {
+    closeConfirmModal();
+    if (pendingFormData) {
+        pendingFormData.status = 'En proceso';
+        document.getElementById('form-data-input').value = JSON.stringify(pendingFormData);
+        document.getElementById('status-input').value = 'En proceso';
+        document.getElementById('survey-form').submit();
+    }
+});
+
+document.getElementById('confirm-modal-container').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirmModal();
+});
+
+function disableForm() {
+    document.querySelectorAll('#survey-form input, #survey-form textarea, #survey-form select').forEach(function(el) {
+        el.disabled = true;
+    });
+    document.querySelectorAll('#survey-form .ska-btn-outline, #survey-form .ska-btn-del').forEach(function(el) {
+        el.style.display = 'none';
+    });
+}
+
+function refreshStations() {
+    // Re-trigger station validation after loading data
+    ['e1', 'e2', 'e3'].forEach(function(p) {
+        var cl = document.getElementById(p === 'e3' ? 'e3_cinta_cl' : p + '_centerline');
+        var sqt = document.getElementById(p + '_requires_sqt');
+        if (cl) {
+            var evt = new Event('change', { bubbles: true });
+            cl.dispatchEvent(evt);
+        }
+        if (sqt) {
+            var evt2 = new Event('change', { bubbles: true });
+            sqt.dispatchEvent(evt2);
+        }
+        // Trigger calc if sqt values exist
+        var minEl = document.getElementById(p + '_sqt_min');
+        var maxEl = document.getElementById(p + '_sqt_max');
+        if (minEl) minEl.dispatchEvent(new Event('input', { bubbles: true }));
+        if (maxEl) maxEl.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add first team row
+    document.getElementById('btn-add-team').click();
+
+    {% if preselected_customer or preselected_machine %}
+    restoreData({
+        customer_id: {{ preselected_customer|tojson if preselected_customer else 'null' }},
+        machine_id: {{ preselected_machine|tojson if preselected_machine else 'null' }},
+    });
+    {% endif %}
+
+    {% if form_data %}
+    restoreData({{ form_data|tojson }});
+    {% endif %}
+    {% if survey and survey.status == "Finalizado" %}
+    disableForm();
+    {% endif %}
+
+    refreshStations();
+});
+</script>
+{% endblock %}

@@ -21,7 +21,7 @@
                 y requerimientos de producción.</p>
         </div>
         <div class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
-            <span class="material-symbols-rounded text-[32px]">inventory_2</span>
+            <span class="material-symbols-rounded text-[32px]" aria-hidden="true">inventory_2</span>
         </div>
     </div>
 
@@ -32,30 +32,30 @@
         <!-- Section: General Info -->
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
-                <span class="material-symbols-rounded text-primary text-xl">settings_input_component</span>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">settings_input_component</span>
                 <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">
                     Especificaciones Generales</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Descripción del
+                    <label for="name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Descripción del
                         Producto</label>
                     <input name="name" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 dark:text-white placeholder:text-slate-400"
-                        placeholder="Ej: Caja de Cartón Reforzada Premium" type="text" />
+                        placeholder="Ej: Caja de Cartón Reforzada Premium" type="text"  id="name"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de ET
+                    <label for="et-number" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de ET
                         (Especificación Técnica)</label>
                     <input name="et_number" required
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold"
-                        placeholder="Ej: ET-2024-042" type="text" />
+                        placeholder="Ej: ET-2024-042" type="text"  id="et-number"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Material
+                    <label for="material" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Material
                         Principal</label>
                     <select name="material" required
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="material">
                         <option>Corrugado Simple (Flauta B)</option>
                         <option>Corrugado Doble (Flauta BC)</option>
                         <option>Microcorrugado (Flauta E)</option>
@@ -63,16 +63,16 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ruta de Fabricación
+                    <label for="manufacturing-route" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ruta de Fabricación
                         Estimada</label>
                     <input name="manufacturing_route"
                         class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
-                        placeholder="Ej: Corte > Impresión > Pegado" type="text" />
+                        placeholder="Ej: Corte > Impresión > Pegado" type="text"  id="manufacturing-route"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estatus</label>
+                    <label for="status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estatus</label>
                     <select name="status" required
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Activo" selected>Activo</option>
                         <option value="Inactivo">Inactivo</option>
                     </select>
@@ -83,14 +83,14 @@
         <!-- Section: Technical Dimensions -->
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
-                <span class="material-symbols-rounded text-primary text-xl">square_foot</span>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">square_foot</span>
                 <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Dimensiones
                     Técnicas (mm)</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div
                     class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-                    <label
+                    <label for="dimensions-l"
                         class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Largo
                         (L)</label>
                     <div class="flex items-center justify-center gap-4">
@@ -98,14 +98,14 @@
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
                         <input name="dimensions_l"
                             class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
-                            type="number" value="400" />
+                            type="number" value="400"  id="dimensions-l"/>
                         <button type="button"
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
                     </div>
                 </div>
                 <div
                     class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-                    <label
+                    <label for="dimensions-a"
                         class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Ancho
                         (A)</label>
                     <div class="flex items-center justify-center gap-4">
@@ -113,14 +113,14 @@
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
                         <input name="dimensions_a"
                             class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
-                            type="number" value="300" />
+                            type="number" value="300"  id="dimensions-a"/>
                         <button type="button"
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
                     </div>
                 </div>
                 <div
                     class="space-y-3 bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
-                    <label
+                    <label for="dimensions-h"
                         class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center">Alto
                         (H)</label>
                     <div class="flex items-center justify-center gap-4">
@@ -128,7 +128,7 @@
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">-</button>
                         <input name="dimensions_h"
                             class="w-20 bg-transparent border-none text-center text-xl font-black text-slate-800 dark:text-white p-0 focus:ring-0"
-                            type="number" value="200" />
+                            type="number" value="200"  id="dimensions-h"/>
                         <button type="button"
                             class="size-8 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-700">+</button>
                     </div>
@@ -139,7 +139,7 @@
         <!-- Section: File Management -->
         <section>
             <div class="flex items-center gap-3 mb-6">
-                <span class="material-symbols-rounded text-primary text-xl">upload_file</span>
+                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">upload_file</span>
                 <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Gestión de
                     Archivos Técnicos</h3>
             </div>
@@ -148,7 +148,7 @@
                 <div class="flex flex-col items-center gap-4">
                     <div
                         class="size-16 rounded-full bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                        <span class="material-symbols-rounded text-4xl">cloud_upload</span>
+                        <span class="material-symbols-rounded text-4xl" aria-hidden="true">cloud_upload</span>
                     </div>
                     <div>
                         <p class="text-sm font-black text-slate-900 dark:text-white mb-1 uppercase tracking-widest">

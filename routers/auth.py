@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from database import get_db
 from models import User
+from templating import templates
 from security import (
     hash_password,
     verify_password,
@@ -32,14 +32,13 @@ def require_admin(request: Request) -> User:
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
     if get_current_user(request):
         return RedirectResponse(url="/", status_code=303)
-    return templates.TemplateResponse("login.html", {"request": request, "active_page": "login"})
+    return templates.TemplateResponse(request, 'login.html', {"request": request, "active_page": "login"})
 
 
 @router.post("/login")
@@ -54,18 +53,18 @@ async def login(
     ).first()
 
     if not user or not verify_password(password, user.hashed_password):
-        return templates.TemplateResponse("login.html", {
+        return templates.TemplateResponse(request, 'login.html', {
             "request": request,
             "active_page": "login",
             "error": "Credenciales inválidas",
-        }, status_code=401)
+        })
 
     if not user.is_active:
-        return templates.TemplateResponse("login.html", {
+        return templates.TemplateResponse(request, 'login.html', {
             "request": request,
             "active_page": "login",
             "error": "Cuenta desactivada",
-        }, status_code=403)
+        })
 
     token = create_token({"sub": str(user.id), "username": user.username, "role": user.role})
     response = RedirectResponse(url="/", status_code=303)
@@ -84,7 +83,7 @@ async def login(
 async def register_page(request: Request):
     require_admin(request)
     csrf = generate_csrf_token(int(get_current_user(request)["sub"]))
-    return templates.TemplateResponse("register.html", {
+    return templates.TemplateResponse(request, 'register.html', {
         "request": request,
         "active_page": "register",
         "csrf_token": csrf,
@@ -108,20 +107,20 @@ async def register(
         raise HTTPException(status_code=403, detail="CSRF inválido")
 
     if db.query(User).filter(User.username == username).first():
-        return templates.TemplateResponse("register.html", {
+        return templates.TemplateResponse(request, 'register.html', {
             "request": request,
             "active_page": "register",
             "csrf_token": generate_csrf_token(int(admin.id)),
             "error": "El nombre de usuario ya existe",
-        }, status_code=400)
+        })
 
     if db.query(User).filter(User.email == email).first():
-        return templates.TemplateResponse("register.html", {
+        return templates.TemplateResponse(request, 'register.html', {
             "request": request,
             "active_page": "register",
             "csrf_token": generate_csrf_token(int(admin.id)),
             "error": "El correo electrónico ya está registrado",
-        }, status_code=400)
+        })
 
     user = User(
         username=username,
@@ -134,7 +133,7 @@ async def register(
     db.add(user)
     db.commit()
 
-    return templates.TemplateResponse("register.html", {
+    return templates.TemplateResponse(request, 'register.html', {
         "request": request,
         "active_page": "register",
         "csrf_token": generate_csrf_token(int(admin.id)),
@@ -154,7 +153,7 @@ async def list_users(request: Request, db: Session = Depends(get_db)):
     admin = require_admin(request)
     users = db.query(User).order_by(User.username).all()
     csrf = generate_csrf_token(int(admin.id))
-    return templates.TemplateResponse("usuarios.html", {
+    return templates.TemplateResponse(request, 'usuarios.html', {
         "request": request,
         "active_page": "usuarios",
         "users": users,
@@ -217,7 +216,7 @@ async def profile_page(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/auth/login", status_code=303)
 
     csrf_token = generate_csrf_token(user.id)
-    return templates.TemplateResponse("perfil.html", {
+    return templates.TemplateResponse(request, 'perfil.html', {
         "request": request,
         "active_page": "perfil",
         "profile_user": user,
@@ -246,20 +245,20 @@ async def update_profile(
         return RedirectResponse(url="/auth/login", status_code=303)
 
     if email != user.email and db.query(User).filter(User.email == email).first():
-        return templates.TemplateResponse("perfil.html", {
+        return templates.TemplateResponse(request, 'perfil.html', {
             "request": request,
             "active_page": "perfil",
             "profile_user": user,
             "csrf_token": generate_csrf_token(user.id),
             "error": "El correo ya está en uso",
-        }, status_code=400)
+        })
 
     user.full_name = full_name
     user.email = email
     user.phone = phone
     db.commit()
 
-    return templates.TemplateResponse("perfil.html", {
+    return templates.TemplateResponse(request, 'perfil.html', {
         "request": request,
         "active_page": "perfil",
         "profile_user": user,
@@ -288,18 +287,18 @@ async def change_password(
         return RedirectResponse(url="/auth/login", status_code=303)
 
     if not verify_password(current_password, user.hashed_password):
-        return templates.TemplateResponse("perfil.html", {
+        return templates.TemplateResponse(request, 'perfil.html', {
             "request": request,
             "active_page": "perfil",
             "profile_user": user,
             "csrf_token": generate_csrf_token(user.id),
             "error": "La contraseña actual no es correcta",
-        }, status_code=400)
+        })
 
     user.hashed_password = hash_password(new_password)
     db.commit()
 
-    return templates.TemplateResponse("perfil.html", {
+    return templates.TemplateResponse(request, 'perfil.html', {
         "request": request,
         "active_page": "perfil",
         "profile_user": user,

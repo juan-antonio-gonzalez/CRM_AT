@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Reporte de Infraestructura #{{ survey.id }}
+{% block title %}Reporte de Infraestructura #{{ survey.id }}{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -76,6 +76,8 @@
         }
     }
 </style>
+{% endblock %}
+
 {% block content %}
 <div class="flex flex-col h-full w-full bg-slate-100 dark:bg-slate-950 print:bg-white print:h-auto print:block">
     <!-- Toolbar -->
@@ -83,7 +85,7 @@
         <div class="flex items-center gap-4">
             <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                 <a href="/relevamiento-infraestructura" class="hover:text-primary transition-colors">Relevamientos de Infraestructura</a>
-                <span class="material-symbols-rounded text-sm">chevron_right</span>
+                <span class="material-symbols-rounded text-sm" aria-hidden="true">chevron_right</span>
                 <span class="text-slate-900 dark:text-slate-100">Vista Previa #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</span>
             </nav>
         </div>
@@ -91,18 +93,18 @@
             {% if survey.status != 'Completado' %}
             <a href="/relevamiento-infraestructura/{{ survey.id }}"
                 class="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors text-sm font-bold mr-2">
-                <span class="material-symbols-rounded text-[20px]">edit</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                 Volver a Edición
             </a>
             {% endif %}
             <button style="cursor:pointer" data-print-btn
                 class="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-semibold">
-                <span class="material-symbols-rounded text-[20px]">print</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">print</span>
                 Imprimir
             </button>
             <button style="cursor:pointer" data-print-btn
                 class="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-primary/90 rounded-lg transition-colors text-sm font-bold shadow-sm">
-                <span class="material-symbols-rounded text-[20px]">download</span>
+                <span class="material-symbols-rounded text-[20px]" aria-hidden="true">download</span>
                 Descargar PDF
             </button>
         </div>
@@ -118,7 +120,7 @@
             <div class="flex justify-between items-start border-b-2 border-slate-100 dark:border-slate-800 pb-8">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-white shrink-0">
-                        <span class="material-symbols-rounded text-3xl">domain</span>
+                        <span class="material-symbols-rounded text-3xl" aria-hidden="true">domain</span>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">Aplicación AT</h2>
@@ -160,7 +162,7 @@
 
             <!-- 2. Almacenamiento -->
             <section class="mt-4">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base">inventory</span> 2. Almacenamiento</h4>
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">inventory</span> 2. Almacenamiento</h4>
                 
                 <h5 class="font-bold text-sm mb-2 text-slate-700 dark:text-slate-300">2.1 Materias Primas / Insumos</h5>
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -185,7 +187,7 @@
 
             <!-- 3. Empaque Primario -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base">package_2</span> 3. Empaque Primario / Insumos</h4>
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">package_2</span> 3. Empaque Primario / Insumos</h4>
                 <div class="grid grid-cols-2 gap-4">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo Empaque:</span> {{ survey.packaging_data.get('type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Dimensiones:</span> {{ survey.packaging_data.get('dim', '-') }}</p>
@@ -197,7 +199,7 @@
 
             <!-- 4. Paletizado -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base">layers</span> 4. Paletizado y Armado</h4>
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">layers</span> 4. Paletizado y Armado</h4>
                 <div class="grid grid-cols-2 gap-4">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo Pallet / Base:</span> {{ survey.palletizing_data.get('pallet_type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Pzas de Recibo:</span> {{ survey.palletizing_data.get('pieces', '-') }}</p>
@@ -210,7 +212,7 @@
 
             <!-- 5. Logística -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base">local_shipping</span> 5. Logística de Distribución</h4>
+                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">local_shipping</span> 5. Logística de Distribución</h4>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Vehículos:</span> {{ survey.logistics_data.get('veh_type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Altura Prom. de Vehículo:</span> {{ survey.logistics_data.get('veh_height', '-') }}</p>
@@ -250,6 +252,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
@@ -257,6 +260,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-print-btn]').forEach(b => b.addEventListener('click', () => window.print()));
 });
 </script>
-{% endblock %}
-{% endblock %}
 {% endblock %}

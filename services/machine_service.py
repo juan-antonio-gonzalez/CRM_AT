@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 from typing import Optional
 from sqlalchemy import func
@@ -7,7 +7,10 @@ from enums import RelevamientoStatus
 
 
 def list_machines(db: Session, cliente: str = None, asistente: str = None, q: str = None):
-    query = db.query(models.Machine)
+    # joinedload: templates/maquinaria.html walks machine.customer per row, which
+    # with lazy loading issued one extra SELECT per machine (101 queries for a
+    # 100-row page).
+    query = db.query(models.Machine).options(joinedload(models.Machine.customer))
     customers_raw = db.query(models.Customer).order_by(models.Customer.name).all()
     assigned_advisors = db.query(models.Customer.technical_advisor).filter(models.Customer.technical_advisor != None).distinct().all()
     assigned_advisor_names = sorted([a[0] for a in assigned_advisors if a[0]])
@@ -119,6 +122,10 @@ def delete_machine(db: Session, machine_id: int, user_id: int = None, username: 
         "brand": machine.brand, "plant_assigned": machine.plant_assigned,
         "machine_type": machine.machine_type, "line": machine.line,
         "status": machine.status,
+        # Needed to restore the machine back onto its customer.
+        "customer_id": machine.customer_id,
+        "relevamiento_status": machine.relevamiento_status,
+        "is_active": machine.is_active,
     }, user_id, username, f"{machine.brand} {machine.model}")
     surveys = db.query(models.TechnicalSurvey).filter(models.TechnicalSurvey.machine_id == machine_id).all()
     for s in surveys:

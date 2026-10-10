@@ -6,11 +6,9 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>{% block title %}CRM-AT{% endblock %}</title>
     <link href="{{ url_for('static', path='/css/tailwind.css') }}" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
-        rel="stylesheet" crossorigin="anonymous" />
-    <link rel="stylesheet" crossorigin="anonymous"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
+    {% block extra_head %}{% endblock %}
     {% if request.state.csrf_token %}
     <meta name="csrf-token" content="{{ request.state.csrf_token }}">
     {% endif %}
@@ -53,7 +51,7 @@
                 <a href="/" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
                     <div
                         class="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                        <span class="material-symbols-rounded text-lg">package_2</span>
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">package_2</span>
                     </div>
                     <div class="flex flex-col">
                         <h1
@@ -64,20 +62,30 @@
                 </a>
 
                 <!-- Navigation Groups -->
-                <nav class="flex flex-col gap-3">
+                <nav class="flex flex-col gap-3" aria-label="Navegación principal">
                     <!-- Group: Análisis -->
                     <div class="flex flex-col gap-0.5">
                         <span
                             class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Análisis</span>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'dashboard' %}sidebar-active{% endif %}"
-                            href="/">
-                            <span class="material-symbols-rounded text-lg">dashboard</span>
-                            <span class="text-xs font-semibold">Dashboard Gerencial</span>
+                            href="/" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">dashboard</span>
+                            <span class="text-xs font-semibold">KPIs - AT</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'kpis_at' %}sidebar-active{% endif %}"
-                            href="/kpis-at">
-                            <span class="material-symbols-rounded text-lg">ssid_chart</span>
-                            <span class="text-xs font-semibold">KPIs - Asignación AT</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'kpi_calidad' %}sidebar-active{% endif %}"
+                            href="/kpi-calidad" {% if active_page == 'kpi_calidad' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">ssid_chart</span>
+                            <span class="text-xs font-semibold">KPIs Calidad AT</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'control_at' %}sidebar-active{% endif %}"
+                            href="/control-at" {% if active_page == 'control_at' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
+                            <span class="text-xs font-semibold">KPIs Asignación AT</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'historial_at' %}sidebar-active{% endif %}"
+                            href="/historial-at" {% if active_page == 'historial_at' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">history</span>
+                            <span class="text-xs font-semibold">Historial Asignación AT</span>
                         </a>
                     </div>
 
@@ -86,19 +94,24 @@
                         <span
                             class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Operaciones</span>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'clientes' %}sidebar-active{% endif %}"
-                            href="/clientes">
-                            <span class="material-symbols-rounded text-lg">group</span>
+                            href="/clientes" {% if active_page == 'clientes' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">group</span>
                             <span class="text-xs font-semibold">Biblioteca de Clientes</span>
                         </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'organigrama' %}sidebar-active{% endif %}"
+                            href="/organigrama" {% if active_page == 'organigrama' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">account_tree</span>
+                            <span class="text-xs font-semibold">Organigrama</span>
+                        </a>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'productos' %}sidebar-active{% endif %}"
-                            href="/productos">
-                            <span class="material-symbols-rounded text-lg">inventory_2</span>
+                            href="/productos" {% if active_page == 'productos' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">inventory_2</span>
                             <span class="text-xs font-semibold">Biblioteca de Productos</span>
                         </a>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'maquinaria' %}sidebar-active{% endif %}"
-                            href="/maquinaria">
-                            <span class="material-symbols-rounded text-lg">precision_manufacturing</span>
-                            <span class="text-xs font-semibold">Inventario de Maquinaria</span>
+                            href="/maquinaria" {% if active_page == 'maquinaria' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">precision_manufacturing</span>
+                            <span class="text-xs font-semibold">Biblioteca de Máquinas</span>
                         </a>
                     </div>
 
@@ -106,46 +119,51 @@
                     <div class="flex flex-col gap-0.5">
                         <span
                             class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Gestión</span>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'relevamiento' %}sidebar-active{% endif %}"
-                            href="/relevamiento">
-                            <span class="material-symbols-rounded text-lg">analytics</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'relevamiento2' %}sidebar-active{% endif %}"
+                            href="/relevamiento2" {% if active_page == 'relevamiento2' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">summarize</span>
                             <span class="text-xs font-semibold">Relevamiento Técnico</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'infraestructura' %}sidebar-active{% endif %}"
-                            href="/relevamiento-infraestructura">
-                            <span class="material-symbols-rounded text-lg">factory</span>
-                            <span class="text-xs font-semibold">Infraestructura & Logística</span>
-                        </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'visitas' %}sidebar-active{% endif %}"
-                            href="/visitas">
-                            <span class="material-symbols-rounded text-lg">engineering</span>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'visitas2' %}sidebar-active{% endif %}"
+                            href="/visitas2" {% if active_page == 'visitas2' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
                             <span class="text-xs font-semibold">Visitas Técnicas</span>
                         </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'minutas' %}sidebar-active{% endif %}"
+                            href="/minutas" {% if active_page == 'minutas' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">description</span>
+                            <span class="text-xs font-semibold">Minutas</span>
+                        </a>
+                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'infraestructura' %}sidebar-active{% endif %}"
+                            href="/relevamiento-infraestructura" {% if active_page == 'infraestructura' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">factory</span>
+                            <span class="text-xs font-semibold">Infraestructura & Logística</span>
+                        </a>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'seguimiento' %}sidebar-active{% endif %}"
-                            href="/seguimiento-plan">
-                            <span class="material-symbols-rounded text-lg">checklist_rtl</span>
+                            href="/seguimiento-plan" {% if active_page == 'seguimiento' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">checklist_rtl</span>
                             <span class="text-xs font-semibold">Seguimiento Plan</span>
                         </a>
                         {% if request.state.user and request.state.user.role == 'admin' %}
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'papelera' %}sidebar-active{% endif %}"
-                            href="/papelera">
-                            <span class="material-symbols-rounded text-lg">delete_sweep</span>
+                            href="/papelera" {% if active_page == 'papelera' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">delete_sweep</span>
                             <span class="text-xs font-semibold">Papelera</span>
                         </a>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'usuarios' %}sidebar-active{% endif %}"
-                            href="/auth/usuarios">
-                            <span class="material-symbols-rounded text-lg">manage_accounts</span>
+                            href="/auth/usuarios" {% if active_page == 'usuarios' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">manage_accounts</span>
                             <span class="text-xs font-semibold">Usuarios</span>
                         </a>
                         {% endif %}
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'agenda' %}sidebar-active{% endif %}"
-                            href="/agenda">
-                            <span class="material-symbols-rounded text-lg">calendar_month</span>
+                            href="/agenda" {% if active_page == 'agenda' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">calendar_month</span>
                             <span class="text-xs font-semibold">Agenda de Visitas</span>
                         </a>
                         <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'configuracion' %}sidebar-active{% endif %}"
-                            href="/configuracion">
-                            <span class="material-symbols-rounded text-lg">settings</span>
+                            href="/configuracion" {% if active_page == 'configuracion' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">settings</span>
                             <span class="text-xs font-semibold">Tablas Auxiliares</span>
                         </a>
                     </div>
@@ -164,8 +182,8 @@
                             <p class="text-[9px] text-slate-500 dark:text-slate-400 truncate capitalize">{{ request.state.user.role if request.state.user else 'Sin sesión' }}</p>
                         </div>
                     </a>
-                    <a href="/auth/logout" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="Cerrar sesión">
-                        <span class="material-symbols-rounded text-lg">logout</span>
+                    <a href="/auth/logout" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="Cerrar sesión" aria-label="Cerrar sesión">
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">logout</span>
                     </a>
                 </div>
             </div>
@@ -180,13 +198,13 @@
                 {% block header %}
                 <div class="flex items-center gap-3 lg:gap-6">
                     <!-- Mobile Hamburger -->
-                    <button id="btnMobileMenu"
+                    <button id="btnMobileMenu" aria-label="Abrir menú de navegación" aria-controls="sidebarNav" aria-expanded="false"
                         class="lg:hidden p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
-                        <span class="material-symbols-rounded">menu</span>
+                        <span class="material-symbols-rounded" aria-hidden="true">menu</span>
                     </button>
-                    <button id="themeToggle"
+                    <button id="themeToggle" aria-label="Cambiar tema claro/oscuro"
                         class="p-2 lg:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
-                        <span id="themeIcon" class="material-symbols-rounded">light_mode</span>
+                        <span id="themeIcon" class="material-symbols-rounded" aria-hidden="true">light_mode</span>
                     </button>
                     <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden lg:block"></div>
                     {% block header_extra %}{% endblock %}
@@ -198,13 +216,6 @@
                         class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary/20">
                         Iniciar Sesión
                     </a>
-                    {% else %}
-                    <button
-                        class="relative p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
-                        <span class="material-symbols-rounded">notifications</span>
-                        <span
-                            class="absolute top-2.5 right-2.5 size-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-                    </button>
                     {% endif %}
                 </div>
                 {% endblock %}
@@ -217,14 +228,14 @@
             </main>
         </div>
       <!-- Custom Confirmation Modal -->
-    <div id="confirmModal"
+    <div id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
         <div
             class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
             <div class="flex flex-col items-center text-center gap-4">
                 <div id="confirmModalIconContainer"
                     class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-2">
-                    <span id="confirmModalIcon" class="material-symbols-rounded text-[32px]">warning</span>
+                    <span id="confirmModalIcon" class="material-symbols-rounded text-[32px]" aria-hidden="true">warning</span>
                 </div>
                 <h3 id="confirmModalTitle" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">¿Confirmar Acción?</h3>
                 <p id="confirmModalMessage" class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -244,12 +255,84 @@
         </div>
     </div>
 
+    <!-- Deactivation Modal (reason) -->
+    <div id="deactivate-modal-container" role="dialog" aria-modal="true" aria-labelledby="deactivate-modal-title"
+        class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+        <div id="deactivate-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
+            <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-2">
+                        <span class="material-symbols-rounded text-[32px]" aria-hidden="true">block</span>
+                    </div>
+                    <h3 id="deactivate-modal-title" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Desactivar Registro</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                        Indica el motivo por el cual desactivás este registro:
+                    </p>
+                    <textarea id="deactivate-reason" rows="3"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
+                        placeholder="Motivo obligatorio..."></textarea>
+                    <div id="deactivate-error" class="hidden text-[11px] font-bold text-red-500 -mt-2">
+                        Debes ingresar un motivo
+                    </div>
+                    <div class="flex gap-3 w-full mt-2">
+                        <button id="btn-cancel-deactivate"
+                            class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            Cancelar
+                        </button>
+                        <button id="btn-confirm-deactivate"
+                            class="flex-1 px-6 py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-widest transition-all">
+                            Desactivar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
-    <div id="toastContainer"
+    <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions"
         class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none">
     </div>
 
     <script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/app.js') }}"></script>
+    <script nonce="{{ request.state.script_nonce }}">
+    // ── Global deactivation modal ──
+    var deactivateCallback = null;
+
+    function openDeactivateModal(callback) {
+        deactivateCallback = callback;
+        document.getElementById('deactivate-reason').value = '';
+        document.getElementById('deactivate-error').classList.add('hidden');
+        document.getElementById('deactivate-modal-container').classList.remove('hidden');
+        document.getElementById('deactivate-modal').classList.remove('hidden');
+    }
+
+    function closeDeactivateModal() {
+        document.getElementById('deactivate-modal-container').classList.add('hidden');
+        document.getElementById('deactivate-modal').classList.add('hidden');
+        deactivateCallback = null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('btn-cancel-deactivate')?.addEventListener('click', closeDeactivateModal);
+        document.getElementById('deactivate-modal-container')?.addEventListener('click', function(e) {
+            if (e.target === this) closeDeactivateModal();
+        });
+        document.getElementById('btn-confirm-deactivate')?.addEventListener('click', function() {
+            var reason = document.getElementById('deactivate-reason').value.trim();
+            if (!reason) {
+                document.getElementById('deactivate-error').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('deactivate-error').classList.add('hidden');
+            if (deactivateCallback) {
+                deactivateCallback(reason);
+            }
+            closeDeactivateModal();
+        });
+    });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 

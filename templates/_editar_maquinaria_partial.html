@@ -2,7 +2,7 @@
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
     <section>
         <div class="flex items-center gap-3 mb-6 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <span class="material-symbols-rounded text-primary text-lg">settings</span>
+            <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">settings</span>
             <h3 class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información del Equipo</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

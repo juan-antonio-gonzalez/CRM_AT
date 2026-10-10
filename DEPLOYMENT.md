@@ -1,243 +1,232 @@
-# Deployment Guide — CRM-AT (Industrial BI Dashboard)
+# Despliegue en el VPS — CRM-AT
 
-Production deployment guide for the CRM-AT platform. Covers Docker-based deployment, database migration, security hardening, and CI/CD.
-
----
-
-## Architecture
-
-```
-Internet ──▶ Nginx (HTTPS) ──▶ Gunicorn + Uvicorn Workers (port 8000) ──▶ PostgreSQL/SQLite
-                                    │
-                                    └── static/uploads/ (persistent volume)
-```
+Guía para desplegar esta aplicación en un VPS Ubuntu con **PostgreSQL** y **Nginx**
+locales. Está escrita para el servidor `servidor.ejemplo.com` (Hostinger,
+Ubuntu 26.04, PostgreSQL 18, Nginx), que además ya sirve otra aplicación
+(`otro-sitio.com`). El despliegue de CRM-AT es **completamente independiente**: usa
+su propio usuario de sistema, su propia base de datos, su propio puerto y su
+propio virtual host, así que no interfiere con lo que ya está corriendo.
 
 ---
 
-## Quick Start (Docker Compose)
+## 1. Antes de empezar: apuntar el DNS
 
-### Prerequisites
+Let's Encrypt valida que el dominio resuelva a la IP del servidor. Si esto no
+está hecho, el certificado falla (la aplicación igual funciona por HTTP).
 
-- Docker & Docker Compose
-- Git
+El dominio `ejemplo.com` **todavía no apunta al VPS**. Hoy resuelve así:
 
-### Steps
+| Dominio | Resuelve a | Estado |
+|---|---|---|
+| `otro-sitio.com` | `203.0.113.10` | ✅ correcto (es la IP del VPS) |
+| `ejemplo.com` | `2.57.91.91` | ❌ nameservers de parking de Hostinger |
+
+**Qué hacer** (panel de Hostinger → Dominios → `ejemplo.com` → DNS / Nameservers):
+
+1. Si los nameservers siguen en `nebula.dns-parking.com` / `aurora.dns-parking.com`,
+   cambialos a los de Hostinger (`ns1.dns-parking.com` y `ns2.dns-parking.com` ya
+   son suyos, así que basta con editar la **zona DNS**).
+2. En la zona DNS de `ejemplo.com`, creá o corregí:
+
+   | Tipo | Nombre | Valor | TTL |
+   |------|--------|-------|-----|
+   | A | `@` | `203.0.113.10` | 3600 |
+   | A | `www` | `203.0.113.10` | 3600 |
+
+3. Verificá la propagación desde tu máquina (puede tardar de minutos a horas):
+
+   ```bash
+   dig +short ejemplo.com
+   # debe devolver 203.0.113.10
+   ```
+
+> Alternativa sin tocar DNS: usar `crm.otro-sitio.com`, que ya apunta al VPS porque
+> `otro-sitio.com` está bien configurado:
+> `sudo bash deploy/install.sh --domain crm.otro-sitio.com`
+
+---
+
+## 2. Instalación (un solo comando)
+
+Copiá el proyecto al servidor y ejecutá el instalador. Desde tu máquina:
 
 ```bash
-git clone <your-repo-url> crm-at
-cd crm-at
+# Sincronizar el código (ajustá la ruta local)
+rsync -a --delete \
+  --exclude '.git' --exclude '.venv' --exclude '.venv-work' \
+  --exclude '__pycache__' --exclude 'node_modules' --exclude '*.db' \
+  ~/ruta/al/proyecto/ root@203.0.113.10:/var/www/crm_at/
 
-# Production startup (SQLite)
-docker-compose up -d --build
-# App available at http://localhost:8000
+# En el servidor
+ssh root@203.0.113.10
+cd /var/www/crm_at
+sudo bash deploy/install.sh --ssl
 ```
 
-### With PostgreSQL
+`install.sh` hace todo esto, de forma idempotente (podés re-ejecutarlo para
+actualizar):
 
-1. Uncomment the `db` service and `DATABASE_URL` in `docker-compose.yml`
-2. Set strong credentials in `docker-compose.yml` or `.env`
-3. Start:
+1. Instala dependencias del sistema. En Ubuntu 26.04 el módulo `venv` **no trae
+   `ensurepip`**, así que instala `python3-venv` y `python3-pip` explícitamente.
+   También `build-essential`, `zlib1g-dev` y `libjpeg-dev` porque **Pillow 11.1.0
+   no publica wheel para Python 3.14** y se compila desde fuente.
+2. Crea el usuario de sistema `crmat` (sin shell ni home real).
+3. Crea el rol `crm_at` y la base `crm_at` en el PostgreSQL existente, con una
+   contraseña aleatoria. **No toca la base `ejemplo`.**
+4. Crea el entorno virtual e instala `requirements.txt`.
+5. Genera `/etc/crm-at/crm-at.env` con `SECRET_KEY` aleatoria, la contraseña de
+   base de datos y una contraseña inicial de administrador. El archivo queda en
+   modo `640` y **fuera del repositorio**.
+6. Aplica `alembic upgrade head` y siembra los catálogos y el administrador.
+7. Instala y arranca el servicio `crm-at.service` (systemd), en el puerto **8020**.
+8. Instala el virtual host de Nginx y, con `--ssl`, emite el certificado.
+
+Al terminar, **el script imprime la contraseña del administrador una sola vez**.
+Anotala; después podés cambiarla desde `/auth/perfil`.
+
+---
+
+## 3. Verificación
 
 ```bash
-docker-compose up -d --build
+# El servicio está activo
+systemctl status crm-at
+
+# La sonda de salud responde (sin autenticación)
+curl -s http://127.0.0.1:8020/health
+# {"status":"ok","database":"ok","revision":"a1b2c3d4e5f6"}
+
+# Nginx está bien configurado
+nginx -t
+
+# Desde afuera
+curl -I https://ejemplo.com
 ```
 
-### Environment Variables (`.env`)
-
-```env
-DATABASE_URL=postgresql://user:password@db:5432/industrial_bi
-SECRET_KEY=<generate-a-random-64-char-key>
-DEBUG=false
-CORS_ORIGINS=["https://yourdomain.com"]
-LOG_LEVEL=INFO
-```
+Navegá a `https://ejemplo.com` e iniciá sesión con el usuario `admin` y la
+contraseña que imprimió el instalador.
 
 ---
 
-## Dockerfile
+## 4. Operación diaria
 
-Multi-stage build (`python:3.12-slim`):
+| Tarea | Comando |
+|---|---|
+| Ver logs en vivo | `journalctl -u crm-at -f` |
+| Reiniciar | `systemctl restart crm-at` |
+| Detener | `systemctl stop crm-at` |
+| Estado | `systemctl status crm-at` |
+| Revisión de esquema aplicada | `cd /var/www/crm_at && sudo -u crmat .venv/bin/python main.py check-schema` |
+| Editar configuración | `sudo nano /etc/crm-at/crm-at.env` y luego `systemctl restart crm-at` |
 
-| Stage | Base | Purpose |
-|-------|------|---------|
-| `builder` | `python:3.12-slim` | Compile dependencies (gcc, libpq-dev) |
-| `runtime` | `python:3.12-slim` | Minimal runtime (only libpq5), non-root `app` user |
-
-**CMD**: `gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 4 --max-requests 1000`
-
----
-
-## Nginx + HTTPS (Let's Encrypt)
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    location / {
-        proxy_pass http://localhost:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+### Actualizar a una versión nueva
 
 ```bash
-sudo certbot --nginx -d yourdomain.com
+cd /var/www/crm_at
+sudo git pull            # o re-sincronizar con rsync
+sudo bash deploy/install.sh
 ```
 
----
+El instalador vuelve a instalar dependencias, aplica migraciones nuevas y
+reinicia el servicio. **No** regenera las credenciales si ya existen.
 
-## Security Hardening
-
-### CSP
-
-The app sets a strict CSP with per-request nonces. In production, ensure:
-
-- All `<script>` tags include `nonce="{{ request.state.script_nonce }}"`
-- No inline event handlers (`onclick`, `onchange`, etc.) — use `addEventListener` in nonced script blocks
-- CDN origins in CSP match your dependencies
-
-### CORS
-
-Edit `main.py` or set `CORS_ORIGINS` env var:
-
-```python
-# config.py default: cors_origins: list[str] = ["*"]
-# Override via .env or environment:
-CORS_ORIGINS='["https://yourdomain.com"]'
-```
-
-### Secret Key
+### Backups
 
 ```bash
-python -c "import secrets; print(secrets.token_hex(32))"
-# Set as SECRET_KEY in .env or environment
+sudo bash deploy/backup.sh                       # a /var/backups/crm-at
+sudo crontab -e                                  # backup diario a las 03:15
+# 15 3 * * * root bash /var/www/crm_at/deploy/backup.sh >/dev/null 2>&1
 ```
 
-### CSRF
-
-Enabled by default (`csrf_enabled: bool = True`). CSRF tokens are:
-
-- Tied to the user's JWT session
-- 1-hour expiry
-- Auto-injected into forms via JavaScript
-- Available in `<meta name="csrf-token">`
-
-### Security Headers (auto-set)
-
-| Header | Value |
-|--------|-------|
-| `X-Content-Type-Options` | `nosniff` |
-| `X-Frame-Options` | `DENY` |
-| `X-XSS-Protection` | `1; mode=block` |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
-
-### Session
-
-- JWT in HTTP-only cookie (`session`)
-- `httponly`, `samesite=lax`, `max_age` = `session_expire_hours` (default 24h)
-- `secure: true` recommended in production (set in `main.py`)
+Guarda un `pg_dump` comprimido de la base y un tar de `static/uploads`, y
+conserva 14 días. Las instrucciones de restauración están al final del script.
 
 ---
 
-## Database Migrations
+## 5. Alternativa: Docker
+
+El repositorio incluye `Dockerfile` y `docker-compose.yml`, pero **el VPS no
+tiene Docker instalado**. Si preferís ese camino:
 
 ```bash
-# Auto-generate migration after model changes
-alembic revision --autogenerate -m "description"
-
-# Apply migrations
-alembic upgrade head
-
-# Rollback
-alembic downgrade -1
+apt-get install -y docker.io docker-compose-plugin
+docker compose up -d --build
 ```
 
-### SQLite → PostgreSQL Migration
-
-1. Set `DATABASE_URL` env var to PostgreSQL connection string
-2. Run `alembic upgrade head`
-3. Tables are created automatically by SQLAlchemy on first startup
+`docker-compose.yml` levanta su propio PostgreSQL en un contenedor, así que es
+una vía independiente del PostgreSQL del sistema. Para producción se recomienda
+la instalación nativa de la sección 2 (menos capas, y aprovecha el PostgreSQL que
+ya está corriendo y respaldado).
 
 ---
 
-## Backups
+## 6. Detalles de configuración que conviene conocer
 
-### SQLite
+- **`COOKIE_SECURE`**: el instalador la pone en `true` cuando usás `--ssl`. Si
+  desplegás sin HTTPS y la dejás en `true`, el navegador **no enviará la cookie de
+  sesión** y no vas a poder iniciar sesión. Está documentado en `deploy/env.example`.
+- **`WEB_CONCURRENCY`**: por defecto 2 workers de uvicorn. El VPS tiene 4 vCPU y
+  15 GB de RAM, así que hay margen para subirlo.
+- **Archivos subidos**: viven en `static/uploads/` y Nginx los sirve directamente.
+  En el servicio systemd, `ReadWritePaths` incluye ese directorio (con
+  `ProtectSystem=full` el resto del árbol es de solo lectura).
+- **Migraciones automáticas**: `run.py` ejecuta `alembic upgrade head` en cada
+  arranque. Es idempotente. Si alguna vez necesitás arrancar sin migrar, definí
+  `SKIP_MIGRATIONS=true`.
+- **Nginx no toca las otras aplicaciones**: el instalador agrega un sitio nuevo y
+  **no** elimina ni el sitio `default` ni el de `ejemplo`.
+
+---
+
+## 7. Resolución de problemas
+
+**El servicio no arranca**
 
 ```bash
-cp industrial_bi.db backups/industrial_bi_$(date +%Y-%m-%d).db
+journalctl -u crm-at -n 60 --no-pager
 ```
+Las causas más comunes son `DATABASE_URL` mal formada o permisos sobre
+`/etc/crm-at/crm-at.env`.
 
-### PostgreSQL
+**Error 502 desde Nginx**
 
 ```bash
-docker exec -t crm-at_db_1 pg_dumpall -c -U admin_crm > dump_$(date +%Y-%m-%d).sql
+curl -s http://127.0.0.1:8020/health   # ¿responde la app?
+ss -tlnp | grep 8020                   # ¿está escuchando?
 ```
+Si la app responde pero Nginx da 502, revisá que el `proxy_pass` apunte al puerto
+correcto y que `SELinux`/AppArmor no esté bloqueando el proxy local.
 
-### Uploaded Files
+**No puedo iniciar sesión**
+
+- Verificá que `COOKIE_SECURE` coincida con el esquema real (ver punto 6).
+- Comprobá que exista un usuario:
+  ```bash
+  sudo -u postgres psql -d crm_at -c "SELECT username, role, is_active FROM users;"
+  ```
+- Si no hay ninguno, creá uno:
+  ```bash
+  cd /var/www/crm_at
+  sudo -u crmat env DATABASE_URL="$(grep -oP '(?<=^DATABASE_URL=).*' /etc/crm-at/crm-at.env)" \
+    ADMIN_PASSWORD='UnaClaveSegura' .venv/bin/python main.py create-admin
+  ```
+
+**Certbot falla**
+
+Es casi siempre DNS. Verificá con `dig +short ejemplo.com` que devuelva
+`203.0.113.10`, esperá la propagación y reintentá:
 
 ```bash
-tar -czf uploads_$(date +%Y-%m-%d).tar.gz static/uploads/
+sudo LETSENCRYPT_EMAIL=tu@correo.com bash deploy/install.sh --ssl
 ```
 
----
-
-## CI/CD (GitHub Actions)
-
-Workflow: `.github/workflows/ci.yml`
-
-| Job | Triggers | Steps |
-|-----|----------|-------|
-| `lint` | push (main/develop), PR (main) | `py_compile` syntax check, `ruff` linter |
-| `test` | after lint | `pytest` (37 tests) |
-| `docker` | after lint | Docker build (no push) |
-
----
-
-## Monitoring
-
-- Logs via `logger.py` — supports JSON structured logging (`LOG_JSON=true`)
-- Log level configurable: `DEBUG`, `INFO`, `WARNING`, `ERROR` (`LOG_LEVEL` env var)
-- All unhandled exceptions are caught globally, logged, and return 500 JSON
-
----
-
-## Tailwind CSS (development only)
+**Quiero volver a la versión anterior**
 
 ```bash
-npm install
-npm run tailwind-watch    # Watch mode for development
-NODE_ENV=production npx tailwindcss -i static/css/input.css -o static/css/tailwind.css --minify
+cd /var/www/crm_at
+sudo git log --oneline -10
+sudo git checkout <commit-anterior>
+sudo bash deploy/install.sh
 ```
-
-The compiled `static/css/tailwind.css` is gitignored — build it in CI or pre-build before deployment.
-
----
-
-## Application Structure
-
-```
-├── main.py                  # FastAPI app, middleware, error handlers
-├── config.py                # Pydantic settings (env vars)
-├── database.py              # SQLAlchemy engine + session
-├── models.py                # 18 ORM models
-├── security.py              # JWT, bcrypt, CSRF
-├── logger.py                # Structured logging
-├── utils.py                 # Helper functions
-├── routers/                 # Route modules (12 files)
-│   ├── auth.py, dashboard.py, customers.py
-│   ├── products.py, machinery.py, visits.py
-│   ├── relevamiento.py, infraestructura.py
-│   ├── kpis.py, seguimiento.py, configuracion.py
-├── schemas/                 # Pydantic schemas (6 files)
-├── templates/               # Jinja2 templates (32 files)
-├── static/                  # CSS, JS, uploads
-├── tests/                   # Pytest tests (6 files, 37 tests)
-├── alembic/                 # DB migrations
-└── .github/workflows/       # CI pipeline
-```
+Las migraciones tienen `downgrade` implementado, pero con datos reales conviene
+restaurar un backup en lugar de revertir el esquema.

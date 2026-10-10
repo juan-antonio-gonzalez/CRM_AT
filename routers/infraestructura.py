@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 from sqlalchemy import func
@@ -8,29 +7,38 @@ import models
 from database import get_db
 from services import survey_service
 from enums import SurveyStatus
+from templating import templates
 
 router = APIRouter(tags=["infraestructura"])
-templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/relevamiento-infraestructura", response_class=HTMLResponse)
-async def infraestructura_lista(request: Request, cliente: Optional[int] = Query(None), asistente: Optional[str] = Query(None), db: Session = Depends(get_db)):
-    surveys, customers, advisors = survey_service.list_infrastructure_surveys(db, cliente, asistente)
+async def infraestructura_lista(
+    request: Request,
+    cliente: Optional[int] = Query(None),
+    asistente: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    surveys, customers, advisors, pagination = survey_service.list_infrastructure_surveys(
+        db, cliente, asistente, page, per_page
+    )
 
-    total_surveys = len(surveys)
     completados = db.query(func.count(models.InfrastructureSurvey.id)).filter(models.InfrastructureSurvey.status == SurveyStatus.COMPLETADO.value).scalar() or 0
     en_proceso = db.query(func.count(models.InfrastructureSurvey.id)).filter(models.InfrastructureSurvey.status == SurveyStatus.EN_PROCESO.value).scalar() or 0
     pendientes = db.query(func.count(models.InfrastructureSurvey.id)).filter(models.InfrastructureSurvey.status == SurveyStatus.PENDIENTE.value).scalar() or 0
     stats = {
-        "total": total_surveys,
+        "total": completados + en_proceso + pendientes,
         "completados": completados,
         "en_proceso": en_proceso,
         "pendientes": pendientes
     }
 
-    return templates.TemplateResponse("relevamiento_infraestructura_lista.html", {
+    return templates.TemplateResponse(request, 'relevamiento_infraestructura_lista.html', {
         "request": request,
         "surveys": surveys,
+        "pagination": pagination,
         "customers": customers,
         "advisors": advisors,
         "selected_customer_id": cliente,
@@ -45,7 +53,7 @@ async def infraestructura_nuevo(request: Request, db: Session = Depends(get_db))
     customers = db.query(models.Customer).order_by(models.Customer.name).all()
     advisors = db.query(models.TechnicalAdvisor).order_by(models.TechnicalAdvisor.name).all()
     unique_customer_names = sorted(list(set(c.name for c in customers)))
-    return templates.TemplateResponse("relevamiento_infraestructura_form.html", {
+    return templates.TemplateResponse(request, 'relevamiento_infraestructura_form.html', {
         "request": request,
         "customers": customers,
         "unique_customer_names": unique_customer_names,
@@ -68,7 +76,7 @@ async def infraestructura_editar(request: Request, survey_id: int, db: Session =
     current_customer = db.query(models.Customer).filter(models.Customer.id == survey.customer_id).first()
     current_customer_name = current_customer.name if current_customer else ""
 
-    return templates.TemplateResponse("relevamiento_infraestructura_form.html", {
+    return templates.TemplateResponse(request, 'relevamiento_infraestructura_form.html', {
         "request": request,
         "customers": customers,
         "unique_customer_names": unique_customer_names,
@@ -97,7 +105,7 @@ async def reporte_infraestructura(request: Request, survey_id: int, db: Session 
     if not survey:
         return RedirectResponse(url="/relevamiento-infraestructura", status_code=303)
 
-    return templates.TemplateResponse("infraestructura_reporte.html", {
+    return templates.TemplateResponse(request, 'infraestructura_reporte.html', {
         "request": request,
         "survey": survey,
         "active_page": "infraestructura"

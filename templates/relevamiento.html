@@ -9,7 +9,7 @@
         <div class="flex items-center gap-3">
             <div
                 class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                <span class="material-symbols-rounded text-xl">settings_input_component</span>
+                <span class="material-symbols-rounded text-xl" aria-hidden="true">settings_input_component</span>
             </div>
             <div>
                 <h1 class="text-sm font-black leading-tight uppercase tracking-tight">Relevamiento</h1>
@@ -24,7 +24,7 @@
         <!-- Volver -->
         <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-wider"
             href="/relevamiento">
-            <span class="material-symbols-rounded text-[18px]">arrow_back</span>
+            <span class="material-symbols-rounded text-[18px]" aria-hidden="true">arrow_back</span>
             Volver a Relevamientos
         </a>
 
@@ -35,7 +35,7 @@
             class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group"
             data-section="sec-info-cliente">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">person</span>
+                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" aria-hidden="true">person</span>
             <span class="text-sm font-semibold">Información Cliente</span>
         </a>
 
@@ -44,7 +44,7 @@
             class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group"
             data-section="sec-maquinaria">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">precision_manufacturing</span>
+                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" aria-hidden="true">precision_manufacturing</span>
             <span class="text-sm font-semibold">Especificaciones Máquina</span>
         </a>
 
@@ -54,11 +54,11 @@
                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group">
                 <div class="flex items-center gap-2.5">
                     <span
-                        class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">factory</span>
+                        class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" aria-hidden="true">factory</span>
                     <span class="text-sm font-semibold">Estaciones</span>
                 </div>
                 <span class="material-symbols-rounded text-[16px] text-slate-400 dark:text-slate-500 transition-transform"
-                    id="tree-estaciones-icon">expand_more</span>
+                    id="tree-estaciones-icon" aria-hidden="true">expand_more</span>
             </button>
             <div id="tree-estaciones" class="ml-5 pl-3 border-l-2 border-slate-200 dark:border-slate-800 space-y-0.5">
                 <a href="#sec-estacion-1"
@@ -89,7 +89,7 @@
             class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group"
             data-section="sec-resumen">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">assignment</span>
+                class="material-symbols-rounded text-[20px] text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" aria-hidden="true">assignment</span>
             <span class="text-sm font-semibold">Resumen Final</span>
         </a>
     </nav>
@@ -116,8 +116,8 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="flex items-center gap-3">
             <button id="themeToggle"
-                class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 hover:text-primary transition-all">
-                <span id="themeIcon" class="material-symbols-rounded">light_mode</span>
+                class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 hover:text-primary transition-all" aria-label="Cambiar tema claro/oscuro">
+                <span id="themeIcon" class="material-symbols-rounded" aria-hidden="true">light_mode</span>
             </button>
             <h2 class="text-base sm:text-xl font-bold tracking-tight">Formulario de Relevamiento</h2>
             <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">BORRADOR</span>
@@ -125,7 +125,7 @@
         <div class="flex items-center gap-2 sm:gap-3">
             <button type="button" data-preview-survey
                 class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] sm:text-xs font-black uppercase py-2 px-3 sm:px-5 rounded-lg transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
-                <span class="material-symbols-rounded !text-[18px]">visibility</span>
+                <span class="material-symbols-rounded !text-[18px]" aria-hidden="true">visibility</span>
                 <span class="hidden sm:inline">Previsualizar</span>
             </button>
             <button type="button" data-submit-survey="false"
@@ -176,9 +176,9 @@
                     <div class="text-sm font-bold text-slate-900 dark:text-white">{{ machine.brand }} {{ machine.model }} — {{ machine.serial_number }}</div>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asistente Técnico</label>
+                    <label for="technical-advisor" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asistente Técnico</label>
                     <select name="technical_advisor"
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor">
                         <option value="">Seleccionar asistente...</option>
                         {% for advisor in advisors %}
                         <option value="{{ advisor.name }}" {% if survey_data.get('technical_advisor') == advisor.name or (not survey_data.get('technical_advisor') and customer.technical_advisor == advisor.name) %}selected{% endif %}>
@@ -200,20 +200,20 @@
                 <div class="p-4 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Velocidad Objetivo (Cajas/Min)</label>
+                            <label for="maquinaria-capacidad" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Velocidad Objetivo (Cajas/Min)</label>
                             <input name="maquinaria_capacidad"
                                 class="w-full bg-slate-50 dark:bg-slate-800 border border-emerald-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
-                                placeholder="45" type="number" value="{{ survey_data.get('maquinaria_capacidad', '45') }}" />
+                                placeholder="45" type="number" value="{{ survey_data.get('maquinaria_capacidad', '45') }}"  id="maquinaria-capacidad"/>
                             <div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 mt-1">
-                                <span class="material-symbols-rounded text-xs">check_circle</span>
+                                <span class="material-symbols-rounded text-xs" aria-hidden="true">check_circle</span>
                                 <span class="text-[10px] font-medium">Valor dentro del rango óptimo (10-100)</span>
                             </div>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">PPM Promedio</label>
+                            <label for="maquinaria-ppm" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">PPM Promedio</label>
                             <input name="maquinaria_ppm"
                                 class="w-full bg-slate-50 dark:bg-slate-800 border border-emerald-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
-                                placeholder="40" type="number" value="{{ survey_data.get('maquinaria_ppm', '40') }}" />
+                                placeholder="40" type="number" value="{{ survey_data.get('maquinaria_ppm', '40') }}"  id="maquinaria-ppm"/>
                             <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-1">Rango estándar: 0 - 200 PPM</p>
                         </div>
                     </div>
@@ -223,9 +223,9 @@
                         {% set impresiones = [impresiones] if impresiones is string else impresiones %}
                         <div class="flex gap-1.5">
                             {% for letra in ['A','B','C','D'] %}
-                            <label class="flex-1 cursor-pointer">
+                            <label for="tipo-impresion{{ loop.index }}" class="flex-1 cursor-pointer">
                                 <input {% if 'Impresión ' ~ letra in impresiones %}checked{% endif %}
-                                    class="peer sr-only" name="tipo_impresion" value="Impresión {{ letra }}" type="checkbox" />
+                                    class="peer sr-only" name="tipo_impresion" value="Impresión {{ letra }}" type="checkbox"  id="tipo-impresion{{ loop.index }}"/>
                                 <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 dark:peer-checked:bg-primary/10 peer-checked:text-primary transition-all text-xs font-bold text-slate-700 dark:text-slate-300">
                                     Impresión {{ letra }}
                                 </div>
@@ -234,12 +234,12 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Tipo de Slotter</label>
-                        <div class="grid grid-cols-2 gap-1.5">
+                        <label id="tipo-de-slotter" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Tipo de Slotter</label>
+                        <div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-labelledby="tipo-de-slotter">
                             {% for slotter in ['Slotter Desplazado','Slotter Centrado'] %}
-                            <label class="cursor-pointer">
+                            <label for="tipo-slotter{{ loop.index }}" class="cursor-pointer">
                                 <input {% if survey_data.get('tipo_slotter')==slotter %}checked{% endif %}
-                                    class="peer sr-only" name="tipo_slotter" value="{{ slotter }}" type="radio" />
+                                    class="peer sr-only" name="tipo_slotter" value="{{ slotter }}" type="radio"  id="tipo-slotter{{ loop.index }}"/>
                                 <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 dark:peer-checked:bg-primary/10 peer-checked:text-primary transition-all text-xs font-bold text-slate-700 dark:text-slate-300">
                                     {{ slotter }}
                                 </div>
@@ -248,11 +248,11 @@
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
+                        <label for="maquinaria-obs" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
                         <textarea name="maquinaria_obs"
                             class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none"
                             placeholder="Notas adicionales sobre la maquinaria..."
-                            rows="3">{{ survey_data.get('maquinaria_obs', '') }}</textarea>
+                            rows="3" id="maquinaria-obs">{{ survey_data.get('maquinaria_obs', '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -271,12 +271,12 @@
                             <span class="size-1.5 bg-emerald-500 rounded-full"></span>
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estación 1: Alimentación (Feeder)</span>
                         </div>
-                        <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                        <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                     </summary>
                     <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Posición del cargador</label>
-                            <select name="e1_toma_cajas" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <label for="e1-toma-cajas" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Posición del cargador</label>
+                            <select name="e1_toma_cajas" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-toma-cajas">
                                 <option value="">Seleccionar...</option>
                                 <option {% if survey_data.get('e1_toma_cajas')=='Horizontal' %}selected{% endif %}>Horizontal</option>
                                 <option {% if survey_data.get('e1_toma_cajas')=='Vertical' %}selected{% endif %}>Vertical</option>
@@ -284,44 +284,44 @@
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Vacío</label>
-                            <select name="e1_tipo_vacio" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                            <label for="e1-tipo-vacio" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Vacío</label>
+                            <select name="e1_tipo_vacio" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-tipo-vacio">
                                 <option value="">Seleccionar...</option>
                                 <option {% if survey_data.get('e1_tipo_vacio')=='Venturi' %}selected{% endif %}>Venturi</option>
                                 <option {% if survey_data.get('e1_tipo_vacio')=='Bomba de vacío' %}selected{% endif %}>Bomba de vacío</option>
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
+                            <label for="e1-cant-ventosas" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
                             <input name="e1_cant_ventosas" value="{{ survey_data.get('e1_cant_ventosas', '4') }}"
                                 class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
-                                type="number" />
+                                type="number"  id="e1-cant-ventosas"/>
                         </div>
                     </div>
                     <div class="px-6 pb-2">
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
                             <div class="flex items-center gap-4">
-                                <label class="flex items-center gap-2 cursor-pointer">
+                                <label for="e1-centerline" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e1_centerline')=='on' %}checked{% endif %}
                                         name="e1_centerline" class="rounded text-primary focus:ring-primary" id="e1-centerline" type="checkbox" />
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere Center Line</span>
                                 </label>
-                                <label class="flex items-center gap-2 cursor-pointer">
+                                <label for="e1-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e1_requires_sqt')=='on' %}checked{% endif %}
                                         name="e1_requires_sqt" class="rounded text-primary focus:ring-primary" id="e1-requires-sqt" type="checkbox" />
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere SQT</span>
                                 </label>
                             </div>
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
-                                <div class="flex gap-2">
+                                <label id="criticidad" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                                <div class="flex gap-2" role="radiogroup" aria-labelledby="criticidad">
                                     {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
-                                    <label class="flex-1 cursor-pointer">
+                                    <label for="criticidad-e1{{ loop.index }}" class="flex-1 cursor-pointer">
                                         <input {% if (survey_data.get('criticidad_e1') or 'baja')==val %}checked{% endif %}
-                                            class="peer sr-only" name="criticidad_e1" value="{{ val }}" type="radio" />
+                                            class="peer sr-only" name="criticidad_e1" value="{{ val }}" type="radio"  id="criticidad-e1{{ loop.index }}"/>
                                         <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                             <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                            <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                            <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                         </div>
                                     </label>
                                     {% endfor %}
@@ -330,7 +330,7 @@
                         </div>
                     </div>
                     <div class="px-4 pb-4 space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <label for="e1_obs" class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                             FODA <span id="e1-obs-required" class="text-rose-500 hidden">*</span>
                         </label>
                         <textarea name="e1_obs" id="e1_obs"
@@ -340,7 +340,7 @@
                     <div id="e1-sqt-values-container" class="hidden px-4 pb-4">
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_nominal" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
                                         Nominal SQT *</label>
                                     <input type="text" name="e1_sqt_nominal" id="e1_sqt_nominal"
                                         value="{{ survey_data.get('e1_sqt_nominal', '') }}"
@@ -348,7 +348,7 @@
                                         placeholder="Nominal...">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_min" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
                                         Mínimo SQT *</label>
                                     <input type="text" name="e1_sqt_min" id="e1_sqt_min"
                                         value="{{ survey_data.get('e1_sqt_min', '') }}"
@@ -356,7 +356,7 @@
                                         placeholder="Mínimo...">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_max" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Valor
                                         Máximo SQT *</label>
                                     <input type="text" name="e1_sqt_max" id="e1_sqt_max"
                                         value="{{ survey_data.get('e1_sqt_max', '') }}"
@@ -373,11 +373,11 @@
                         <span class="size-1.5 bg-emerald-500 rounded-full"></span>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estaci&oacute;n 2: Formado y Escuadrado</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Formado</label>
+                        <label for="e2-tipo-formado" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Formado</label>
                         <select name="e2_tipo_formado" id="e2-tipo-formado" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_tipo_formado')=='Por mandril formador' %}selected{% endif %}>Por mandril formador</option>
@@ -386,7 +386,7 @@
                         </select>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cierre Inferior</label>
+                        <label for="e2-cierre-inferior" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cierre Inferior</label>
                         <select name="e2_cierre_inferior" id="e2-cierre-inferior" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_cierre_inferior')=='Por prensas' %}selected{% endif %}>Por prensas</option>
@@ -395,7 +395,7 @@
                         </select>
                     </div>
                     <div class="space-y-1.5" id="e2-vacio-container">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Vac&iacute;o</label>
+                        <label for="e2-tipo-vacio" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Vac&iacute;o</label>
                         <select name="e2_tipo_vacio" id="e2-tipo-vacio" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_tipo_vacio')=='Venturi' %}selected{% endif %}>Venturi</option>
@@ -403,7 +403,7 @@
                         </select>
                     </div>
                     <div class="space-y-1.5" id="e2-ventosas-container">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
+                        <label for="e2_ventosas" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
                         <input name="e2_ventosas" id="e2_ventosas" value="{{ survey_data.get('e2_ventosas', '2') }}"
                             class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number" />
                     </div>
@@ -411,27 +411,27 @@
                 <div class="px-4 pb-2">
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
                         <div class="flex items-center gap-4">
-                            <label class="flex items-center gap-2 cursor-pointer">
+                            <label for="e2-centerline" class="flex items-center gap-2 cursor-pointer">
                                 <input {% if survey_data.get('e2_centerline')=='on' %}checked{% endif %}
                                     name="e2_centerline" class="rounded text-primary focus:ring-primary" id="e2-centerline" type="checkbox" />
                                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere Center Line</span>
                             </label>
-                            <label class="flex items-center gap-2 cursor-pointer">
+                            <label for="e2-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                                 <input {% if survey_data.get('e2_requires_sqt')=='on' %}checked{% endif %}
                                     name="e2_requires_sqt" class="rounded text-primary focus:ring-primary" id="e2-requires-sqt" type="checkbox" />
                                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere SQT</span>
                             </label>
                         </div>
                         <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
-                            <div class="flex gap-1.5">
+                            <label id="criticidad-2" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                            <div class="flex gap-1.5" role="radiogroup" aria-labelledby="criticidad-2">
                                 {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
-                                <label class="flex-1 cursor-pointer">
+                                <label for="criticidad-e2{{ loop.index }}" class="flex-1 cursor-pointer">
                                     <input {% if (survey_data.get('criticidad_e2') or 'baja')==val %}checked{% endif %}
-                                        class="peer sr-only" name="criticidad_e2" value="{{ val }}" type="radio" />
+                                        class="peer sr-only" name="criticidad_e2" value="{{ val }}" type="radio"  id="criticidad-e2{{ loop.index }}"/>
                                     <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                         <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                        <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                        <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                     </div>
                                 </label>
                                 {% endfor %}
@@ -440,7 +440,7 @@
                     </div>
                 </div>
                 <div class="px-4 pb-4 space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                    <label for="e2_obs" class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                         FODA <span id="e2-obs-required" class="text-rose-500 hidden">*</span>
                     </label>
                     <textarea name="e2_obs" id="e2_obs"
@@ -451,7 +451,7 @@
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                         {% for label, field in [('Valor Nominal','e2_sqt_nominal'),('Valor M&iacute;nimo','e2_sqt_min'),('Valor M&aacute;ximo','e2_sqt_max')] %}
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ label }} SQT *</label>
+                            <label for="{{ field }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ label }} SQT *</label>
                             <input type="text" name="{{ field }}" id="{{ field }}" value="{{ survey_data.get(field, '') }}"
                                 class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                                 placeholder="{{ label.split()[-1] }}...">
@@ -468,11 +468,11 @@
                         <span class="size-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></span>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estaci&oacute;n 3: Sistema de Cierre</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180">expand_more</span>
+                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 space-y-3">
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Cierre</label>
+                        <label for="e3-tipo-cierre" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Cierre</label>
                         <select name="e3_tipo_cierre" id="e3-tipo-cierre" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option value="Hotmelt" {% if survey_data.get('e3_tipo_cierre')=='Hotmelt' %}selected{% endif %}>Hotmelt</option>
@@ -480,15 +480,15 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
-                        <div class="flex gap-1.5">
+                        <label id="criticidad-3" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                        <div class="flex gap-1.5" role="radiogroup" aria-labelledby="criticidad-3">
                             {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
-                            <label class="flex-1 cursor-pointer">
+                            <label for="criticidad-e3{{ loop.index }}" class="flex-1 cursor-pointer">
                                 <input {% if (survey_data.get('criticidad_e3') or 'baja')==val %}checked{% endif %}
-                                    class="peer sr-only" name="criticidad_e3" value="{{ val }}" type="radio" />
+                                    class="peer sr-only" name="criticidad_e3" value="{{ val }}" type="radio"  id="criticidad-e3{{ loop.index }}"/>
                                 <div class="p-2 text-center border-2 border-slate-200 dark:border-slate-700 rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 dark:peer-checked:bg-{{ color }}-500/10 transition-all">
                                     <span class="block text-[10px] font-bold text-{{ color }}-600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
-                                    <span class="material-symbols-rounded text-{{ color }}-500 text-lg">{{ icon }}</span>
+                                    <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                 </div>
                             </label>
                             {% endfor %}
@@ -497,7 +497,7 @@
                 </div>
                 <div class="px-4 pb-2">
                     <div class="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
-                        <label class="flex items-center gap-2 cursor-pointer">
+                        <label for="e3-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                             <input {% if survey_data.get('e3_requires_sqt') == 'on' %}checked{% endif %}
                                 name="e3_requires_sqt" class="rounded text-primary focus:ring-primary" id="e3-requires-sqt" type="checkbox" />
                             <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere SQT</span>
@@ -510,55 +510,55 @@
                         <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Hotmelt</h4>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca Adhesivo</label>
+                                <label for="e3-marca-adhesivo" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca Adhesivo</label>
                                 <input name="e3_marca_adhesivo" value="{{ survey_data.get('e3_marca_adhesivo', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-adhesivo"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Proveedor</label>
+                                <label for="e3-proveedor" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Proveedor</label>
                                 <input name="e3_proveedor" value="{{ survey_data.get('e3_proveedor', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-proveedor"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo Adhesivo</label>
-                                <select name="e3_tipo_adhesivo" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                                <label for="e3-tipo-adhesivo" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo Adhesivo</label>
+                                <select name="e3_tipo_adhesivo" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-adhesivo">
                                     <option {% if survey_data.get('e3_tipo_adhesivo')=='Base EVA' %}selected{% endif %}>Base EVA</option>
                                     <option {% if survey_data.get('e3_tipo_adhesivo')=='Base metaloceno' %}selected{% endif %}>Base metaloceno</option>
                                 </select>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo Colero</label>
-                                <select name="e3_tipo_colero" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                                <label for="e3-tipo-colero" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo Colero</label>
+                                <select name="e3_tipo_colero" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-colero">
                                     <option {% if survey_data.get('e3_tipo_colero')=='Digital' %}selected{% endif %}>Digital</option>
                                     <option {% if survey_data.get('e3_tipo_colero')=='Anal&oacute;gico' %}selected{% endif %}>Anal&oacute;gico</option>
                                 </select>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca Colero</label>
+                                <label for="e3-marca-colero" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca Colero</label>
                                 <input name="e3_marca_colero" value="{{ survey_data.get('e3_marca_colero', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-colero"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Temp. M&iacute;n/M&aacute;x</label>
+                                <label for="e3_temp" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Temp. M&iacute;n/M&aacute;x</label>
                                 <input name="e3_temp" id="e3_temp" value="{{ survey_data.get('e3_temp', '178°C') }}"
                                     class="w-full bg-slate-50 dark:bg-slate-800 border border-amber-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
                                     placeholder="160-180°C" type="text" title="Temperatura del adhesivo en °C. Rango recomendado: 160-180°C" />
                                 <div class="flex items-center gap-1 text-amber-600 dark:text-amber-400 mt-1">
-                                    <span class="material-symbols-rounded text-xs">warning</span>
+                                    <span class="material-symbols-rounded text-xs" aria-hidden="true">warning</span>
                                     <span class="text-[10px] font-medium">Cerca del l&iacute;mite m&aacute;ximo (180°C)</span>
                                 </div>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Gramos por Caja</label>
+                                <label for="e3-gramos-caja" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Gramos por Caja</label>
                                 <input name="e3_gramos_caja" value="{{ survey_data.get('e3_gramos_caja', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number"  id="e3-gramos-caja"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Presi&oacute;n Aire (Bar)</label>
+                                <label for="e3-presion-aire" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Presi&oacute;n Aire (Bar)</label>
                                 <input name="e3_presion_aire" value="{{ survey_data.get('e3_presion_aire', '8.5') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-rose-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-rose-500/10 transition-all font-bold" step="0.1" type="number" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-rose-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-rose-500/10 transition-all font-bold" step="0.1" type="number"  id="e3-presion-aire"/>
                                 <div class="flex items-center gap-1 text-rose-600 dark:text-rose-400 mt-1">
-                                    <span class="material-symbols-rounded text-xs">error</span>
+                                    <span class="material-symbols-rounded text-xs" aria-hidden="true">error</span>
                                     <span class="text-[10px] font-medium">Presi&oacute;n excede el rango (M&aacute;x 7.0 bar)</span>
                                 </div>
                             </div>
@@ -571,17 +571,17 @@
                         <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Embalaje Secundario (Cinta)</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Cinta</label>
+                                <label for="e3-tipo-cinta" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Cinta</label>
                                 <input name="e3_tipo_cinta" value="{{ survey_data.get('e3_tipo_cinta', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-tipo-cinta"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca de Cinta</label>
+                                <label for="e3-marca-cinta" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca de Cinta</label>
                                 <input name="e3_marca_cinta" value="{{ survey_data.get('e3_marca_cinta', '') }}"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text" />
+                                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-cinta"/>
                             </div>
                             <div class="flex items-end pb-1">
-                                <label class="flex items-center gap-2 cursor-pointer">
+                                <label for="cinta-cl" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e3_cinta_cl')=='on' %}checked{% endif %}
                                         name="e3_cinta_cl" class="rounded text-primary focus:ring-primary" id="cinta-cl" type="checkbox" />
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Requiere Center Line</span>
@@ -604,7 +604,7 @@
                     </div>
                 </div>
                 <div class="px-4 pb-4 space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                    <label for="e3_obs" class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                         FODA <span id="e3-obs-required" class="text-rose-500 hidden">*</span>
                     </label>
                     <textarea name="e3_obs" id="e3_obs"
@@ -623,7 +623,7 @@
                     </div>
                     <button type="button" id="add-team-row"
                         class="flex items-center gap-1.5 text-[10px] font-black text-primary uppercase tracking-widest hover:opacity-80 transition-all">
-                        <span class="material-symbols-rounded text-[16px]">add_circle</span>
+                        <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span>
                         A&ntilde;adir Integrante
                     </button>
                 </div>
@@ -633,10 +633,10 @@
                     <table class="w-full text-left border-collapse" id="teamTable">
                         <thead>
                             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Nombre Completo</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Cargo / Funci&oacute;n</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Observaciones</th>
-                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Acciones</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Nombre Completo</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cargo / Funci&oacute;n</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Observaciones</th>
+                                <th class="px-4 py-2 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
@@ -653,7 +653,7 @@
                                     <td class="px-4 py-2"><input name="team_role" value="{{ team_roles[i] if i < team_roles|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" value="{{ team_obs[i] if i < team_obs|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><span class="material-symbols-rounded text-[18px]">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -663,7 +663,7 @@
                                     <td class="px-4 py-2"><input name="team_role" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors"><span class="material-symbols-rounded text-[18px]">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -672,9 +672,9 @@
                 </div>
             </div>
             <div class="mt-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones del equipo de producci&oacute;n</label>
+                <label for="relev-obs-equipo" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones del equipo de producci&oacute;n</label>
                 <textarea name="relev_obs_equipo" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
-                    placeholder="Observaciones del equipo de relevamiento...">{{ survey_data.get('relev_obs_equipo', '') }}</textarea>
+                    placeholder="Observaciones del equipo de relevamiento..." id="relev-obs-equipo">{{ survey_data.get('relev_obs_equipo', '') }}</textarea>
             </div>
         </section>
 
@@ -684,9 +684,9 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Conclusiones generales del relevamiento t&eacute;cnico.</p>
             </div>
             <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones Generales</label>
+                <label for="relev-obs-generales" class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones Generales</label>
                 <textarea name="relev_obs_generales" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
-                    placeholder="Conclusiones finales...">{{ survey_data.get('relev_obs_generales', '') }}</textarea>
+                    placeholder="Conclusiones finales..." id="relev-obs-generales">{{ survey_data.get('relev_obs_generales', '') }}</textarea>
             </div>
         </section>
 
@@ -1198,7 +1198,7 @@
                     addBtn.type = "button";
                     addBtn.className = "add-to-lib-btn text-amber-500 hover:text-emerald-600 transition-colors";
                     addBtn.title = "Cargar en biblioteca";
-                    addBtn.innerHTML = '<span class="material-symbols-rounded text-sm">library_add</span>';
+                    addBtn.innerHTML = '<span class="material-symbols-rounded text-sm" aria-hidden="true">library_add</span>';
                     addBtn.onclick = () => saveToLibrary(row);
                     actionContainer.prepend(addBtn);
                 }
