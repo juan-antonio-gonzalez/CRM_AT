@@ -93,91 +93,26 @@
 .ska-firma-input { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; width: 100%; padding: 6px 0; font-size: 0.85rem; }
 
 @media print {
-    /* ── Página ─────────────────────────────────────────────────────────────
-       Sin @page el navegador usa sus márgenes por defecto y no numera las
-       hojas. Al agregarlo, el contenido largo se reparte en varias hojas. */
-    @page { size: A4 portrait; margin: 12mm 12mm 16mm 12mm; }
-
-    html, body {
-        height: auto !important; min-height: 0 !important;
-        overflow: visible !important; background: #fff !important;
-    }
-    body > div, .ska-body, main {
-        height: auto !important; min-height: 0 !important;
-        overflow: visible !important; display: block !important; background: #fff !important;
-    }
-    .ska-container {
-        box-shadow: none !important; width: 100% !important; max-width: 100% !important;
-        margin: 0 !important; padding: 0 !important; min-height: 0 !important;
-        border-radius: 0 !important;
-    }
-    .no-print, .ska-actions, .ska-btn, .ska-editor-toolbar, .ska-btn-del { display: none !important; }
-
-    /* ── CAMPOS COMPLETOS ───────────────────────────────────────────────────
-       La causa principal de que se cortara el texto: los textarea se crean con
-       rows="1" y overflow:hidden, así que el navegador los imprime con una sola
-       línea de alto y todo lo demás se pierde. En impresión se neutraliza el
-       recorte y la altura fija. */
-    textarea, .ska-textarea, input.ska-input, .ska-select {
-        overflow: visible !important;
-        overflow-y: visible !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        resize: none !important;
-        white-space: pre-wrap !important;
-        field-sizing: content;
-    }
+    /* Las reglas comunes a todos los informes (campos completos, ajuste de
+       texto, saltos de hoja, @page) viven en static/css/style.css. Acá queda
+       sólo lo propio de este formulario: la apariencia del papel y las reglas
+       de sus componentes (anexos, slots de foto, objetivos). */
     .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group {
         border: none !important; padding: 2px 0 !important;
         background: transparent !important; box-shadow: none !important;
     }
-    .ska-rich-text, .ska-editor-content {
-        min-height: 0 !important; height: auto !important;
-        overflow: visible !important; max-height: none !important;
-    }
     .ska-editor-wrapper, .ska-editor-content {
-        overflow: visible !important; height: auto !important;
-        border: none !important;
+        overflow: visible !important; height: auto !important; border: none !important;
     }
-    /* El contenido del editor enriquecido sale como HTML: se evita que una
-       palabra larga (una URL, un código) desborde su celda. */
-    .ska-editor-content * { max-width: 100% !important; overflow-wrap: anywhere; }
-
-    /* Se respeta el texto tal como se cargó: los saltos de línea se conservan y
-       las palabras se parten sólo si no entran de ninguna manera. */
-    .ska-body, .ska-body * { overflow-wrap: break-word; }
-
-    /* ── QUE NADA SE CORTE NI SE ROMPA MAL ───────────────────────────────── */
-    .ska-section-title { border-bottom: 1px solid #000 !important; break-after: avoid-page; page-break-after: avoid; }
-    .ska-card { break-inside: auto; page-break-inside: auto; }
-    .ska-table { break-inside: auto; page-break-inside: auto; }
-    /* El encabezado de una tabla debe repetirse si la tabla sigue en otra hoja. */
-    .ska-table thead { display: table-header-group; }
-    .ska-table tfoot { display: table-footer-group; }
-    .ska-table tr, .ska-table td, .ska-table th {
-        break-inside: avoid; page-break-inside: avoid;
-        overflow-wrap: break-word; word-break: normal; hyphens: none;
-    }
-    /* Los bloques de texto largos SÍ pueden repartirse entre hojas; el título
-       de arriba es lo que no debe quedar solo al final de una. */
-    .ska-part-row { break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #eee; }
-    .ska-obj-item { break-inside: avoid; page-break-inside: avoid; }
-    .anexo-block { break-inside: auto; page-break-inside: auto; }
+    .ska-part-row { border-bottom: 1px solid #eee; }
     .ska-firma-input { border: none !important; border-bottom: 1px solid #000 !important; width: 100%; }
 
-    /* ── IMÁGENES Y ANEXOS ────────────────────────────────────────────────── */
-    .ska-img-slot { border: 1px solid #ccc !important; break-inside: avoid; page-break-inside: avoid; }
-    .ska-img-slot input { display: none !important; }
-    img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
-
-    /* Un anexo sin texto y sin fotos no debe generar una hoja en blanco: sale
-       con su título y cuatro casillas vacías, que es basura impresa. */
+    /* Un anexo sin texto y sin fotos no debe generar una hoja en blanco. */
     .anexo-block[data-empty="true"] { display: none !important; }
-    .ska-rich-text:empty::before { content: "" !important; }
 
-    /* Las cuatro casillas de "EVIDENCIA FOTOGRÁFICA" sólo tienen sentido si hay
-       fotos. Sin fotos ocupaban media hoja con el ícono 📷 de marcador. */
+    /* Las casillas de "EVIDENCIA FOTOGRÁFICA" sólo tienen sentido si hay fotos:
+       sin fotos ocupaban media hoja con el ícono 📷 de marcador. */
+    .ska-img-slot { border: 1px solid #ccc !important; }
     .ska-img-slot:not(.has-img) { display: none !important; }
     .ska-img-slot.has-img { border: none !important; }
     .ska-img-upload-area { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }
@@ -189,12 +124,6 @@
         height: auto !important;
         object-fit: contain !important;
     }
-    /* El texto del editor enriquecido puede traer tablas propias: sus filas
-       tampoco deben partirse. */
-    .ska-editor-content table { width: 100% !important; border-collapse: collapse !important; }
-    .ska-editor-content tr, .ska-editor-content td, .ska-editor-content th {
-        break-inside: avoid; page-break-inside: avoid;
-    }
 
     /* Los checkbox de objetivos deben seguir viéndose como casillas. */
     .ska-obj-item input[type="checkbox"] {
@@ -203,18 +132,8 @@
         border: none !important; background: transparent !important;
     }
 
-    .ska-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .ska-header { break-after: avoid; page-break-after: avoid; }
-    .ska-part-group { break-inside: avoid; page-break-inside: avoid; }
-}
-
-/* ── Sangría de hojas adicionales ──────────────────────────────────────────
-   Cuando el texto de un campo excede la hoja, la continuación arranca en la
-   hoja siguiente sin repetir el encabezado, así que se agrega un margen extra
-   para que no quede pegado al borde. */
-@media print {
-    .ska-textarea, .ska-rich-text, .ska-editor-content { orphans: 2; widows: 2; }
-    .ska-card > .ska-section-title + * { margin-top: 4px; }
+    .ska-table th { background-color: #eee !important; }
+    .ska-section-title { border-bottom: 1px solid #000 !important; }
 }
 
 </style>

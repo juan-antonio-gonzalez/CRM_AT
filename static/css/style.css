@@ -193,7 +193,110 @@ textarea:focus-visible {
 
 @media print {
     @page {
-        margin: 1.5cm;
+        size: A4 portrait;
+        margin: 12mm 12mm 16mm 12mm;
+    }
+
+    /* ── Campos de texto completos ────────────────────────────────────────────
+       Los formularios de informe (visita técnica, minuta) crean sus textarea con
+       rows="1" y overflow:hidden, y el JS les fija la altura para que entren en
+       pantalla. Al imprimir, el navegador respeta esa altura y recorta todo el
+       texto que no entra en una línea.
+
+       Estas reglas viven acá, y no en cada plantilla, porque son las mismas para
+       todos los informes: tenerlas duplicadas hacía que un arreglo se aplicara a
+       un formulario y no al otro, que es exactamente lo que pasó con la minuta. */
+    textarea,
+    input.ska-input,
+    select.ska-select,
+    .ska-textarea,
+    .ska-rich-text,
+    .ska-input,
+    .ska-select {
+        overflow: visible !important;
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        resize: none !important;
+        white-space: pre-wrap !important;
+        field-sizing: content;
+    }
+
+    /* El texto se ajusta palabra por palabra. Una palabra se parte sólo si no
+       entra de ninguna manera (una URL, un código); nunca una oración. */
+    .ska-body,
+    .ska-body *,
+    .ska-editor-content * {
+        overflow-wrap: break-word;
+        word-break: normal;
+        hyphens: none;
+    }
+
+    /* El marcador del editor enriquecido no debe imprimirse. */
+    .ska-rich-text:empty::before {
+        content: "" !important;
+    }
+
+    /* ── Saltos de hoja ──────────────────────────────────────────────────────
+       El encabezado de una tabla se repite si la tabla sigue en otra hoja, y las
+       filas no se parten. Los títulos no quedan solos al pie. */
+    .ska-table thead {
+        display: table-header-group;
+    }
+
+    .ska-table tfoot {
+        display: table-footer-group;
+    }
+
+    .ska-table tr,
+    .ska-table td,
+    .ska-table th,
+    .ska-editor-content tr,
+    .ska-editor-content td,
+    .ska-editor-content th,
+    .ska-part-row,
+    .ska-agenda-row,
+    .ska-obj-item,
+    .ska-img-slot {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .ska-section-title,
+    .ska-agenda-header,
+    .ska-header {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    .ska-table td,
+    .ska-rich-text,
+    .ska-textarea {
+        orphans: 2;
+        widows: 2;
+    }
+
+    /* Las tablas y las tarjetas SÍ pueden repartirse entre hojas: forzar que no
+       se partan es lo que empujaba bloques enteros a la hoja siguiente dejando
+       media página en blanco. */
+    .ska-table,
+    .ska-card,
+    .anexo-block {
+        break-inside: auto;
+        page-break-inside: auto;
+    }
+
+    /* Una foto no debe partirse ni desbordar la hoja. */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        break-inside: avoid;
+    }
+
+    .ska-table th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     /* The app shell pins height/overflow, which truncates printed pages. */

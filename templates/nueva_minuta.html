@@ -1,15 +1,17 @@
 {% extends "layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block header_extra %}
-<div class="hidden lg:flex items-center gap-4 ml-4">
+{# Sin el `hidden lg:flex`, el título desaparecía por debajo de 1024px y el
+   usuario no sabía en qué pantalla estaba. #}
+<div class="flex items-center gap-4 ml-4 min-w-0">
     <a href="/minutas"
-        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
+        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all shrink-0"
         title="Volver al listado" aria-label="Volver al listado">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
     </a>
-    <div class="flex flex-col">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight">{{ title }}</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Complete los datos del acta de reunión.</p>
+    <div class="flex flex-col min-w-0">
+        <h2 class="text-sm sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight truncate">{{ title }}</h2>
+        <p class="hidden lg:block text-xs text-slate-500 dark:text-slate-400 font-medium">Complete los datos del acta de reunión.</p>
     </div>
 </div>
 {% endblock %}
@@ -54,25 +56,22 @@
 .ska-actions { position: sticky; bottom: 0; background: rgba(255,255,255,0.98); padding: 12px 15px; margin-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(5px); z-index: 10; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
 .ska-firma-input { border: none; border-bottom: 1px solid #000; border-radius: 0; background: transparent; width: 100%; padding: 6px 0; font-size: 0.85rem; }
 @media print {
-    html, body { height: auto !important; overflow: visible !important; background: white !important; }
-    body > div { height: auto !important; overflow: visible !important; display: block !important; }
-    main { overflow: visible !important; height: auto !important; display: block !important; background: white !important; }
-    .ska-body { background: white; padding: 0; }
-    .ska-container { box-shadow: none; padding: 15px; width: 100%; max-width: 100%; margin: 0; min-height: auto; }
-    .no-print { display: none !important; }
-    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group { border: none !important; padding: 2px 0; background: transparent !important; box-shadow: none !important; }
-    .ska-textarea, .ska-rich-text, textarea.ska-textarea { overflow: visible !important; height: auto !important; min-height: auto !important; max-height: none !important; resize: none !important; line-height: 1.3 !important; }
-    .ska-table td textarea { height: auto !important; min-height: auto !important; }
-    .ska-section-title { border-bottom: 1px solid #000; }
+    /* Las reglas comunes a todos los informes (campos completos, ajuste de
+       texto, saltos de hoja, @page) viven en static/css/style.css. Acá queda
+       sólo lo propio de la minuta. */
+    .ska-input, .ska-select, .ska-textarea, .ska-rich-text, .ska-part-group {
+        border: none !important; padding: 2px 0 !important;
+        background: transparent !important; box-shadow: none !important;
+    }
+    .ska-part-row, .ska-agenda-row {
+        border-bottom: 1px solid #eee;
+    }
+    .ska-agenda-header { border-bottom: 2px solid #000 !important; }
+    .ska-firma-input { border: none !important; border-bottom: 1px solid #000 !important; width: 100%; }
     .ska-table th { background-color: #eee !important; }
-    .ska-actions, .ska-btn { display: none !important; }
-    .ska-table { page-break-inside: auto; }
-    .ska-card { page-break-inside: auto; }
-    .ska-table td { page-break-inside: avoid; }
-    .ska-part-row, .ska-agenda-row, .ska-agenda-header { border-bottom: 1px solid #eee; padding-bottom: 3px; margin-bottom: 3px; }
-    .ska-agenda-header { border-bottom: 2px solid #000; }
-    .ska-table tbody tr { page-break-inside: avoid; }
+    .ska-section-title { border-bottom: 1px solid #000 !important; }
 }
+
 </style>
 
 <div class="ska-body">
@@ -316,11 +315,47 @@ function escHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 
+// Devuelve el valor de un control, sea input, textarea o select.
+// innerText respeta los saltos de línea; .value los conserva en un textarea.
+function valorDe(el) {
+    if (!el) return '';
+    return el.value !== undefined ? el.value : '';
+}
+
 function autoResize(el) {
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
 }
+
+// ── Preparación para imprimir ───────────────────────────────────────────────
+// Los textarea se redimensionan por JS para que entren en pantalla, y guardan la
+// altura calculada en un estilo en línea. Al imprimir, esa altura fija recorta el
+// texto que no entra: el navegador imprime una sola línea y el resto se pierde.
+// Acá se libera la altura antes de imprimir y se restaura después, así el acta
+// sale completa. `field-sizing: content` en el CSS hace lo mismo en navegadores
+// que lo soportan; esto cubre al resto.
+(function () {
+    var previas = [];
+
+    window.addEventListener('beforeprint', function () {
+        previas = [];
+        document.querySelectorAll('textarea').forEach(function (el) {
+            previas.push([el, el.style.height, el.rows]);
+            el.style.height = 'auto';
+            // rows=1 es lo que hace que el navegador reserve una sola línea.
+            el.rows = Math.max(1, (el.value || '').split('\n').length + 1);
+        });
+    });
+
+    window.addEventListener('afterprint', function () {
+        previas.forEach(function (par) {
+            par[0].style.height = par[1];
+            par[0].rows = par[2];
+        });
+        previas = [];
+    });
+})();
 
 function serializeForm() {
     var presentes = [];
@@ -333,21 +368,33 @@ function serializeForm() {
         var inp = r.querySelector('input');
         ausentes.push({ nombre: inp ? inp.value : '' });
     });
+    // Cada fila tiene columnas de distinto tipo (textarea para los textos largos,
+    // input para los cortos), así que se leen por posición real y no buscando
+    // sólo 'input': en la agenda, el tema y el responsable son textarea y los
+    // buscaba como input, por lo que el orden del día se guardaba vacío.
     var agenda = [];
     document.querySelectorAll('#agenda-list .ska-agenda-row').forEach(function(r) {
-        var inputs = r.querySelectorAll('input');
-        agenda.push({ tema: inputs[0].value, responsable: inputs[1].value, tiempo: inputs[2].value });
+        var campos = r.querySelectorAll('textarea, input');
+        agenda.push({
+            tema: valorDe(campos[0]),
+            responsable: valorDe(campos[1]),
+            tiempo: valorDe(campos[2])
+        });
     });
     var acuerdos = [];
     document.querySelectorAll('#acuerdos-tb tr').forEach(function(tr) {
-        var textareas = tr.querySelectorAll('textarea');
-        acuerdos.push({ acuerdo: textareas[0].value, observaciones: textareas[1].value });
+        var campos = tr.querySelectorAll('textarea, input');
+        acuerdos.push({ acuerdo: valorDe(campos[0]), observaciones: valorDe(campos[1]) });
     });
     var tareas = [];
     document.querySelectorAll('#tareas-tb tr').forEach(function(tr) {
-        var textarea = tr.querySelector('textarea');
-        var inputs = tr.querySelectorAll('input, select');
-        tareas.push({ tarea: textarea.value, responsable: inputs[0].value, plazo: inputs[1].value, estado: inputs[2].value });
+        var campos = tr.querySelectorAll('textarea, input, select');
+        tareas.push({
+            tarea: valorDe(campos[0]),
+            responsable: valorDe(campos[1]),
+            plazo: valorDe(campos[2]),
+            estado: valorDe(campos[3])
+        });
     });
 
     return {
