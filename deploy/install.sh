@@ -195,12 +195,23 @@ chmod 750 "$APP_DIR" "${APP_DIR}/static/uploads"
 chown root:"${APP_USER}" "$ENV_FILE"
 chmod 640 "$ENV_FILE"
 
-# Nginx runs as www-data and must be able to traverse APP_DIR (mode 750, owned by
-# APP_USER, otherwise every static file returns 403) and read the static tree.
+# Permisos del código. Un `rsync` desde otra máquina puede dejar los archivos en
+# modo 600 propiedad del usuario que copió, y entonces el servicio (que corre
+# como APP_USER) no puede leerlos: falla con
+# "python: can't open file 'run.py': [Errno 13] Permission denied".
+# Se normalizan siempre.
+chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+find "$APP_DIR" -type f -name '*.py' -exec chmod 640 {} + 2>/dev/null || true
+find "$APP_DIR" -type f \( -name '*.sh' -o -name '*.ini' \) -exec chmod 640 {} + 2>/dev/null || true
+find "$APP_DIR" -type d -exec chmod 750 {} + 2>/dev/null || true
+chmod 750 "$APP_DIR"
+
+# Nginx corre como www-data y necesita atravesar APP_DIR y leer los estáticos.
 if id -u www-data >/dev/null 2>&1; then
   usermod -aG "$APP_USER" www-data || warn "No se pudo agregar www-data al grupo ${APP_USER}"
 fi
 find "$APP_DIR" -type d -exec chmod o+x {} + 2>/dev/null || true
+chmod 755 "$APP_DIR/static" 2>/dev/null || true
 find "$APP_DIR/static" -type d -exec chmod o+rx {} + 2>/dev/null || true
 find "$APP_DIR/static" -type f -exec chmod o+r {} + 2>/dev/null || true
 

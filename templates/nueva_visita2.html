@@ -248,6 +248,60 @@
         </div>
     </form>
 
+    {# Tareas del plan de acción que genera esta visita.
+       Se muestran para que el vínculo visita <-> seguimiento sea visible: antes
+       sólo se veían yendo a /seguimiento-plan, y al eliminar la visita quedaban
+       huérfanas sin que el usuario pudiera notarlo. #}
+    {% if tareas_vinculadas %}
+    <div class="no-print" style="margin-top:24px;">
+        <div class="ska-card">
+            <div class="ska-section-title">
+                <span>Tareas del plan de acción generadas por esta visita</span>
+                <span style="font-weight:600;font-size:12px;color:#6b7280;">
+                    {{ tareas_vinculadas|length }} tarea{{ 's' if tareas_vinculadas|length != 1 else '' }}
+                </span>
+            </div>
+            <table class="ska-table">
+                <thead>
+                    <tr>
+                        <th scope="col">ET</th>
+                        <th scope="col">Acción</th>
+                        <th scope="col">Responsable</th>
+                        <th scope="col">Plazo</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tareas_vinculadas %}
+                    <tr>
+                        <td>{{ t.et_number or '—' }}</td>
+                        <td>{{ t.task }}</td>
+                        <td>{{ t.responsible or '—' }}</td>
+                        <td>{{ t.due_date or '—' }}</td>
+                        <td>
+                            {% if t.status == 'Finalizado' %}
+                            <span style="color:#059669;font-weight:700;">{{ t.status }}</span>
+                            {% elif t.status == 'Cancelado' %}
+                            <span style="color:#dc2626;font-weight:700;">{{ t.status }}</span>
+                            {% elif t.status == 'En curso' %}
+                            <span style="color:#1a57db;font-weight:700;">{{ t.status }}</span>
+                            {% else %}
+                            <span style="color:#d97706;font-weight:700;">{{ t.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p style="margin:10px 0 0;font-size:12px;color:#6b7280;">
+                El avance de estas tareas se edita en
+                <a href="/seguimiento-plan" style="color:#1a57db;font-weight:700;">Seguimiento Plan de Acción</a>.
+                Al guardar esta visita se actualizan sus datos, pero se conserva el avance registrado.
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Save confirmation modal -->
     <div id="confirm-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-container-title">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>

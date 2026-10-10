@@ -52,7 +52,7 @@ def list_trash(db: Session, entity_type: Optional[str] = None):
 
 
 # ── Re-insertion per entity type ────────────────────────────────────────────
-def _restore_product(db: Session, data: dict):
+def _restore_product(db: Session, data: dict, new_id: int = None):
     product = models.Product(
         name=data.get("name"),
         et_number=data.get("et_number"),
@@ -68,7 +68,7 @@ def _restore_product(db: Session, data: dict):
     return product
 
 
-def _restore_machine(db: Session, data: dict):
+def _restore_machine(db: Session, data: dict, new_id: int = None):
     serial = data.get("serial_number")
     if serial and db.query(models.Machine).filter(models.Machine.serial_number == serial).first():
         raise ValueError(f"Ya existe una máquina con el número de serie {serial}.")
@@ -88,7 +88,7 @@ def _restore_machine(db: Session, data: dict):
     return machine
 
 
-def _restore_assignment(db: Session, data: dict):
+def _restore_assignment(db: Session, data: dict, new_id: int = None):
     assignment = models.ATAssignment(
         customer_name=data.get("customer_name"),
         technical_advisor=data.get("technical_advisor"),
@@ -105,7 +105,7 @@ def _restore_assignment(db: Session, data: dict):
     return assignment
 
 
-def _restore_infrastructure(db: Session, data: dict):
+def _restore_infrastructure(db: Session, data: dict, new_id: int = None):
     survey = models.InfrastructureSurvey(
         customer_id=data.get("customer_id"),
         plant=data.get("plant"),
@@ -121,7 +121,7 @@ def _restore_infrastructure(db: Session, data: dict):
     return survey
 
 
-def _restore_survey2(db: Session, data: dict):
+def _restore_survey2(db: Session, data: dict, new_id: int = None):
     survey = models.TechnicalSurveyV2(
         customer_id=data.get("customer_id"),
         machine_id=data.get("machine_id"),
@@ -134,7 +134,14 @@ def _restore_survey2(db: Session, data: dict):
     return survey
 
 
-def _restore_visit2(db: Session, data: dict):
+def _restore_visit2(db: Session, data: dict, new_id: int = None):
+    """Reinserta la visita y vuelve a vincular sus tareas del plan de acción.
+
+    La restauración crea una fila con un id NUEVO, así que las tareas del plan
+    de acción seguían apuntando al id viejo y el vínculo visita <-> seguimiento
+    quedaba roto (y las tareas, invisibles en /seguimiento-plan porque el borrado
+    de la visita las había desactivado).
+    """
     visit = models.TechnicalVisit2(
         fecha=data.get("fecha"),
         status=data.get("status"),
@@ -142,10 +149,29 @@ def _restore_visit2(db: Session, data: dict):
         is_active=True,
     )
     db.add(visit)
+    db.flush()  # obtener el id nuevo
+
+    tareas_ids = data.get("tareas_ids") or []
+    consulta = db.query(models.ActionPlanTracking)
+    if tareas_ids:
+        filas = consulta.filter(models.ActionPlanTracking.id.in_(tareas_ids)).all()
+    else:
+        # Registros borrados antes de que se guardara la lista de tareas: se
+        # recuperan por el vínculo viejo.
+        filas = consulta.filter(
+            models.ActionPlanTracking.source_visit_id == data.get("id")
+        ).all()
+
+    for tarea in filas:
+        tarea.source_visit_id = visit.id
+        tarea.is_active = True
+        tarea.inactivation_reason = None
+        tarea.inactivated_at = None
+
     return visit
 
 
-def _restore_meeting_minutes(db: Session, data: dict):
+def _restore_meeting_minutes(db: Session, data: dict, new_id: int = None):
     minute = models.MeetingMinutes(
         fecha=data.get("fecha"),
         status=data.get("status"),
@@ -194,7 +220,9 @@ def restore_from_trash(db: Session, trash_id: int, restored_by_id: int):
         )
 
     try:
-        restorer(db, item.data or {})
+        restaurado = restorer(db, item.data or {})
+        if restaurado is not None:
+            db.flush()
         item.restored_at = _utcnow_naive()
         item.restored_by = restored_by_id
         db.commit()

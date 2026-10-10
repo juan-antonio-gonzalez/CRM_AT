@@ -66,10 +66,40 @@
 
     <!-- Main Content Area: Table -->
     <div class="flex-1 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col overflow-hidden relative">
-        <div class="flex px-6 py-5 border-b border-slate-200 dark:border-slate-800 justify-between items-center bg-white dark:bg-slate-900 z-10">
+        <div class="flex flex-wrap px-6 py-5 border-b border-slate-200 dark:border-slate-800 justify-between items-center gap-3 bg-white dark:bg-slate-900 z-10">
             <div>
                 <h3 class="text-lg font-black text-slate-900 dark:text-white">Listado de Tareas</h3>
                 <p class="text-sm text-slate-500 dark:text-slate-400">Seguimiento de planes de acción generados a partir de visitas técnicas.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <form method="GET" action="/seguimiento-plan" class="flex flex-wrap items-center gap-2">
+                    <label for="s-q" class="sr-only">Buscar tarea</label>
+                    <input id="s-q" name="q" type="search" value="{{ q }}"
+                        placeholder="Buscar tarea, cliente, responsable..."
+                        class="w-56 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    <label for="s-estado" class="sr-only">Filtrar por estado</label>
+                    <select id="s-estado" name="estado"
+                        class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                        <option value="">Todos los estados</option>
+                        {% for e in ['Pendiente', 'En curso', 'Finalizado', 'Cancelado'] %}
+                        <option value="{{ e }}" {% if estado == e %}selected{% endif %}>{{ e }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit"
+                        class="p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-500 hover:text-primary transition-all"
+                        aria-label="Filtrar" title="Filtrar">
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">filter_alt</span>
+                    </button>
+                    {% if q or estado %}
+                    <a href="/seguimiento-plan"
+                        class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-[10px] uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Limpiar</a>
+                    {% endif %}
+                </form>
+                <button type="button" id="btn-nueva-tarea"
+                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-1.5">
+                    <span class="material-symbols-rounded text-base" aria-hidden="true">add</span>
+                    Nueva tarea
+                </button>
             </div>
         </div>
 
@@ -190,6 +220,83 @@
 </div>
 
 <!-- Edit Tracking Modal -->
+<div id="newTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in duration-300 p-4" role="dialog" aria-modal="true" aria-labelledby="newTrackingModal-title">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-zoom-in">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-rounded" aria-hidden="true">playlist_add</span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white" id="newTrackingModal-title">Nueva tarea de seguimiento</h3>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400">Para acciones que no nacen de una visita técnica</p>
+                </div>
+            </div>
+            <button type="button" id="btn-cerrar-nueva" class="p-2 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
+            </button>
+        </div>
+        <form method="POST" action="/seguimiento-plan/nueva" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <div>
+                <label for="new-task" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Tarea <span class="text-red-500">*</span></label>
+                <textarea id="new-task" name="task" required rows="2"
+                    placeholder="Qué hay que hacer..."
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white resize-none"></textarea>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="new-customer" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Cliente</label>
+                    <select id="new-customer" name="customer_name"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white">
+                        <option value="">Sin cliente</option>
+                        {% for cli in clientes %}
+                        <option value="{{ cli.name }}">{{ cli.name }}{% if cli.plant %} — {{ cli.plant }}{% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="new-et" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">N° ET</label>
+                    <input type="text" id="new-et" name="et_number"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white">
+                </div>
+                <div>
+                    <label for="new-responsible" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Responsable</label>
+                    <input type="text" id="new-responsible" name="responsible"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white">
+                </div>
+                <div>
+                    <label for="new-due" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Plazo</label>
+                    <input type="text" id="new-due" name="due_date" placeholder="DD/MM/YYYY"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white">
+                </div>
+            </div>
+            <div>
+                <span class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Estado inicial</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Estado inicial">
+                    {% for valor, texto in [('Pendiente', 'Pendiente'), ('En curso', 'En curso'), ('Finalizado', 'Finalizado'), ('Cancelado', 'Cancelado')] %}
+                    <label class="relative cursor-pointer">
+                        <input type="radio" name="status" value="{{ valor }}" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" {% if loop.first %}checked{% endif %} />
+                        <div class="px-3 py-2.5 text-center rounded-xl border border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <label for="new-observations" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Observaciones</label>
+                <textarea id="new-observations" name="observations" rows="2"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white resize-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" id="btn-cancelar-nueva"
+                    class="px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Cancelar</button>
+                <button type="submit"
+                    class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-primary/20">Crear tarea</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="editTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in duration-300 p-4" role="dialog" aria-modal="true" aria-labelledby="editTrackingModal-title">
     <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col max-h-[90vh]">
         <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
@@ -282,6 +389,37 @@
 
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
+    // ── Modal de creación de tarea ──
+    // Este módulo sólo permitía editar y eliminar: las tareas nacían únicamente
+    // de la tabla 9 de una visita, así que no había forma de registrar una acción
+    // surgida de una llamada o una reunión.
+    (function () {
+        var modal = document.getElementById('newTrackingModal');
+        var abrir = document.getElementById('btn-nueva-tarea');
+        var cerrar = document.getElementById('btn-cerrar-nueva');
+        var cancelar = document.getElementById('btn-cancelar-nueva');
+        if (!modal || !abrir) return;
+
+        function mostrar() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            var primero = document.getElementById('new-task');
+            if (primero) primero.focus();
+        }
+        function ocultar() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        abrir.addEventListener('click', mostrar);
+        if (cerrar) cerrar.addEventListener('click', ocultar);
+        if (cancelar) cancelar.addEventListener('click', ocultar);
+        modal.addEventListener('click', function (e) { if (e.target === modal) ocultar(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) ocultar();
+        });
+    })();
+
     function openEditModal(id, task, responsible, dueDate, status, obs, et) {
         document.getElementById('editTrackingForm').action = `/seguimiento-plan/${id}/editar`;
         document.getElementById('edit-task').value = task;
