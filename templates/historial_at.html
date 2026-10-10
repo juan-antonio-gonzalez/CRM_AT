@@ -93,6 +93,16 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1 w-40">
+                <label for="filtro-estado" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                <select id="filtro-estado" name="estado"
+                    class="form-select w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary">
+                    <option value="">Todos</option>
+                    {% for valor, texto in estados %}
+                    <option value="{{ valor }}" {% if filters.estado == valor %}selected{% endif %}>{{ texto }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col gap-1 w-40">
                 <label for="filtro-desde" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Desde</label>
                 <input id="filtro-desde" type="date" name="desde" value="{{ filters.desde or '' }}"
                     class="form-input w-full h-[34px] bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:ring-primary focus:border-primary">
@@ -107,6 +117,11 @@
                     class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1" aria-label="Buscar">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">search</span>
                 </button>
+                <a href="/historial-at/exportar-excel?{{ qs }}"
+                    class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
+                    aria-label="Exportar a Excel" title="Exportar a Excel">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">download</span>
+                </a>
                 <a href="/historial-at"
                     class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
@@ -226,9 +241,51 @@
                 </tbody>
             </table>
         </div>
+
+        {# Paginación. Antes la tabla volcaba todas las asignaciones del rango sin
+           límite, así que con muchos períodos la página se volvía inmanejable. #}
+        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-3 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                {{ total_filtrado }} período{{ 's' if total_filtrado != 1 else '' }}
+                {% if pagination.total_pages > 1 %}
+                &middot; Página {{ pagination.page }} de {{ pagination.total_pages }}
+                {% endif %}
+            </span>
+            {% if pagination.total_pages > 1 %}
+            <div class="flex items-center gap-1">
+                {% if pagination.has_prev %}
+                <a href="?page={{ pagination.page - 1 }}{{ ('&' + qs) if qs else '' }}"
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Anterior</a>
+                {% else %}
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Anterior</span>
+                {% endif %}
+                {% for p in range(1, pagination.total_pages + 1) %}
+                    {% if p == pagination.page %}
+                    <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">{{ p }}</span>
+                    {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
+                    <a href="?page={{ p }}{{ ('&' + qs) if qs else '' }}"
+                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 flex items-center justify-center transition-colors">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if pagination.has_next %}
+                <a href="?page={{ pagination.page + 1 }}{{ ('&' + qs) if qs else '' }}"
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Siguiente</a>
+                {% else %}
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Siguiente</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
         {% else %}
         <div class="px-6 py-10 text-center">
-            <p class="text-sm text-slate-500">No hay períodos registrados en el rango seleccionado.</p>
+            <p class="text-sm text-slate-500">
+                {% if filters.cliente or filters.at or filters.estado %}
+                Ningún período coincide con los filtros aplicados.
+                <a href="/historial-at" class="text-primary font-bold underline ml-1">Limpiar filtros</a>
+                {% else %}
+                No hay períodos registrados en el rango seleccionado.
+                {% endif %}
+            </p>
         </div>
         {% endif %}
     </div>

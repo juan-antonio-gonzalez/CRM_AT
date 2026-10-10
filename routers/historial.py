@@ -2,12 +2,29 @@ from fastapi import APIRouter, Request, Depends, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+import datetime
+import io
 import models
 from database import get_db
-import datetime
+from services import pagination as pg
 from templating import templates
 
 router = APIRouter(tags=["historial_at"])
+
+# Opciones del filtro de estado. Las dos primeras son de vigencia del período y
+# el resto son los estados reales que guarda una asignación.
+ESTADOS_ASIGNACION = [
+    ("vigentes", "Vigentes"),
+    ("cerrados", "Cerrados"),
+    ("Activo", "Activo"),
+    ("Inactivo", "Inactivo"),
+]
+
+
+def _query_string(**kwargs) -> str:
+    """Query string con los filtros que tienen valor, para paginar sin perderlos."""
+    from urllib.parse import urlencode
+    return urlencode({k: v for k, v in kwargs.items() if v not in (None, "")})
 
 
 def _today():
@@ -40,6 +57,9 @@ async def historial_at(
     hasta: str = Query("", alias="hasta"),
     cliente: str = Query("", alias="cliente"),
     at: str = Query("", alias="at"),
+    estado: str = Query("", alias="estado"),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(25, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
     hasta = hasta or _today()
@@ -48,6 +68,8 @@ async def historial_at(
     desde_dt = _parse_dt(desde)
 
     # ── PERÍODOS DEL HISTORIAL ──
+    # Los indicadores describen el conjunto completo, así que se calculan antes de
+    # paginar; sólo la tabla se recorta a la página pedida.
     hist_q = db.query(models.ATAssignment).filter(
         models.ATAssignment.valid_from <= (hasta_dt or datetime.datetime.utcnow())
     )
@@ -60,22 +82,35 @@ async def historial_at(
         hist_q = hist_q.filter(models.ATAssignment.customer_name.ilike(f"%{cliente}%"))
     if at:
         hist_q = hist_q.filter(models.ATAssignment.technical_advisor.ilike(f"%{at}%"))
-    historial = hist_q.order_by(
+    # Filtro por vigencia / estado del período.
+    if estado == "vigentes":
+        hist_q = hist_q.filter(models.ATAssignment.valid_to.is_(None))
+    elif estado == "cerrados":
+        hist_q = hist_q.filter(models.ATAssignment.valid_to.is_not(None))
+    elif estado and estado != "todos":
+        hist_q = hist_q.filter(models.ATAssignment.status == estado)
+
+    historial_completo = hist_q.order_by(
         models.ATAssignment.customer_name, models.ATAssignment.valid_from.desc()
     ).all()
 
-    # ── INDICADORES ──
-    vigentes = sum(1 for h in historial if h.valid_to is None)
-    cerrados = len(historial) - vigentes
-    asignaciones_hist = len(historial)
+    page, per_page, offset = pg.paginate(page, per_page)
+    total = len(historial_completo)
+    historial = historial_completo[offset:offset + per_page]
+    paginacion = pg.build_pagination(page, per_page, total)
 
-    std_hist = sum(h.standard_visits or 0 for h in historial)
-    prem_hist = sum(h.premium_visits or 0 for h in historial)
+    # ── INDICADORES ──
+    vigentes = sum(1 for h in historial_completo if h.valid_to is None)
+    cerrados = len(historial_completo) - vigentes
+    asignaciones_hist = len(historial_completo)
+
+    std_hist = sum(h.standard_visits or 0 for h in historial_completo)
+    prem_hist = sum(h.premium_visits or 0 for h in historial_completo)
 
     por_status = {}
     por_at = {}
     por_cliente = {}
-    for h in historial:
+    for h in historial_completo:
         st = h.status or "Prospecto"
         por_status[st] = por_status.get(st, 0) + 1
         if h.technical_advisor:
@@ -133,14 +168,19 @@ async def historial_at(
     return templates.TemplateResponse(request, 'historial_at.html', {
         "request": request,
         "historial": historial,
+        "pagination": paginacion,
+        "total_filtrado": total,
         "fuadera": fuadera,
         "at_list": at_list,
+        "estados": ESTADOS_ASIGNACION,
         "filters": {
             "desde": desde,
             "hasta": hasta,
             "cliente": cliente,
             "at": at,
+            "estado": estado,
         },
+        "qs": _query_string(desde=desde, hasta=hasta, cliente=cliente, at=at, estado=estado),
         "indicadores": {
             "asignaciones": asignaciones_hist,
             "vigentes": vigentes,
@@ -154,6 +194,83 @@ async def historial_at(
         "por_cliente": sorted(por_cliente.items(), key=lambda x: x[1], reverse=True),
         "active_page": "historial_at",
     })
+
+
+@router.get("/historial-at/exportar-excel")
+async def exportar_historial_excel(
+    desde: str = Query("", alias="desde"),
+    hasta: str = Query("", alias="hasta"),
+    cliente: str = Query("", alias="cliente"),
+    at: str = Query("", alias="at"),
+    estado: str = Query("", alias="estado"),
+    db: Session = Depends(get_db),
+):
+    """Exporta el historial filtrado a Excel."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+    from fastapi.responses import StreamingResponse
+
+    hasta = hasta or _today()
+    hasta_dt = _parse_dt(hasta)
+    desde_dt = _parse_dt(desde)
+
+    q = db.query(models.ATAssignment).filter(
+        models.ATAssignment.valid_from <= (hasta_dt or datetime.datetime.utcnow())
+    )
+    if desde_dt:
+        q = q.filter(
+            (models.ATAssignment.valid_to.is_(None)) |
+            (models.ATAssignment.valid_to >= desde_dt)
+        )
+    if cliente:
+        q = q.filter(models.ATAssignment.customer_name.ilike(f"%{cliente}%"))
+    if at:
+        q = q.filter(models.ATAssignment.technical_advisor.ilike(f"%{at}%"))
+    if estado == "vigentes":
+        q = q.filter(models.ATAssignment.valid_to.is_(None))
+    elif estado == "cerrados":
+        q = q.filter(models.ATAssignment.valid_to.is_not(None))
+    elif estado and estado != "todos":
+        q = q.filter(models.ATAssignment.status == estado)
+
+    filas = q.order_by(
+        models.ATAssignment.customer_name, models.ATAssignment.valid_from.desc()
+    ).all()
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Historial AT"
+    ws.append(["Cliente", "Asistente técnico", "Estado", "Válido desde",
+               "Válido hasta", "Visitas estándar", "Visitas premium",
+               "Requiere atención", "Observaciones"])
+    for celda in ws[1]:
+        celda.font = Font(bold=True)
+
+    for a in filas:
+        ws.append([
+            a.customer_name or "",
+            a.technical_advisor or "",
+            a.status or "",
+            a.valid_from.strftime("%d/%m/%Y") if a.valid_from else "",
+            a.valid_to.strftime("%d/%m/%Y") if a.valid_to else "Vigente",
+            a.standard_visits or 0,
+            a.premium_visits or 0,
+            "Sí" if a.attention_required else "No",
+            a.attention_observations or "",
+        ])
+
+    for i, ancho in enumerate([32, 24, 14, 14, 14, 16, 16, 18, 40], start=1):
+        ws.column_dimensions[ws.cell(row=1, column=i).column_letter].width = ancho
+
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    nombre = f"historial-at-{datetime.date.today().isoformat()}.xlsx"
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={nombre}"},
+    )
 
 
 @router.post("/historial-at/eliminar/{assignment_id}")
