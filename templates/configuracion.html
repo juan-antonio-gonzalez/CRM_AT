@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Configuración</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Gestión de Listas Auxiliares</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Configuración</h2>
+    <p class="text-2xs text-texto-suave font-bold">Gestión de Listas Auxiliares</p>
 </div>
 {% endblock %}
 
@@ -16,7 +16,7 @@
         class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
         <div class="flex flex-col gap-0.5">
             <h2 class="text-xl font-black text-texto-fuerte tracking-tight">Tablas Auxiliares</h2>
-            <p class="text-texto-suave text-2xs uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
+            <p class="text-texto-suave text-2xs font-bold tracking-wide">Gestión de catálogos del sistema</p>
         </div>
         <div class="flex gap-2">
             <a href="/relevamiento"
@@ -37,7 +37,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">engineering</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">AT Asignados</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">AT Asignados</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -52,7 +52,7 @@
                 </div>
                 <div id="list-advisor" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not advisors %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in advisors %}
                     <div id="item-advisor-{{ item.id }}"
@@ -84,7 +84,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">draw</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Diseñadores</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Diseñadores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -99,7 +99,7 @@
                 </div>
                 <div id="list-designer" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not designers %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in designers %}
                     <div id="item-designer-{{ item.id }}"
@@ -131,7 +131,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">assignment_ind</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Comerciales</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Comerciales</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -146,7 +146,7 @@
                 </div>
                 <div id="list-commercial" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not commercials %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in commercials %}
                     <div id="item-commercial-{{ item.id }}"
@@ -178,7 +178,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">factory</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Sectores</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Sectores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -193,7 +193,7 @@
                 </div>
                 <div id="list-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not sectors %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in sectors %}
                     <div id="item-sector-{{ item.id }}"
@@ -225,7 +225,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">precision_manufacturing</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Maquinaria</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Maquinaria</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -240,7 +240,7 @@
                 </div>
                 <div id="list-machine-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not machine_types %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in machine_types %}
                     <div id="item-machine-type-{{ item.id }}"
@@ -272,7 +272,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">square_foot</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Tipo de Formado</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Tipo de Formado</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -287,7 +287,7 @@
                 </div>
                 <div id="list-formado" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not formado_types %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in formado_types %}
                     <div id="item-formado-{{ item.id }}"
@@ -319,7 +319,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">handyman</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Cierre Inferior</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Cierre Inferior</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -334,7 +334,7 @@
                 </div>
                 <div id="list-cierre-inferior" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not inferior_closure_types %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in inferior_closure_types %}
                     <div id="item-cierre-inferior-{{ item.id }}"
@@ -366,7 +366,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Nombre de Cliente</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Nombre de Cliente</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -381,7 +381,7 @@
                 </div>
                 <div id="list-client-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not client_names %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in client_names %}
                     <div id="item-client-name-{{ item.id }}"
@@ -413,7 +413,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">business</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Planta</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Planta</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -428,7 +428,7 @@
                 </div>
                 <div id="list-plant-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not plant_names %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in plant_names %}
                     <div id="item-plant-name-{{ item.id }}"
@@ -460,7 +460,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">topic</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Motivo de Visita</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Motivo de Visita</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -475,7 +475,7 @@
                 </div>
                 <div id="list-visit-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not visit_types %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in visit_types %}
                     <div id="item-visit-type-{{ item.id }}"
@@ -506,7 +506,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">warehouse</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Planta Distribuidora</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Planta Distribuidora</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -521,7 +521,7 @@
                 </div>
                 <div id="list-distributor-plant" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not distributor_plants %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in distributor_plants %}
                     <div id="item-distributor-plant-{{ item.id }}"
@@ -552,7 +552,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">quality</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Temas de Calidad</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Temas de Calidad</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -567,7 +567,7 @@
                 </div>
                 <div id="list-tema-calidad" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_topics %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_topics %}
                     <div id="item-tema-calidad-{{ item.id }}"
@@ -598,7 +598,7 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">build</span>
-                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Calidad AT</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Calidad AT</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
@@ -613,7 +613,7 @@
                 </div>
                 <div id="list-calidad-at" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_at_topics %}
-                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_at_topics %}
                     <div id="item-calidad-at-{{ item.id }}"
@@ -645,7 +645,7 @@
         <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">category</span>
-                <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Sector / Departamento</h3>
+                <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Sector / Departamento</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
@@ -660,7 +660,7 @@
             </div>
             <div id="list-member-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not member_sectors %}
-                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                 {% endif %}
                 {% for item in member_sectors %}
                 <div id="item-member-sector-{{ item.id }}"
@@ -689,7 +689,7 @@
         <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Nombres de Contacto</h3>
+                <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Nombres de Contacto</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
@@ -704,7 +704,7 @@
             </div>
             <div id="list-contact-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not contact_names_list %}
-                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                 {% endif %}
                 {% for item in contact_names_list %}
                 <div id="item-contact-name-{{ item.id }}"
@@ -738,7 +738,7 @@
 <div>
     <label for="modal-edit-input" class="block text-sm font-semibold text-texto-base mb-1">Nuevo nombre</label>
     <input id="modal-edit-input" type="text" data-modal-focus
-        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
+        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
         oninput="this.value = this.value.toUpperCase()">
 </div>
 {% call pie_modal() %}

@@ -8,6 +8,7 @@ on an instance nobody used. Import ``templates`` from here instead.
 
 import glob
 import hashlib
+import datetime
 import json
 import os
 
@@ -79,13 +80,24 @@ def _from_json(value):
 
 
 def _fmt_date(value, fmt: str = "%d/%m/%Y"):
-    """Format a date/datetime consistently across templates."""
+    """Format a date/datetime consistently across templates.
+
+    Las fechas llegan de tres formas: objetos date/datetime, texto ISO (columnas
+    String y campos de form_data) y texto ya formateado. Sin parsear el texto, la
+    tabla de visitas mostraba ``2026-09-24`` mientras el resto de la aplicación
+    mostraba ``24/09/2026``.
+    """
     if not value:
         return ""
-    try:
+    if hasattr(value, "strftime"):
         return value.strftime(fmt)
-    except AttributeError:
-        return str(value)
+    texto = str(value).strip()
+    for patron in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d/%m/%Y"):
+        try:
+            return datetime.datetime.strptime(texto[:19], patron).strftime(fmt)
+        except ValueError:
+            continue
+    return texto
 
 
 def _fmt_datetime(value):

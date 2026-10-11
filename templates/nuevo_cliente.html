@@ -2,8 +2,8 @@
 
 {% block title %}Nuevo Cliente | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Clientes</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Registro de Cuenta</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Clientes</h2>
+    <p class="text-2xs text-texto-suave font-bold">Registro de Cuenta</p>
 </div>
 {% endblock %}
 
@@ -17,11 +17,11 @@
         <section>
             <div class="flex items-center gap-3 mb-4 pb-2 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">domain</span>
-                <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Información General</h3>
+                <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">Información General</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-2">
-                    <label for="name" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="name" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Nombre de la Empresa <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="client-name" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -29,7 +29,7 @@
                         <div class="flex gap-1.5">
                             <div class="flex-1">
                                 <select name="name" required
-                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="name">
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="name">
                                     <option value="">Seleccionar Cliente...</option>
                                     {% for c in client_names %}
                                     <option value="{{ c.name }}">{{ c.name }}</option>
@@ -42,14 +42,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="client-name" data-select="name">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="plant" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="plant" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Planta / Unidad Productiva <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="plant-name" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -57,7 +57,7 @@
                         <div class="flex gap-1.5">
                             <div class="flex-1">
                                 <select name="plant" required
-                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="plant">
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="plant">
                                     <option value="">Seleccionar Planta...</option>
                                     {% for p in plant_names %}
                                     <option value="{{ p.name }}">{{ p.name }}</option>
@@ -70,14 +70,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="plant-name" data-select="plant">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="industry-sector" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="industry-sector" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Sector Industrial <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="sector" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -98,14 +98,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="sector" data-select="industry_sector">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="assigned-commercial" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="assigned-commercial" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Asesor Comercial Asignado <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="commercial" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -126,14 +126,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="commercial" data-select="assigned_commercial">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="technical-advisor" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="technical-advisor" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Asistente Técnico Asignado <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="advisor" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -154,14 +154,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="advisor" data-select="technical_advisor">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="designer" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+                    <label for="designer" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                         Diseñador Asignado <span class="text-peligro-500">*</span>
                         <button type="button" data-manage-entity="designer" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
                     </label>
@@ -182,14 +182,14 @@
                         </div>
                         <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase">
+                                <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
                                 <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="designer" data-select="designer">Crear</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="city" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Ciudad</label>
+                    <label for="city" class="text-2xs font-black text-texto-tenue tracking-normal">Ciudad</label>
                     <input name="city" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         placeholder="Ej: Monterrey" type="text"  id="city"/>
@@ -197,14 +197,14 @@
                 <div class="space-y-2">
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-rounded text-texto-tenue text-sm" aria-hidden="true">location_on</span>
-                        <label for="address" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Dirección</label>
+                        <label for="address" class="text-2xs font-black text-texto-tenue tracking-normal">Dirección</label>
                     </div>
                     <input name="address" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         placeholder="Ej: Av. Central 123" type="text"  id="address"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="status" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Estatus de Cuenta</label>
+                    <label for="status" class="text-2xs font-black text-texto-tenue tracking-normal">Estatus de Cuenta</label>
                     <select name="status" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Inactivo" selected>Inactivo</option>
@@ -219,10 +219,10 @@
             <div class="flex items-center justify-between mb-4 pb-2 border-b border-superficie-borde">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">groups_3</span>
-                    <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
+                    <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">Equipo & Observaciones</h3>
                 </div>
                 <button type="button" id="btn-add-team-row"
-                    class="group flex items-center gap-2 text-2xs font-black text-primary uppercase tracking-widest hover:scale-105 transition-all">
+                    class="group flex items-center gap-2 text-2xs font-black text-primary tracking-normal hover:scale-105 transition-all">
                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">add_circle</span>
                     Añadir Nuevo
                 </button>
@@ -233,19 +233,19 @@
                 <table class="w-full text-left border-collapse min-w-[650px]" id="teamTable">
                     <thead>
                         <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Nombre Completo</th>
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Reporta a</th>
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Cargo / Función</th>
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">E-mail de Contacto</th>
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Teléfono</th>
-                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest text-center" scope="col">Acciones</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Nombre Completo</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Reporta a</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Cargo / Función</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">E-mail de Contacto</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Teléfono</th>
+                            <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal text-center" scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-superficie-borde bg-white">
                         <tr>
                             <td class="px-3 py-2">
                                 <div class="relative flex gap-1">
-                                    <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                                    <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                         <option value="">SELECCIONAR...</option>
                                     </select>
                                     <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
@@ -253,7 +253,7 @@
                                     </button>
                                     <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                         <div class="flex gap-2">
-                                            <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                            <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                             <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                         </div>
                                     </div>
@@ -266,7 +266,7 @@
                             </td>
                             <td class="px-3 py-2">
                                 <div class="relative flex gap-1">
-                                    <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                                    <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                         <option value="">SELECCIONAR...</option>
                                         {% for ms in member_sectors %}
                                         <option value="{{ ms.name }}">{{ ms.name }}</option>
@@ -277,7 +277,7 @@
                                     </button>
                                     <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                         <div class="flex gap-2">
-                                            <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                            <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                             <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                         </div>
                                     </div>
@@ -300,7 +300,7 @@
             </div>
 
             <div class="space-y-2">
-                <label for="observations" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Observaciones</label>
+                <label for="observations" class="text-2xs font-black text-texto-tenue tracking-normal">Observaciones</label>
                 <textarea name="observations"
                     class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
                     placeholder="Notas estratégicas..."
@@ -311,10 +311,10 @@
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-6 pt-10 border-t border-superficie-borde">
             <a href="/clientes"
-                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte uppercase tracking-widest transition-colors">Descartar
+                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Descartar
                 Cambios</a>
             <button type="submit"
-                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
                 Registrar Cliente
             </button>
         </div>
@@ -325,7 +325,7 @@
 <div id="manageEntityModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
     <div class="bg-superficie-card rounded-lg shadow-pop w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-superficie-borde">
         <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde shrink-0">
-            <h3 id="manageEntityTitle" class="text-lg font-bold text-texto-fuerte uppercase tracking-wider">Gestionar</h3>
+            <h3 id="manageEntityTitle" class="text-lg font-bold text-texto-fuerte tracking-normal">Gestionar</h3>
             <button type="button" id="manageEntityCloseBtn"
                 class="size-8 rounded-lg flex items-center justify-center text-texto-tenue hover:text-texto-base hover:bg-superficie-suave transition-all" aria-label="Cerrar">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
@@ -334,7 +334,7 @@
         <div class="p-6 space-y-4">
             <div class="flex gap-2">
                 <input id="manageEntityInput" type="text" placeholder="Nuevo elemento..."
-                    class="flex-1 bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
+                    class="flex-1 bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none">
                 <button id="manageEntityAddBtn" type="button"
                     class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
@@ -366,7 +366,7 @@
         newRow.innerHTML = `
         <td class="px-3 py-2">
             <div class="relative flex gap-1">
-                <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                     <option value="">SELECCIONAR...</option>
                     ${nameOpts}
                 </select>
@@ -375,7 +375,7 @@
                 </button>
                 <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -389,7 +389,7 @@
         </td>
         <td class="px-3 py-2">
             <div class="relative flex gap-1">
-                <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                     <option value="">SELECCIONAR...</option>
                     ${sectorOpts}
                 </select>
@@ -398,7 +398,7 @@
                 </button>
                 <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>

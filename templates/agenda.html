@@ -21,13 +21,13 @@
                 <span class="material-symbols-rounded text-xl" aria-hidden="true">chevron_right</span>
             </button>
             <button id="btn-today"
-                class="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs rounded-lg transition-colors uppercase tracking-wider">
+                class="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs rounded-lg transition-colors tracking-normal">
                 Hoy
             </button>
         </div>
         <div class="flex items-center gap-2">
             <button id="btn-agendar"
-                class="px-4 py-2 bg-primary hover:bg-primary/90 text-white font-bold text-xs rounded-lg transition-colors uppercase tracking-wider flex items-center gap-1.5">
+                class="px-4 py-2 bg-primary hover:bg-primary/90 text-white font-bold text-xs rounded-lg transition-colors tracking-normal flex items-center gap-1.5">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                 Agendar visita
             </button>
@@ -40,11 +40,11 @@
             </select>
             <div class="flex rounded-lg border border-superficie-borde overflow-hidden">
                 <button id="view-month" type="button" aria-pressed="true"
-                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors">
+                    class="px-4 py-2 text-xs font-black tracking-normal bg-primary text-white transition-colors">
                     Mes
                 </button>
                 <button id="view-week" type="button" aria-pressed="false"
-                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave text-texto-base hover:bg-superficie-suave transition-colors">
+                    class="px-4 py-2 text-xs font-black tracking-normal bg-superficie-suave text-texto-base hover:bg-superficie-suave transition-colors">
                     Semana
                 </button>
             </div>
@@ -55,13 +55,13 @@
     <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
         <!-- Weekday headers -->
         <div id="weekday-header" class="grid grid-cols-7 bg-superficie-suave/50 border-b border-superficie-borde">
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Lun</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Mar</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Mié</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Jue</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Vie</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Sáb</div>
-            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Dom</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Lun</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Mar</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Mié</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Jue</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Vie</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Sáb</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave tracking-normal text-center">Dom</div>
         </div>
         <!-- Calendar body -->
         <div id="calendar-body" class="min-h-[600px]">
@@ -103,7 +103,7 @@
                     Ver / Editar
                 </a>
                 <span id="popover-status"
-                    class="px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center"></span>
+                    class="px-3 py-2 rounded-xl text-2xs font-black inline-flex items-center"></span>
             </div>
             <button id="popover-cancel-btn"
                 class="w-full px-3 py-2 bg-peligro-50 hover:bg-peligro-100 text-peligro-600 rounded-xl text-xs font-bold transition-colors">
@@ -122,7 +122,7 @@
                     <input type="hidden" name="form_data" id="agenda-form-data">
                     <div class="space-y-4">
                         <div>
-                            <label for="agenda-cliente" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Cliente *</label>
+                            <label for="agenda-cliente" class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Cliente *</label>
                             <select id="agenda-cliente" data-modal-focus required
                                 class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar —</option>
@@ -132,12 +132,12 @@
                             </select>
                         </div>
                         <div>
-                            <label for="agenda-fecha" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Fecha *</label>
+                            <label for="agenda-fecha" class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Fecha *</label>
                             <input type="date" id="agenda-fecha" required min="{{ today }}"
                                 class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                         </div>
                         <div>
-                            <label for="agenda-at" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Asistente Técnico (AT) *</label>
+                            <label for="agenda-at" class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Asistente Técnico (AT) *</label>
                             <select id="agenda-at" required
                                 class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar AT —</option>
@@ -148,7 +148,7 @@
                             <span id="cliente-at-map" class="hidden"></span>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Objetivo *</label>
+                            <label class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Objetivo *</label>
                             <div class="grid grid-cols-2 gap-2">
                                 <label for="visita-programada" class="flex items-center gap-2 bg-superficie-suave rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Visita programada" id="visita-programada">
@@ -169,32 +169,32 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Participantes SWA *</label>
+                            <label class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Participantes SWA *</label>
                             <div id="agenda-swa-list" class="space-y-1.5"></div>
                             <button type="button" id="btn-add-swa" class="text-xs font-bold text-primary hover:text-primary/80 flex items-center gap-1 mt-1">
                                 <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span> Agregar SWA
                             </button>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Participantes Cliente *</label>
+                            <label class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Participantes Cliente *</label>
                             <div id="agenda-cli-list" class="space-y-1.5"></div>
                             <button type="button" id="btn-add-cli" class="text-xs font-bold text-primary hover:text-primary/80 flex items-center gap-1 mt-1">
                                 <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span> Agregar Cliente
                             </button>
                         </div>
                         <div>
-                            <label for="agenda-observaciones" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Observaciones</label>
+                            <label for="agenda-observaciones" class="block text-2xs font-black text-texto-suave tracking-normal mb-1.5">Observaciones</label>
                             <textarea id="agenda-observaciones" rows="2"
                                 class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm text-texto-fuerte focus:ring-2 focus:ring-primary"></textarea>
                         </div>
                     </div>
                     <div class="flex gap-3 pt-4">
                         <button type="submit"
-                            class="flex-1 bg-primary hover:bg-primary/90 text-white py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">
+                            class="flex-1 bg-primary hover:bg-primary/90 text-white py-3.5 rounded-2xl font-black text-xs tracking-normal transition-all">
                             Guardar como programado
                         </button>
                         <button type="button" id="btn-cancel-create" data-modal-close="create-modal-container"
-                            class="px-6 py-3.5 text-xs font-black text-texto-tenue hover:text-texto-base uppercase tracking-widest transition-colors">
+                            class="px-6 py-3.5 text-xs font-black text-texto-tenue hover:text-texto-base tracking-normal transition-colors">
                             Cancelar
                         </button>
                     </div>
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             html += '<div class="cal-day p-2 flex flex-col (isToday today : )" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
             html += '<div class="cal-day-header flex flex-col items-center py-2 border-b border-superficie-borde mb-2">';
-            html += '<span class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">' + daysOfWeek[i] + '</span>';
+            html += '<span class="text-2xs font-bold text-texto-tenue tracking-normal">' + daysOfWeek[i] + '</span>';
             html += '<span class="cal-day-num text-sm mt-1 (isToday bg-primary text-white : )">' + d.getDate() + '</span>';
             html += '</div>';
             html += '<div class="flex-1 overflow-y-auto space-y-1">';
@@ -430,16 +430,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('popover-objetivo').textContent = this.dataset.objetivo || '—';
                 var statusEl = document.getElementById('popover-status');
                 if (status === 'Finalizado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-exito-100 text-exito-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black inline-flex items-center bg-exito-100 text-exito-700';
                     statusEl.textContent = 'Finalizado';
                 } else if (status === 'Programado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-info-100 text-info-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black inline-flex items-center bg-info-100 text-info-700';
                     statusEl.textContent = 'Programado';
                 } else if (status === 'Cancelado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-peligro-100 text-peligro-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black inline-flex items-center bg-peligro-100 text-peligro-700';
                     statusEl.textContent = 'Cancelado';
                 } else {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-alerta-100 text-alerta-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black inline-flex items-center bg-alerta-100 text-alerta-700';
                     statusEl.textContent = 'En proceso';
                 }
                 document.getElementById('popover-link').href = this.dataset.url;
@@ -481,16 +481,16 @@ document.addEventListener('DOMContentLoaded', function() {
         currentView = 'month';
         viewMonthBtn.setAttribute('aria-pressed', 'true');
         viewWeekBtn.setAttribute('aria-pressed', 'false');
-        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
+        viewMonthBtn.className = 'px-4 py-2 text-xs font-black tracking-normal bg-primary text-white transition-colors';
+        viewWeekBtn.className = 'px-4 py-2 text-xs font-black tracking-normal bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
         loadAndRender();
     });
     viewWeekBtn.addEventListener('click', function() {
         currentView = 'week';
         viewWeekBtn.setAttribute('aria-pressed', 'true');
         viewMonthBtn.setAttribute('aria-pressed', 'false');
-        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
+        viewWeekBtn.className = 'px-4 py-2 text-xs font-black tracking-normal bg-primary text-white transition-colors';
+        viewMonthBtn.className = 'px-4 py-2 text-xs font-black tracking-normal bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
         loadAndRender();
     });
     filterCliente.addEventListener('change', function() { loadAndRender(); });

@@ -327,6 +327,9 @@ def test_el_enlace_activo_del_menu_se_marca_solo_en_uno():
     # Starlette inyecta url_for en el contexto; con un entorno Jinja pelado hay
     # que registrarlo.
     env.globals["url_for"] = lambda name, **params: "/static/" + str(params.get("path", "")).lstrip("/")
+    # `static_url` lo registra templating.py sobre el entorno compartido; acá se
+    # replica para poder renderizar el layout en un entorno pelado.
+    env.globals["static_url"] = lambda path: "/static/" + str(path).lstrip("/")
     contexto = {
         "active_page": "clientes",
         "today": None, "clientes": {"total": 0, "activos": 0, "prospectos": 0},

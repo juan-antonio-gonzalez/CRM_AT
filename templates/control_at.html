@@ -26,7 +26,7 @@
         {{ indicador("Visita pendiente", kpi.pendientes_sum, "alerta", "hourglass_empty") }}
         {{ indicador("Visita fuera de cronograma", kpi.fuera_cronograma, "alerta", "schedule") }}
         {{ indicador("Avance del plan", kpi.avance_pct ~ "%", "info", "trending_up") }}
-            <p class="text-2xs text-texto-tenue mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
+            <p class="text-2xs text-texto-tenue mt-1.5 font-bold">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
         </div>
     </div>
 
@@ -34,13 +34,13 @@
     <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
         <form id="filter-form" method="GET" action="/control-at" class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="cliente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Cliente</label>
+                <label for="cliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
                 <input type="text" name="cliente" value="{{ filters.cliente }}"
                     class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary"
                     placeholder="Buscar cliente..." id="cliente">
             </div>
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="at" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">AT</label>
+                <label for="at" class="text-2xs font-bold text-texto-tenue tracking-normal">AT</label>
                 <select name="at"
                     class="form-select w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="at">
                     <option value="">Todos</option>
@@ -50,17 +50,17 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="estandar" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estándar</label>
+                <label for="estandar" class="text-2xs font-bold text-texto-tenue tracking-normal">Estándar</label>
                 <input type="number" name="estandar" value="{{ filters.estandar or '' }}" min="0" placeholder="Cant."
                     class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="estandar">
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="premium" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Premium</label>
+                <label for="premium" class="text-2xs font-bold text-texto-tenue tracking-normal">Premium</label>
                 <input type="number" name="premium" value="{{ filters.premium or '' }}" min="0" placeholder="Cant."
                     class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="premium">
             </div>
             <div class="flex flex-col gap-1 w-40">
-                <label for="status" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estado</label>
+                <label for="status" class="text-2xs font-bold text-texto-tenue tracking-normal">Estado</label>
                 <select name="status"
                     class="form-select w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="status">
                     <option value="">Todos</option>
@@ -71,11 +71,11 @@
             </div>
             <div class="flex items-end gap-2">
                 <button type="submit"
-                    class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1" aria-label="Buscar">
+                    class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-xl text-xs font-bold tracking-normal transition-all flex items-center gap-1" aria-label="Buscar">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">search</span>
                 </button>
                 <a href="/control-at"
-                    class="bg-superficie-suave hover:bg-superficie-fuerte text-texto-suave px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
+                    class="bg-superficie-suave hover:bg-superficie-fuerte text-texto-suave px-3 py-2 rounded-xl text-xs font-bold tracking-normal transition-all flex items-center justify-center" aria-label="Limpiar filtros">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
                 </a>
             </div>
@@ -87,7 +87,7 @@
         <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
             <p class="text-xs text-texto-suave font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
             <button type="button" id="btn-nueva-asignacion"
-                class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-black text-xs tracking-normal shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                 Nueva Asignación
             </button>
@@ -97,15 +97,15 @@
             <table class="w-full text-left" id="tabla-control-at">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">AT</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Premium</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Total</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Vigente desde</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Vigente hasta</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Total</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -131,15 +131,15 @@
                         <td class="px-6 py-4 text-center">
                             {% set est = r.status or 'Activo' %}
                             {% if est == 'Activo' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-exito-100 text-exito-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-exito-100 text-exito-700">
                                 <span class="size-1.5 bg-exito-500 rounded-full"></span>Activo
                             </span>
                             {% elif est == 'Fuera de Cronograma' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700">
                                 <span class="size-1.5 bg-alerta-500 rounded-full"></span>Fuera de Cronograma
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave">
                                 <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>Inactivo
                             </span>
                             {% endif %}
@@ -182,7 +182,7 @@
 
         {% if total_pages > 1 %}
         <div class="flex items-center justify-between px-6 py-4 bg-superficie-suave/50 border-t border-superficie-borde">
-            <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
+            <div class="text-2xs font-bold text-texto-tenue tracking-normal">
                 Página {{ page }} de {{ total_pages }}
             </div>
             <div class="flex items-center gap-1">
@@ -237,16 +237,16 @@
                 <div class="space-y-4">
                     <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-superficie-suave rounded-xl">
                         <div>
-                            <label class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Realizadas</label>
+                            <label class="text-2xs font-bold text-texto-tenue tracking-normal">Realizadas</label>
                             <p id="modal-realizadas" class="text-sm font-bold text-exito-600 mt-0.5">0</p>
                         </div>
                         <div>
-                            <label class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Pendientes</label>
+                            <label class="text-2xs font-bold text-texto-tenue tracking-normal">Pendientes</label>
                             <p id="modal-pendientes" class="text-sm font-bold text-alerta-600 mt-0.5">0</p>
                         </div>
                     </div>
                     <div>
-                        <label for="modal-cliente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Cliente</label>
+                        <label for="modal-cliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
                         <select id="modal-cliente" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar cliente...</option>
                             {% for c in customer_names %}
@@ -255,7 +255,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="modal-at" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">AT Asignado</label>
+                        <label for="modal-at" class="text-2xs font-bold text-texto-tenue tracking-normal">AT Asignado</label>
                         <select id="modal-at" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar AT...</option>
                             {% for a in advisors %}
@@ -265,18 +265,18 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-estandar" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Visitas Estándar</label>
+                            <label for="modal-estandar" class="text-2xs font-bold text-texto-tenue tracking-normal">Visitas Estándar</label>
                             <input type="number" id="modal-estandar" value="0" min="0"
                                 class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-premium" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Visitas Premium</label>
+                            <label for="modal-premium" class="text-2xs font-bold text-texto-tenue tracking-normal">Visitas Premium</label>
                             <input type="number" id="modal-premium" value="0" min="0"
                                 class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                     </div>
                     <div>
-                        <label for="modal-estado" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estado</label>
+                        <label for="modal-estado" class="text-2xs font-bold text-texto-tenue tracking-normal">Estado</label>
                         <select id="modal-estado" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="Activo">Activo</option>
                             <option value="Inactivo">Inactivo</option>
@@ -285,12 +285,12 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-valid-from" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Vigente desde</label>
+                            <label for="modal-valid-from" class="text-2xs font-bold text-texto-tenue tracking-normal">Vigente desde</label>
                             <input type="date" id="modal-valid-from"
                                 class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-valid-to" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Vigente hasta</label>
+                            <label for="modal-valid-to" class="text-2xs font-bold text-texto-tenue tracking-normal">Vigente hasta</label>
                             <input type="date" id="modal-valid-to"
                                 class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
@@ -298,11 +298,11 @@
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" id="modal-cancel"
-                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold tracking-normal transition-all">
                         Cancelar
                     </button>
                     <button type="button" id="modal-save"
-                        class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-primary/20">
+                        class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-primary/20">
                         Guardar
                     </button>
                 </div>
@@ -329,11 +329,11 @@
                 <input type="hidden" id="delete-csrf" value="{{ request.state.csrf_token or '' }}">
                 <div class="flex gap-3 pt-2">
                     <button type="button" id="delete-cancel"
-                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold tracking-normal transition-all">
                         Cancelar
                     </button>
                     <button type="button" id="delete-confirm"
-                        class="flex-1 px-5 py-2 bg-peligro-500 hover:bg-peligro-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-peligro-500/20">
+                        class="flex-1 px-5 py-2 bg-peligro-500 hover:bg-peligro-600 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-peligro-500/20">
                         Eliminar
                     </button>
                 </div>

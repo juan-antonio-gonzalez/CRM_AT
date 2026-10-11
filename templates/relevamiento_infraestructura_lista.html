@@ -2,8 +2,8 @@
 
 {% block title %}Infraestructura & Logística | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Infraestructura</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Relevamiento de Planta & Logística</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Infraestructura</h2>
+    <p class="text-2xs text-texto-suave font-bold">Relevamiento de Planta & Logística</p>
 </div>
 {% endblock %}
 
@@ -15,7 +15,7 @@
     <form method="GET" action="/relevamiento-infraestructura" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Cliente</label>
                 <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
@@ -24,7 +24,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Asistente Técnico</label>
+                <label for="asistente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Asistente Técnico</label>
                 <select name="asistente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
@@ -32,7 +32,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
             <a href="/relevamiento-infraestructura" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <a href="/relevamiento-infraestructura/nuevo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
@@ -55,11 +55,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-superficie-borde bg-superficie-suave/50">
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Cliente / Planta</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Asistente Técnico</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Cliente / Planta</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Asistente Técnico</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -68,7 +68,7 @@
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-texto-fuerte">{{ s.customer.name }}</span>
-                                <span class="text-2xs font-bold text-primary uppercase">{{ s.plant }}</span>
+                                <span class="text-2xs font-bold text-primary">{{ s.plant }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -79,17 +79,17 @@
                         </td>
                         <td class="px-6 py-4">
                             {% if s.status == 'Completado' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-exito-100 text-exito-600 text-2xs font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-exito-100 text-exito-600 text-2xs font-bold tracking-normal">
                                 <span class="size-1.5 bg-exito-500 rounded-full"></span>
                                 Completado
                             </span>
                             {% elif s.status == 'En Proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-alerta-100 text-alerta-600 text-2xs font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-alerta-100 text-alerta-600 text-2xs font-bold tracking-normal">
                                 <span class="size-1.5 bg-alerta-500 rounded-full"></span>
                                 En Proceso
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-superficie-suave text-texto-suave text-2xs font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-superficie-suave text-texto-suave text-2xs font-bold tracking-normal">
                                 <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>
                                 Pendiente
                             </span>

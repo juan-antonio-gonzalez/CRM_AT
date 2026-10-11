@@ -3,11 +3,11 @@
     <section>
         <div class="flex items-center gap-3 mb-6 pb-3 border-b border-superficie-borde">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">settings</span>
-            <h3 class="text-2xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Información del Equipo</h3>
+            <h3 class="text-2xs font-black text-texto-fuerte tracking-[0.2em]">Información del Equipo</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cliente Asignado</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Cliente Asignado</label>
                 <select id="edit_client_select" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="">Seleccionar cliente...</option>
@@ -17,7 +17,7 @@
                 </select>
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Planta Asignada</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Planta Asignada</label>
                 <select id="edit_plant_select" name="customer_id" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     {% for p in current_plants %}
@@ -27,7 +27,7 @@
                 <input type="hidden" id="edit_plant_assigned" name="plant_assigned" value="{{ machine.plant_assigned }}">
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Máquina</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Tipo de Máquina</label>
                 <select name="machine_type" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="">Seleccionar tipo...</option>
@@ -37,31 +37,31 @@
                 </select>
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Número de Serie</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Número de Serie</label>
                 <input name="serial_number" value="{{ machine.serial_number }}" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-texto-fuerte"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Marca</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Marca</label>
                 <input name="brand" value="{{ machine.brand }}" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Modelo</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Modelo</label>
                 <input name="model_name" value="{{ machine.model }}" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Línea</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Línea</label>
                 <input name="line" value="{{ machine.line or '' }}"
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" placeholder="Ej: LÍNEA 1" />
             </div>
             <div class="space-y-1.5">
-                <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Estado</label>
+                <label class="text-2xs font-black text-texto-tenue tracking-normal">Estado</label>
                 <select name="status" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="Operativo" {% if machine.status == "Operativo" %}selected{% endif %}>Operativo</option>
@@ -74,9 +74,9 @@
 
     <div class="flex items-center justify-end gap-4 pt-4 border-t border-superficie-borde">
         <button type="button" id="btn-cancel-edit-machine"
-            class="text-xs font-black text-texto-tenue hover:text-texto-fuerte uppercase tracking-widest transition-colors">Cancelar</button>
+            class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
         <button type="submit"
-            class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
+            class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
             Guardar Cambios
         </button>
     </div>

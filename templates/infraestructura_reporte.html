@@ -83,7 +83,7 @@
     <!-- Toolbar -->
     <header class="h-16 bg-white border-b border-superficie-borde flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
         <div class="flex items-center gap-4">
-            <nav class="flex items-center gap-2 text-xs text-texto-suave uppercase tracking-wider font-semibold">
+            <nav class="flex items-center gap-2 text-xs text-texto-suave tracking-normal font-semibold">
                 <a href="/relevamiento-infraestructura" class="hover:text-primary transition-colors">Relevamientos de Infraestructura</a>
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">chevron_right</span>
                 <span class="text-texto-fuerte">Vista Previa #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</span>
@@ -123,8 +123,8 @@
                         <span class="material-symbols-rounded text-3xl" aria-hidden="true">domain</span>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-texto-fuerte uppercase">Aplicación AT</h2>
-                        <p class="text-xs font-semibold text-primary uppercase tracking-widest">Servicios Técnicos Profesionales</p>
+                        <h2 class="text-xl font-bold tracking-tight text-texto-fuerte">Aplicación AT</h2>
+                        <p class="text-xs font-semibold text-primary tracking-normal">Servicios Técnicos Profesionales</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -137,14 +137,14 @@
             <!-- Customer Info -->
             <div class="grid grid-cols-2 gap-8">
                 <section>
-                    <h4 class="text-xs font-bold text-texto-tenue uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
+                    <h4 class="text-xs font-bold text-texto-tenue tracking-normal mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
                     <div class="space-y-1.5">
                         <p class="text-sm"><span class="font-bold text-texto-base">Cliente:</span> {{ survey.customer.name if survey.customer else 'No asignado' }}</p>
                         <p class="text-sm"><span class="font-bold text-texto-base">Planta/Sede:</span> {{ survey.plant }}</p>
                     </div>
                 </section>
                 <section>
-                    <h4 class="text-xs font-bold text-texto-tenue uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
+                    <h4 class="text-xs font-bold text-texto-tenue tracking-normal mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
                     <div class="space-y-1.5">
                         <p class="text-sm"><span class="font-bold text-texto-base">Asistente Técnico:</span> {{ survey.technical_advisor if survey.technical_advisor else 'No especificado' }}</p>
                         <p class="text-sm"><span class="font-bold text-texto-base">Estado global:</span> 
@@ -162,7 +162,7 @@
 
             <!-- 2. Almacenamiento -->
             <section class="mt-4">
-                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">inventory</span> 2. Almacenamiento</h4>
+                <h4 class="text-xs font-bold text-texto-suave tracking-normal border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">inventory</span> 2. Almacenamiento</h4>
                 
                 <h5 class="font-bold text-sm mb-2 text-texto-base">2.1 Materias Primas / Insumos</h5>
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -170,7 +170,7 @@
                     <p class="text-sm"><span class="font-semibold text-texto-base">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_insumos', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_insumos', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Rotación (POP):</span> {{ survey.storage_data.get('pop_insumos', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Observaciones:</span> {{ survey.storage_data.get('obs_insumos', '-') }}</p>
                 </div>
                 
@@ -180,39 +180,39 @@
                     <p class="text-sm"><span class="font-semibold text-texto-base">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_finished', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_finished', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Rotación (POP):</span> {{ survey.storage_data.get('pop_finished', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Observaciones:</span> {{ survey.storage_data.get('obs_finished', '-') }}</p>
                 </div>
             </section>
 
             <!-- 3. Empaque Primario -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">package_2</span> 3. Empaque Primario / Insumos</h4>
+                <h4 class="text-xs font-bold text-texto-suave tracking-normal border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">package_2</span> 3. Empaque Primario / Insumos</h4>
                 <div class="grid grid-cols-2 gap-4">
                     <p class="text-sm"><span class="font-semibold text-texto-base">Tipo Empaque:</span> {{ survey.packaging_data.get('type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Dimensiones:</span> {{ survey.packaging_data.get('dim', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Peso Promedio:</span> {{ survey.packaging_data.get('weight', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.packaging_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.packaging_data.get('crit', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Observaciones:</span> {{ survey.packaging_data.get('obs', '-') }}</p>
                 </div>
             </section>
 
             <!-- 4. Paletizado -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">layers</span> 4. Paletizado y Armado</h4>
+                <h4 class="text-xs font-bold text-texto-suave tracking-normal border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">layers</span> 4. Paletizado y Armado</h4>
                 <div class="grid grid-cols-2 gap-4">
                     <p class="text-sm"><span class="font-semibold text-texto-base">Tipo Pallet / Base:</span> {{ survey.palletizing_data.get('pallet_type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Pzas de Recibo:</span> {{ survey.palletizing_data.get('pieces', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Alto Máximo (mm):</span> {{ survey.palletizing_data.get('height', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Patrón / Traba:</span> {{ survey.palletizing_data.get('pattern', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Observaciones:</span> {{ survey.palletizing_data.get('obs', '-') }}</p>
                 </div>
             </section>
 
             <!-- 5. Logística -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">local_shipping</span> 5. Logística de Distribución</h4>
+                <h4 class="text-xs font-bold text-texto-suave tracking-normal border-b border-superficie-borde pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">local_shipping</span> 5. Logística de Distribución</h4>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Vehículos:</span> {{ survey.logistics_data.get('veh_type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-texto-base">Altura Prom. de Vehículo:</span> {{ survey.logistics_data.get('veh_height', '-') }}</p>
@@ -223,8 +223,8 @@
                 </div>
                 <!-- Logistica Transporte -->
                 <div class="grid grid-cols-2 gap-4 border-t border-superficie-borde pt-4">
-                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
-                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold uppercase">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-superficie-fuerte rounded text-2xs font-bold">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Obs. Transporte:</span> {{ survey.logistics_data.get('obs_trans', '-') }}</p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Obs. Distribución:</span> {{ survey.logistics_data.get('obs_dist', '-') }}</p>
                 </div>
@@ -244,7 +244,7 @@
             </div>
 
             <!-- Footer Page Number -->
-            <div class="pt-8 flex justify-between items-center text-2xs text-texto-tenue font-bold uppercase tracking-widest mt-8 border-t border-dashed border-superficie-borde">
+            <div class="pt-8 flex justify-between items-center text-2xs text-texto-tenue font-bold tracking-normal mt-8 border-t border-dashed border-superficie-borde">
                 <span>{{ survey.date.strftime('%Y-%m-%d %H:%M') if survey.date else '' }}</span>
                 <span>Documento Generado vía Aplicación AT</span>
             </div>

@@ -31,7 +31,7 @@
     <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-end w-full">
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterCliente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Cliente</label>
+                <label for="filterCliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
                 <select id="filterCliente"
                     class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los clientes</option>
@@ -41,7 +41,7 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterAsistente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Asistente Técnico</label>
+                <label for="filterAsistente" class="text-2xs font-bold text-texto-tenue tracking-normal">Asistente Técnico</label>
                 <select id="filterAsistente"
                     class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los asistentes</option>
@@ -51,14 +51,14 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterPlanta" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Planta</label>
+                <label for="filterPlanta" class="text-2xs font-bold text-texto-tenue tracking-normal">Planta</label>
                 <select id="filterPlanta" disabled
                     class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las plantas</option>
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterLinea" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Línea</label>
+                <label for="filterLinea" class="text-2xs font-bold text-texto-tenue tracking-normal">Línea</label>
                 <select id="filterLinea" disabled
                     class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las líneas</option>
@@ -89,16 +89,16 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Máquina</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Planta</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Asistente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Línea</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Máquina</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Planta</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Asistente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Línea</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="surveyTableBody" class="divide-y divide-superficie-borde">
@@ -135,11 +135,11 @@
                         </td>
                         <td class="px-6 py-5 text-sm text-texto-base">{{ cli_plant }}</td>
                         <td class="px-6 py-5">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-2xs font-bold bg-superficie-suave text-texto-base uppercase">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-2xs font-bold bg-superficie-suave text-texto-base">
                                 {{ tech_adv or 'Sin Asignar' }}
                             </span>
                         </td>
-                        <td class="px-6 py-5 text-sm font-bold uppercase text-texto-base">{{ mach_line }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-texto-base">{{ mach_line }}</td>
                         <td class="px-6 py-5 text-center">
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-info-100 text-info-700">
                                 {{ mach_type or 'Sin Tipo' }}
@@ -147,15 +147,15 @@
                         </td>
                         <td class="px-6 py-5 text-center">
                             {% if s.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-exito-100 text-exito-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-exito-100 text-exito-700">
                                 <span class="size-1.5 bg-exito-500 rounded-full"></span>COMPLETADO
                             </span>
                             {% elif s.status == 'En proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700">
                                 <span class="size-1.5 bg-alerta-500 rounded-full animate-pulse"></span>EN PROCESO
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave">
                                 <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>PENDIENTE
                             </span>
                             {% endif %}
@@ -199,7 +199,7 @@
 
         {% if pagination.total_pages > 1 %}
         <div class="flex items-center justify-between px-4 py-3 bg-superficie-suave/50 border-t border-superficie-borde">
-            <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
+            <div class="text-2xs font-bold text-texto-tenue tracking-normal">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
                 <span class="mx-1">·</span>
                 {{ pagination.total }} relevamiento{{ 's' if pagination.total != 1 else '' }}

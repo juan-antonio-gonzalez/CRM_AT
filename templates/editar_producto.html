@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Productos</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Edición Técnica</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Productos</h2>
+    <p class="text-2xs text-texto-suave font-bold">Edición Técnica</p>
 </div>
 {% endblock %}
 
@@ -33,26 +33,26 @@
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">settings_input_component</span>
-                <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">
+                <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">
                     Especificaciones Generales</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-2">
-                    <label for="name" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Descripción del
+                    <label for="name" class="text-2xs font-black text-texto-tenue tracking-normal">Descripción del
                         Producto</label>
                     <input name="name" required value="{{ product.name }}"
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold text-texto-fuerte placeholder:text-texto-tenue"
                         placeholder="Ej: Caja de Cartón Reforzada Premium" type="text"  id="name"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="et-number" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Número de ET
+                    <label for="et-number" class="text-2xs font-black text-texto-tenue tracking-normal">Número de ET
                         (Especificación Técnica)</label>
                     <input name="et_number" required value="{{ product.et_number }}"
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold"
                         placeholder="Ej: ET-2024-042" type="text"  id="et-number"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="material" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Material
+                    <label for="material" class="text-2xs font-black text-texto-tenue tracking-normal">Material
                         Principal</label>
                     <select name="material" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="material">
@@ -66,14 +66,14 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="manufacturing-route" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Ruta de Fabricación
+                    <label for="manufacturing-route" class="text-2xs font-black text-texto-tenue tracking-normal">Ruta de Fabricación
                         Estimada</label>
                     <input name="manufacturing_route" value="{{ product.manufacturing_route }}"
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         placeholder="Ej: Corte > Impresión > Pegado" type="text"  id="manufacturing-route"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="status" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Estatus</label>
+                    <label for="status" class="text-2xs font-black text-texto-tenue tracking-normal">Estatus</label>
                     <select name="status" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Activo" {% if product.status=='Activo' %}selected{% endif %}>Activo</option>
@@ -88,14 +88,14 @@
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">square_foot</span>
-                <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Dimensiones
+                <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">Dimensiones
                     Técnicas (mm)</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div
                     class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
                     <label for="dimensions-l"
-                        class="text-2xs font-black text-texto-tenue uppercase tracking-widest block text-center">Largo
+                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Largo
                         (L)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button" class="btn-step-down step-btn size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
@@ -108,7 +108,7 @@
                 <div
                     class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
                     <label for="dimensions-a"
-                        class="text-2xs font-black text-texto-tenue uppercase tracking-widest block text-center">Ancho
+                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Ancho
                         (A)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button" class="btn-step-down step-btn size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
@@ -121,7 +121,7 @@
                 <div
                     class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
                     <label for="dimensions-h"
-                        class="text-2xs font-black text-texto-tenue uppercase tracking-widest block text-center">Alto
+                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Alto
                         (H)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button" class="btn-step-down step-btn size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
@@ -137,10 +137,10 @@
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-6 pt-10 border-t border-superficie-borde">
             <a href="/productos"
-                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte uppercase tracking-widest transition-colors">Cancelar
+                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar
                 Edición</a>
             <button type="submit"
-                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] transition-all">
                 Actualizar Especificación
             </button>
         </div>

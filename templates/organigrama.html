@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Organigrama</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Estructura del Equipo</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Organigrama</h2>
+    <p class="text-2xs text-texto-suave font-bold">Estructura del Equipo</p>
 </div>
 {% endblock %}
 
@@ -26,7 +26,7 @@
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">groups</span>
             <select id="customerSelect"
-                class="flex-1 bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all uppercase">
+                class="flex-1 bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all">
                 <option value="">SELECCIONAR CLIENTE...</option>
                 {% for c in customers %}
                 <option value="{{ c.id }}">{{ c.name }}</option>
@@ -194,7 +194,7 @@ function renderNodo(nodo) {
             ${iconoInicial(nodo)}
             <div class="min-w-0 flex-1">
                 <p class="text-sm font-bold text-texto-fuerte break-words">${escaparHtml(nodo.name)}</p>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-wider break-words">${rol}</p>
+                <p class="text-2xs font-bold text-texto-tenue tracking-normal break-words">${rol}</p>
                 ${telefono}
                 ${aviso}
             </div>
@@ -284,7 +284,7 @@ function renderOrgChart(team) {
         <div class="org-tarjeta bg-white rounded-2xl border border-superficie-borde shadow-sm overflow-hidden" data-sector="${escaparHtml(sector)}">
             <div class="px-5 py-3 bg-superficie-suave/50 border-b border-superficie-borde flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">folder</span>
-                <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-wider break-words">${escaparHtml(sector)}</h3>
+                <h3 class="text-xs font-black text-texto-fuerte tracking-normal break-words">${escaparHtml(sector)}</h3>
                 <span class="ml-auto text-2xs font-bold text-texto-tenue">${enEsteSector} miembro${enEsteSector !== 1 ? 's' : ''}</span>
             </div>
             <div class="p-5">

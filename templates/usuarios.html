@@ -37,12 +37,12 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-superficie-suave">
-                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Usuario</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Nombre</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Email</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Rol</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="text-right px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Acciones</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Usuario</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Nombre</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Email</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Rol</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Estado</th>
+                        <th class="text-right px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -59,7 +59,7 @@
                         <td class="px-6 py-4 text-sm text-texto-base font-medium">{{ u.full_name or '-' }}</td>
                         <td class="px-6 py-4 text-sm text-texto-base">{{ u.email }}</td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-black uppercase tracking-wider bg-info-100 text-info-700 if u.role admin else bg-superficie-suave text-texto-base">
+                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-black tracking-normal bg-info-100 text-info-700 if u.role admin else bg-superficie-suave text-texto-base">
                                 {{ u.role }}
                             </span>
                         </td>

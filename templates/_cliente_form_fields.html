@@ -3,11 +3,11 @@
 <section>
     <div class="flex items-center gap-3 mb-4 pb-2 border-b border-superficie-borde">
         <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">domain</span>
-        <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Información General</h3>
+        <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">Información General</h3>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-2">
-            <label for="name-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="name-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Nombre de la Empresa <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="client-name" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -15,7 +15,7 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="name" required
-                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="name-{{ modal_suffix }}">
+                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="name-{{ modal_suffix }}">
                             <option value="">Seleccionar Cliente...</option>
                             {% for c in client_names %}
                             <option value="{{ c.name }}" {% if customer and customer.name == c.name %}selected{% endif %}>{{ c.name }}</option>
@@ -28,14 +28,14 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="plant-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="plant-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Planta / Unidad Productiva <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="plant-name" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -43,7 +43,7 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="plant" required
-                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="plant-{{ modal_suffix }}">
+                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="plant-{{ modal_suffix }}">
                             <option value="">Seleccionar Planta...</option>
                             {% for p in plant_names %}
                             <option value="{{ p.name }}" {% if customer and customer.plant == p.name %}selected{% endif %}>{{ p.name }}</option>
@@ -56,14 +56,14 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="industry-sector-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="industry-sector-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Sector Industrial <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="sector" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -84,14 +84,14 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="assigned-commercial-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="assigned-commercial-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Asesor Comercial Asignado <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="commercial" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -112,14 +112,14 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="technical-advisor-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="technical-advisor-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Asistente Técnico Asignado <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="advisor" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -140,14 +140,14 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="designer-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-2">
+            <label for="designer-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal flex items-center gap-2">
                 Diseñador Asignado <span class="text-peligro-500">*</span>
                 <button type="button" data-manage-entity="designer" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
             </label>
@@ -168,31 +168,31 @@
                 </div>
                 <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-2">
-            <label for="city-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Ciudad</label>
+            <label for="city-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal">Ciudad</label>
             <input name="city" required
-                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                 placeholder="Ej: Monterrey" type="text"
                 value="{{ customer.city if customer else '' }}"  id="city-{{ modal_suffix }}"/>
         </div>
         <div class="space-y-2">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-texto-tenue text-sm" aria-hidden="true">location_on</span>
-                <label for="address-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Dirección</label>
+                <label for="address-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal">Dirección</label>
             </div>
             <input name="address" required
-                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                 placeholder="Ej: Av. Central 123" type="text"
                 value="{{ customer.address if customer else '' }}"  id="address-{{ modal_suffix }}"/>
         </div>
         <div class="space-y-2">
-            <label for="status-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Estatus de Cuenta</label>
+            <label for="status-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal">Estatus de Cuenta</label>
             <select name="status" required
                 class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status-{{ modal_suffix }}">
                 <option value="Inactivo" {% if not customer or customer.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
@@ -207,10 +207,10 @@
     <div class="flex items-center justify-between mb-4 pb-2 border-b border-superficie-borde">
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">groups_3</span>
-            <h3 class="text-xs font-black text-texto-fuerte uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
+            <h3 class="text-xs font-black text-texto-fuerte tracking-[0.2em]">Equipo & Observaciones</h3>
         </div>
         <button type="button" id="btn-add-team-row-{{ modal_suffix }}"
-            class="group flex items-center gap-2 text-2xs font-black text-primary uppercase tracking-widest hover:scale-105 transition-all">
+            class="group flex items-center gap-2 text-2xs font-black text-primary tracking-normal hover:scale-105 transition-all">
             <span class="material-symbols-rounded text-[18px]" aria-hidden="true">add_circle</span>
             Añadir Nuevo
         </button>
@@ -228,12 +228,12 @@
         <table class="w-full text-left border-collapse min-w-[650px]" id="teamTable-{{ modal_suffix }}">
             <thead>
              <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Nombre Completo</th>
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Reporta a</th>
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Sector / Departamento</th>
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Cargo / Función</th>
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Teléfono</th>
-                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue uppercase tracking-widest text-center" scope="col">Acciones</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Nombre Completo</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Reporta a</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Sector / Departamento</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Cargo / Función</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Teléfono</th>
+                 <th class="px-4 py-3 text-2xs font-black text-texto-tenue tracking-normal text-center" scope="col">Acciones</th>
              </tr>
             </thead>
             <tbody class="divide-y divide-superficie-borde bg-white">
@@ -242,7 +242,7 @@
                     <tr>
                         <td class="px-3 py-2">
                             <div class="relative flex gap-1">
-                                <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                                <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                     <option value="">SELECCIONAR...</option>
                                     {% for cn in contact_names %}
                                     <option value="{{ cn }}" {% if member.name == cn %}selected{% endif %}>{{ cn }}</option>
@@ -253,7 +253,7 @@
                                 </button>
                                 <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                     <div class="flex gap-2">
-                                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                         <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                     </div>
                                 </div>
@@ -269,7 +269,7 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="relative flex gap-1">
-                                <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                                <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                     <option value="">SELECCIONAR...</option>
                                     {% for ms in member_sectors %}
                                     <option value="{{ ms.name }}" {% if member.sector == ms.name %}selected{% endif %}>{{ ms.name }}</option>
@@ -280,7 +280,7 @@
                                 </button>
                                 <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                     <div class="flex gap-2">
-                                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                         <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                     </div>
                                 </div>
@@ -301,7 +301,7 @@
                 <tr>
                     <td class="px-3 py-2">
                         <div class="relative flex gap-1">
-                            <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                            <select name="member_name" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                 <option value="">SELECCIONAR...</option>
                             </select>
                             <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
@@ -309,7 +309,7 @@
                             </button>
                             <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
-                                    <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                    <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                     <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@
                     </td>
                     <td class="px-3 py-2">
                         <div class="relative flex gap-1">
-                            <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                            <select name="member_sector" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                                 <option value="">SELECCIONAR...</option>
                                 {% for ms in member_sectors %}
                                 <option value="{{ ms.name }}">{{ ms.name }}</option>
@@ -333,7 +333,7 @@
                             </button>
                             <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
-                                    <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                    <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                     <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                 </div>
                             </div>
@@ -355,7 +355,7 @@
     </div>
 
     <div class="space-y-2">
-        <label for="observations-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Observaciones</label>
+        <label for="observations-{{ modal_suffix }}" class="text-2xs font-black text-texto-tenue tracking-normal">Observaciones</label>
         <textarea name="observations"
             class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
             placeholder="Notas estratégicas..." rows="2" id="observations-{{ modal_suffix }}">{{ customer.observations if customer else '' }}</textarea>

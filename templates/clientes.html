@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Clientes</h2>
-    <p class="text-2xs text-texto-suave font-bold uppercase">Gestión de Cuentas</p>
+    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Clientes</h2>
+    <p class="text-2xs text-texto-suave font-bold">Gestión de Cuentas</p>
 </div>
 {% endblock %}
 
@@ -27,7 +27,7 @@
             </div>
             {% if q %}
             <a href="/clientes"
-                class="text-2xs font-black text-texto-suave hover:text-primary transition-colors uppercase tracking-wider">Limpiar</a>
+                class="text-2xs font-black text-texto-suave hover:text-primary transition-colors tracking-normal">Limpiar</a>
             {% endif %}
             <button type="submit"
                 class="bg-primary-700 text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
@@ -58,11 +58,11 @@
             <table class="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Empresa / Sector</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Ubicación</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Equipo</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Status</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Empresa / Sector</th>
+                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Ubicación</th>
+                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Equipo</th>
+                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Status</th>
+                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -76,16 +76,16 @@
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-texto-fuerte">{{ customer.name }}</span>
                                     {% if not customer.is_active %}
-                                    <span class="text-2xs font-black text-peligro-500 uppercase tracking-tighter mt-0.5">INACTIVO</span>
+                                    <span class="text-2xs font-black text-peligro-500 tracking-tighter mt-0.5">INACTIVO</span>
                                     {% endif %}
-                                    <span class="text-2xs font-black text-texto-tenue uppercase tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
+                                    <span class="text-2xs font-black text-texto-tenue tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
                                 </div>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-xs">
                              <div class="flex flex-col">
                                 <span class="font-bold text-texto-base">{{ customer.plant }}</span>
-                                <span class="text-2xs text-texto-tenue uppercase font-bold">{{ customer.city }}</span>
+                                <span class="text-2xs text-texto-tenue font-bold">{{ customer.city }}</span>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-xs">
@@ -103,11 +103,11 @@
                         </td>
                         <td class="px-4 py-3 text-center">
                             {% if not customer.is_active %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase bg-peligro-100 text-peligro-700">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black bg-peligro-100 text-peligro-700">
                                 Inactivo
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase {% if customer.relevamiento_status == 'Completado' %} bg-exito-100 text-exito-700 {% elif customer.relevamiento_status == 'En Proceso' %} bg-alerta-100 text-alerta-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black {% if customer.relevamiento_status == 'Completado' %} bg-exito-100 text-exito-700 {% elif customer.relevamiento_status == 'En Proceso' %} bg-alerta-100 text-alerta-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
                                 {{ customer.relevamiento_status }}
                             </span>
                             {% endif %}
@@ -156,7 +156,7 @@
 
 {% if pagination.total_pages > 1 %}
 <div class="flex items-center justify-between px-4 py-3 bg-white border-t border-superficie-borde rounded-b-xl">
-    <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
+    <div class="text-2xs font-bold text-texto-tenue tracking-normal">
         Página {{ pagination.page }} de {{ pagination.total_pages }}
         <span class="mx-1">·</span>
         {{ pagination.total }} registro{{ 's' if pagination.total != 1 else '' }}
@@ -164,11 +164,11 @@
     <div class="flex items-center gap-1">
         {% if pagination.has_prev %}
         <a href="?page={{ pagination.page - 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Anterior
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
             Anterior
         </span>
         {% endif %}
@@ -188,11 +188,11 @@
 
         {% if pagination.has_next %}
         <a href="?page={{ pagination.page + 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Siguiente
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
             Siguiente
         </span>
         {% endif %}
@@ -220,9 +220,9 @@
             {% include "_cliente_form_fields.html" with context %}
             <div class="flex items-center justify-end gap-4 pt-4 border-t border-superficie-borde">
                 <button type="button" id="btn-cancel-nuevo-cliente"
-                    class="text-xs font-black text-texto-tenue hover:text-texto-fuerte uppercase tracking-widest transition-colors">Cancelar</button>
+                    class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
                 <button type="submit"
-                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
+                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
                     Registrar Cliente
                 </button>
             </div>
@@ -256,7 +256,7 @@
  <div id="manageEntityModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
       <div class="bg-superficie-card rounded-lg shadow-pop w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-superficie-borde">
          <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde shrink-0">
-             <h3 id="manageEntityTitle" class="text-lg font-bold text-texto-fuerte uppercase tracking-wider">Gestionar</h3>
+             <h3 id="manageEntityTitle" class="text-lg font-bold text-texto-fuerte tracking-normal">Gestionar</h3>
              <button type="button" id="manageEntityCloseBtn"
                  class="size-8 rounded-lg flex items-center justify-center text-texto-tenue hover:text-texto-base hover:bg-superficie-suave transition-all" aria-label="Cerrar">
                  <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
@@ -265,7 +265,7 @@
          <div class="p-6 space-y-4">
              <div class="flex gap-2">
                  <input id="manageEntityInput" type="text" aria-label="Nombre del nuevo elemento" placeholder="Nuevo elemento..."
-                     class="flex-1 bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none uppercase">
+                     class="flex-1 bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none">
                  <button id="manageEntityAddBtn" type="button"
                      class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
                      <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
@@ -618,7 +618,7 @@
             row.innerHTML = `
                 <td class="px-3 py-2">
                     <div class="relative flex gap-1">
-                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                             <option value="">SELECCIONAR...</option>
                             ${nameOpts}
                         </select>
@@ -627,7 +627,7 @@
                         </button>
                         <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                             </div>
                         </div>
@@ -641,7 +641,7 @@
                 </td>
                 <td class="px-3 py-2">
                     <div class="relative flex gap-1">
-                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                             <option value="">SELECCIONAR...</option>
                             ${sectorOpts}
                         </select>
@@ -650,7 +650,7 @@
                         </button>
                         <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                             </div>
                         </div>
@@ -808,7 +808,7 @@
             // Cancel button closes modal
            document.getElementById('btn-cancel-editar-cliente')?.addEventListener('click', closeEditModal);
 
-           // Reapply uppercase to text inputs
+           // Reapply to text inputs
            document.querySelectorAll('#editarClienteModal input[type="text"]').forEach(input => {
                input.addEventListener('input', function() {
                    this.value = this.value.toUpperCase();
@@ -824,7 +824,7 @@
                  newRow.innerHTML = `
                 <td class="px-3 py-2">
                     <div class="relative flex gap-1">
-                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                        <select name="member_name" aria-label="Nombre del integrante" required class="team-name-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                             <option value="">SELECCIONAR...</option>
                             ${nameOpts}
                         </select>
@@ -833,7 +833,7 @@
                         </button>
                         <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                             </div>
                         </div>
@@ -847,7 +847,7 @@
                 </td>
                 <td class="px-3 py-2">
                     <div class="relative flex gap-1">
-                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte uppercase">
+                        <select name="member_sector" aria-label="Sector del integrante" class="team-sector-select flex-1 bg-superficie-suave border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte">
                             <option value="">SELECCIONAR...</option>
                             ${sectorOpts}
                         </select>
@@ -856,7 +856,7 @@
                         </button>
                         <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue uppercase" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                             </div>
                         </div>

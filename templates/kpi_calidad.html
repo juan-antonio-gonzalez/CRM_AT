@@ -5,11 +5,11 @@
 {% block header_extra %}
 <div class="flex items-center gap-3">
     <div class="flex flex-col">
-        <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">KPIs Calidad</h2>
-        <p class="text-2xs text-texto-suave font-bold uppercase">Indicadores de Calidad y Asistencia Técnica</p>
+        <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">KPIs Calidad</h2>
+        <p class="text-2xs text-texto-suave font-bold">Indicadores de Calidad y Asistencia Técnica</p>
     </div>
     <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
-        <p class="text-2xs font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
+        <p class="text-2xs font-black text-primary tracking-normal leading-tight">Última Actualización</p>
         <p class="text-2xs font-bold text-texto-base">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
     </div>
 </div>
@@ -20,7 +20,7 @@
         <form method="GET" action="/kpi-calidad" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col w-20">
-                <label for="anio" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Año</label>
+                <label for="anio" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Año</label>
                 <select name="anio" class="bg-superficie-suave border border-superficie-borde rounded-lg px-2 py-1.5 text-xs font-bold" id="anio">
                     <option value="">Todos</option>
                     {% for y in available_years %}
@@ -29,7 +29,7 @@
                 </select>
             </div>
             <div class="flex flex-col w-20">
-                <label for="mes" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Mes</label>
+                <label for="mes" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Mes</label>
                 <select name="mes" class="bg-superficie-suave border border-superficie-borde rounded-lg px-2 py-1.5 text-xs font-bold" id="mes">
                     <option value="">Todos</option>
                     {% for m in months %}
@@ -38,7 +38,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="at" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">AT</label>
+                <label for="at" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">AT</label>
                 <select name="at" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="at">
                     <option value="">Todos</option>
                     {% for a in advisors %}
@@ -47,7 +47,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Cliente</label>
                 <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos</option>
                     {% for c in customer_list %}
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="tema" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Tema</label>
+                <label for="tema" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Tema</label>
                 <select name="tema" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="tema">
                     <option value="">Todos</option>
                     {% set all_temas = visitas.all_temas_calidad + visitas.all_temas_asistencia %}
@@ -67,7 +67,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="tipo-producto" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Tipo Producto</label>
+                <label for="tipo-producto" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Tipo Producto</label>
                 <select name="tipo_producto" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="tipo-producto">
                     <option value="">Todos</option>
                     {% for tp in visitas.all_tipos_producto %}
@@ -76,7 +76,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="planta" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Planta</label>
+                <label for="planta" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Planta</label>
                 <select name="planta" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="planta">
                     <option value="">Todos</option>
                     {% for p in visitas.all_plantas %}
@@ -84,14 +84,14 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
             <a href="/kpi-calidad" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
         </div>
     </form>
     <div class="grid grid-cols-1 gap-6">
         <div class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-2">
-                <h4 class="text-sm font-black text-texto-fuerte uppercase tracking-tight">Punto 7 — Asistencia Técnica</h4>
+                <h4 class="text-sm font-black text-texto-fuerte tracking-tight">Punto 7 — Asistencia Técnica</h4>
                 <span id="totalRegistros" class="text-2xs font-bold text-info-600 bg-info-500/10 px-2 py-1 rounded-lg">{{ visitas.total_asistencia }} registros</span>
             </div>
 

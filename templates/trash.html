@@ -24,7 +24,7 @@
                 data-confirm="Se eliminarán permanentemente {{ items|length }} elemento{{ 's' if items|length != 1 else '' }}{% if active_tipo %} de la categoría {{ active_tipo }}{% endif %}. No se podrá recuperar esta información.">
                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                 <button type="submit" id="btn-empty-trash"
-                    class="flex items-center gap-1.5 px-3 py-1.5 bg-peligro-50 text-peligro-700 hover:bg-peligro-100 border border-peligro-200 rounded-lg transition-colors text-2xs font-bold uppercase tracking-wider">
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-peligro-50 text-peligro-700 hover:bg-peligro-100 border border-peligro-200 rounded-lg transition-colors text-2xs font-bold tracking-normal">
                     <span class="material-symbols-rounded text-[14px]" aria-hidden="true">delete_sweep</span>
                     Vaciar{{ ' (' ~ items|length ~ ')' if active_tipo else '' }}
                 </button>
@@ -36,39 +36,39 @@
     <!-- Filters -->
     <div class="flex flex-wrap gap-2">
         <a href="/papelera"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if not active_tipo %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if not active_tipo %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Todos
         </a>
         <a href="/papelera?tipo=customer"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'customer' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'customer' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Clientes
         </a>
         <a href="/papelera?tipo=machine"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'machine' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'machine' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Máquinas
         </a>
         <a href="/papelera?tipo=product"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'product' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'product' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Productos
         </a>
         <a href="/papelera?tipo=visit"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'visit' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Visitas
         </a>
         <a href="/papelera?tipo=visit2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'visit2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Visitas V2
         </a>
         <a href="/papelera?tipo=survey2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'survey2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'survey2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Relevamientos V2
         </a>
         <a href="/papelera?tipo=infrastructure"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'infrastructure' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'infrastructure' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Infraestructura
         </a>
         <a href="/papelera?tipo=auxiliary"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'auxiliary' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-normal transition-all {% if active_tipo == 'auxiliary' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Tablas Auxiliares
         </a>
     </div>
@@ -93,7 +93,7 @@
                             {% endif %}
                         </p>
                         <div class="flex items-center gap-2 text-xs text-texto-suave mt-0.5">
-                            <span class="px-1.5 py-0.5 rounded bg-superficie-suave font-semibold uppercase text-2xs">
+                            <span class="px-1.5 py-0.5 rounded bg-superficie-suave font-semibold text-2xs">
                                 {{ item.entity_type }}
                             </span>
                             <span>ID {{ item.entity_id or '-' }}</span>

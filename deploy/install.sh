@@ -197,14 +197,28 @@ chmod 640 "$ENV_FILE"
 
 # Permisos del código. Un `rsync` desde otra máquina puede dejar los archivos en
 # modo 600 propiedad del usuario que copió, y entonces el servicio (que corre
-# como APP_USER) no puede leerlos: falla con
-# "python: can't open file 'run.py': [Errno 13] Permission denied".
-# Se normalizan siempre.
+# como APP_USER) no puede leerlos.
+#
+# Esto ya rompió producción dos veces, con dos síntomas distintos:
+#   * `run.py` en 600 -> "can't open file 'run.py': [Errno 13] Permission denied"
+#     y el servicio reiniciándose en bucle.
+#   * `templates/_ui.html` en 600 -> "PermissionError: [Errno 13] Permission
+#     denied: 'templates/_ui.html'" y la pantalla devolviendo HTTP 500.
+#
+# Por eso ahora se normaliza TODO archivo, no sólo los .py: alcanza con que un
+# editor cree un archivo con permisos restrictivos para tumbar una pantalla.
 chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
-find "$APP_DIR" -type f -name '*.py' -exec chmod 640 {} + 2>/dev/null || true
-find "$APP_DIR" -type f \( -name '*.sh' -o -name '*.ini' \) -exec chmod 640 {} + 2>/dev/null || true
+find "$APP_DIR" -type f -exec chmod 640 {} + 2>/dev/null || true
 find "$APP_DIR" -type d -exec chmod 750 {} + 2>/dev/null || true
 chmod 750 "$APP_DIR"
+
+# Los estáticos los lee nginx (www-data), así que necesitan ser legibles por todos
+# y las carpetas atravesables.
+if [ -d "${APP_DIR}/static" ]; then
+  find "${APP_DIR}/static" -type f -exec chmod 644 {} + 2>/dev/null || true
+  find "${APP_DIR}/static" -type d -exec chmod 755 {} + 2>/dev/null || true
+  chmod 755 "${APP_DIR}/static"
+fi
 
 # Nginx corre como www-data y necesita atravesar APP_DIR y leer los estáticos.
 if id -u www-data >/dev/null 2>&1; then
