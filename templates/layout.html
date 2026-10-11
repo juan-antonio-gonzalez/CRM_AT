@@ -37,7 +37,7 @@
 </head>
 
 <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300 h-full overflow-hidden m-0 p-0">
+    class="bg-superficie-base font-display text-texto-base antialiased h-full overflow-hidden m-0 p-0">
     <div class="flex h-full w-full overflow-hidden print:h-auto print:overflow-visible">
         <!-- Mobile Overlay -->
         <div id="sidebarOverlay"
@@ -48,21 +48,18 @@
            últimos grupos del menú quedaban inalcanzables. Ahora el logo y el
            perfil quedan fijos y sólo el menú se desplaza. #}
         <aside id="sidebarNav"
-            class="fixed inset-y-0 left-0 z-50 w-56 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-brand-navy flex flex-col px-3 py-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
             {% block sidebar %}
-            <!-- Logo Section (fijo) -->
-            <a href="/" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity shrink-0">
-                <div
-                    class="size-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                    <span class="material-symbols-rounded text-lg" aria-hidden="true">package_2</span>
-                </div>
-                <div class="flex flex-col">
-                    <h1
-                        class="text-slate-900 dark:text-white text-xs font-black leading-tight uppercase tracking-widest">
-                        CRM-AT</h1>
-                    <p class="text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase leading-tight">Gestión Operativa</p>
-                </div>
+            <!-- Logo (fijo) -->
+            <a href="/" class="flex items-center shrink-0 px-1 py-1 rounded-md hover:bg-white/5 transition-colors"
+                aria-label="Ir al inicio">
+                <img src="{{ url_for('static', path='/img/logo-aplicacionat.svg') }}"
+                    alt="AplicacionAT" class="h-8 w-auto" width="168" height="40">
             </a>
+            <div class="mt-3 mb-1 px-3">
+                <p class="text-2xs font-bold uppercase tracking-wider text-primary-200">CRM-AT</p>
+                <p class="text-2xs text-primary-300/80">Gestión Operativa</p>
+            </div>
 
             <!-- Navigation Groups (con scroll) -->
             <nav class="flex flex-col gap-3 flex-1 min-h-0 overflow-y-auto mt-4 -mr-1 pr-1"
@@ -70,23 +67,23 @@
                     <!-- Group: Análisis -->
                     <div class="flex flex-col gap-0.5">
                         <span
-                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Análisis</span>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'dashboard' %}sidebar-active{% endif %}"
+                            class="text-2xs font-bold text-primary-300 uppercase tracking-wider px-3 mb-1">Análisis</span>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page dashboard % sidebar-active % endif %"
                             href="/" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">dashboard</span>
                             <span class="text-xs font-semibold">KPIs - AT</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'kpi_calidad' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page kpi_calidad % sidebar-active % endif %"
                             href="/kpi-calidad" {% if active_page == 'kpi_calidad' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">ssid_chart</span>
                             <span class="text-xs font-semibold">KPIs Calidad AT</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'control_at' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page control_at % sidebar-active % endif %"
                             href="/control-at" {% if active_page == 'control_at' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
                             <span class="text-xs font-semibold">KPIs Asignación AT</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'historial_at' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page historial_at % sidebar-active % endif %"
                             href="/historial-at" {% if active_page == 'historial_at' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">history</span>
                             <span class="text-xs font-semibold">Historial Asignación AT</span>
@@ -96,23 +93,23 @@
                     <!-- Group: Operaciones -->
                     <div class="flex flex-col gap-0.5">
                         <span
-                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Operaciones</span>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'clientes' %}sidebar-active{% endif %}"
+                            class="text-2xs font-bold text-primary-300 uppercase tracking-wider px-3 mb-1">Operaciones</span>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page clientes % sidebar-active % endif %"
                             href="/clientes" {% if active_page == 'clientes' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">group</span>
                             <span class="text-xs font-semibold">Biblioteca de Clientes</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'organigrama' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page organigrama % sidebar-active % endif %"
                             href="/organigrama" {% if active_page == 'organigrama' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">account_tree</span>
                             <span class="text-xs font-semibold">Organigrama</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'productos' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page productos % sidebar-active % endif %"
                             href="/productos" {% if active_page == 'productos' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">inventory_2</span>
                             <span class="text-xs font-semibold">Biblioteca de Productos</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'maquinaria' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page maquinaria % sidebar-active % endif %"
                             href="/maquinaria" {% if active_page == 'maquinaria' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">precision_manufacturing</span>
                             <span class="text-xs font-semibold">Biblioteca de Máquinas</span>
@@ -122,50 +119,50 @@
                     <!-- Group: Gestión -->
                     <div class="flex flex-col gap-0.5">
                         <span
-                            class="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2.5 mb-0.5">Gestión</span>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'relevamiento2' %}sidebar-active{% endif %}"
+                            class="text-2xs font-bold text-primary-300 uppercase tracking-wider px-3 mb-1">Gestión</span>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page relevamiento2 % sidebar-active % endif %"
                             href="/relevamiento2" {% if active_page == 'relevamiento2' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">summarize</span>
                             <span class="text-xs font-semibold">Relevamiento Técnico</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'visitas2' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page visitas2 % sidebar-active % endif %"
                             href="/visitas2" {% if active_page == 'visitas2' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
                             <span class="text-xs font-semibold">Visitas Técnicas</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'minutas' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page minutas % sidebar-active % endif %"
                             href="/minutas" {% if active_page == 'minutas' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">description</span>
                             <span class="text-xs font-semibold">Minutas</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'infraestructura' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page infraestructura % sidebar-active % endif %"
                             href="/relevamiento-infraestructura" {% if active_page == 'infraestructura' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">factory</span>
                             <span class="text-xs font-semibold">Infraestructura & Logística</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'seguimiento' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page seguimiento % sidebar-active % endif %"
                             href="/seguimiento-plan" {% if active_page == 'seguimiento' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">checklist_rtl</span>
                             <span class="text-xs font-semibold">Seguimiento Plan</span>
                         </a>
                         {% if request.state.user and request.state.user.role == 'admin' %}
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'papelera' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page papelera % sidebar-active % endif %"
                             href="/papelera" {% if active_page == 'papelera' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">delete_sweep</span>
                             <span class="text-xs font-semibold">Papelera</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'usuarios' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page usuarios % sidebar-active % endif %"
                             href="/auth/usuarios" {% if active_page == 'usuarios' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">manage_accounts</span>
                             <span class="text-xs font-semibold">Usuarios</span>
                         </a>
                         {% endif %}
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'agenda' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page agenda % sidebar-active % endif %"
                             href="/agenda" {% if active_page == 'agenda' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">calendar_month</span>
                             <span class="text-xs font-semibold">Agenda de Visitas</span>
                         </a>
-                        <a class="flex items-center gap-2.5 px-2.5 py-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all {% if active_page == 'configuracion' %}sidebar-active{% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors % if active_page configuracion % sidebar-active % endif %"
                             href="/configuracion" {% if active_page == 'configuracion' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">settings</span>
                             <span class="text-xs font-semibold">Tablas Auxiliares</span>
@@ -174,18 +171,18 @@
                 </nav>
 
             <!-- Profile Section (fijo abajo) -->
-            <div class="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
+            <div class="pt-3 mt-3 border-t border-white/10 shrink-0">
                 <div class="flex items-center justify-between">
                     <a href="/auth/perfil" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity flex-1 min-w-0">
                         <div
-                            class="size-7 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-[10px] uppercase shrink-0">
+                            class="size-7 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold text-2xs uppercase shrink-0">
                             {{ (request.state.user.username[:2] if request.state.user else 'AD') }}</div>
                         <div class="flex flex-col overflow-hidden min-w-0">
-                            <p class="text-[11px] font-bold text-slate-900 dark:text-white truncate">{{ request.state.user.username if request.state.user else 'Invitado' }}</p>
-                            <p class="text-[9px] text-slate-500 dark:text-slate-400 truncate capitalize">{{ request.state.user.role if request.state.user else 'Sin sesión' }}</p>
+                            <p class="text-xs font-semibold text-white truncate">{{ request.state.user.username if request.state.user else 'Invitado' }}</p>
+                            <p class="text-2xs text-primary-300 truncate capitalize">{{ request.state.user.role if request.state.user else 'Sin sesión' }}</p>
                         </div>
                     </a>
-                    <a href="/auth/logout" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="Cerrar sesión" aria-label="Cerrar sesión">
+                    <a href="/auth/logout" class="p-1.5 text-primary-300 hover:text-white transition-colors shrink-0" title="Cerrar sesión" aria-label="Cerrar sesión">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">logout</span>
                     </a>
                 </div>
@@ -197,19 +194,15 @@
         <div class="flex-1 flex flex-col overflow-hidden print:overflow-visible print:h-auto">
             <!-- Global Header -->
             <header
-                class="h-16 lg:h-20 flex-shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-10 print:hidden">
+                class="h-16 lg:h-20 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-10 print:hidden">
                 {% block header %}
                 <div class="flex items-center gap-3 lg:gap-6">
                     <!-- Mobile Hamburger -->
                     <button id="btnMobileMenu" aria-label="Abrir menú de navegación" aria-controls="sidebarNav" aria-expanded="false"
-                        class="lg:hidden p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
+                        class="lg:hidden p-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:text-primary transition-all">
                         <span class="material-symbols-rounded" aria-hidden="true">menu</span>
                     </button>
-                    <button id="themeToggle" aria-label="Cambiar tema claro/oscuro"
-                        class="p-2 lg:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary transition-all">
-                        <span id="themeIcon" class="material-symbols-rounded" aria-hidden="true">light_mode</span>
-                    </button>
-                    <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden lg:block"></div>
+                    
                     {% block header_extra %}{% endblock %}
                 </div>
 
@@ -226,7 +219,7 @@
 
             <!-- Scrollable Content -->
             <main
-                class="flex-1 overflow-y-auto bg-slate-50 dark:bg-background-dark p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
+                class="flex-1 overflow-y-auto bg-slate-50 p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
                 {% block content %}{% endblock %}
             </main>
         </div>
@@ -234,19 +227,19 @@
     <div id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"
         class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
         <div
-            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+            class="bg-white w-full max-w-md rounded-3xl p-8 border border-slate-200 shadow-2xl">
             <div class="flex flex-col items-center text-center gap-4">
                 <div id="confirmModalIconContainer"
-                    class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-2">
+                    class="size-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-2">
                     <span id="confirmModalIcon" class="material-symbols-rounded text-[32px]" aria-hidden="true">warning</span>
                 </div>
-                <h3 id="confirmModalTitle" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">¿Confirmar Acción?</h3>
-                <p id="confirmModalMessage" class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                <h3 id="confirmModalTitle" class="text-xl font-black text-slate-900 tracking-tight">¿Confirmar Acción?</h3>
+                <p id="confirmModalMessage" class="text-slate-500 text-sm leading-relaxed">
                     ¿Deseas continuar con esta acción?
                 </p>
                 <div class="flex gap-3 w-full mt-6">
                     <button id="btnCancelConfirm"
-                        class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
                         Cancelar
                     </button>
                     <button id="confirmModalAction"
@@ -263,24 +256,24 @@
         class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
         <div id="deactivate-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
-            <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+            <div class="bg-white w-full max-w-md rounded-3xl p-8 border border-slate-200 shadow-2xl">
                 <div class="flex flex-col items-center text-center gap-4">
-                    <div class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-2">
+                    <div class="size-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-2">
                         <span class="material-symbols-rounded text-[32px]" aria-hidden="true">block</span>
                     </div>
-                    <h3 id="deactivate-modal-title" class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Desactivar Registro</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    <h3 id="deactivate-modal-title" class="text-xl font-black text-slate-900 tracking-tight">Desactivar Registro</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">
                         Indica el motivo por el cual desactivás este registro:
                     </p>
                     <textarea id="deactivate-reason" rows="3"
-                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
                         placeholder="Motivo obligatorio..."></textarea>
                     <div id="deactivate-error" class="hidden text-[11px] font-bold text-red-500 -mt-2">
                         Debes ingresar un motivo
                     </div>
                     <div class="flex gap-3 w-full mt-2">
                         <button id="btn-cancel-deactivate"
-                            class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
                             Cancelar
                         </button>
                         <button id="btn-confirm-deactivate"

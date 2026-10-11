@@ -24,10 +24,10 @@
 
     const icons = { success: 'check_circle', error: 'error', warning: 'warning', info: 'info' };
     const colorMap = {
-      success: 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300',
-      error: 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300',
-      warning: 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300',
-      info: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300',
+      success: 'bg-emerald-50 bg-emerald-900/30 border-emerald-200 border-emerald-800 text-emerald-700 text-emerald-300',
+      error: 'bg-red-50 bg-red-900/30 border-red-200 border-red-800 text-red-700 text-red-300',
+      warning: 'bg-amber-50 bg-amber-900/30 border-amber-200 border-amber-800 text-amber-700 text-amber-300',
+      info: 'bg-blue-50 bg-blue-900/30 border-blue-200 border-blue-800 text-blue-700 text-blue-300',
     };
     const iconColors = { success: 'text-emerald-500', error: 'text-red-500', warning: 'text-amber-500', info: 'text-blue-500' };
 
@@ -55,6 +55,74 @@
     }, duration);
   }
 
+  // ── Controlador único de modales ──
+  //
+  // Antes cada pantalla tenía su propio par de funciones (17 en total), cada una
+  // tocando `hidden` y `flex` a mano. Eso hacía que algunos modales no se
+  // cerraran con Escape, que el foco quedara detrás del diálogo y que el fondo
+  // no bloqueara el desplazamiento.
+  //
+  // Todo modal ahora se abre con `data-modal-open="<id>"` y se cierra con
+  // `data-modal-close="<id>"`. El componente está en templates/_ui.html.
+  let modalConFoco = null;
+
+  function abrirModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modalConFoco = document.activeElement;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    // El foco entra al diálogo para que el teclado no siga navegando el fondo.
+    const primero = modal.querySelector(
+      'input:not([type="hidden"]), select, textarea, button, [href]');
+    if (primero) primero.focus({ preventScroll: true });
+  }
+
+  function cerrarModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    // Si no queda ningún modal abierto, se libera el desplazamiento.
+    if (!document.querySelector('[role="dialog"]:not(.hidden)')) {
+      document.body.style.overflow = '';
+    }
+    if (modalConFoco && typeof modalConFoco.focus === 'function') {
+      modalConFoco.focus({ preventScroll: true });
+      modalConFoco = null;
+    }
+  }
+
+  function initModales() {
+    // Apertura y cierre por delegación: alcanza con marcar el elemento, sin
+    // escribir una función nueva por cada modal.
+    document.addEventListener('click', (e) => {
+      const abrir = e.target.closest('[data-modal-open]');
+      if (abrir) {
+        e.preventDefault();
+        abrirModal(abrir.dataset.modalOpen);
+        return;
+      }
+      const cerrar = e.target.closest('[data-modal-close]');
+      if (cerrar) {
+        e.preventDefault();
+        cerrarModal(cerrar.dataset.modalClose);
+        return;
+      }
+      // Clic en el fondo oscuro (fuera del panel) cierra el modal.
+      if (e.target.matches('[role="dialog"]')) {
+        cerrarModal(e.target.id);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const abierto = Array.from(document.querySelectorAll('[role="dialog"]:not(.hidden)')).pop();
+      if (abierto) cerrarModal(abierto.id);
+    });
+  }
+
   // ── Confirm Modal ──
   let currentFormToSubmit = null;
   let currentConfirmCallback = null;
@@ -76,49 +144,37 @@
     const iconContainer = document.getElementById('confirmModalIconContainer');
     document.getElementById('confirmModalIcon').textContent = icon;
 
-    actionBtn.className = 'flex-1 px-6 py-3.5 rounded-xl text-white font-bold text-xs uppercase tracking-widest transition-all';
-    iconContainer.className = 'size-16 rounded-2xl flex items-center justify-center mb-2';
+    actionBtn.className = 'flex-1 px-4 py-2 rounded-md text-white text-sm font-semibold transition-colors';
+    iconContainer.className = 'size-12 rounded-md flex items-center justify-center';
 
     if (type === 'danger') {
-      actionBtn.classList.add('bg-red-500', 'hover:bg-red-600', 'shadow-lg', 'shadow-red-200', 'dark:shadow-none');
-      iconContainer.classList.add('bg-red-50', 'dark:bg-red-900/20', 'text-red-500');
+      actionBtn.classList.add('bg-peligro-500', 'hover:bg-peligro-600');
+      iconContainer.classList.add('bg-peligro-50', 'text-peligro-500');
     } else {
-      actionBtn.classList.add('bg-primary', 'hover:bg-primary/90', 'shadow-lg', 'shadow-primary/20', 'dark:shadow-none');
-      iconContainer.classList.add('bg-blue-50', 'dark:bg-blue-900/20', 'text-primary');
+      actionBtn.classList.add('bg-primary-600', 'hover:bg-primary-700');
+      iconContainer.classList.add('bg-primary-50', 'text-primary-600');
     }
 
-    document.getElementById('confirmModal').classList.remove('hidden');
-    document.getElementById('confirmModal').classList.add('flex');
+    abrirModal('confirmModal');
   }
 
   function closeConfirmModal() {
-    document.getElementById('confirmModal').classList.remove('flex');
-    document.getElementById('confirmModal').classList.add('hidden');
+    cerrarModal('confirmModal');
     currentFormToSubmit = null;
     currentConfirmCallback = null;
   }
 
-  // ── Dark Mode ──
+  // ── Tema ──
+  // El modo oscuro se retiró: duplicaba cada componente y no se usaba. Se quita
+  // también la clase residual del documento, porque una sesión anterior pudo
+  // haberla guardado en localStorage y dejaría la interfaz a medio pintar.
   function initTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    if (!themeToggle || !themeIcon) return;
-
-    if (localStorage.getItem('theme') === 'dark' ||
-      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-      themeIcon.textContent = 'dark_mode';
-    } else {
-      document.documentElement.classList.remove('dark');
-      themeIcon.textContent = 'light_mode';
+    document.documentElement.classList.remove('dark');
+    try {
+      localStorage.removeItem('theme');
+    } catch (e) {
+      /* almacenamiento no disponible: no es crítico */
     }
-
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      themeIcon.textContent = isDark ? 'dark_mode' : 'light_mode';
-      document.dispatchEvent(new CustomEvent('themechange', { detail: { dark: isDark } }));
-    });
   }
 
   // ── Sidebar ──
@@ -167,12 +223,12 @@
   function validateField(input) {
     const isValid = input.checkValidity();
     if (isValid) {
-      input.classList.remove('field-invalid', 'border-red-300', 'dark:border-red-700', 'bg-red-50', 'dark:bg-red-900/10');
-      input.classList.add('border-emerald-300', 'dark:border-emerald-700');
+      input.classList.remove('field-invalid', 'border-red-300', 'border-red-700', 'bg-red-50', 'bg-red-900/10');
+      input.classList.add('border-emerald-300', 'border-emerald-700');
       return true;
     }
-    input.classList.remove('border-emerald-300', 'dark:border-emerald-700');
-    input.classList.add('field-invalid', 'border-red-300', 'dark:border-red-700', 'bg-red-50', 'dark:bg-red-900/10');
+    input.classList.remove('border-emerald-300', 'border-emerald-700');
+    input.classList.add('field-invalid', 'border-red-300', 'border-red-700', 'bg-red-50', 'bg-red-900/10');
     return false;
   }
 
@@ -202,7 +258,7 @@
   // ── Safe DOM creation (replaces innerHTML for dynamic rows) ──
   function createMaterialRow() {
     const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors material-row';
+    tr.className = 'hover:bg-slate-50/50 hover:bg-slate-800/30 transition-colors material-row';
     const td1 = document.createElement('td');
     td1.className = 'px-6 py-4 relative';
     const inp1 = document.createElement('input');
@@ -213,7 +269,7 @@
     inp1.autocomplete = 'off';
     td1.appendChild(inp1);
     const pred = document.createElement('div');
-    pred.className = 'predictions-container absolute left-0 right-0 top-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl z-50 hidden max-h-48 overflow-y-auto';
+    pred.className = 'predictions-container absolute left-0 right-0 top-full mt-1 bg-white bg-slate-800 border border-slate-200 border-slate-700 rounded-lg shadow-xl z-50 hidden max-h-48 overflow-y-auto';
     td1.appendChild(pred);
     tr.appendChild(td1);
     for (const [name, cls, placeholder] of [['material_desc', 'desc-input', 'Descripción...'], ['material_tipo', 'mat-input', 'Material...'], ['material_obs', '', 'Notas...']]) {
@@ -490,6 +546,7 @@
   // ── Initialize ──
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initModales();
     initEventDelegation();
     initConfirmBridge();
     initMobileNavState();
@@ -503,6 +560,8 @@
   window.showToast = showToast;
   window.showConfirmModal = showConfirmModal;
   window.closeConfirmModal = closeConfirmModal;
+  window.abrirModal = abrirModal;
+  window.cerrarModal = cerrarModal;
   window.toggleSidebar = toggleSidebar;
   window.escapeHtml = escapeHtml;
   window.setHTML = setHTML;

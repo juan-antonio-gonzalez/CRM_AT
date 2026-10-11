@@ -1,9 +1,9 @@
 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
 <!-- Section: General Info -->
 <section>
-    <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+    <div class="flex items-center gap-3 mb-4 pb-2 border-b border-slate-100">
         <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">domain</span>
-        <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información General</h3>
+        <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Información General</h3>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-2">
@@ -15,20 +15,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="name" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="name-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="name-{{ modal_suffix }}">
                             <option value="">Seleccionar Cliente...</option>
                             {% for c in client_names %}
                             <option value="{{ c.name }}" {% if customer and customer.name == c.name %}selected{% endif %}>{{ c.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="client-name" data-select="name" title="Crear nuevo cliente" aria-label="Crear nuevo cliente">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="client-name" data-select="name" title="Crear nuevo cliente" aria-label="Crear nuevo cliente">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo cliente..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -43,20 +43,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="plant" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="plant-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase" id="plant-{{ modal_suffix }}">
                             <option value="">Seleccionar Planta...</option>
                             {% for p in plant_names %}
                             <option value="{{ p.name }}" {% if customer and customer.plant == p.name %}selected{% endif %}>{{ p.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="plant-name" data-select="plant" title="Crear nueva planta" aria-label="Crear nueva planta">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="plant-name" data-select="plant" title="Crear nueva planta" aria-label="Crear nueva planta">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nueva planta..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -71,20 +71,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="industry_sector" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="industry-sector-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="industry-sector-{{ modal_suffix }}">
                             <option value="">Seleccionar Sector...</option>
                             {% for s in sectors %}
                             <option value="{{ s.name }}" {% if customer and customer.industry_sector == s.name %}selected{% endif %}>{{ s.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="sector" data-select="industry_sector" title="Crear nuevo sector" aria-label="Crear nuevo sector">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="sector" data-select="industry_sector" title="Crear nuevo sector" aria-label="Crear nuevo sector">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo sector..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -99,20 +99,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="assigned_commercial" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="assigned-commercial-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="assigned-commercial-{{ modal_suffix }}">
                             <option value="">Seleccionar Comercial...</option>
                             {% for c in commercials %}
                             <option value="{{ c.name }}" {% if customer and customer.assigned_commercial == c.name %}selected{% endif %}>{{ c.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="commercial" data-select="assigned_commercial" title="Crear nuevo comercial" aria-label="Crear nuevo comercial">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="commercial" data-select="assigned_commercial" title="Crear nuevo comercial" aria-label="Crear nuevo comercial">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -127,20 +127,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="technical_advisor" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor-{{ modal_suffix }}">
                             <option value="">Seleccionar AT...</option>
                             {% for a in advisors %}
                             <option value="{{ a.name }}" {% if customer and customer.technical_advisor == a.name %}selected{% endif %}>{{ a.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="advisor" data-select="technical_advisor" title="Crear nuevo AT" aria-label="Crear nuevo AT">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="advisor" data-select="technical_advisor" title="Crear nuevo AT" aria-label="Crear nuevo AT">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -155,20 +155,20 @@
                 <div class="flex gap-1.5">
                     <div class="flex-1">
                         <select name="designer" required
-                            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="designer-{{ modal_suffix }}">
+                            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="designer-{{ modal_suffix }}">
                             <option value="">Seleccionar Diseñador...</option>
                             {% for d in designers %}
                             <option value="{{ d.name }}" {% if customer and customer.designer == d.name %}selected{% endif %}>{{ d.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="designer" data-select="designer" title="Crear nuevo diseñador" aria-label="Crear nuevo diseñador">
+                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="designer" data-select="designer" title="Crear nuevo diseñador" aria-label="Crear nuevo diseñador">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                         <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
         <div class="space-y-2">
             <label for="city-{{ modal_suffix }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ciudad</label>
             <input name="city" required
-                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
                 placeholder="Ej: Monterrey" type="text"
                 value="{{ customer.city if customer else '' }}"  id="city-{{ modal_suffix }}"/>
         </div>
@@ -187,14 +187,14 @@
                 <label for="address-{{ modal_suffix }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dirección</label>
             </div>
             <input name="address" required
-                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
+                class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
                 placeholder="Ej: Av. Central 123" type="text"
                 value="{{ customer.address if customer else '' }}"  id="address-{{ modal_suffix }}"/>
         </div>
         <div class="space-y-2">
             <label for="status-{{ modal_suffix }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estatus de Cuenta</label>
             <select name="status" required
-                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status-{{ modal_suffix }}">
+                class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status-{{ modal_suffix }}">
                 <option value="Inactivo" {% if not customer or customer.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
                 <option value="Activo" {% if customer and customer.status == 'Activo' %}selected{% endif %}>Activo</option>
                 <option value="Inactivo" {% if customer and customer.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
@@ -204,10 +204,10 @@
 </section>
 
 <section>
-    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">groups_3</span>
-            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
+            <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Equipo & Observaciones</h3>
         </div>
         <button type="button" id="btn-add-team-row-{{ modal_suffix }}"
             class="group flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest hover:scale-105 transition-all">
@@ -224,10 +224,10 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800 mb-6 shadow-sm max-h-80 overflow-y-auto">
+    <div class="overflow-x-auto rounded-2xl border border-slate-100 mb-6 shadow-sm max-h-80 overflow-y-auto">
         <table class="w-full text-left border-collapse min-w-[650px]" id="teamTable-{{ modal_suffix }}">
             <thead>
-             <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+             <tr class="bg-slate-50/50 border-b border-slate-100">
                  <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Nombre Completo</th>
                  <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Reporta a</th>
                  <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Sector / Departamento</th>
@@ -236,31 +236,31 @@
                  <th class="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center" scope="col">Acciones</th>
              </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/50">
+            <tbody class="divide-y divide-slate-100 bg-white">
                 {% if contact_names %}
                     {% for member in customer.client_team %}
                     <tr>
                         <td class="px-3 py-2">
                             <div class="relative flex gap-1">
-                                <select name="member_name" required class="team-name-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                                <select name="member_name" required class="team-name-select flex-1 bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 uppercase">
                                     <option value="">SELECCIONAR...</option>
                                     {% for cn in contact_names %}
                                     <option value="{{ cn }}" {% if member.name == cn %}selected{% endif %}>{{ cn }}</option>
                                     {% endfor %}
                                 </select>
-                                <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
+                                <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                                 </button>
-                                <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                                <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                                     <div class="flex gap-2">
-                                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                                         <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-3 py-2">
-                            <select name="member_reports_to" class="team-reports-select w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white">
+                            <select name="member_reports_to" class="team-reports-select w-full bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900">
                                 <option value="">(NINGUNO)</option>
                                 {% for cn in contact_names %}
                                 <option value="{{ cn }}" {% if member.reports_to == cn %}selected{% endif %}>{{ cn }}</option>
@@ -269,18 +269,18 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="relative flex gap-1">
-                                <select name="member_sector" class="team-sector-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                                <select name="member_sector" class="team-sector-select flex-1 bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 uppercase">
                                     <option value="">SELECCIONAR...</option>
                                     {% for ms in member_sectors %}
                                     <option value="{{ ms.name }}" {% if member.sector == ms.name %}selected{% endif %}>{{ ms.name }}</option>
                                     {% endfor %}
                                 </select>
-                                <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
+                                <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                                 </button>
-                                <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                                <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                                     <div class="flex gap-2">
-                                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                        <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                                         <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@
                         <td class="px-3 py-2"><input name="member_phone"
                                 class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Teléfono..." type="text" value="{{ member.phone or '' }}" /></td>
                         <td class="px-3 py-2 text-center">
-                            <button type="button" class="btn-remove-team-row-{{ modal_suffix }} p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
+                            <button type="button" class="btn-remove-team-row- modal_suffix p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
                                 <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete_sweep</span>
                             </button>
                         </td>
@@ -301,39 +301,39 @@
                 <tr>
                     <td class="px-3 py-2">
                         <div class="relative flex gap-1">
-                            <select name="member_name" required class="team-name-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <select name="member_name" required class="team-name-select flex-1 bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 uppercase">
                                 <option value="">SELECCIONAR...</option>
                             </select>
-                            <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
+                            <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                             </button>
-                            <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
-                                    <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                    <input type="text" placeholder="Nuevo nombre..." class="team-add-name-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                                     <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                 </div>
                             </div>
                         </div>
                     </td>
                     <td class="px-3 py-2">
-                        <select name="member_reports_to" class="team-reports-select w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white">
+                        <select name="member_reports_to" class="team-reports-select w-full bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900">
                             <option value="">(NINGUNO)</option>
                         </select>
                     </td>
                     <td class="px-3 py-2">
                         <div class="relative flex gap-1">
-                            <select name="member_sector" class="team-sector-select flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white uppercase">
+                            <select name="member_sector" class="team-sector-select flex-1 bg-slate-50 border-none rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 uppercase">
                                 <option value="">SELECCIONAR...</option>
                                 {% for ms in member_sectors %}
                                 <option value="{{ ms.name }}">{{ ms.name }}</option>
                                 {% endfor %}
                             </select>
-                            <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
+                            <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                             </button>
-                            <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl p-2 min-w-[220px]">
+                            <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-slate-200 shadow-xl p-2 min-w-[220px]">
                                 <div class="flex gap-2">
-                                    <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-slate-50 dark:bg-slate-700 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 dark:text-white placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
+                                    <input type="text" placeholder="Nuevo sector..." class="team-add-sector-input flex-1 bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-slate-900 placeholder:text-slate-400 uppercase" oninput="this.value = this.value.toUpperCase()">
                                     <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
                                 </div>
                             </div>
@@ -344,7 +344,7 @@
                     <td class="px-3 py-2"><input name="member_phone"
                             class="w-full bg-transparent border-none text-sm font-semibold focus:ring-0" placeholder="Teléfono..." type="text" /></td>
                     <td class="px-3 py-2 text-center">
-                        <button type="button" class="btn-remove-team-row-{{ modal_suffix }} p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
+                        <button type="button" class="btn-remove-team-row- modal_suffix p-2 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante">
                             <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete_sweep</span>
                         </button>
                     </td>
@@ -357,7 +357,7 @@
     <div class="space-y-2">
         <label for="observations-{{ modal_suffix }}" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
         <textarea name="observations"
-            class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
+            class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:italic"
             placeholder="Notas estratégicas..." rows="2" id="observations-{{ modal_suffix }}">{{ customer.observations if customer else '' }}</textarea>
     </div>
 </section>

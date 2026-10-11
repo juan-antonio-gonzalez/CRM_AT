@@ -2,22 +2,22 @@
 {% block title %}Agenda de Visitas | CRM-AT{% endblock %}
 {% block header_extra %}
 <div class="flex flex-col ml-2 lg:ml-4 min-w-0">
-    <h2 class="text-sm sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight truncate">Agenda de Visitas</h2>
-    <p class="hidden lg:block text-xs text-slate-500 dark:text-slate-400 font-medium">Vista calendario de visitas técnicas.</p>
+    <h2 class="text-sm sm:text-xl font-bold text-slate-900 leading-tight font-display tracking-tight truncate">Agenda de Visitas</h2>
+    <p class="hidden lg:block text-xs text-slate-500 font-medium">Vista calendario de visitas técnicas.</p>
 </div>
 {% endblock %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-6 animate-fade-in">
     <!-- Toolbar -->
-    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-4">
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
             <button id="btn-prev"
-                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" aria-label="Mes anterior">
+                class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors" aria-label="Mes anterior">
                 <span class="material-symbols-rounded text-xl" aria-hidden="true">chevron_left</span>
             </button>
-            <h3 id="calendar-title" class="text-lg font-black text-slate-900 dark:text-white min-w-[200px] text-center">Junio 2026</h3>
+            <h3 id="calendar-title" class="text-lg font-black text-slate-900 min-w-[200px] text-center">Junio 2026</h3>
             <button id="btn-next"
-                class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" aria-label="Mes siguiente">
+                class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors" aria-label="Mes siguiente">
                 <span class="material-symbols-rounded text-xl" aria-hidden="true">chevron_right</span>
             </button>
             <button id="btn-today"
@@ -32,19 +32,19 @@
                 Agendar visita
             </button>
             <select id="filter-cliente"
-                class="form-select bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-2 focus:ring-primary focus:border-primary">
+                class="form-select bg-slate-50 border-slate-200 rounded-lg text-xs font-bold px-3 py-2 focus:ring-primary focus:border-primary">
                 <option value="">Todos los clientes</option>
                 {% for c in clientes %}
                 <option value="{{ c.id }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
                 {% endfor %}
             </select>
-            <div class="flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="flex rounded-lg border border-slate-200 overflow-hidden">
                 <button id="view-month" type="button" aria-pressed="true"
                     class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors">
                     Mes
                 </button>
                 <button id="view-week" type="button" aria-pressed="false"
-                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors">
                     Semana
                 </button>
             </div>
@@ -52,16 +52,16 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <!-- Weekday headers -->
-        <div id="weekday-header" class="grid grid-cols-7 bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Lun</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Mar</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Mié</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Jue</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Vie</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Sáb</div>
-            <div class="px-3 py-3 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Dom</div>
+        <div id="weekday-header" class="grid grid-cols-7 bg-slate-50/50 border-b border-slate-200">
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Lun</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Mar</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Mié</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Jue</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Vie</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Sáb</div>
+            <div class="px-3 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Dom</div>
         </div>
         <!-- Calendar body -->
         <div id="calendar-body" class="min-h-[600px]">
@@ -71,15 +71,15 @@
 
     <!-- Visit detail popover -->
     <div id="visit-popover"
-        class="hidden fixed z-50 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-5 w-80"
+        class="hidden fixed z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 p-5 w-80"
         style="display:none;">
         <div class="flex items-start justify-between mb-3">
-            <h4 id="popover-title" class="text-sm font-bold text-slate-900 dark:text-white pr-4"></h4>
+            <h4 id="popover-title" class="text-sm font-bold text-slate-900 pr-4"></h4>
             <button id="popover-close" class="text-slate-400 hover:text-slate-600" aria-label="Cerrar">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
             </button>
         </div>
-        <div class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+        <div class="space-y-2 text-xs text-slate-600">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-[16px] text-primary" aria-hidden="true">calendar_today</span>
                 <span id="popover-date" class="font-semibold"></span>
@@ -97,7 +97,7 @@
                 <span id="popover-objetivo" class="flex-1"></span>
             </div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-2">
             <div class="flex gap-2">
                 <a id="popover-link" href="#"
                     class="flex-1 text-center px-3 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold transition-colors">
@@ -107,7 +107,7 @@
                     class="px-3 py-2 rounded-xl text-[10px] font-black uppercase inline-flex items-center"></span>
             </div>
             <button id="popover-cancel-btn"
-                class="w-full px-3 py-2 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-600 rounded-xl text-xs font-bold transition-colors">
+                class="w-full px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition-colors">
                 Cancelar visita
             </button>
         </div>
@@ -118,10 +118,10 @@
 <div id="create-modal-container" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="create-modal-container-title">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200">
             <div class="p-6 space-y-5">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="create-modal-container-title">Agendar Visita</h3>
+                    <h3 class="text-lg font-black text-slate-900 tracking-tight" id="create-modal-container-title">Agendar Visita</h3>
                     <button id="btn-close-create" class="text-slate-400 hover:text-slate-600" aria-label="Cerrar">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
                     </button>
@@ -133,7 +133,7 @@
                         <div>
                             <label for="agenda-cliente" class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Cliente *</label>
                             <select id="agenda-cliente" required
-                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-primary">
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar —</option>
                                 {% for c in clientes %}
                                 <option value="{{ c.id }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
@@ -143,12 +143,12 @@
                         <div>
                             <label for="agenda-fecha" class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Fecha *</label>
                             <input type="date" id="agenda-fecha" required min="{{ today }}"
-                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-primary">
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
                         </div>
                         <div>
                             <label for="agenda-at" class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Asistente Técnico (AT) *</label>
                             <select id="agenda-at" required
-                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-primary">
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar AT —</option>
                                 {% for at_name in ats_asignados %}
                                 <option value="{{ at_name }}">{{ at_name }}</option>
@@ -159,21 +159,21 @@
                         <div>
                             <label class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Objetivo *</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <label for="visita-programada" class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="visita-programada" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Visita programada" id="visita-programada">
-                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Visita programada</span>
+                                    <span class="text-xs font-bold text-slate-600">Visita programada</span>
                                 </label>
-                                <label for="no-conformidad" class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="no-conformidad" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Análisis No conformidad" id="no-conformidad">
-                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">No conformidad</span>
+                                    <span class="text-xs font-bold text-slate-600">No conformidad</span>
                                 </label>
-                                <label for="seguimiento" class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="seguimiento" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Seguimiento" id="seguimiento">
-                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Seguimiento</span>
+                                    <span class="text-xs font-bold text-slate-600">Seguimiento</span>
                                 </label>
-                                <label for="solicitud-del-cliente" class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="solicitud-del-cliente" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Solicitud del cliente" id="solicitud-del-cliente">
-                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">Solicitud del cliente</span>
+                                    <span class="text-xs font-bold text-slate-600">Solicitud del cliente</span>
                                 </label>
                             </div>
                         </div>
@@ -194,7 +194,7 @@
                         <div>
                             <label for="agenda-observaciones" class="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Observaciones</label>
                             <textarea id="agenda-observaciones" rows="2"
-                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary"></textarea>
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary"></textarea>
                         </div>
                     </div>
                     <div class="flex gap-3 pt-4">
@@ -333,9 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var MONTH_NAMES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
     function dayAriaLabel(d, count) {
-        var label = DAY_NAMES[d.getDay()] + ' ' + d.getDate() + ' de ' + MONTH_NAMES[d.getMonth()] + ' de ' + d.getFullYear();
+        var label = DAY_NAMES[d.getDay()] + '' + d.getDate() + 'de' + MONTH_NAMES[d.getMonth()] + 'de' + d.getFullYear();
         if (count === 1) return label + '. 1 visita agendada.';
-        if (count > 1) return label + '. ' + count + ' visitas agendadas.';
+        if (count > 1) return label + '.' + count + 'visitas agendadas.';
         return label + '. Sin visitas agendadas.';
     }
 
@@ -403,9 +403,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var grouped = groupVisitsByDate(visits);
 
         var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-        titleEl.textContent = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+        titleEl.textContent = monthNames[date.getMonth()] + '' + date.getFullYear();
 
-        var html = '<div class="grid grid-cols-7 divide-x divide-y divide-slate-100 dark:divide-slate-800">';
+        var html = '<div class="grid grid-cols-7 divide-x divide-y divide-slate-100">';
         var todayStr = fmtDate(new Date());
         while (d <= end) {
             var ds = fmtDate(d);
@@ -413,12 +413,12 @@ document.addEventListener('DOMContentLoaded', function() {
             var isToday = ds === todayStr;
             var dayVisits = grouped[ds] || [];
 
-            html += '<div class="cal-day p-2 ' + (isOther ? 'other-month' : '') + (isToday ? ' today' : '') + '" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
+            html += '<div class="cal-day p-2 (isOther other-month : ) (isToday today : )" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
             html += '<div class="cal-day-header"><span class="cal-day-num">' + d.getDate() + '</span></div>';
             dayVisits.forEach(function(v) {
                 var sClass = statusClass(v.status);
                 var shortTitle = v.title.length > 18 ? v.title.substring(0, 16) + '..' : v.title;
-                html += '<div class="cal-visit-dot ' + sClass + '" data-id="' + v.id + '" data-title="' + escapeHtml(v.title) + '" data-date="' + v.start + '" data-advisor="' + escapeHtml(v.advisor) + '" data-swa="' + v.swa_count + '" data-cli="' + v.cli_count + '" data-objetivo="' + escapeHtml(v.objetivo) + '" data-status="' + v.status + '" data-url="' + v.url + '">' + shortTitle + '</div>';
+                html += '<div class="cal-visit-dot sClass" data-id="' + v.id + '" data-title="' + escapeHtml(v.title) + '" data-date="' + v.start + '" data-advisor="' + escapeHtml(v.advisor) + '" data-swa="' + v.swa_count + '" data-cli="' + v.cli_count + '" data-objetivo="' + escapeHtml(v.objetivo) + '" data-status="' + v.status + '" data-url="' + v.url + '">' + shortTitle + '</div>';
             });
             html += '</div>';
             d.setDate(d.getDate() + 1);
@@ -438,26 +438,26 @@ document.addEventListener('DOMContentLoaded', function() {
         var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         var weekStart = new Date(range.start + 'T12:00:00');
         var weekEnd = new Date(range.end + 'T12:00:00');
-        titleEl.textContent = weekStart.getDate() + ' ' + monthNames[weekStart.getMonth()] + ' - ' + weekEnd.getDate() + ' ' + monthNames[weekEnd.getMonth()] + ' ' + weekEnd.getFullYear();
+        titleEl.textContent = weekStart.getDate() + '' + monthNames[weekStart.getMonth()] + '-' + weekEnd.getDate() + '' + monthNames[weekEnd.getMonth()] + '' + weekEnd.getFullYear();
 
         var daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
         var todayStr = fmtDate(new Date());
 
-        var html = '<div class="grid grid-cols-7 divide-x divide-slate-100 dark:divide-slate-800" style="min-height:500px">';
+        var html = '<div class="grid grid-cols-7 divide-x divide-slate-100" style="min-height:500px">';
         for (var i = 0; i < 7; i++) {
             var ds = fmtDate(d);
             var isToday = ds === todayStr;
             var dayVisits = grouped[ds] || [];
 
-            html += '<div class="cal-day p-2 flex flex-col ' + (isToday ? ' today' : '') + '" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
-            html += '<div class="cal-day-header flex flex-col items-center py-2 border-b border-slate-100 dark:border-slate-800 mb-2">';
+            html += '<div class="cal-day p-2 flex flex-col (isToday today : )" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
+            html += '<div class="cal-day-header flex flex-col items-center py-2 border-b border-slate-100 mb-2">';
             html += '<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">' + daysOfWeek[i] + '</span>';
-            html += '<span class="cal-day-num text-sm mt-1 ' + (isToday ? 'bg-primary text-white' : '') + '">' + d.getDate() + '</span>';
+            html += '<span class="cal-day-num text-sm mt-1 (isToday bg-primary text-white : )">' + d.getDate() + '</span>';
             html += '</div>';
             html += '<div class="flex-1 overflow-y-auto space-y-1">';
             dayVisits.forEach(function(v) {
                 var sClass = statusClass(v.status);
-                html += '<div class="cal-visit-dot ' + sClass + '" data-id="' + v.id + '" data-title="' + escapeHtml(v.title) + '" data-date="' + v.start + '" data-advisor="' + escapeHtml(v.advisor) + '" data-swa="' + v.swa_count + '" data-cli="' + v.cli_count + '" data-objetivo="' + escapeHtml(v.objetivo) + '" data-status="' + v.status + '" data-url="' + v.url + '">';
+                html += '<div class="cal-visit-dot sClass" data-id="' + v.id + '" data-title="' + escapeHtml(v.title) + '" data-date="' + v.start + '" data-advisor="' + escapeHtml(v.advisor) + '" data-swa="' + v.swa_count + '" data-cli="' + v.cli_count + '" data-objetivo="' + escapeHtml(v.objetivo) + '" data-status="' + v.status + '" data-url="' + v.url + '">';
                 html += '<span class="visit-title">' + escapeHtml(v.title) + '</span>';
                 if (v.advisor) html += '<span class="visit-time">' + escapeHtml(v.advisor) + '</span>';
                 html += '</div>';
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 openCreateForDate(this.dataset.date);
             });
             cell.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                if (e.key === 'Enter' || e.key === '' || e.key === 'Spacebar') {
                     e.preventDefault();
                     this.click();
                 }
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('popover-advisor').textContent = this.dataset.advisor || 'Sin asignar';
                 var swa = parseInt(this.dataset.swa) || 0;
                 var cli = parseInt(this.dataset.cli) || 0;
-                document.getElementById('popover-participants').textContent = swa + ' SWA, ' + cli + ' Cliente';
+                document.getElementById('popover-participants').textContent = swa + 'SWA,' + cli + 'Cliente';
                 document.getElementById('popover-objetivo').textContent = this.dataset.objetivo || '—';
                 var statusEl = document.getElementById('popover-status');
                 if (status === 'Finalizado') {
@@ -591,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
         viewMonthBtn.setAttribute('aria-pressed', 'true');
         viewWeekBtn.setAttribute('aria-pressed', 'false');
         viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors';
+        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 bg-slate-800 text-slate-600 text-slate-400 hover:bg-slate-100 hover:bg-slate-700 transition-colors';
         loadAndRender();
     });
     viewWeekBtn.addEventListener('click', function() {
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
         viewWeekBtn.setAttribute('aria-pressed', 'true');
         viewMonthBtn.setAttribute('aria-pressed', 'false');
         viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors';
+        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 bg-slate-800 text-slate-600 text-slate-400 hover:bg-slate-100 hover:bg-slate-700 transition-colors';
         loadAndRender();
     });
     filterCliente.addEventListener('change', function() { loadAndRender(); });
@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.action = '/api/agenda/cancelar-visita/' + id;
         window.showConfirmModal(
             form,
-            '¿Estás seguro de que deseas cancelar la visita de ' + (name || 'este cliente') + '? Una vez cancelada, no podrás editarla.',
+            '¿Estás seguro de que deseas cancelar la visita de' + (name || 'este cliente') + '? Una vez cancelada, no podrás editarla.',
             { title: 'Cancelar Visita', buttonText: 'Cancelar visita', type: 'danger', icon: 'cancel' }
         );
     });
@@ -696,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (errors.length) {
             e.preventDefault();
-            alert('Campos obligatorios: ' + errors.join(', '));
+            alert('Campos obligatorios:' + errors.join(','));
             return;
         }
 
@@ -732,8 +732,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var container = document.getElementById(listId);
         var row = document.createElement('div');
         row.className = 'agenda-part-row flex gap-1.5 items-center';
-        row.innerHTML = '<input type="text" class="flex-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-primary" placeholder="Nombre">'
-            + '<input type="text" class="flex-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-primary" placeholder="Rol">'
+        row.innerHTML = '<input type="text" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary" placeholder="Nombre">'
+            + '<input type="text" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary" placeholder="Rol">'
             + '<button type="button" class="text-red-400 hover:text-red-500 flex-shrink-0" aria-label="Eliminar participante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">remove_circle</span></button>';
         row.querySelector('button').addEventListener('click', function() { row.remove(); });
         container.appendChild(row);

@@ -1,15 +1,15 @@
 <form action="/editar-maquinaria/{{ machine.id }}" method="POST" class="p-6 space-y-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
     <section>
-        <div class="flex items-center gap-3 mb-6 pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3 mb-6 pb-3 border-b border-slate-100">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">settings</span>
-            <h3 class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Información del Equipo</h3>
+            <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Información del Equipo</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente Asignado</label>
                 <select id="edit_client_select" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="">Seleccionar cliente...</option>
                     {% for name in unique_customer_names %}
                     <option value="{{ name }}" {% if machine.customer and machine.customer.name == name %}selected{% endif %}>{{ name }}</option>
@@ -19,7 +19,7 @@
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta Asignada</label>
                 <select id="edit_plant_select" name="customer_id" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     {% for p in current_plants %}
                     <option value="{{ p.id }}" {% if machine.customer_id == p.id %}selected{% endif %}>{{ p.name }}</option>
                     {% endfor %}
@@ -29,7 +29,7 @@
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de Máquina</label>
                 <select name="machine_type" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="">Seleccionar tipo...</option>
                     {% for type in machine_types %}
                     <option value="{{ type.name }}" {% if machine.machine_type == type.name %}selected{% endif %}>{{ type.name }}</option>
@@ -39,31 +39,31 @@
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de Serie</label>
                 <input name="serial_number" value="{{ machine.serial_number }}" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-slate-900 dark:text-white"
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-slate-900"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca</label>
                 <input name="brand" value="{{ machine.brand }}" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo</label>
                 <input name="model_name" value="{{ machine.model }}" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" />
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
                 <input name="line" value="{{ machine.line or '' }}"
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                     type="text" oninput="this.value = this.value.toUpperCase()" placeholder="Ej: LÍNEA 1" />
             </div>
             <div class="space-y-1.5">
                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</label>
                 <select name="status" required
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                     <option value="Operativo" {% if machine.status == "Operativo" %}selected{% endif %}>Operativo</option>
                     <option value="Mantenimiento" {% if machine.status == "Mantenimiento" %}selected{% endif %}>En Mantenimiento</option>
                     <option value="Fuera de Servicio" {% if machine.status == "Fuera de Servicio" %}selected{% endif %}>Fuera de Servicio</option>
@@ -72,9 +72,9 @@
         </div>
     </section>
 
-    <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+    <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-100">
         <button type="button" id="btn-cancel-edit-machine"
-            class="text-xs font-black text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors">Cancelar</button>
+            class="text-xs font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors">Cancelar</button>
         <button type="submit"
             class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
             Guardar Cambios

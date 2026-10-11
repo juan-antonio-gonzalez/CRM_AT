@@ -1,0 +1,193 @@
+{# ============================================================================
+   Componentes de interfaz reutilizables (CRM-AT)
+
+   Cada componente existe para que una misma cosa se vea igual en toda la
+   aplicación. Antes cada plantilla escribía sus propias clases, y eso produjo,
+   por ejemplo, 21 modales con 4 tamaños de título, 6 anchos distintos, 2
+   opacidades de fondo y 14 estructuras diferentes.
+
+   Uso:
+     {% from "_ui.html" import indicador, estado, boton, modal, barra_filtros, vacio %}
+   ============================================================================ #}
+
+
+{# ── Indicador ───────────────────────────────────────────────────────────────
+   La cifra es el elemento más importante del bloque: tamaño grande y color con
+   contraste AA. Antes las cifras usaban emerald-500 (2.54:1) y amber-500
+   (2.15:1), que no llegan al mínimo de 4.5:1: los números más mirados eran los
+   menos legibles. #}
+{% macro indicador(etiqueta, valor, tono='neutro', icono=None) %}
+{% set tonos = {
+    'neutro':   'text-texto-fuerte',
+    'primario': 'text-primary-600',
+    'exito':    'text-exito-500',
+    'alerta':   'text-alerta-500',
+    'peligro':  'text-peligro-500',
+    'info':     'text-info-500',
+} %}
+<div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-4 flex items-start gap-3">
+    {% if icono %}
+    <span class="size-9 rounded-md bg-primary-50 text-primary-600 flex items-center justify-center shrink-0" aria-hidden="true">
+        <span class="material-symbols-rounded text-lg">{{ icono }}</span>
+    </span>
+    {% endif %}
+    <div class="min-w-0">
+        <p class="text-2xs font-semibold uppercase tracking-wide text-texto-suave">{{ etiqueta }}</p>
+        <p class="text-2xl font-bold {{ tonos.get(tono, tonos['neutro']) }} leading-tight mt-1">{{ valor }}</p>
+    </div>
+</div>
+{% endmacro %}
+
+
+{# ── Píldora de estado ───────────────────────────────────────────────────────
+   Los estados de la aplicación, ya mapeados a los colores semánticos. #}
+{% macro estado(texto, tono='neutro') %}
+{% set tonos = {
+    'neutro':   'bg-superficie-suave text-texto-base border-superficie-fuerte',
+    'exito':    'bg-exito-50 text-exito-500 border-exito-100',
+    'alerta':   'bg-alerta-50 text-alerta-500 border-alerta-100',
+    'peligro':  'bg-peligro-50 text-peligro-500 border-peligro-100',
+    'info':     'bg-info-50 text-info-500 border-info-100',
+    'primario': 'bg-primary-50 text-primary-600 border-primary-200',
+} %}
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-2xs font-semibold uppercase tracking-wide {{ tonos.get(tono, tonos['neutro']) }}">
+    {{ texto }}
+</span>
+{% endmacro %}
+
+
+{# ── Botón ───────────────────────────────────────────────────────────────────
+   Tres variantes y un solo tamaño por variante. Los botones de modal tenían 5
+   rellenos distintos y dos invertían el color al pasar el mouse. #}
+{% macro boton(texto, tono='primario', tipo='button', icono=None, attrs='') %}
+{% set tonos = {
+    'primario':   'bg-primary-600 hover:bg-primary-700 text-white',
+    'secundario': 'bg-superficie-card hover:bg-superficie-suave text-texto-base border border-superficie-fuerte',
+    'peligro':    'bg-peligro-500 hover:bg-peligro-600 text-white',
+    'exito':      'bg-exito-500 hover:bg-exito-600 text-white',
+    'plano':      'text-texto-base hover:bg-superficie-suave',
+} %}
+<button type="{{ tipo }}"
+    class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 {{ tonos.get(tono, tonos['primario']) }}"
+    {{ attrs|safe }}>
+    {% if icono %}<span class="material-symbols-rounded text-lg" aria-hidden="true">{{ icono }}</span>{% endif %}
+    {{ texto }}
+</button>
+{% endmacro %}
+
+
+{# ── Modal ───────────────────────────────────────────────────────────────────
+   Un solo modal para toda la aplicación. Se usa siempre con un bloque `call`:
+   ahí va el cuerpo y, al final, la fila de botones (se usa `boton()` para que
+   todos midan igual).
+
+   Jinja no permite un bloque opcional anidado dentro del `call`, así que el pie
+   no es una ranura aparte: la fila de botones va en el propio cuerpo, separada
+   con un borde superior. El resultado visual es el mismo y no hay dos caminos.
+
+   Reglas del componente (antes no existían, y por eso cada modal era distinto):
+     * Fondo: una sola opacidad. Había 40% y 60% mezclados.
+     * Panel: radio y sombra únicos del sistema.
+     * Ancho: tres tamaños con nombre, no seis valores sueltos.
+     * Título: un solo tamaño. Había text-sm, lg, xl y 2xl en 21 modales.
+     * Relleno: lo aplica el panel una vez. Antes 16 de 20 no tenían ninguno.
+     * Cierre: esquina superior derecha, siempre, con data-modal-close.
+
+   Parámetros:
+     id, titulo, tamano ('confirmar' | 'formulario' | 'amplio'),
+     icono, tono_icono, descripcion
+#}
+{% macro modal(id, titulo, tamano='formulario', icono=None, tono_icono='primario', descripcion=None) %}
+{% set anchos = {'confirmar': 'max-w-sm', 'formulario': 'max-w-lg', 'amplio': 'max-w-3xl'} %}
+{% set tonos = {
+    'neutro':   'bg-superficie-suave text-texto-base',
+    'primario': 'bg-primary-50 text-primary-600',
+    'exito':    'bg-exito-50 text-exito-500',
+    'alerta':   'bg-alerta-50 text-alerta-500',
+    'peligro':  'bg-peligro-50 text-peligro-500',
+    'info':     'bg-info-50 text-info-500',
+} %}
+<div id="{{ id }}" role="dialog" aria-modal="true" aria-labelledby="{{ id }}-titulo"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4">
+    <div class="bg-superficie-card w-full {{ anchos.get(tamano, anchos['formulario']) }} rounded-lg shadow-pop border border-superficie-borde max-h-[90vh] flex flex-col">
+
+        <div class="flex items-start gap-3 p-5 border-b border-superficie-borde shrink-0">
+            {% if icono %}
+            <span class="size-10 rounded-md flex items-center justify-center shrink-0 {{ tonos.get(tono_icono, tonos['primario']) }}" aria-hidden="true">
+                <span class="material-symbols-rounded text-xl">{{ icono }}</span>
+            </span>
+            {% endif %}
+            <div class="min-w-0 flex-1">
+                <h2 id="{{ id }}-titulo" class="text-lg font-bold text-texto-fuerte tracking-tight">{{ titulo }}</h2>
+                {% if descripcion %}<p class="text-sm text-texto-suave mt-0.5">{{ descripcion }}</p>{% endif %}
+            </div>
+            <button type="button" data-modal-close="{{ id }}" aria-label="Cerrar"
+                class="p-1.5 rounded-md text-texto-tenue hover:text-texto-fuerte hover:bg-superficie-suave transition-colors shrink-0">
+                <span class="material-symbols-rounded text-xl" aria-hidden="true">close</span>
+            </button>
+        </div>
+
+        <div class="p-5 overflow-y-auto">
+            {{ caller() }}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+
+{# ── Pie de modal ────────────────────────────────────────────────────────────
+   La fila de botones, para cerrar el cuerpo de un modal. Se usa al final del
+   bloque `call`, con una línea divisoria. #}
+{% macro pie_modal() %}
+<div class="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-superficie-borde">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+
+{# ── Barra de filtros ────────────────────────────────────────────────────────
+   Una sola ubicación y un solo aspecto. Antes la barra estaba al 1% del archivo
+   en una pantalla y al 57% en otra, así que en algunas había que desplazarse
+   para encontrarla. Los campos van en el bloque `call`. #}
+{% macro barra_filtros(accion, limpiar='/', activos=0) %}
+<form method="GET" action="{{ accion }}"
+    class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-4">
+    <div class="flex flex-wrap items-end gap-3">
+        {{ caller() }}
+        <div class="flex items-center gap-2">
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">filter_alt</span>
+                Filtrar
+            </button>
+            {% if activos %}
+            <a href="{{ limpiar }}"
+                class="px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+                Limpiar ({{ activos }})
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endmacro %}
+
+
+{# ── Estado vacío ────────────────────────────────────────────────────────────
+   Distingue "no hay nada" de "el filtro no encontró nada", que es lo que el
+   usuario necesita saber para actuar. #}
+{% macro vacio(titulo, detalle=None, icono='inbox', accion_texto=None, accion_url=None, alterno_texto=None, alterno_url=None) %}
+<div class="text-center py-16 bg-superficie-card border border-superficie-borde rounded-lg">
+    <span class="material-symbols-rounded text-4xl text-texto-tenue" aria-hidden="true">{{ icono }}</span>
+    <h3 class="text-base font-bold text-texto-fuerte mt-3">{{ titulo }}</h3>
+    {% if detalle %}<p class="text-sm text-texto-suave mt-1">{{ detalle }}</p>{% endif %}
+    {% if accion_texto and accion_url %}
+    <a href="{{ accion_url }}"
+        class="inline-flex items-center gap-2 mt-5 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+        {{ accion_texto }}
+    </a>
+    {% endif %}
+    {% if alterno_texto and alterno_url %}
+    <a href="{{ alterno_url }}" class="block text-sm text-primary-600 hover:underline mt-4">{{ alterno_texto }}</a>
+    {% endif %}
+</div>
+{% endmacro %}

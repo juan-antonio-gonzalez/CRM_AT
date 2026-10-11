@@ -5,13 +5,13 @@
 {% block header_extra %}
 <div class="flex items-center gap-4 ml-4 min-w-0">
     <a href="/"
-        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all shrink-0"
+        class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 transition-all shrink-0"
         title="Volver al Dashboard" aria-label="Volver al Dashboard">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
     </a>
     <div class="flex flex-col min-w-0">
-        <h2 class="text-sm sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight truncate">Relevamiento Técnico</h2>
-        <p class="hidden lg:block text-xs text-slate-500 dark:text-slate-400 font-medium">Gestión de relevamientos técnicos por máquina y cliente.</p>
+        <h2 class="text-sm sm:text-xl font-bold text-slate-900 leading-tight font-display tracking-tight truncate">Relevamiento Técnico</h2>
+        <p class="hidden lg:block text-xs text-slate-500 font-medium">Gestión de relevamientos técnicos por máquina y cliente.</p>
     </div>
 </div>
 {% endblock %}
@@ -21,28 +21,28 @@
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span class="material-symbols-rounded text-slate-500 dark:text-slate-400 text-2xl" aria-hidden="true">precision_manufacturing</span>
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-slate-100 flex items-center justify-center">
+                <span class="material-symbols-rounded text-slate-500 text-2xl" aria-hidden="true">precision_manufacturing</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Pendientes</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Pendientes</p>
                 <p class="text-2xl font-black text-slate-600">{{ stats.pendientes }}</p>
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
             <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">assignment</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Total Relevados</p>
-                <p class="text-2xl font-black text-slate-900 dark:text-white">{{ stats.total }}</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Relevados</p>
+                <p class="text-2xl font-black text-slate-900">{{ stats.total }}</p>
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-emerald-50 flex items-center justify-center">
                 <span class="material-symbols-rounded text-emerald-500 text-2xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
@@ -51,8 +51,8 @@
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-amber-50 flex items-center justify-center">
                 <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">hourglass_top</span>
             </div>
             <div>
@@ -63,12 +63,12 @@
     </div>
 
     <!-- Filters and Actions -->
-    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-end w-full">
             <div class="flex flex-col gap-1.5 w-full">
                 <label for="filterCliente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
                 <select id="filterCliente"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                    class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
                     <option value="{{ c.id }}" {% if selected_customer_id==c.id|string %}selected{% endif %}>{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
@@ -78,7 +78,7 @@
             <div class="flex flex-col gap-1.5 w-full">
                 <label for="filterAsistente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
                 <select id="filterAsistente"
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+                    class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor }}" {% if selected_asistente == advisor %}selected{% endif %}>{{ advisor }}</option>
@@ -88,20 +88,20 @@
             <div class="flex flex-col gap-1.5 w-full">
                 <label for="filterPlanta" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Planta</label>
                 <select id="filterPlanta" disabled
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
+                    class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las plantas</option>
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
                 <label for="filterLinea" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Línea</label>
                 <select id="filterLinea" disabled
-                    class="form-select w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
+                    class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las líneas</option>
                 </select>
             </div>
             <div class="flex gap-3 w-full sm:col-span-2 lg:col-span-1 justify-end h-[42px]">
                 <button type="button" id="btnFilterClear"
-                    class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2 border border-transparent dark:border-slate-700 h-full hidden">
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2 border border-transparent h-full hidden">
                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">clear_all</span>
                     Limpiar
                 </button>
@@ -114,29 +114,29 @@
         </div>
     </div>
     <div class="mb-4">
-        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold ml-2">Mostrando <span id="displayCount" class="text-primary">{{
+        <p class="text-xs text-slate-500 font-bold ml-2">Mostrando <span id="displayCount" class="text-primary">{{
             pagination.total }}</span> registros</p>
     </div>
 
     <!-- Surveys Table -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Máquina</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Planta</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Asistente</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Línea</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                    <tr class="bg-slate-50/50 border-b border-slate-200">
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Máquina</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Planta</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Asistente</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Línea</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="surveyTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody id="surveyTableBody" class="divide-y divide-slate-100">
                     {% for s in surveys %}
                     {% set fd = s.form_data or {} %}
                     {% set mach = s.machine or None %}
@@ -148,10 +148,10 @@
                     {% set mach_line = mach.line if mach else '' %}
                     {% set mach_type = mach.machine_type if mach else '' %}
                     {% set tech_adv = fd.get('technical_advisor', '') or (cust.technical_advisor if cust else '') %}
-                    <tr class="visit-row hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors"
+                    <tr class="visit-row hover:bg-slate-50/50 transition-colors"
                         data-planta="{{ cli_plant }}" data-linea="{{ mach_line }}">
-                        <td class="px-6 py-5 text-sm font-bold text-slate-900 dark:text-white">#{{ s.id }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">{{ s.fecha or '' }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-slate-900">#{{ s.id }}</td>
+                        <td class="px-6 py-5 text-sm text-slate-600">{{ s.fecha or '' }}</td>
                         <td class="px-6 py-5">
                             {% if cli_name %}
                             <a href="/relevamiento2?cliente={{ cust.id if cust else '' }}"
@@ -164,33 +164,33 @@
                         </td>
                         <td class="px-6 py-5">
                             <div class="flex flex-col">
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">{{ mach_display or '—' }}</span>
+                                <span class="text-sm font-bold text-slate-900">{{ mach_display or '—' }}</span>
                                 <span class="text-[10px] font-mono text-slate-400 mt-0.5">{{ mach_serial }}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">{{ cli_plant }}</td>
+                        <td class="px-6 py-5 text-sm text-slate-600">{{ cli_plant }}</td>
                         <td class="px-6 py-5">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 uppercase">
                                 {{ tech_adv or 'Sin Asignar' }}
                             </span>
                         </td>
-                        <td class="px-6 py-5 text-sm font-bold uppercase text-slate-600 dark:text-slate-400">{{ mach_line }}</td>
+                        <td class="px-6 py-5 text-sm font-bold uppercase text-slate-600">{{ mach_line }}</td>
                         <td class="px-6 py-5 text-center">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-700">
                                 {{ mach_type or 'Sin Tipo' }}
                             </span>
                         </td>
                         <td class="px-6 py-5 text-center">
                             {% if s.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>COMPLETADO
                             </span>
                             {% elif s.status == 'En proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">
                                 <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>EN PROCESO
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 uppercase">
                                 <span class="size-1.5 bg-slate-400 rounded-full"></span>PENDIENTE
                             </span>
                             {% endif %}
@@ -199,13 +199,13 @@
                             <div class="flex justify-end gap-2 transition-opacity">
                                 {% if s.status == 'Finalizado' %}
                                 <a href="/relevamiento2/{{ s.id }}/editar"
-                                    class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100"
                                     title="Ver" aria-label="Ver">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">visibility</span>
                                 </a>
                                 {% else %}
                                 <a href="/relevamiento2/{{ s.id }}/editar"
-                                    class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700"
+                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100"
                                     title="Editar" aria-label="Editar">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">edit</span>
                                 </a>
@@ -214,7 +214,7 @@
                                     data-confirm="Esta acción eliminará permanentemente el relevamiento de {{ (s.customer.name if s.customer else 'este cliente') }}{% if s.plant %} - {{ s.plant }}{% endif %} y todos sus datos asociados. No se puede deshacer.">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                        class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100"
                                         title="Eliminar" aria-label="Eliminar">
                                         <span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete</span>
                                     </button>
@@ -233,7 +233,7 @@
         {% if selected_asistente %}{% set ns.qs = ns.qs + '&asistente=' + selected_asistente|urlencode %}{% endif %}
 
         {% if pagination.total_pages > 1 %}
-        <div class="flex items-center justify-between px-4 py-3 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center justify-between px-4 py-3 bg-slate-50/50 border-t border-slate-100">
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
                 <span class="mx-1">·</span>
@@ -242,11 +242,11 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
                     Anterior
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">
                     Anterior
                 </span>
                 {% endif %}
@@ -258,7 +258,7 @@
                     </span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ns.qs }}"
-                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/50 flex items-center justify-center transition-colors">
+                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
                         {{ p }}
                     </a>
                     {% endif %}
@@ -266,18 +266,18 @@
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
                     Siguiente
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">
                     Siguiente
                 </span>
                 {% endif %}
             </div>
         </div>
         {% else %}
-        <div class="px-3 py-2 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+        <div class="px-3 py-2 bg-slate-50/50 border-t border-slate-100">
             <span class="text-[11px] font-bold text-slate-500">{{ pagination.total }} relevamiento{{ 's' if pagination.total != 1 else '' }}</span>
         </div>
         {% endif %}

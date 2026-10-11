@@ -79,26 +79,26 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-full w-full bg-slate-100 dark:bg-slate-950 print:bg-white print:h-auto print:block">
+<div class="flex flex-col h-full w-full bg-slate-100 print:bg-white print:h-auto print:block">
     <!-- Toolbar -->
-    <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
         <div class="flex items-center gap-4">
-            <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
+            <nav class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-wider font-semibold">
                 <a href="/relevamiento-infraestructura" class="hover:text-primary transition-colors">Relevamientos de Infraestructura</a>
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">chevron_right</span>
-                <span class="text-slate-900 dark:text-slate-100">Vista Previa #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</span>
+                <span class="text-slate-900">Vista Previa #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</span>
             </nav>
         </div>
         <div class="flex items-center gap-2">
             {% if survey.status != 'Completado' %}
             <a href="/relevamiento-infraestructura/{{ survey.id }}"
-                class="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200 dark:border-amber-800 rounded-lg transition-colors text-sm font-bold mr-2">
+                class="flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-lg transition-colors text-sm font-bold mr-2">
                 <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                 Volver a Edición
             </a>
             {% endif %}
             <button style="cursor:pointer" data-print-btn
-                class="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-semibold">
+                class="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-sm font-semibold">
                 <span class="material-symbols-rounded text-[20px]" aria-hidden="true">print</span>
                 Imprimir
             </button>
@@ -111,49 +111,49 @@
     </header>
 
     <!-- Document Scrollable Area -->
-    <div class="flex-1 overflow-y-auto w-full px-4 py-4 md:px-8 md:py-6 scroll-smooth flex justify-center bg-slate-100 dark:bg-slate-950 print:bg-white print:p-0 print:overflow-visible print:block print:h-auto print:min-h-0 print:shadow-none print:m-0">
+    <div class="flex-1 overflow-y-auto w-full px-4 py-4 md:px-8 md:py-6 scroll-smooth flex justify-center bg-slate-100 print:bg-white print:p-0 print:overflow-visible print:block print:h-auto print:min-h-0 print:shadow-none print:m-0">
         
         <!-- PDF Page Simulation -->
-        <div class="pdf-page w-full max-w-[850px] min-h-[1100px] print:min-h-0 print:max-w-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-8 py-6 md:px-12 md:py-8 print:p-0 pdf-shadow print:shadow-none flex flex-col gap-8 rounded-sm text-sm">
+        <div class="pdf-page w-full max-w-[850px] min-h-[1100px] print:min-h-0 print:max-w-none bg-white text-slate-900 px-8 py-6 md:px-12 md:py-8 print:p-0 pdf-shadow print:shadow-none flex flex-col gap-8 rounded-sm text-sm">
 
             <!-- PDF Header -->
-            <div class="flex justify-between items-start border-b-2 border-slate-100 dark:border-slate-800 pb-8">
+            <div class="flex justify-between items-start border-b-2 border-slate-100 pb-8">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-white shrink-0">
                         <span class="material-symbols-rounded text-3xl" aria-hidden="true">domain</span>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">Aplicación AT</h2>
+                        <h2 class="text-xl font-bold tracking-tight text-slate-900 uppercase">Aplicación AT</h2>
                         <p class="text-xs font-semibold text-primary uppercase tracking-widest">Servicios Técnicos Profesionales</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">REPORTE DE INFRAESTRUCTURA</h3>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Folio: #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</p>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Fecha: {{ survey.date.strftime('%d/%m/%Y') if survey.date else '-' }}</p>
+                    <h3 class="text-lg font-bold text-slate-900">REPORTE DE INFRAESTRUCTURA</h3>
+                    <p class="text-sm font-medium text-slate-500">Folio: #IN-{{ survey.date.strftime('%Y') if survey.date else '0000' }}-{{ "%04d" | format(survey.id) }}</p>
+                    <p class="text-sm font-medium text-slate-500">Fecha: {{ survey.date.strftime('%d/%m/%Y') if survey.date else '-' }}</p>
                 </div>
             </div>
 
             <!-- Customer Info -->
             <div class="grid grid-cols-2 gap-8">
                 <section>
-                    <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
                     <div class="space-y-1.5">
-                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Cliente:</span> {{ survey.customer.name if survey.customer else 'No asignado' }}</p>
-                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Planta/Sede:</span> {{ survey.plant }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700">Cliente:</span> {{ survey.customer.name if survey.customer else 'No asignado' }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700">Planta/Sede:</span> {{ survey.plant }}</p>
                     </div>
                 </section>
                 <section>
-                    <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
                     <div class="space-y-1.5">
-                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Asistente Técnico:</span> {{ survey.technical_advisor if survey.technical_advisor else 'No especificado' }}</p>
-                        <p class="text-sm"><span class="font-bold text-slate-700 dark:text-slate-300">Estado global:</span> 
+                        <p class="text-sm"><span class="font-bold text-slate-700">Asistente Técnico:</span> {{ survey.technical_advisor if survey.technical_advisor else 'No especificado' }}</p>
+                        <p class="text-sm"><span class="font-bold text-slate-700">Estado global:</span> 
                             {% if survey.status == 'Completado' %}
-                                <span class="text-emerald-600 dark:text-emerald-500 font-bold">Completado</span>
+                                <span class="text-emerald-600 font-bold">Completado</span>
                             {% elif survey.status == 'En Proceso' %}
-                                <span class="text-blue-600 dark:text-blue-500 font-bold">En Proceso</span>
+                                <span class="text-blue-600 font-bold">En Proceso</span>
                             {% else %}
-                                <span class="text-amber-600 dark:text-amber-500 font-bold">Pendiente</span>
+                                <span class="text-amber-600 font-bold">Pendiente</span>
                             {% endif %}
                         </p>
                     </div>
@@ -162,89 +162,89 @@
 
             <!-- 2. Almacenamiento -->
             <section class="mt-4">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">inventory</span> 2. Almacenamiento</h4>
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">inventory</span> 2. Almacenamiento</h4>
                 
-                <h5 class="font-bold text-sm mb-2 text-slate-700 dark:text-slate-300">2.1 Materias Primas / Insumos</h5>
+                <h5 class="font-bold text-sm mb-2 text-slate-700">2.1 Materias Primas / Insumos</h5>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Medidas:</span> {{ survey.storage_data.get('measures_insumos', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_insumos', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_insumos', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Rotación (POP):</span> {{ survey.storage_data.get('pop_insumos', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Observaciones:</span> {{ survey.storage_data.get('obs_insumos', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Medidas:</span> {{ survey.storage_data.get('measures_insumos', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_insumos', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_insumos', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Rotación (POP):</span> {{ survey.storage_data.get('pop_insumos', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.storage_data.get('obs_insumos', '-') }}</p>
                 </div>
                 
-                <h5 class="font-bold text-sm mb-2 text-slate-700 dark:text-slate-300">2.2 Productos Terminados</h5>
+                <h5 class="font-bold text-sm mb-2 text-slate-700">2.2 Productos Terminados</h5>
                 <div class="grid grid-cols-2 gap-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Medidas:</span> {{ survey.storage_data.get('measures_finished', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_finished', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_finished', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Rotación (POP):</span> {{ survey.storage_data.get('pop_finished', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Observaciones:</span> {{ survey.storage_data.get('obs_finished', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Medidas:</span> {{ survey.storage_data.get('measures_finished', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_finished', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_finished', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Rotación (POP):</span> {{ survey.storage_data.get('pop_finished', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.storage_data.get('obs_finished', '-') }}</p>
                 </div>
             </section>
 
             <!-- 3. Empaque Primario -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">package_2</span> 3. Empaque Primario / Insumos</h4>
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">package_2</span> 3. Empaque Primario / Insumos</h4>
                 <div class="grid grid-cols-2 gap-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo Empaque:</span> {{ survey.packaging_data.get('type', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Dimensiones:</span> {{ survey.packaging_data.get('dim', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Peso Promedio:</span> {{ survey.packaging_data.get('weight', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.packaging_data.get('crit', '-') }}</span></p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Observaciones:</span> {{ survey.packaging_data.get('obs', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo Empaque:</span> {{ survey.packaging_data.get('type', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Dimensiones:</span> {{ survey.packaging_data.get('dim', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Peso Promedio:</span> {{ survey.packaging_data.get('weight', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.packaging_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.packaging_data.get('obs', '-') }}</p>
                 </div>
             </section>
 
             <!-- 4. Paletizado -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">layers</span> 4. Paletizado y Armado</h4>
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">layers</span> 4. Paletizado y Armado</h4>
                 <div class="grid grid-cols-2 gap-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo Pallet / Base:</span> {{ survey.palletizing_data.get('pallet_type', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Pzas de Recibo:</span> {{ survey.palletizing_data.get('pieces', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Alto Máximo (mm):</span> {{ survey.palletizing_data.get('height', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Patrón / Traba:</span> {{ survey.palletizing_data.get('pattern', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Observaciones:</span> {{ survey.palletizing_data.get('obs', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo Pallet / Base:</span> {{ survey.palletizing_data.get('pallet_type', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Pzas de Recibo:</span> {{ survey.palletizing_data.get('pieces', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Alto Máximo (mm):</span> {{ survey.palletizing_data.get('height', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Patrón / Traba:</span> {{ survey.palletizing_data.get('pattern', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.palletizing_data.get('obs', '-') }}</p>
                 </div>
             </section>
 
             <!-- 5. Logística -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">local_shipping</span> 5. Logística de Distribución</h4>
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4"><span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">local_shipping</span> 5. Logística de Distribución</h4>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Tipo de Vehículos:</span> {{ survey.logistics_data.get('veh_type', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Altura Prom. de Vehículo:</span> {{ survey.logistics_data.get('veh_height', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Distancia Máxima:</span> {{ survey.logistics_data.get('max_route', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Canal de Venta:</span> {{ survey.logistics_data.get('channel', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Exposición en Góndola:</span> {{ survey.logistics_data.get('shelf', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Frecuencia Reposición:</span> {{ survey.logistics_data.get('freq', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Vehículos:</span> {{ survey.logistics_data.get('veh_type', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Altura Prom. de Vehículo:</span> {{ survey.logistics_data.get('veh_height', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Distancia Máxima:</span> {{ survey.logistics_data.get('max_route', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Canal de Venta:</span> {{ survey.logistics_data.get('channel', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Exposición en Góndola:</span> {{ survey.logistics_data.get('shelf', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Frecuencia Reposición:</span> {{ survey.logistics_data.get('freq', '-') }}</p>
                 </div>
                 <!-- Logistica Transporte -->
-                <div class="grid grid-cols-2 gap-4 border-t border-slate-50 dark:border-slate-800 pt-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600 dark:text-slate-400">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 dark:bg-slate-700 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Obs. Transporte:</span> {{ survey.logistics_data.get('obs_trans', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600 dark:text-slate-400">Obs. Distribución:</span> {{ survey.logistics_data.get('obs_dist', '-') }}</p>
+                <div class="grid grid-cols-2 gap-4 border-t border-slate-50 pt-4">
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Obs. Transporte:</span> {{ survey.logistics_data.get('obs_trans', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Obs. Distribución:</span> {{ survey.logistics_data.get('obs_dist', '-') }}</p>
                 </div>
             </section>
 
              <!-- Signatures -->
-             <div class="mt-auto pt-8 border-t border-slate-100 dark:border-slate-800 page-break-inside-avoid">
+             <div class="mt-auto pt-8 border-t border-slate-100 page-break-inside-avoid">
                 <div class="grid grid-cols-2 gap-20 mt-12">
                     <div class="text-center">
-                        <div class="border-b border-slate-900 dark:border-slate-100 mb-2 h-16 flex items-end justify-center">
+                        <div class="border-b border-slate-900 mb-2 h-16 flex items-end justify-center">
                             <!-- Espacio para firma técnico -->
                         </div>
-                        <p class="text-xs font-bold dark:text-slate-100">Firma Técnico / Profesional</p>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400">Representante Aplicación AT</p>
+                        <p class="text-xs font-bold">Firma Técnico / Profesional</p>
+                        <p class="text-[10px] text-slate-500">Representante Aplicación AT</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Page Number -->
-            <div class="pt-8 flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200 dark:border-slate-800">
+            <div class="pt-8 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
                 <span>{{ survey.date.strftime('%Y-%m-%d %H:%M') if survey.date else '' }}</span>
                 <span>Documento Generado vía Aplicación AT</span>
             </div>

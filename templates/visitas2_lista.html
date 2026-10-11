@@ -3,13 +3,13 @@
 {% block header_extra %}
 <div class="flex items-center gap-4 ml-4 min-w-0">
     <a href="/"
-        class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary/30 transition-all shrink-0"
+        class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 transition-all shrink-0"
         title="Volver al Dashboard" aria-label="Volver al Dashboard">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
     </a>
     <div class="flex flex-col min-w-0">
-        <h2 class="text-sm sm:text-xl font-bold text-slate-900 dark:text-white leading-tight font-display tracking-tight truncate">Visitas Técnicas</h2>
-        <p class="hidden lg:block text-xs text-slate-500 dark:text-slate-400 font-medium">Listado de visitas técnicas realizadas y programadas.</p>
+        <h2 class="text-sm sm:text-xl font-bold text-slate-900 leading-tight font-display tracking-tight truncate">Visitas Técnicas</h2>
+        <p class="hidden lg:block text-xs text-slate-500 font-medium">Listado de visitas técnicas realizadas y programadas.</p>
     </div>
 </div>
 {% endblock %}
@@ -18,18 +18,18 @@
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
             <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">assignment_turned_in</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Realizadas</p>
-                <p class="text-2xl font-black text-slate-900 dark:text-white">{{ stats.hechas }}</p>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Realizadas</p>
+                <p class="text-2xl font-black text-slate-900">{{ stats.hechas }}</p>
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-blue-50 flex items-center justify-center">
                 <span class="material-symbols-rounded text-blue-500 text-2xl" aria-hidden="true">calendar_month</span>
             </div>
             <div>
@@ -38,8 +38,8 @@
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-amber-50 flex items-center justify-center">
                 <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">hourglass_top</span>
             </div>
             <div>
@@ -50,8 +50,8 @@
             </div>
         </div>
         <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-red-50 flex items-center justify-center">
                 <span class="material-symbols-rounded text-red-500 text-2xl" aria-hidden="true">cancel</span>
             </div>
             <div>
@@ -63,18 +63,18 @@
 
     <!-- Filtros -->
     <form method="GET" action="/visitas2"
-        class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex-1 min-w-[200px]">
-                <label for="f-q" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Buscar</label>
+                <label for="f-q" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Buscar</label>
                 <input id="f-q" name="q" type="search" value="{{ filtros.q or '' }}"
                     placeholder="Cliente, AT, objetivo, estado..."
-                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div class="min-w-[150px]">
-                <label for="f-estado" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Estado</label>
+                <label for="f-estado" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Estado</label>
                 <select id="f-estado" name="estado"
-                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
                     {% for e in estados %}
                     <option value="{{ e }}" {% if filtros.estado == e %}selected{% endif %}>{{ e }}</option>
@@ -82,9 +82,9 @@
                 </select>
             </div>
             <div class="min-w-[170px]">
-                <label for="f-at" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Asistente técnico</label>
+                <label for="f-at" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Asistente técnico</label>
                 <select id="f-at" name="at"
-                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
                     {% for a in advisors %}
                     <option value="{{ a }}" {% if filtros.at == a %}selected{% endif %}>{{ a }}</option>
@@ -92,14 +92,14 @@
                 </select>
             </div>
             <div>
-                <label for="f-desde" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Desde</label>
+                <label for="f-desde" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Desde</label>
                 <input id="f-desde" name="fecha_desde" type="date" value="{{ filtros.fecha_desde or '' }}"
-                    class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div>
-                <label for="f-hasta" class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Hasta</label>
+                <label for="f-hasta" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Hasta</label>
                 <input id="f-hasta" name="fecha_hasta" type="date" value="{{ filtros.fecha_hasta or '' }}"
-                    class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <input type="hidden" name="sort" value="{{ sort }}">
             <div class="flex items-center gap-2">
@@ -109,15 +109,15 @@
                     Filtrar
                 </button>
                 <a href="/visitas2"
-                    class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Limpiar</a>
+                    class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all">Limpiar</a>
             </div>
         </div>
     </form>
 
     <!-- Table -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-            <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
+            <p class="text-xs text-slate-500 font-bold">
                 {{ filtered_total }} visita{{ 's' if filtered_total != 1 else '' }}
                 {% if q or estado or at or fecha_desde or fecha_hasta %}
                 <span class="text-slate-400 font-medium">(filtradas de {{ pagination.total if pagination.total is defined else '' }} en total)</span>
@@ -125,7 +125,7 @@
             </p>
             <div class="flex items-center gap-2">
                 <a href="/visitas2/exportar-excel?{{ qs }}"
-                    class="border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-2">
+                    class="border border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-2">
                     <span class="material-symbols-rounded text-base" aria-hidden="true">download</span>
                     Exportar
                 </a>
@@ -139,42 +139,42 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
-                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <tr class="bg-slate-50/50 border-b border-slate-200">
                         <th scope="col" tabindex="0" aria-sort="{{ 'descending' if sort == 'fecha_desc' else 'ascending' }}"
-                            class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest cursor-pointer select-none"
+                            class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest cursor-pointer select-none"
                             onclick="window.location.href='?sort={% if sort == 'fecha_desc' %}fecha_asc{% else %}fecha_desc{% endif %}'"
                             onkeydown="if(event.key==='Enter'||event.key===' '||event.key==='Spacebar'){event.preventDefault();this.click();}">
                             Fecha
                             <span class="material-symbols-rounded text-base align-middle ml-1" aria-hidden="true">{% if sort == 'fecha_desc' %}expand_more{% else %}expand_less{% endif %}</span>
                         </th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Cliente (Planta)</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">AT</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente (Planta)</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody class="divide-y divide-slate-100">
                     {% for v in visits %}
                     {% set fd = v.form_data or {} %}
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">{{ v.fecha or '—' }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">{{ fd.get('cliente_nombre','—') }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">{{ fd.get('at','—') }}</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-5 text-sm text-slate-600">{{ v.fecha or '—' }}</td>
+                        <td class="px-6 py-5 text-sm text-slate-600">{{ fd.get('cliente_nombre','—') }}</td>
+                        <td class="px-6 py-5 text-sm text-slate-600">{{ fd.get('at','—') }}</td>
                         <td class="px-6 py-5">
                             {% if v.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>Finalizado
                             </span>
                             {% elif v.status == 'Programado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 uppercase">
                                 <span class="size-1.5 bg-purple-500 rounded-full"></span>Programado
                             </span>
                             {% elif v.status == 'Cancelado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-red-100 dark:bg-red-900/30 text-red-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-700 uppercase">
                                 <span class="size-1.5 bg-red-500 rounded-full"></span>Cancelado
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">
                                 <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>En proceso
                             </span>
                             {% endif %}
@@ -183,7 +183,7 @@
                             <div class="flex items-center justify-end gap-2">
                                 {% if v.status == 'Finalizado' %}
                                 <a href="/visitas2/{{ v.id }}/editar"
-                                    class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100 dark:border-slate-700"
+                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100"
                                     title="Ver" aria-label="Ver">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">visibility</span>
                                 </a>
@@ -191,7 +191,7 @@
                                 <span class="text-[10px] text-slate-400 italic">—</span>
                                 {% else %}
                                 <a href="/visitas2/{{ v.id }}/editar"
-                                    class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100 dark:border-slate-700"
+                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100"
                                     title="Editar" aria-label="Editar">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">edit</span>
                                 </a>
@@ -199,7 +199,7 @@
                                     data-confirm="La visita de {{ fd.get('cliente_nombre') or 'este cliente' }} se marcará como cancelada. Una vez cancelada no podrás editarla.">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                        class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100"
                                         title="Cancelar visita" aria-label="Cancelar visita">
                                         <span class="material-symbols-rounded text-[18px]" aria-hidden="true">cancel</span>
                                     </button>
@@ -209,7 +209,7 @@
                                     data-confirm="Esta acción eliminará permanentemente la visita de {{ fd.get('cliente_nombre') or 'este cliente' }} y todas sus tareas asociadas en el plan de acción. No se puede deshacer.">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100 dark:border-slate-700"
+                                        class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100"
                                         title="Eliminar" aria-label="Eliminar">
                                         <span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete</span>
                                     </button>
@@ -225,53 +225,53 @@
         {% if pagination.total_pages > 1 %}
         {# 'qs' ya viene del router con todos los filtros activos, para que al
            cambiar de pagina no se pierda la busqueda. #}
-        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 border-t border-slate-100">
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
             </div>
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
                     <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">{{ p }}</span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ('&' + qs) if qs else '' }}"
-                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/50 flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
-        <div class="px-6 py-3 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+        <div class="px-6 py-3 bg-slate-50/50 border-t border-slate-100">
             <span class="text-[11px] font-bold text-slate-500">{{ filtered_total }} visita{{ 's' if filtered_total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% else %}
         <div class="text-center py-20">
-            <div class="size-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="size-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="material-symbols-rounded text-4xl text-slate-400" aria-hidden="true">assignment</span>
             </div>
             {% if q or estado or at or fecha_desde or fecha_hasta %}
-            <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">Sin resultados</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Ninguna visita coincide con los filtros aplicados.</p>
+            <h3 class="text-lg font-black text-slate-900 mb-2">Sin resultados</h3>
+            <p class="text-sm text-slate-500 mb-6">Ninguna visita coincide con los filtros aplicados.</p>
             <a href="/visitas2"
-                class="inline-flex border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                class="inline-flex border border-slate-200 text-slate-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
                 Limpiar filtros
             </a>
             {% else %}
-            <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">No hay visitas</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Crea la primera visita técnica.</p>
+            <h3 class="text-lg font-black text-slate-900 mb-2">No hay visitas</h3>
+            <p class="text-sm text-slate-500 mb-6">Crea la primera visita técnica.</p>
             <a href="/visitas2/nueva"
                 class="inline-flex bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">
                 Nueva Visita

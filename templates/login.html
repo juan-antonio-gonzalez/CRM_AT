@@ -8,7 +8,7 @@
     <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
 </head>
-<body class="h-full bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<body class="h-full bg-background-light font-display text-slate-900">
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="min-h-full flex items-center justify-center p-6">
@@ -17,15 +17,15 @@
                 <div class="size-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/20 mx-auto mb-4">
                     <span class="material-symbols-rounded text-3xl" aria-hidden="true">package_2</span>
                 </div>
-                <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">CRM-AT</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Gestión Operativa</p>
+                <h1 class="text-2xl font-black text-slate-900 tracking-tight">CRM-AT</h1>
+                <p class="text-sm text-slate-500 font-medium mt-1">Gestión Operativa</p>
             </div>
 
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-8">
-                <h2 class="text-lg font-black text-slate-900 dark:text-white mb-6">Iniciar Sesión</h2>
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-8">
+                <h2 class="text-lg font-black text-slate-900 mb-6">Iniciar Sesión</h2>
 
                 {% if error %}
-                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold mb-6">
+                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold mb-6">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
                     <span>{{ error }}</span>
                 </div>
@@ -37,7 +37,7 @@
                         <div class="relative">
                             <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">person</span>
                             <input id="login-username" name="username" required
-                                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
+                                class="w-full bg-slate-50 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="usuario@ejemplo.com" />
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                         <div class="relative">
                             <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">lock</span>
                             <input id="login-password" name="password" type="password" required
-                                class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
+                                class="w-full bg-slate-50 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="••••••••" />
                         </div>
                     </div>

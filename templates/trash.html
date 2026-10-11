@@ -7,12 +7,12 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Papelera</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Papelera</h1>
+            <p class="text-sm text-slate-500 font-medium mt-1">
                 Elementos eliminados. Solo visible para administradores.
             </p>
         </div>
-        <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+        <div class="flex items-center gap-3 text-sm text-slate-500">
             <span class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-base" aria-hidden="true">delete</span>
                 <span class="font-semibold">{{ items|length }} elementos</span>
@@ -23,7 +23,7 @@
                 data-confirm="Se eliminarán permanentemente {{ items|length }} elemento{{ 's' if items|length != 1 else '' }}{% if active_tipo %} de la categoría {{ active_tipo }}{% endif %}. No se podrá recuperar esta información.">
                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                 <button type="submit" id="btn-empty-trash"
-                    class="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-lg transition-colors text-[10px] font-bold uppercase tracking-wider">
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg transition-colors text-[10px] font-bold uppercase tracking-wider">
                     <span class="material-symbols-rounded text-[14px]" aria-hidden="true">delete_sweep</span>
                     Vaciar{{ ' (' ~ items|length ~ ')' if active_tipo else '' }}
                 </button>
@@ -35,39 +35,39 @@
     <!-- Filters -->
     <div class="flex flex-wrap gap-2">
         <a href="/papelera"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if not active_tipo %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if not active_tipo % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Todos
         </a>
         <a href="/papelera?tipo=customer"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'customer' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo customer % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Clientes
         </a>
         <a href="/papelera?tipo=machine"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'machine' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo machine % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Máquinas
         </a>
         <a href="/papelera?tipo=product"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'product' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo product % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Productos
         </a>
         <a href="/papelera?tipo=visit"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo visit % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Visitas
         </a>
         <a href="/papelera?tipo=visit2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit2' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo visit2 % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Visitas V2
         </a>
         <a href="/papelera?tipo=survey2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'survey2' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo survey2 % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Relevamientos V2
         </a>
         <a href="/papelera?tipo=infrastructure"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'infrastructure' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo infrastructure % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Infraestructura
         </a>
         <a href="/papelera?tipo=auxiliary"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'auxiliary' %}bg-primary text-white shadow-sm{% else %}bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700{% endif %}">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo auxiliary % bg-primary text-white shadow-sm % else % bg-slate-100 text-slate-600 hover:bg-slate-200 % endif %">
             Tablas Auxiliares
         </a>
     </div>
@@ -78,21 +78,21 @@
         <div class="space-y-2">
             {% for item in items %}
             {% set item_label = item.entity_name or item.data.get('name') or (item.data.get('brand', '') ~ ' ' ~ item.data.get('model', '')).strip() or 'Sin nombre' %}
-            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between shadow-sm">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-4 min-w-0">
-                    <div class="size-10 rounded-xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 shrink-0">
+                    <div class="size-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500 shrink-0">
                         <span class="material-symbols-rounded" aria-hidden="true">delete</span>
                     </div>
                     <div class="min-w-0">
-                        <p class="text-sm font-bold text-slate-900 dark:text-white truncate">
+                        <p class="text-sm font-bold text-slate-900 truncate">
                             {% if item.entity_name %}
                                 {{ item.entity_name }}
                             {% else %}
                                 {{ item.data.get('name') or item.data.get('brand', '') ~ ' ' ~ item.data.get('model', '') or 'Sin nombre' }}
                             {% endif %}
                         </p>
-                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                            <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-semibold uppercase text-[10px]">
+                        <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 font-semibold uppercase text-[10px]">
                                 {{ item.entity_type }}
                             </span>
                             <span>ID {{ item.entity_id or '-' }}</span>
@@ -109,7 +109,7 @@
                     <form method="POST" action="/papelera/restaurar/{{ item.id }}">
                         <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                         <button type="submit"
-                            class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-lg transition-colors text-xs font-bold">
+                            class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors text-xs font-bold">
                             <span class="material-symbols-rounded text-[16px]" aria-hidden="true">restore</span>
                             Restaurar
                         </button>
@@ -118,7 +118,7 @@
                         data-confirm="Se eliminará permanentemente «{{ item_label }}» de la papelera. No se podrá recuperar.">
                         <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                         <button type="submit"
-                            class="flex items-center gap-1.5 px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-lg transition-colors text-xs font-bold">
+                            class="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg transition-colors text-xs font-bold">
                             <span class="material-symbols-rounded text-[16px]" aria-hidden="true">delete_forever</span>
                             Borrar
                         </button>
@@ -128,7 +128,7 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="flex flex-col items-center justify-center py-20 text-slate-400 dark:text-slate-500">
+        <div class="flex flex-col items-center justify-center py-20 text-slate-400">
             <span class="material-symbols-rounded text-6xl mb-4" aria-hidden="true">delete_sweep</span>
             <p class="text-lg font-bold">La papelera está vacía</p>
             <p class="text-sm">Los elementos eliminados aparecerán aquí.</p>

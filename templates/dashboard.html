@@ -5,12 +5,12 @@
 {% block header_extra %}
 <div class="flex items-center gap-3">
     <div class="flex flex-col">
-        <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Dashboard BI</h2>
-        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Indicadores principales</p>
+        <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Dashboard BI</h2>
+        <p class="text-[10px] text-slate-500 font-bold uppercase">Indicadores principales</p>
     </div>
     <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
         <p class="text-[8px] font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
-        <p class="text-[11px] font-bold text-slate-700 dark:text-slate-200">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p class="text-[11px] font-bold text-slate-700">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
     </div>
 </div>
 {% endblock %}
@@ -20,11 +20,11 @@
 
     <!-- ════════════ FILTROS ════════════ -->
     <section>
-        <form method="GET" action="/" class="bg-white dark:bg-slate-900 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <form method="GET" action="/" class="bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm">
             <div class="flex items-end gap-3 w-full">
                 <div class="flex flex-col gap-0.5 flex-1">
                     <label for="filter-at" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">AT</label>
-                    <select id="filter-at" name="at" class="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                    <select id="filter-at" name="at" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
                         <option value="">Todos</option>
                         {% for a in advisors %}
                         <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex flex-col gap-0.5 flex-[2]">
                     <label for="filter-cliente" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Cliente</label>
-                    <select id="filter-cliente" name="cliente" class="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                    <select id="filter-cliente" name="cliente" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
                         <option value="">Todos</option>
                         {% for c in customer_list %}
                         <option value="{{ c.id }}" {% if filters.cliente|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="flex flex-col gap-0.5 w-20">
                     <label for="filter-anio" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Año</label>
-                    <select id="filter-anio" name="anio" class="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                    <select id="filter-anio" name="anio" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
                         <option value="">Todos</option>
                         {% for y in available_years %}
                         <option value="{{ y }}" {% if filters.anio == y %}selected{% endif %}>{{ y }}</option>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="flex flex-col gap-0.5 w-20">
                     <label for="filter-mes" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Mes</label>
-                    <select id="filter-mes" name="mes" class="text-[11px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                    <select id="filter-mes" name="mes" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
                         <option value="">Todos</option>
                         {% for m in months %}
                         <option value="{{ m[0] }}" {% if filters.mes == m[0] %}selected{% endif %}>{{ m[1] }}</option>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="flex items-end gap-1.5 flex-none">
                     <button type="submit" class="text-[11px] font-bold bg-primary text-white px-3 py-1.5 rounded-lg hover:bg-primary/90 transition-all">Filtrar</button>
-                    <a href="/" class="text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Limpiar</a>
+                    <a href="/" class="text-[11px] font-bold bg-slate-100 text-slate-500 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-all">Limpiar</a>
                 </div>
             </div>
         </form>
@@ -73,21 +73,21 @@
                 <span class="material-symbols-rounded text-2xl" aria-hidden="true">group</span>
             </div>
             <div>
-                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Clientes</h3>
+                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Clientes</h3>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Cartera y segmentación</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Clientes</p>
-                <p class="text-3xl font-black text-slate-900 dark:text-white mt-1">{{ clientes.total }}</p>
+                <p class="text-3xl font-black text-slate-900 mt-1">{{ clientes.total }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Activos</p>
                 <p class="text-3xl font-black text-emerald-600 mt-1">{{ clientes.activos }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Inactivos</p>
                 <p class="text-3xl font-black text-amber-600 mt-1">{{ clientes.prospectos }}</p>
             </div>
@@ -103,35 +103,35 @@
                 <span class="material-symbols-rounded text-2xl" aria-hidden="true">engineering</span>
             </div>
             <div>
-                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Visitas</h3>
+                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Visitas</h3>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Informes de asistencia técnica</p>
             </div>
         </div>
 
         <div class="flex flex-wrap gap-3 mb-3">
-            <div class="flex-1 min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Visitas</p>
-                <p class="text-3xl font-black text-slate-900 dark:text-white mt-1">{{ visitas.total }}</p>
+                <p class="text-3xl font-black text-slate-900 mt-1">{{ visitas.total }}</p>
             </div>
-            <div class="flex-1 min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Borrador</p>
                 <p class="text-3xl font-black text-amber-600 mt-1">{{ visitas.borrador }}</p>
             </div>
-            <div class="flex-1 min-w-[140px] bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Finalizado</p>
                 <p class="text-3xl font-black text-emerald-600 mt-1">{{ visitas.finalizado }}</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Objetivo total AT</p>
                 <p class="text-3xl font-black text-sky-600 mt-1">{{ visitas.total_asignadas_at }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance de Visitas</p>
                 <p class="text-3xl font-black text-emerald-600 mt-1">{{ visitas.avance_pct }}%</p>
-                <div class="mt-2 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                     <div class="h-full bg-emerald-500" style="width: {{ visitas.avance_pct }}%"></div>
                 </div>
                 <p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">{{ visitas.finalizado }} de {{ visitas.total_asignadas_at }} realizadas</p>
@@ -140,9 +140,9 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
             <!-- Tendencia de Visitas -->
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-[300px] flex flex-col">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-[300px] flex flex-col">
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Tendencia de Visitas</h4>
+                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Tendencia de Visitas</h4>
                     <span class="text-[9px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-lg uppercase">Mensual</span>
                 </div>
                 <div class="flex-1 relative">
@@ -151,17 +151,17 @@
             </div>
 
             <!-- Motivos de Visita -->
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-[300px] flex flex-col">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-[300px] flex flex-col">
                 <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Motivos de Visita</h4>
+                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Motivos de Visita</h4>
                     <span class="text-[9px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-lg uppercase">Objetivos</span>
                 </div>
                 <div class="flex-1 grid grid-cols-2 gap-4">
                     <div class="space-y-2 overflow-y-auto">
                         {% for item in visitas.objetivos %}
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase truncate">{{ item[0] }}</span>
-                            <span class="text-xs font-black text-slate-900 dark:text-white">{{ item[1] }}</span>
+                            <span class="text-[10px] font-bold text-slate-600 uppercase truncate">{{ item[0] }}</span>
+                            <span class="text-xs font-black text-slate-900">{{ item[1] }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -175,12 +175,12 @@
         </div>
 
         <!-- Visitas por AT -->
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm mb-3">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-3">
             <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Visitas por Asistente Técnico</h4>
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {% for at, cant in visitas.por_at %}
-                <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
-                    <p class="text-lg font-black text-slate-900 dark:text-white">{{ cant }}</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                    <p class="text-lg font-black text-slate-900">{{ cant }}</p>
                     <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">{{ at }}</p>
                 </div>
                 {% endfor %}
@@ -195,20 +195,20 @@
                 <span class="material-symbols-rounded text-2xl" aria-hidden="true">precision_manufacturing</span>
             </div>
             <div>
-                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Máquinas</h3>
+                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Máquinas</h3>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Biblioteca de Máquinas</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Máquinas</p>
-                <p class="text-3xl font-black text-slate-900 dark:text-white mt-1">{{ maquinas.total }}</p>
+                <p class="text-3xl font-black text-slate-900 mt-1">{{ maquinas.total }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance de Relevamiento</p>
                 <p class="text-3xl font-black text-emerald-600 mt-1">{{ maquinas.survey_progress }}%</p>
-                <div class="mt-2 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                     <div class="h-full bg-emerald-500" style="width: {{ maquinas.survey_progress }}%"></div>
                 </div>
                 <p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">{{ maquinas.relevamiento_completado }} de {{ maquinas.total }} completadas</p>
@@ -216,35 +216,35 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Tipo</h4>
                 <div class="space-y-2">
                     {% for item in maquinas.por_tipo[:6] %}
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{ item.tipo }}</span>
-                        <span class="text-xs font-black text-slate-900 dark:text-white">{{ item.cant }}</span>
+                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.tipo }}</span>
+                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
                     </div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Estado</h4>
                 <div class="space-y-2">
                     {% for item in maquinas.por_estado[:6] %}
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{ item.estado }}</span>
-                        <span class="text-xs font-black text-slate-900 dark:text-white">{{ item.cant }}</span>
+                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.estado }}</span>
+                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
                     </div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Relevamiento</h4>
                 <div class="space-y-2">
                     {% for item in maquinas.por_relevamiento[:6] %}
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{ item.estado }}</span>
-                        <span class="text-xs font-black text-slate-900 dark:text-white">{{ item.cant }}</span>
+                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.estado }}</span>
+                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
                     </div>
                     {% endfor %}
                 </div>
@@ -259,33 +259,33 @@
                 <span class="material-symbols-rounded text-2xl" aria-hidden="true">description</span>
             </div>
             <div>
-                <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Minutas</h3>
+                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Minutas</h3>
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Actas de reunión</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Minutas</p>
-                <p class="text-3xl font-black text-slate-900 dark:text-white mt-1">{{ minutas.total }}</p>
+                <p class="text-3xl font-black text-slate-900 mt-1">{{ minutas.total }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Borrador</p>
                 <p class="text-3xl font-black text-amber-600 mt-1">{{ minutas.borrador }}</p>
             </div>
-            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                 <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Finalizado</p>
                 <p class="text-3xl font-black text-emerald-600 mt-1">{{ minutas.finalizado }}</p>
             </div>
         </div>
 
         {% if minutas.por_tipo %}
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Tipo de Reunión</h4>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {% for tipo, cant in minutas.por_tipo %}
-                <div class="bg-slate-50 dark:bg-slate-800/30 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
-                    <p class="text-lg font-black text-slate-900 dark:text-white">{{ cant }}</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                    <p class="text-lg font-black text-slate-900">{{ cant }}</p>
                     <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">{{ tipo }}</p>
                 </div>
                 {% endfor %}
@@ -417,11 +417,6 @@
     }
 
     const chartInstances = createCharts();
-
-    document.addEventListener('themechange', function(e) {
-        const colors = getChartColors(e.detail.dark);
-        Object.values(chartInstances).forEach(chart => updateChartTheme(chart, colors));
-    });
 })();
 </script>
 {% endblock %}

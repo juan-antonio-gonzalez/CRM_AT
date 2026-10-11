@@ -2,8 +2,8 @@
 
 {% block title %}Biblioteca de Productos | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Productos</h2>
-    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Biblioteca Técnica</p>
+    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Productos</h2>
+    <p class="text-[10px] text-slate-500 font-bold uppercase">Biblioteca Técnica</p>
 </div>
 {% endblock %}
 
@@ -11,18 +11,18 @@
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
 
     <!-- Filters and Search -->
-    <form method="GET" action="/productos" class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+    <form method="GET" action="/productos" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="relative flex-1 min-w-[200px]">
                 <label for="filtro-q" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Buscar</label>
                 <div class="relative">
                     <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-lg" aria-hidden="true">search</span>
-                    <input id="filtro-q" name="q" value="{{ q or '' }}" placeholder="Descripción, material o ET..." class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold">
+                    <input id="filtro-q" name="q" value="{{ q or '' }}" placeholder="Descripción, material o ET..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold">
                 </div>
             </div>
             <div class="flex flex-col min-w-[160px]">
                 <label for="filtro-material" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Material</label>
-                <select id="filtro-material" name="material" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold">
+                <select id="filtro-material" name="material" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Corrugado Doble" {% if selected_material=="Corrugado Doble" %}selected{% endif %}>Corrugado Doble</option>
                     <option value="Corrugado Simple" {% if selected_material=="Corrugado Simple" %}selected{% endif %}>Corrugado Simple</option>
@@ -30,7 +30,7 @@
             </div>
             <div class="flex flex-col min-w-[120px]">
                 <label for="filtro-status" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Estado</label>
-                <select id="filtro-status" name="status" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs font-bold">
+                <select id="filtro-status" name="status" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Activo" {% if selected_status=="Activo" %}selected{% endif %}>Activo</option>
                     <option value="Inactivo" {% if selected_status=="Inactivo" %}selected{% endif %}>Inactivo</option>
@@ -47,60 +47,60 @@
 
     <!-- Table Section -->
     <div
-        class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">
+                    <tr class="bg-slate-50/50 border-b border-slate-200">
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">
                             Descripción / ET</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Material
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Material
                         </th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">
                             Dimensiones</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest" scope="col">Ruta
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Ruta
                             Fabricación</th>
                         <th
-                            class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center" scope="col">
+                            class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">
                             Estado</th>
                         <th
-                            class="px-6 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right" scope="col">
+                            class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">
                             Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody class="divide-y divide-slate-100">
                     {% for product in products %}
-                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                    <tr class="hover:bg-slate-50/50 transition-colors group">
                         <td class="px-6 py-5">
                             <div class="flex flex-col">
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">{{ product.name }}</span>
+                                <span class="text-sm font-bold text-slate-900">{{ product.name }}</span>
                                 <span class="text-[10px] font-mono text-slate-400 mt-0.5">{{ product.et_number }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-5">
                             <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 uppercase">
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 uppercase">
                                 {{ product.material }}
                             </span>
                         </td>
-                        <td class="px-6 py-5 text-xs text-slate-600 dark:text-slate-400 font-medium italic">
+                        <td class="px-6 py-5 text-xs text-slate-600 font-medium italic">
                             {{ product.dimensions_l }} x {{ product.dimensions_a }} x {{ product.dimensions_h }} mm
                         </td>
-                        <td class="px-6 py-5 text-xs text-slate-600 dark:text-slate-400">
+                        <td class="px-6 py-5 text-xs text-slate-600">
                             {{ product.manufacturing_route }}
                         </td>
                         <td class="px-6 py-5 text-center">
                             <span
-                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold {% if product.status == 'Activo' %}bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300{% else %}bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400{% endif %}">
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold % if product.status Activo % bg-green-100 text-green-700 % else % bg-slate-100 text-slate-500 % endif %">
                                 <span
-                                    class="w-1.5 h-1.5 rounded-full {% if product.status == 'Activo' %}bg-green-500{% else %}bg-slate-400{% endif %}"></span>
+                                    class="w-1.5 h-1.5 rounded-full % if product.status Activo % bg-green-500 % else % bg-slate-400 % endif %"></span>
                                 {{ product.status }}
                             </span>
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex justify-end gap-2 transition-opacity">
                                 <a href="/editar-producto/{{ product.id }}"
-                                    class="p-2 text-slate-400 hover:text-primary transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
+                                    class="p-2 text-slate-400 hover:text-primary transition-colors bg-slate-50 rounded-lg border border-slate-100"
                                     title="Editar Producto" aria-label="Editar Producto">
                                     <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                                 </a>
@@ -108,7 +108,7 @@
                                     class="inline delete-product-form" data-confirm="¿Estás seguro de que deseas eliminar el producto {{ product.name }}?">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-2 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700"
+                                        class="p-2 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 rounded-lg border border-slate-100"
                                         title="Eliminar Producto" aria-label="Eliminar Producto">
                                         <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete</span>
                                     </button>
@@ -128,7 +128,7 @@
 
         {% if pagination and pagination.total_pages > 1 %}
         <div
-            class="bg-slate-50/50 dark:bg-slate-800/50 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            class="bg-slate-50/50 px-6 py-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
                 <span class="mx-1">·</span>
@@ -137,10 +137,10 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Anterior</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">Anterior</span>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">Anterior</span>
                 {% endif %}
 
                 {% for p in range(1, pagination.total_pages + 1) %}
@@ -149,22 +149,22 @@
                     aria-current="page">{{ p }}</span>
                 {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                 <a href="?page={{ p }}{{ ns.qs }}"
-                    class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">{{ p }}</a>
+                    class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
                 {% endif %}
                 {% endfor %}
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 uppercase tracking-widest transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Siguiente</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest cursor-default">Siguiente</span>
+                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
         <div
-            class="bg-slate-50/50 dark:bg-slate-800/50 px-6 py-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            class="bg-slate-50/50 px-6 py-3 border-t border-slate-200 flex items-center justify-between">
             <span class="text-[11px] font-bold text-slate-500">
                 Mostrando {{ products|length }} de {{ pagination.total if pagination else products|length }}
                 producto{{ 's' if (pagination.total if pagination else products|length) != 1 else '' }}

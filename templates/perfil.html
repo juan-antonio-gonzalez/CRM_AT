@@ -4,36 +4,36 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Perfil</h2>
-    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Configuración de Cuenta</p>
+    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Perfil</h2>
+    <p class="text-[10px] text-slate-500 font-bold uppercase">Configuración de Cuenta</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto space-y-6 animate-fade-in pb-10">
     {% if success %}
-    <div role="status" class="flex items-center gap-3 px-5 py-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-semibold">
+    <div role="status" class="flex items-center gap-3 px-5 py-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">check_circle</span>
         <span>{{ success }}</span>
     </div>
     {% endif %}
 
     {% if error %}
-    <div role="alert" class="flex items-center gap-3 px-5 py-4 rounded-2xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold">
+    <div role="alert" class="flex items-center gap-3 px-5 py-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
         <span>{{ error }}</span>
     </div>
     {% endif %}
 
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
-        <div class="flex items-center gap-6 mb-8 pb-6 border-b border-slate-100 dark:border-slate-800">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+        <div class="flex items-center gap-6 mb-8 pb-6 border-b border-slate-100">
             <div class="size-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <span class="material-symbols-rounded text-5xl" aria-hidden="true">person</span>
             </div>
             <div>
-                <h3 class="text-xl font-black text-slate-900 dark:text-white">{{ profile_user.full_name or profile_user.username }}</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ profile_user.email }}</p>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mt-2 {% if profile_user.role == 'admin' %}bg-amber-100 dark:bg-amber-900/30 text-amber-700{% else %}bg-primary/10 text-primary{% endif %}">
+                <h3 class="text-xl font-black text-slate-900">{{ profile_user.full_name or profile_user.username }}</h3>
+                <p class="text-sm text-slate-500 font-medium">{{ profile_user.email }}</p>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mt-2 % if profile_user.role admin % bg-amber-100 text-amber-700 % else % bg-primary/10 text-primary % endif %">
                     {{ profile_user.role }}
                 </span>
             </div>
@@ -46,27 +46,27 @@
                 <div class="space-y-2">
                     <label for="perfil-full-name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
                     <input id="perfil-full-name" name="full_name" value="{{ profile_user.full_name or '' }}" required
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
+                        class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
                 </div>
                 <div class="space-y-2">
                     <label for="perfil-username" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario</label>
                     <input id="perfil-username" value="{{ profile_user.username }}" disabled
-                        class="w-full bg-slate-100 dark:bg-slate-700 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-400 cursor-not-allowed" />
+                        class="w-full bg-slate-100 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-400 cursor-not-allowed" />
                 </div>
                 <div class="space-y-2">
                     <label for="perfil-email" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
                     <input id="perfil-email" name="email" type="email" value="{{ profile_user.email }}" required
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
+                        class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
                 </div>
                 <div class="space-y-2">
                     <label for="perfil-phone" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono</label>
                     <input id="perfil-phone" name="phone" value="{{ profile_user.phone or '' }}"
-                        class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                        class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                         placeholder="+52 555 123 4567" />
                 </div>
             </div>
 
-            <div class="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex justify-end pt-4 border-t border-slate-100">
                 <button type="submit"
                     class="bg-primary hover:bg-primary/90 text-white px-10 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">
                     Guardar Cambios
@@ -75,8 +75,8 @@
         </form>
     </div>
 
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
-        <h3 class="text-lg font-black text-slate-900 dark:text-white mb-6">Cambiar Contraseña</h3>
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+        <h3 class="text-lg font-black text-slate-900 mb-6">Cambiar Contraseña</h3>
 
         <form method="POST" action="/auth/perfil/password" class="space-y-5 max-w-md">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -84,15 +84,15 @@
             <div class="space-y-2">
                 <label for="perfil-current-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contraseña Actual</label>
                 <input id="perfil-current-password" name="current_password" type="password" required minlength="6"
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
+                    class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
             </div>
             <div class="space-y-2">
                 <label for="perfil-new-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
                 <input id="perfil-new-password" name="new_password" type="password" required minlength="6"
-                    class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
+                    class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
             </div>
             <button type="submit"
-                class="bg-slate-900 dark:bg-primary hover:bg-slate-800 dark:hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg transition-all">
+                class="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg transition-all">
                 Actualizar Contraseña
             </button>
         </form>

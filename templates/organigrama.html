@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tighter">Organigrama</h2>
-    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Estructura del Equipo</p>
+    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Organigrama</h2>
+    <p class="text-[10px] text-slate-500 font-bold uppercase">Estructura del Equipo</p>
 </div>
 {% endblock %}
 
@@ -21,12 +21,12 @@
 </style>
 <div class="max-w-5xl mx-auto space-y-4 animate-fade-in pb-10">
 
-    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-xl shadow-sm no-print">
+    <section class="bg-white border border-slate-200 px-4 py-3 rounded-xl shadow-sm no-print">
         <label for="customerSelect" class="sr-only">Seleccionar cliente</label>
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">groups</span>
             <select id="customerSelect"
-                class="flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all uppercase">
+                class="flex-1 bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all uppercase">
                 <option value="">SELECCIONAR CLIENTE...</option>
                 {% for c in customers %}
                 <option value="{{ c.id }}">{{ c.name }}</option>
@@ -187,13 +187,13 @@ function renderNodo(nodo) {
         ? `<p class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1"><span class="material-symbols-rounded text-[11px]" aria-hidden="true">call</span>${escaparHtml(nodo.phone)}</p>`
         : '';
     const aviso = nodo.aviso
-        ? `<p class="text-[9px] text-amber-600 dark:text-amber-400 mt-0.5">${escaparHtml(nodo.aviso)}</p>`
+        ? `<p class="text-[9px] text-amber-600 mt-0.5">${escaparHtml(nodo.aviso)}</p>`
         : '';
     return `
         <div class="flex items-start gap-3 py-1.5">
             ${iconoInicial(nodo)}
             <div class="min-w-0 flex-1">
-                <p class="text-sm font-bold text-slate-900 dark:text-white break-words">${escaparHtml(nodo.name)}</p>
+                <p class="text-sm font-bold text-slate-900 break-words">${escaparHtml(nodo.name)}</p>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider break-words">${rol}</p>
                 ${telefono}
                 ${aviso}
@@ -205,7 +205,7 @@ function renderNodo(nodo) {
 // acumulado, que con pocos niveles sacaba el contenido de la tarjeta.
 function renderRama(nodos, nivel = 0) {
     if (!nodos || !nodos.length) return '';
-    return `<ul class="${nivel === 0 ? 'space-y-1' : 'border-l-2 border-slate-100 dark:border-slate-800 ml-4 pl-4 space-y-1'}">` +
+    return `<ul class="nivel 0 space-y-1 : border-l-2 border-slate-100 ml-4 pl-4 space-y-1">` +
         nodos.map(n =>
             `<li>${renderNodo(n)}${renderRama(n.children, nivel + 1)}</li>`
         ).join('') +
@@ -231,7 +231,7 @@ function renderOrgChart(team) {
 
     if (!team || !team.length) {
         contenedor.innerHTML = `
-        <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 shadow-sm">
             <span class="material-symbols-rounded text-4xl text-slate-300" aria-hidden="true">groups_off</span>
             <p class="text-xs font-bold text-slate-400 mt-2">Este cliente no tiene equipo registrado</p>
         </div>`;
@@ -243,7 +243,7 @@ function renderOrgChart(team) {
 
     if (!arbol.raices.length) {
         contenedor.innerHTML = `
-        <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-amber-200 shadow-sm">
+        <div class="text-center py-12 bg-white rounded-2xl border border-amber-200 shadow-sm">
             <span class="material-symbols-rounded text-4xl text-amber-400" aria-hidden="true">account_tree</span>
             <p class="text-xs font-bold text-slate-500 mt-2">No se pudo armar la jerarquía: revisá los campos "reporta a".</p>
         </div>`;
@@ -265,10 +265,10 @@ function renderOrgChart(team) {
             ? `<ul class="list-disc list-inside space-y-0.5">${avisos.map(a => `<li>${escaparHtml(a)}</li>`).join('')}</ul>`
             : '';
         html += `
-        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl px-5 py-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4">
             <div class="flex items-start gap-2">
                 <span class="material-symbols-rounded text-amber-500 text-lg" aria-hidden="true">warning</span>
-                <div class="text-xs text-amber-800 dark:text-amber-200 space-y-1">
+                <div class="text-xs text-amber-800 space-y-1">
                     <p class="font-bold">Hay datos del equipo que conviene revisar.</p>
                     ${detalle}
                 </div>
@@ -281,10 +281,10 @@ function renderOrgChart(team) {
         if (!raices.length) return;
         const enEsteSector = mostrados.get(sector) || 0;
         html += `
-        <div class="org-tarjeta bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden" data-sector="${escaparHtml(sector)}">
-            <div class="px-5 py-3 bg-slate-50/50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+        <div class="org-tarjeta bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" data-sector="${escaparHtml(sector)}">
+            <div class="px-5 py-3 bg-slate-50/50 border-b border-slate-100 flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">folder</span>
-                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider break-words">${escaparHtml(sector)}</h3>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider break-words">${escaparHtml(sector)}</h3>
                 <span class="ml-auto text-[10px] font-bold text-slate-400">${enEsteSector} miembro${enEsteSector !== 1 ? 's' : ''}</span>
             </div>
             <div class="p-5">
