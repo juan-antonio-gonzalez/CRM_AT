@@ -7,7 +7,7 @@
 </div>
 {% endblock %}
 
-{% from "_ui.html" import indicador %}
+{% from "_ui.html" import boton_exportar, indicador %}
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     
@@ -36,6 +36,7 @@
             <a href="/relevamiento-infraestructura" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <a href="/relevamiento-infraestructura/nuevo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
+                {{ boton_exportar("/relevamiento-infraestructura/exportar-excel", request.url.query) }}
                 Nuevo Relevamiento
             </a>
         </div>

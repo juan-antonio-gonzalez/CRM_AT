@@ -148,6 +148,29 @@ async def logout():
     return response
 
 
+@router.get("/usuarios/exportar-excel")
+async def exportar_usuarios_excel(request: Request, db: Session = Depends(get_db)):
+    """Exporta el listado de usuarios a Excel.
+
+    No incluye contraseñas ni hashes: sólo los datos de la ficha.
+    """
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    usuarios = db.query(User).order_by(User.username).all()
+    filas = [[
+        u.username, u.full_name, u.email, u.phone, u.role,
+        "Sí" if u.is_active else "No",
+        u.created_at.strftime("%d/%m/%Y") if u.created_at else "",
+    ] for u in usuarios]
+
+    return hoja_excel(
+        "Usuarios",
+        ["Usuario", "Nombre completo", "Correo", "Teléfono", "Rol", "Activo", "Alta"],
+        filas,
+        nombre_con_fecha("usuarios"),
+    )
+
+
 @router.get("/usuarios", response_class=HTMLResponse)
 async def list_users(request: Request, db: Session = Depends(get_db)):
     admin = require_admin(request)

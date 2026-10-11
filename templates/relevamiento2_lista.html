@@ -16,7 +16,7 @@
 </div>
 {% endblock %}
 
-{% from "_ui.html" import indicador %}
+{% from "_ui.html" import boton_exportar, indicador %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
@@ -73,6 +73,7 @@
                 <a href="/relevamiento2/nuevo"
                     class="bg-primary hover:bg-primary/90 text-white font-bold px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-primary/20 h-full w-full lg:w-auto">
                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">add</span>
+                    {{ boton_exportar("/relevamiento2/exportar-excel", request.url.query) }}
                     Nuevo Relevamiento
                 </a>
             </div>

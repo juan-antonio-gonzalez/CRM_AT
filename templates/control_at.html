@@ -13,7 +13,7 @@
     </div>
 </div>
 {% endblock %}
-{% from "_ui.html" import indicador, modal, pie_modal %}
+{% from "_ui.html" import boton_exportar, indicador, modal, pie_modal %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
@@ -87,6 +87,8 @@
     <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
             <p class="text-xs text-texto-suave font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
+
+            {{ boton_exportar("/control-at/exportar-excel", request.url.query) }}
             <button type="button" id="btn-nueva-asignacion"
                 class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-semibold text-xs tracking-normal shadow-primary/20 transition-all flex items-center gap-2">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>

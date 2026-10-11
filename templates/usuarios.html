@@ -8,12 +8,14 @@
 </div>
 {% endblock %}
 
+{% from "_ui.html" import boton_exportar, modal, pie_modal %}
 {% block content %}
 <div class="max-w-5xl mx-auto">
     <div class="flex items-center justify-end mb-6">
         <a href="/auth/register"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
             <span class="material-symbols-rounded text-lg" aria-hidden="true">person_add</span>
+            {{ boton_exportar("/auth/usuarios/exportar-excel", request.url.query) }}
             Nuevo usuario
         </a>
     </div>
@@ -95,7 +97,6 @@
 </div>
 
 {# Modal de reseteo de contraseña, con el componente único (_ui.html). #}
-{% from "_ui.html" import modal, pie_modal %}
 
 {% call modal("resetModal", "Resetear contraseña", "formulario", "key", "alerta") %}
 <p id="resetUserLabel" class="text-sm text-texto-suave mb-4">Usuario:</p>

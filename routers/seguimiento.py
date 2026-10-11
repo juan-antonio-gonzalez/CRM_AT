@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Depends, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
+import models
 from database import get_db
 from logger import get_logger
 from services import tracking_service
@@ -10,6 +11,35 @@ from templating import templates
 logger = get_logger(__name__)
 
 router = APIRouter(tags=["seguimiento"])
+
+
+@router.get("/seguimiento-plan/exportar-excel")
+async def exportar_seguimiento_excel(
+    q: str = Query(None),
+    estado: str = Query(None),
+    db: Session = Depends(get_db),
+):
+    """Exporta el plan de acción filtrado a Excel."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    tareas = (
+        tracking_service.query_trackings(db, q=q, estado=estado)
+        .order_by(models.ActionPlanTracking.created_at.desc())
+        .all()
+    )
+
+    filas = [[
+        t.customer_name, t.plant, t.visit_date, t.et_number, t.task,
+        t.responsible, t.due_date, t.status, t.observations,
+    ] for t in tareas]
+
+    return hoja_excel(
+        "Plan de acción",
+        ["Cliente", "Planta", "Fecha de visita", "Nº ET", "Tarea", "Responsable",
+         "Vence", "Estado", "Observaciones"],
+        filas,
+        nombre_con_fecha("seguimiento-plan"),
+    )
 
 
 @router.get("/seguimiento-plan", response_class=HTMLResponse)

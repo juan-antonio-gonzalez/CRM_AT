@@ -13,6 +13,92 @@ from templating import templates
 router = APIRouter(tags=["control_at"])
 
 
+def _control_at_query(db, cliente="", at="", estandar=None, premium=None,
+                      status="", vigentes=True):
+    """Consulta de asignaciones AT con los filtros del listado.
+
+    La comparten el listado y la exportación, para que exportar respete los mismos
+    filtros que se ven en pantalla.
+    """
+    cols = [
+        models.Customer.id.label("customer_id"),
+        models.Customer.name,
+        models.Customer.plant,
+        models.ATAssignment.id.label("assignment_id"),
+        models.ATAssignment.technical_advisor,
+        models.ATAssignment.standard_visits,
+        models.ATAssignment.premium_visits,
+        models.ATAssignment.status,
+        models.ATAssignment.valid_from,
+        models.ATAssignment.valid_to,
+    ]
+    now = datetime.datetime.utcnow()
+    on_condition = models.Customer.name == models.ATAssignment.customer_name
+    if vigentes:
+        on_condition &= or_(models.ATAssignment.valid_to.is_(None),
+                            models.ATAssignment.valid_to > now)
+    base = db.query(*cols).outerjoin(models.ATAssignment, on_condition)
+    if cliente:
+        base = base.filter(models.Customer.name.ilike(f"%{cliente}%"))
+    if at:
+        base = base.filter(models.ATAssignment.technical_advisor.ilike(f"%{at}%"))
+    if estandar is not None:
+        base = base.filter(models.ATAssignment.standard_visits == estandar)
+    if premium is not None:
+        base = base.filter(models.ATAssignment.premium_visits == premium)
+    if status:
+        base = base.filter(models.ATAssignment.status == status)
+    return base
+
+
+@router.get("/control-at/exportar-excel")
+async def exportar_control_at_excel(
+    cliente: str = Query("", alias="cliente"),
+    at: str = Query("", alias="at"),
+    estandar: int = Query(None, alias="estandar"),
+    premium: int = Query(None, alias="premium"),
+    status: str = Query("", alias="status"),
+    db: Session = Depends(get_db),
+):
+    """Exporta el control de asignaciones AT a Excel, con los filtros aplicados."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    filas_crudas = (
+        _control_at_query(db, cliente=cliente, at=at, estandar=estandar,
+                          premium=premium, status=status, vigentes=True)
+        .order_by(models.Customer.name)
+        .all()
+    )
+
+    # Se conserva la version mas reciente por cliente, igual que el listado.
+    vistos = {}
+    for r in filas_crudas:
+        previo = vistos.get(r.name)
+        if previo is None or (r.assignment_id and (previo.assignment_id is None
+                                                   or r.assignment_id > previo.assignment_id)):
+            vistos[r.name] = r
+
+    filas = []
+    for r in vistos.values():
+        std = r.standard_visits or 0
+        prem = r.premium_visits or 0
+        filas.append([
+            r.name, r.plant, r.technical_advisor, std, prem, std + prem,
+            r.status,
+            r.valid_from.strftime("%d/%m/%Y") if r.valid_from else "",
+            r.valid_to.strftime("%d/%m/%Y") if r.valid_to else "Vigente",
+        ])
+
+    return hoja_excel(
+        "Control AT",
+        ["Cliente", "Planta", "Asistente técnico", "Visitas estándar",
+         "Visitas premium", "Total asignadas", "Estado", "Vigente desde",
+         "Vigente hasta"],
+        filas,
+        nombre_con_fecha("control-at"),
+    )
+
+
 @router.get("/control-at", response_class=HTMLResponse)
 async def control_at_lista(
     request: Request,
@@ -26,35 +112,9 @@ async def control_at_lista(
     db: Session = Depends(get_db),
 ):
 
-    def build_base_query(vigentes=True):
-        cols = [
-            models.Customer.id.label("customer_id"),
-            models.Customer.name,
-            models.Customer.plant,
-            models.ATAssignment.id.label("assignment_id"),
-            models.ATAssignment.technical_advisor,
-            models.ATAssignment.standard_visits,
-            models.ATAssignment.premium_visits,
-            models.ATAssignment.status,
-            models.ATAssignment.valid_from,
-            models.ATAssignment.valid_to,
-        ]
-        now = datetime.datetime.utcnow()
-        on_condition = models.Customer.name == models.ATAssignment.customer_name
-        if vigentes:
-            on_condition &= or_(models.ATAssignment.valid_to.is_(None), models.ATAssignment.valid_to > now)
-        base = db.query(*cols).outerjoin(models.ATAssignment, on_condition)
-        if cliente:
-            base = base.filter(models.Customer.name.ilike(f"%{cliente}%"))
-        if at:
-            base = base.filter(models.ATAssignment.technical_advisor.ilike(f"%{at}%"))
-        if estandar is not None:
-            base = base.filter(models.ATAssignment.standard_visits == estandar)
-        if premium is not None:
-            base = base.filter(models.ATAssignment.premium_visits == premium)
-        if status:
-            base = base.filter(models.ATAssignment.status == status)
-        return base
+    build_base_query = lambda vigentes=True: _control_at_query(
+        db, cliente=cliente, at=at, estandar=estandar, premium=premium,
+        status=status, vigentes=vigentes)
 
     base_q = build_base_query(vigentes=True)
     total = base_q.count()

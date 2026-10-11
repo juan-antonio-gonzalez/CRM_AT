@@ -12,6 +12,34 @@ from templating import templates
 router = APIRouter(tags=["infraestructura"])
 
 
+@router.get("/relevamiento-infraestructura/exportar-excel")
+async def exportar_infraestructura_excel(
+    cliente: Optional[int] = Query(None),
+    asistente: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """Exporta el listado filtrado de relevamientos de infraestructura a Excel."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    relevamientos = (
+        survey_service.query_infrastructure_surveys(db, cliente=cliente, asistente=asistente)
+        .order_by(models.InfrastructureSurvey.updated_at.desc())
+        .all()
+    )
+    nombres = {c.id: c.name for c in db.query(models.Customer).all()}
+
+    filas = [[
+        r.date, nombres.get(r.customer_id, ""), r.plant, r.technical_advisor, r.status,
+    ] for r in relevamientos]
+
+    return hoja_excel(
+        "Infraestructura",
+        ["Fecha", "Cliente", "Planta", "Asistente técnico", "Estado"],
+        filas,
+        nombre_con_fecha("relevamiento-infraestructura"),
+    )
+
+
 @router.get("/relevamiento-infraestructura", response_class=HTMLResponse)
 async def infraestructura_lista(
     request: Request,

@@ -752,3 +752,46 @@ def test_los_macros_no_dependen_del_contexto():
         f"macros que dependen del contexto del template: {ofensores}. "
         f"Pasá el valor como argumento."
     )
+
+
+def test_los_modulos_no_usan_nombres_sin_definir():
+    """Nombres usados que no están importados ni definidos.
+
+    Al extraer consultas a funciones compartidas quedaron atrás los imports
+    locales que vivían dentro de esas funciones. El código se veía bien y fallaba
+    recién en ejecución:
+
+        NameError: name 'or_' is not defined
+        NameError: name 'normalize_tracking_status' is not defined
+
+    Este chequeo recorre el árbol sintáctico y compara los nombres que se leen
+    contra los que están definidos, importados o son del lenguaje.
+    """
+    import ast
+    import builtins
+
+    RAIZ = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    ofensores = []
+    for patron in ("services/*.py", "routers/*.py"):
+        for ruta in glob.glob(os.path.join(RAIZ, patron)):
+            with open(ruta, encoding="utf-8") as fh:
+                arbol = ast.parse(fh.read())
+            definidos = set(dir(builtins))
+            for nodo in ast.walk(arbol):
+                if isinstance(nodo, (ast.Import, ast.ImportFrom)):
+                    for a in nodo.names:
+                        definidos.add((a.asname or a.name).split(".")[0])
+                elif isinstance(nodo, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    definidos.add(nodo.name)
+                elif isinstance(nodo, ast.arg):
+                    definidos.add(nodo.arg)
+                elif isinstance(nodo, ast.Name) and isinstance(nodo.ctx, ast.Store):
+                    definidos.add(nodo.id)
+                elif isinstance(nodo, ast.ExceptHandler) and nodo.name:
+                    definidos.add(nodo.name)
+            usados = {n.id for n in ast.walk(arbol)
+                      if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
+            faltan = sorted(usados - definidos)
+            if faltan:
+                ofensores.append(f"{os.path.basename(ruta)}: {faltan[:6]}")
+    assert not ofensores, f"nombres sin definir: {ofensores}"

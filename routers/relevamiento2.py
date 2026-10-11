@@ -17,6 +17,56 @@ from templating import templates
 
 router = APIRouter(tags=["relevamiento2"])
 
+def _relevamiento2_query(db, cliente="", asistente=""):
+    """Consulta de relevamientos con los filtros del listado."""
+    q = db.query(models.TechnicalSurveyV2).options(
+        joinedload(models.TechnicalSurveyV2.machine),
+        joinedload(models.TechnicalSurveyV2.customer),
+    )
+    if cliente:
+        q = q.filter(models.TechnicalSurveyV2.customer_id == int(cliente))
+    if asistente:
+        q = q.filter(
+            models.TechnicalSurveyV2.form_data["technical_advisor"].as_string() == asistente)
+    return q
+
+
+
+
+@router.get("/relevamiento2/exportar-excel")
+async def exportar_relevamiento2_excel(
+    cliente: str = Query("", alias="cliente"),
+    asistente: str = Query("", alias="asistente"),
+    db: Session = Depends(get_db),
+):
+    """Exporta el listado filtrado de relevamientos a Excel."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    relevamientos = (
+        _relevamiento2_query(db, cliente=cliente, asistente=asistente)
+        .order_by(models.TechnicalSurveyV2.id.desc())
+        .all()
+    )
+
+    filas = []
+    for r in relevamientos:
+        fd = r.form_data or {}
+        filas.append([
+            r.fecha,
+            fd.get("cliente_nombre") or (r.customer.name if r.customer else ""),
+            r.machine.model if r.machine else "",
+            r.machine.serial_number if r.machine else "",
+            fd.get("technical_advisor", ""),
+            r.status,
+        ])
+
+    return hoja_excel(
+        "Relevamientos",
+        ["Fecha", "Cliente", "Máquina", "Nº de serie", "Asistente técnico", "Estado"],
+        filas,
+        nombre_con_fecha("relevamientos"),
+    )
+
 
 @router.get("/relevamiento2", response_class=HTMLResponse)
 async def relevamiento2_lista(

@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, or_
 import models
 import datetime
 from services import pagination as pg
+from enums import normalize_tracking_status
 
 
 def list_trackings(db: Session):
@@ -11,16 +12,11 @@ def list_trackings(db: Session):
     ).order_by(models.ActionPlanTracking.created_at.desc()).all()
 
 
-def paginate_trackings(db: Session, page: int = 1, per_page: int = 10,
-                       q: str = None, estado: str = None):
-    """Lista paginada de tareas, con búsqueda y filtro por estado.
+def query_trackings(db: Session, q=None, estado=None):
+    """Consulta de tareas de seguimiento con los filtros del listado.
 
-    Antes no aceptaba filtros: con muchas tareas no había forma de encontrar una
-    acción concreta ni de ver sólo las pendientes.
+    La comparten el listado y la exportación.
     """
-    from sqlalchemy import or_
-    from enums import normalize_tracking_status
-
     base = db.query(models.ActionPlanTracking).filter(
         models.ActionPlanTracking.is_active == True
     )
@@ -40,6 +36,19 @@ def paginate_trackings(db: Session, page: int = 1, per_page: int = 10,
         base = base.filter(
             func.lower(models.ActionPlanTracking.status) == normalize_tracking_status(estado).lower()
         )
+
+    return base
+
+
+def paginate_trackings(db: Session, page: int = 1, per_page: int = 10,
+                       q: str = None, estado: str = None):
+    """Lista paginada de tareas, con búsqueda y filtro por estado.
+
+    Antes no aceptaba filtros: con muchas tareas no había forma de encontrar una
+    acción concreta ni de ver sólo las pendientes.
+    """
+
+    base = query_trackings(db, q=q, estado=estado)
 
     total = base.count()
     page, per_page, offset = pg.paginate(page, per_page)
@@ -80,7 +89,6 @@ def create_tracking(db: Session, form_data) -> models.ActionPlanTracking:
     acción que surgiera de una llamada, un correo o una reunión. Faltaba la "C"
     del CRUD en este módulo.
     """
-    from enums import normalize_tracking_status
 
     task = (form_data.get("task") or "").strip()
     if not task:
@@ -105,7 +113,6 @@ def create_tracking(db: Session, form_data) -> models.ActionPlanTracking:
 
 
 def update_tracking(db: Session, track_id: int, form_data):
-    from enums import normalize_tracking_status
 
     track = db.query(models.ActionPlanTracking).filter(models.ActionPlanTracking.id == track_id).first()
     if track:
