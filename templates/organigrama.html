@@ -10,9 +10,19 @@
 {% endblock %}
 
 {% block content %}
+<style nonce="{{ request.state.script_nonce }}">
+@media print {
+    /* El organigrama se imprime para pegarlo en una pared: sin el armazón, en
+       horizontal (la jerarquía es ancha) y sin partir una tarjeta al medio. */
+    @page { size: A4 landscape; margin: 10mm; }
+    .org-tarjeta { break-inside: avoid; page-break-inside: avoid; }
+    #customerSelect { display: none !important; }
+}
+</style>
 <div class="max-w-5xl mx-auto space-y-4 animate-fade-in pb-10">
 
-    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-xl shadow-sm">
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-3 rounded-xl shadow-sm no-print">
+        <label for="customerSelect" class="sr-only">Seleccionar cliente</label>
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">groups</span>
             <select id="customerSelect"
@@ -25,121 +35,291 @@
         </div>
     </section>
 
-    <div id="orgContainer" class="hidden space-y-4">
-        <div class="text-center py-12 text-slate-400">
-            <span class="material-symbols-rounded text-4xl" aria-hidden="true">account_tree</span>
-            <p class="text-xs font-bold mt-2">Selecciona un cliente para ver su organigrama</p>
-        </div>
+    {# Mensaje inicial. Antes vivía dentro de un contenedor oculto, así que no se
+       veía nunca: el usuario se encontraba una pantalla vacía. #}
+    <div id="orgVacio" class="text-center py-12 text-slate-400">
+        <span class="material-symbols-rounded text-4xl" aria-hidden="true">account_tree</span>
+        <p class="text-xs font-bold mt-2">Seleccioná un cliente para ver su organigrama</p>
     </div>
 
-    <div id="orgContent" class="space-y-4"></div>
+    <div id="orgContent" class="space-y-4" role="region" aria-live="polite" aria-label="Organigrama del cliente"></div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
-document.getElementById('customerSelect')?.addEventListener('change', function() {
-    const customerId = this.value;
-    const container = document.getElementById('orgContent');
-    if (!customerId) {
-        container.innerHTML = '';
-        return;
-    }
-    container.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-4xl animate-spin" aria-hidden="true">hourglass_top</span><p class="text-xs font-bold mt-2">Cargando...</p></div>';
-    fetch(`/api/cliente-team/${customerId}`)
-        .then(r => r.json())
-        .then(team => {
-            if (!team || team.length === 0) {
-                container.innerHTML = '<div class="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"><span class="material-symbols-rounded text-4xl text-slate-300" aria-hidden="true">groups_off</span><p class="text-xs font-bold text-slate-400 mt-2">Este cliente no tiene equipo registrado</p></div>';
-                return;
-            }
-            renderOrgChart(team);
-        })
-        .catch(() => {
-            container.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-4xl" aria-hidden="true">error</span><p class="text-xs font-bold mt-2">Error al cargar datos</p></div>';
-        });
-});
+// ── Organigrama ─────────────────────────────────────────────────────────────
+// El equipo se guarda como JSON en el cliente, con cinco campos por integrante:
+// name, role, phone, reports_to y sector. `reports_to` guarda el NOMBRE del jefe.
+//
+// Reglas de armado del árbol:
+//   * el sector agrupa; dentro de cada sector se respeta `reports_to`;
+//   * si el jefe pertenece a otro sector, la persona se cuelga de él igual (el
+//     organigrama sigue la línea de mando, no el agrupamiento);
+//   * si el jefe no está cargado, la persona queda como raíz y se marca;
+//   * los ciclos y las auto-referencias se cortan y se avisan en pantalla, en
+//     lugar de dejar el organigrama vacío.
 
-function renderOrgChart(team) {
-    const sectors = {};
-    team.forEach(m => {
-        const s = m.sector || 'SIN SECTOR';
-        if (!sectors[s]) sectors[s] = [];
-        sectors[s].push(m);
-    });
+let ORGANIGRAMA = { nodos: [], raices: [], desconocidos: [], avisos: [] };
 
-    const sortedSectors = Object.keys(sectors).sort();
-    let html = '';
-
-    sortedSectors.forEach(sector => {
-        const members = sectors[sector];
-        const tree = buildTree(members);
-        html += `
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="px-5 py-3 bg-slate-50/50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">folder</span>
-                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">${sector}</h3>
-                <span class="ml-auto text-[10px] font-bold text-slate-400">${members.length} miembro${members.length !== 1 ? 's' : ''}</span>
-            </div>
-            <div class="p-5">
-                ${renderTree(tree)}
-            </div>
-        </div>`;
-    });
-
-    document.getElementById('orgContent').innerHTML = html;
+function normNombre(valor) {
+    return String(valor == null ? '' : valor).trim().toUpperCase();
 }
 
-function buildTree(members) {
-    const map = {};
-    const roots = [];
-
-    members.forEach(m => {
-        map[m.name] = { ...m, children: [] };
-    });
-
-    members.forEach(m => {
-        if (m.reports_to && map[m.reports_to]) {
-            map[m.reports_to].children.push(map[m.name]);
-        } else {
-            roots.push(map[m.name]);
-        }
-    });
-
-    return roots;
-}
-
-function renderTree(nodes, level = 0) {
-    if (!nodes || nodes.length === 0) return '';
-    let html = '';
-    const paddingLeft = level * 24;
-
-    nodes.forEach((node, idx) => {
-        const hasChildren = node.children && node.children.length > 0;
-        const isLast = idx === nodes.length - 1;
-        const connector = level === 0 ? '' : (isLast ? '└─' : '├─');
-        html += `
-        <div class="flex items-start gap-3 py-1.5 ${level > 0 ? 'border-l-2 border-slate-100 dark:border-slate-800' : ''}" style="padding-left: ${paddingLeft}px">
-            <div class="size-9 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary font-black text-xs shrink-0">
-                ${getInitials(node.name)}
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${node.name}</p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${node.role || 'Sin cargo'}</p>
-                ${node.phone ? `<p class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1"><span class="material-symbols-rounded text-[11px]" aria-hidden="true">call</span>${node.phone}</p>` : ''}
-            </div>
-        </div>`;
-        if (hasChildren) {
-            html += renderTree(node.children, level + 1);
-        }
-    });
-
-    return html;
+function escaparHtml(valor) {
+    return String(valor == null ? '' : valor)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function getInitials(name) {
     if (!name) return '??';
-    return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    return String(name).trim().split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase() || '??';
 }
+
+function construirArbol(team) {
+    const lista = Array.isArray(team) ? team : [];
+    const nodos = lista
+        .filter(m => m && String(m.name || '').trim())
+        .map((m, i) => ({
+            id: 'n' + i,
+            name: String(m.name).trim(),
+            role: m.role || '',
+            phone: m.phone || '',
+            reports_to: m.reports_to || '',
+            sector: String(m.sector || '').trim() || 'SIN SECTOR',
+            parent: null,
+            children: [],
+            aviso: '',
+        }));
+
+    // Un jefe puede repetir nombre. Si dos integrantes del mismo sector se llaman
+    // igual, `reports_to` es ambiguo y no se puede resolver: se avisa en lugar de
+    // elegir uno al azar o descartar a alguien.
+    const porNombre = new Map();
+    nodos.forEach(n => {
+        const clave = normNombre(n.name);
+        if (!porNombre.has(clave)) porNombre.set(clave, []);
+        porNombre.get(clave).push(n);
+    });
+
+    const avisos = [];
+    porNombre.forEach((grupo, clave) => {
+        const porSector = new Set(grupo.map(n => n.sector));
+        if (grupo.length > 1 && porSector.size < grupo.length) {
+            avisos.push(`Hay ${grupo.length} integrantes llamados "${grupo[0].name}" en el mismo sector. ` +
+                        `No se puede saber a cuál se refiere el campo "reporta a".`);
+        }
+    });
+
+    nodos.forEach(n => {
+        const objetivo = normNombre(n.reports_to);
+        if (!objetivo) return;
+        const candidatos = porNombre.get(objetivo) || [];
+        if (!candidatos.length) {
+            n.aviso = `No se encontró a "${String(n.reports_to).trim()}"`;
+            return;
+        }
+        if (candidatos.length > 1) {
+            n.aviso = `Reporta a "${String(n.reports_to).trim()}", que está repetido`;
+            return;
+        }
+        const jefe = candidatos[0];
+        if (jefe.id === n.id) {
+            n.aviso = 'Se reporta a sí mismo';
+            return;
+        }
+        n.parent = jefe.id;
+        n.aviso = jefe.sector === n.sector ? '' : `Reporta a ${jefe.name} (${jefe.sector})`;
+    });
+
+    const porId = new Map(nodos.map(n => [n.id, n]));
+
+    // 1) Romper los ciclos ANTES de armar los hijos. Si se pueblan primero, los
+    //    nodos de un ciclo no quedan alcanzables desde ninguna raíz (el
+    //    organigrama se ve vacío) y además se referencian entre sí.
+    nodos.forEach(n => {
+        const visto = new Set();
+        let actual = n;
+        while (actual) {
+            if (visto.has(actual.id)) {
+                n.parent = null;
+                n.aviso = 'Relación circular: se muestra como raíz';
+                avisos.push('Se encontraron relaciones circulares en "reporta a"; se cortaron para poder mostrar el organigrama.');
+                return;
+            }
+            visto.add(actual.id);
+            actual = actual.parent ? porId.get(actual.parent) : null;
+        }
+    });
+
+    // 2) Ya sin ciclos, armar la jerarquía.
+    nodos.forEach(n => {
+        if (n.parent && porId.has(n.parent)) porId.get(n.parent).children.push(n);
+    });
+
+    // 3) Orden estable: alfabético por nombre en cada nivel. Un ciclo ya no puede
+    //    colgarse acá porque los hijos forman un árbol.
+    const ordenar = lista => {
+        lista.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+        lista.forEach(n => ordenar(n.children));
+        return lista;
+    };
+    const raices = ordenar(nodos.filter(n => !n.parent));
+    nodos.forEach(n => {
+        n.sectorDeJefe = n.parent && porId.has(n.parent) ? porId.get(n.parent).sector : null;
+    });
+
+    return { nodos, raices, desconocidos: nodos.length - raices.length,
+             avisos: [...new Set(avisos)] };
+}
+
+function iconoInicial(nodo) {
+    return `<div class="size-9 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary font-black text-xs shrink-0" aria-hidden="true">${escaparHtml(getInitials(nodo.name))}</div>`;
+}
+
+function renderNodo(nodo) {
+    const rol = nodo.role ? escaparHtml(nodo.role) : 'Sin cargo';
+    const telefono = nodo.phone
+        ? `<p class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1"><span class="material-symbols-rounded text-[11px]" aria-hidden="true">call</span>${escaparHtml(nodo.phone)}</p>`
+        : '';
+    const aviso = nodo.aviso
+        ? `<p class="text-[9px] text-amber-600 dark:text-amber-400 mt-0.5">${escaparHtml(nodo.aviso)}</p>`
+        : '';
+    return `
+        <div class="flex items-start gap-3 py-1.5">
+            ${iconoInicial(nodo)}
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-slate-900 dark:text-white break-words">${escaparHtml(nodo.name)}</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider break-words">${rol}</p>
+                ${telefono}
+                ${aviso}
+            </div>
+        </div>`;
+}
+
+// La jerarquía se dibuja con una línea guía por nivel. Antes se usaba padding
+// acumulado, que con pocos niveles sacaba el contenido de la tarjeta.
+function renderRama(nodos, nivel = 0) {
+    if (!nodos || !nodos.length) return '';
+    return `<ul class="${nivel === 0 ? 'space-y-1' : 'border-l-2 border-slate-100 dark:border-slate-800 ml-4 pl-4 space-y-1'}">` +
+        nodos.map(n =>
+            `<li>${renderNodo(n)}${renderRama(n.children, nivel + 1)}</li>`
+        ).join('') +
+        `</ul>`;
+}
+
+function contarNodos(nodos) {
+    return (nodos || []).reduce((total, n) => total + 1 + contarNodos(n.children), 0);
+}
+
+function sectoresDe(nodos, acumulador = new Map()) {
+    (nodos || []).forEach(n => {
+        acumulador.set(n.sector, (acumulador.get(n.sector) || 0) + 1);
+        sectoresDe(n.children, acumulador);
+    });
+    return acumulador;
+}
+
+function renderOrgChart(team) {
+    const contenedor = document.getElementById('orgContent');
+    const vacio = document.getElementById('orgVacio');
+    if (vacio) vacio.classList.add('hidden');
+
+    if (!team || !team.length) {
+        contenedor.innerHTML = `
+        <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <span class="material-symbols-rounded text-4xl text-slate-300" aria-hidden="true">groups_off</span>
+            <p class="text-xs font-bold text-slate-400 mt-2">Este cliente no tiene equipo registrado</p>
+        </div>`;
+        return;
+    }
+
+    const arbol = construirArbol(team);
+    ORGANIGRAMA = arbol;
+
+    if (!arbol.raices.length) {
+        contenedor.innerHTML = `
+        <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-amber-200 shadow-sm">
+            <span class="material-symbols-rounded text-4xl text-amber-400" aria-hidden="true">account_tree</span>
+            <p class="text-xs font-bold text-slate-500 mt-2">No se pudo armar la jerarquía: revisá los campos "reporta a".</p>
+        </div>`;
+        return;
+    }
+
+    // Se recorren los sectores en orden, pero un integrante puede colgar de un
+    // jefe de otro sector: se cuenta dónde se muestra realmente.
+    const sectores = [...new Set(arbol.raices.map(n => n.sector))].sort((a, b) => a.localeCompare(b, 'es'));
+    const mostrados = sectoresDe(arbol.raices);
+    const totalMostrado = contarNodos(arbol.raices);
+    const total = arbol.nodos.length;
+    const avisos = [...new Set(arbol.avisos)];
+
+    let html = '';
+
+    if (totalMostrado !== total || avisos.length) {
+        const detalle = avisos.length
+            ? `<ul class="list-disc list-inside space-y-0.5">${avisos.map(a => `<li>${escaparHtml(a)}</li>`).join('')}</ul>`
+            : '';
+        html += `
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl px-5 py-4">
+            <div class="flex items-start gap-2">
+                <span class="material-symbols-rounded text-amber-500 text-lg" aria-hidden="true">warning</span>
+                <div class="text-xs text-amber-800 dark:text-amber-200 space-y-1">
+                    <p class="font-bold">Hay datos del equipo que conviene revisar.</p>
+                    ${detalle}
+                </div>
+            </div>
+        </div>`;
+    }
+
+    sectores.forEach(sector => {
+        const raices = arbol.raices.filter(n => n.sector === sector);
+        if (!raices.length) return;
+        const enEsteSector = mostrados.get(sector) || 0;
+        html += `
+        <div class="org-tarjeta bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden" data-sector="${escaparHtml(sector)}">
+            <div class="px-5 py-3 bg-slate-50/50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">folder</span>
+                <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider break-words">${escaparHtml(sector)}</h3>
+                <span class="ml-auto text-[10px] font-bold text-slate-400">${enEsteSector} miembro${enEsteSector !== 1 ? 's' : ''}</span>
+            </div>
+            <div class="p-5">
+                ${renderRama(raices)}
+            </div>
+        </div>`;
+    });
+
+    contenedor.innerHTML = html;
+}
+
+(function conectarSelector() {
+    const selector = document.getElementById('customerSelect');
+    if (!selector) return;
+    selector.addEventListener('change', function () {
+        const customerId = this.value;
+        const contenedor = document.getElementById('orgContent');
+        const vacio = document.getElementById('orgVacio');
+        if (!customerId) {
+            contenedor.innerHTML = '';
+            if (vacio) vacio.classList.remove('hidden');
+            return;
+        }
+        contenedor.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-4xl animate-spin" aria-hidden="true">hourglass_top</span><p class="text-xs font-bold mt-2">Cargando...</p></div>';
+        fetch(`/api/cliente-team/${encodeURIComponent(customerId)}`)
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(team => renderOrgChart(team))
+            .catch(() => {
+                contenedor.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-4xl" aria-hidden="true">error</span><p class="text-xs font-bold mt-2">No se pudo cargar el equipo del cliente</p></div>';
+            });
+    });
+})();
 </script>
+
 {% endblock %}
