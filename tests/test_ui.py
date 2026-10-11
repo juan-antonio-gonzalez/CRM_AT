@@ -718,3 +718,37 @@ def test_no_quedan_librerias_sin_usar():
         if base != "app.js" and base not in plantillas_y_js:
             huerfanas.append(base)
     assert not huerfanas, f"librerías que nadie referencia: {huerfanas}"
+
+
+def test_los_macros_no_dependen_del_contexto():
+    """Un macro de Jinja no ve el contexto del template.
+
+    `boton_exportar` leía `request.url.query` para reusar los filtros. Los macros
+    sólo reciben sus argumentos, así que `request` no existe dentro y la página
+    fallaba con:
+
+        jinja2.exceptions.UndefinedError: 'request' is undefined
+
+    La plantilla compilaba bien: el error aparecía al renderizar. Por eso no
+    alcanza con `get_template()`. Esta prueba revisa que ningún macro de _ui.html
+    use variables de contexto.
+    """
+    with open(os.path.join(PLANTILLAS, "_ui.html"), encoding="utf-8") as fh:
+        componente = fh.read()
+
+    prohibidas = ("request", "session", "user", "csrf_token")
+    ofensores = []
+    for m in re.finditer(r"\{% macro (\w+)\((.*?)\) %\}(.*?)\{% endmacro %\}",
+                         componente, re.S):
+        nombre, params, cuerpo = m.group(1), m.group(2), m.group(3)
+        # Sólo se analiza lo que está fuera de comentarios Jinja.
+        cuerpo_limpio = re.sub(r"\{#.*?#\}", "", cuerpo, flags=re.S)
+        variables = {p.split("=")[0].strip() for p in params.split(",") if p.strip()}
+        for prohibida in prohibidas:
+            # `request.url.query` o `request.state...` dentro del macro.
+            if re.search(r"\b" + prohibida + r"\b", cuerpo_limpio) and prohibida not in variables:
+                ofensores.append(f"{nombre} usa '{prohibida}'")
+    assert not ofensores, (
+        f"macros que dependen del contexto del template: {ofensores}. "
+        f"Pasá el valor como argumento."
+    )

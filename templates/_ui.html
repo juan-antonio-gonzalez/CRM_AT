@@ -11,6 +11,22 @@
    ============================================================================ #}
 
 
+{# ── Botón de exportar ───────────────────────────────────────────────────────
+   Enlace de descarga que recibe el query string actual, así exporta exactamente
+   lo que se está viendo en pantalla (mismos filtros y búsqueda). El query string
+   se pasa como argumento y no se lee del contexto: los macros de Jinja no ven el
+   contexto del template, y `request` no existe dentro del macro.
+
+   Va en la barra de acciones de un listado, junto al botón de crear. #}
+{% macro boton_exportar(ruta, qs='') %}
+<a href="{{ ruta }}{% if qs %}?{{ qs }}{% endif %}"
+    class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-superficie-borde text-texto-base hover:bg-superficie-card text-sm font-medium transition-colors">
+    <span class="material-symbols-rounded text-lg" aria-hidden="true">download</span>
+    Exportar
+</a>
+{% endmacro %}
+
+
 {# ── Indicador ───────────────────────────────────────────────────────────────
    Azulejo compacto con esquinas redondeadas y color propio.
 

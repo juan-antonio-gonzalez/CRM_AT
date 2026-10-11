@@ -11,16 +11,12 @@ from templating import templates
 router = APIRouter(tags=["products"])
 
 
-@router.get("/productos", response_class=HTMLResponse)
-async def list_products(
-    request: Request,
-    q: Optional[str] = Query(None),
-    material: Optional[str] = Query(None),
-    status: Optional[str] = Query(None),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db)
-):
+def _product_filters(db: Session, q=None, material=None, status=None):
+    """Consulta de productos con los filtros del listado.
+
+    La comparten el listado y la exportación, para que exportar respete lo mismo
+    que se ve en pantalla.
+    """
     query = db.query(models.Product)
     if q:
         query = query.filter(
@@ -32,6 +28,56 @@ async def list_products(
         query = query.filter(models.Product.material == material)
     if status and status != "Todos":
         query = query.filter(models.Product.status == status)
+    return query
+
+
+@router.get("/productos/exportar-excel")
+async def exportar_productos_excel(
+    q: Optional[str] = Query(None),
+    material: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """Exporta el listado filtrado de productos a Excel."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    productos = (
+        _product_filters(db, q=q, material=material, status=status)
+        .order_by(models.Product.name)
+        .all()
+    )
+
+    filas = []
+    for p in productos:
+        medidas = " x ".join(
+            str(v) for v in (p.dimensions_l, p.dimensions_a, p.dimensions_h)
+            if v not in (None, "")
+        )
+        filas.append([
+            p.name, p.et_number, p.material, p.manufacturing_route, medidas,
+            p.status, p.last_modified,
+        ])
+
+    return hoja_excel(
+        "Productos",
+        ["Nombre", "Nº ET", "Material", "Ruta de fabricación", "Medidas (L x A x H)",
+         "Estado", "Última modificación"],
+        filas,
+        nombre_con_fecha("productos"),
+    )
+
+
+@router.get("/productos", response_class=HTMLResponse)
+async def list_products(
+    request: Request,
+    q: Optional[str] = Query(None),
+    material: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    query = _product_filters(db, q=q, material=material, status=status)
 
     total = query.count()
     page, per_page, offset = pg.paginate(page, per_page)

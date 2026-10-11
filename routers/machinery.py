@@ -11,6 +11,76 @@ from templating import templates
 router = APIRouter(tags=["machinery"])
 
 
+def _machine_filters(db: Session, cliente=None, asistente=None, q=None):
+    """Consulta de máquinas con los filtros del listado.
+
+    La usan el listado y la exportación, para que exportar respete exactamente los
+    mismos filtros que se están viendo en pantalla.
+    """
+    query = db.query(models.Machine).options(joinedload(models.Machine.customer))
+
+    if cliente and str(cliente).strip() != "":
+        try:
+            query = query.filter(models.Machine.customer_id == int(cliente))
+        except (TypeError, ValueError):
+            pass
+
+    if asistente and str(asistente).strip() != "":
+        query = query.join(models.Customer).filter(
+            models.Customer.technical_advisor == asistente)
+
+    if q and str(q).strip() != "":
+        patron = f"%{q}%"
+        query = query.filter(
+            (models.Machine.serial_number.ilike(patron)) |
+            (models.Machine.model.ilike(patron)) |
+            (models.Machine.brand.ilike(patron)) |
+            (models.Machine.line.ilike(patron))
+        )
+
+    return query
+
+
+@router.get("/maquinaria/exportar-excel")
+async def exportar_maquinaria_excel(
+    cliente: Optional[str] = Query(None),
+    asistente: Optional[str] = Query(None),
+    q: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """Exporta el listado filtrado de máquinas a Excel."""
+    from services.excel import hoja_excel, nombre_con_fecha
+
+    maquinas = (
+        _machine_filters(db, cliente=cliente, asistente=asistente, q=q)
+        .order_by(models.Machine.brand, models.Machine.model)
+        .all()
+    )
+
+    filas = []
+    for m in maquinas:
+        filas.append([
+            m.customer.name if m.customer else "",
+            m.plant_assigned,
+            m.brand,
+            m.model,
+            m.machine_type,
+            m.serial_number,
+            m.line,
+            m.status,
+            m.relevamiento_status,
+            "Sí" if m.is_active else "No",
+        ])
+
+    return hoja_excel(
+        "Máquinas",
+        ["Cliente", "Planta", "Marca", "Modelo", "Tipo", "Nº de serie", "Línea",
+         "Estado", "Relevamiento", "Activa"],
+        filas,
+        nombre_con_fecha("maquinas"),
+    )
+
+
 @router.get("/maquinaria", response_class=HTMLResponse)
 async def list_machinery(
     request: Request,
@@ -21,8 +91,8 @@ async def list_machinery(
     per_page: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    # joinedload: the template reads machine.customer per row (avoids N+1).
-    query = db.query(models.Machine).options(joinedload(models.Machine.customer))
+    # joinedload: la plantilla lee machine.customer en cada fila (evita N+1).
+    query = _machine_filters(db, cliente=cliente, asistente=asistente, q=q)
 
     customers_raw = db.query(models.Customer).order_by(models.Customer.name).all()
     assigned_advisors = db.query(models.Customer.technical_advisor).filter(
@@ -37,7 +107,6 @@ async def list_machinery(
     if cliente and cliente.strip() != "":
         try:
             cliente_id = int(cliente)
-            query = query.filter(models.Machine.customer_id == cliente_id)
             selected_cust = next((c for c in customers_raw if c.id == cliente_id), None)
             if selected_cust and selected_cust.technical_advisor:
                 advisors_for_dropdown = [selected_cust.technical_advisor]
@@ -45,16 +114,7 @@ async def list_machinery(
             pass
 
     if asistente and asistente.strip() != "":
-        query = query.join(models.Customer).filter(models.Customer.technical_advisor == asistente)
         customers_for_dropdown = [c for c in customers_raw if c.technical_advisor == asistente]
-
-    if q and q.strip() != "":
-        query = query.filter(
-            (models.Machine.serial_number.ilike(f"%{q}%")) |
-            (models.Machine.model.ilike(f"%{q}%")) |
-            (models.Machine.brand.ilike(f"%{q}%")) |
-            (models.Machine.line.ilike(f"%{q}%"))
-        )
 
     total = query.count()
     page, per_page, offset = pg.paginate(page, per_page)
