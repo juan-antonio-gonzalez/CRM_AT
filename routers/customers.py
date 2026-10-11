@@ -8,7 +8,7 @@ from typing import Optional, List
 import models
 from database import get_db
 from services import customer_service, pagination as pg, soft_delete as sd
-from services import auditoria
+from services import auditoria, lote
 from templating import templates
 
 router = APIRouter(tags=["customers"])
@@ -300,9 +300,8 @@ async def customer_report(customer_id: int, request: Request, db: Session = Depe
 
 # ── Acciones en lote ────────────────────────────────────────────────────────
 # Desactivar veinte clientes de a uno, con su motivo cada vez, es la clase de tarea
-# que hace que la gente deje de usar la herramienta. El tope de ids es para que una
-# petición no recorra la tabla entera por accidente.
-MAX_LOTE = 500
+# que hace que la gente deje de usar la herramienta. La lógica compartida —y el
+# tope de identificadores— están en `services/lote.py`.
 
 
 @router.post("/clientes/accion-en-lote")
@@ -322,52 +321,15 @@ async def clientes_accion_en_lote(request: Request, db: Session = Depends(get_db
 
     if accion not in ("desactivar", "reactivar"):
         return error("Acción no válida")
-    if not ids:
-        return error("No se seleccionó ningún cliente")
-
-    try:
-        ids = [int(i) for i in ids][:MAX_LOTE]
-    except (TypeError, ValueError):
-        return error("Identificadores no válidos")
 
     user = getattr(request.state, "user", None)
-    uid = int(user["sub"]) if user else None
-    rol = (user.get("role") or "") if user else ""
+    ids_limpios, falla = lote.validar_peticion(ids, accion, motivo, user)
+    if falla:
+        return error(falla["mensaje"], falla["codigo"])
 
-    if accion == "reactivar" and rol != "admin":
-        return error("Solo el admin puede reactivar", 403)
-    # Se comprueba antes de recorrer: si falta el motivo, es mejor decirlo una vez
-    # que devolver veinte filas "omitidas" por el mismo error repetido.
-    if accion == "desactivar" and not motivo:
-        return error("Indicá el motivo de la desactivación")
-
-    aplicados, omitidos = 0, []
-    for cid in ids:
-        cliente = db.query(models.Customer).filter(models.Customer.id == cid).first()
-        if not cliente:
-            omitidos.append({"id": cid, "motivo": "no existe"})
-            continue
-        # Ya en ese estado: no es un error, simplemente no hay nada que hacer.
-        if accion == "desactivar" and not cliente.is_active:
-            omitidos.append({"id": cid, "motivo": f"{cliente.name}: ya estaba inactivo"})
-            continue
-        if accion == "reactivar" and cliente.is_active:
-            omitidos.append({"id": cid, "motivo": f"{cliente.name}: ya estaba activo"})
-            continue
-
-        try:
-            if accion == "desactivar":
-                sd.soft_deactivate(db, models.Customer, cid, motivo, uid)
-            else:
-                sd.soft_reactivate(db, models.Customer, cid)
-            aplicados += 1
-            auditoria.registrar(db, "customer", cid, accion,
-                                user=user, entity_label=cliente.name,
-                                changes=({"motivo": {"antes": "", "despues": motivo}}
-                                         if accion == "desactivar" else None),
-                                commit=False)
-        except Exception as ex:
-            omitidos.append({"id": cid, "motivo": str(ex)[:80]})
+    aplicados, omitidos = lote.aplicar(
+        db, models.Customer, ids_limpios, accion, motivo, user,
+        etiqueta=lambda c: c.name, registrar="customer")
 
     return JSONResponse({
         "aplicados": aplicados,

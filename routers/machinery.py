@@ -5,7 +5,7 @@ from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
-from services import machine_service, pagination as pg, auditoria
+from services import machine_service, pagination as pg, auditoria, lote
 from templating import templates
 
 router = APIRouter(tags=["machinery"])
@@ -281,3 +281,31 @@ async def delete_machine(machine_id: int, request: Request, redirect: str = Quer
     auditoria.registrar(db, "machine", machine_id, "eliminar",
                         user=user, entity_label=etiqueta)
     return RedirectResponse(url=redirect, status_code=303)
+
+
+# ── Acciones en lote ────────────────────────────────────────────────────────
+@router.post("/maquinaria/accion-en-lote")
+async def machine_accion_en_lote(request: Request, db: Session = Depends(get_db)):
+    """Aplica una acción a varios registros a la vez.
+
+    Devuelve un resumen con cuántos se aplicaron y cuáles no: si tres de veinte ya
+    estaban inactivos, hay que poder decirlo.
+    """
+    datos = await request.json()
+    ids = datos.get("ids") or []
+    accion = (datos.get("accion") or "").strip()
+    motivo = (datos.get("motivo") or "").strip()
+
+    def error(mensaje, codigo=400):
+        return JSONResponse(status_code=codigo, content={"detail": mensaje})
+
+    user = getattr(request.state, "user", None)
+    ids_limpios, falla = lote.validar_peticion(ids, accion, motivo, user)
+    if falla:
+        return error(falla["mensaje"], falla["codigo"])
+
+    aplicados, omitidos = lote.aplicar(
+        db, models.Machine, ids_limpios, accion, motivo, user,
+        etiqueta=lambda m: ' '.join(x for x in (m.brand, m.model) if x) or m.serial_number or f'#{m.id}', registrar="machine")
+
+    return JSONResponse({"aplicados": aplicados, "omitidos": omitidos, "accion": accion})

@@ -5,7 +5,7 @@ from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
-from services import product_service, pagination as pg, auditoria
+from services import product_service, pagination as pg, auditoria, lote
 from templating import templates
 
 router = APIRouter(tags=["products"])
@@ -184,3 +184,31 @@ async def create_producto(request: Request, db: Session = Depends(get_db)):
     if not et_number:
         raise HTTPException(status_code=400, detail="Número de ET es requerido")
     return product_service.create_product_api(db, et_number, data.get("description", ""), data.get("material", ""))
+
+
+# ── Acciones en lote ────────────────────────────────────────────────────────
+@router.post("/productos/accion-en-lote")
+async def product_accion_en_lote(request: Request, db: Session = Depends(get_db)):
+    """Aplica una acción a varios registros a la vez.
+
+    Devuelve un resumen con cuántos se aplicaron y cuáles no: si tres de veinte ya
+    estaban inactivos, hay que poder decirlo.
+    """
+    datos = await request.json()
+    ids = datos.get("ids") or []
+    accion = (datos.get("accion") or "").strip()
+    motivo = (datos.get("motivo") or "").strip()
+
+    def error(mensaje, codigo=400):
+        return JSONResponse(status_code=codigo, content={"detail": mensaje})
+
+    user = getattr(request.state, "user", None)
+    ids_limpios, falla = lote.validar_peticion(ids, accion, motivo, user)
+    if falla:
+        return error(falla["mensaje"], falla["codigo"])
+
+    aplicados, omitidos = lote.aplicar(
+        db, models.Product, ids_limpios, accion, motivo, user,
+        etiqueta=lambda p: p.name or f'#{p.id}', registrar="product")
+
+    return JSONResponse({"aplicados": aplicados, "omitidos": omitidos, "accion": accion})

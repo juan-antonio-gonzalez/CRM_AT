@@ -50,11 +50,36 @@
     <!-- Table Section -->
     <div
         class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
+        {# Barra de acciones en lote: aparece al elegir al menos una fila. #}
+        <div data-lote-barra data-lote-ruta="/productos/accion-en-lote" hidden
+            class="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-superficie-borde bg-primary-100">
+            <span class="text-sm text-primary-700">
+                <strong data-lote-cuenta>0</strong> seleccionado(s)
+            </span>
+            <input type="text" data-lote-motivo placeholder="Motivo (opcional)"
+                class="text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-1.5 outline-none">
+            <button type="button" data-lote-accion="desactivar" data-lote-etiqueta="Desactivar"
+                class="px-3 py-1.5 rounded-md bg-peligro-500 hover:bg-peligro-600 text-white text-sm font-medium transition-colors">
+                Desactivar
+            </button>
+            <button type="button" data-lote-accion="reactivar" data-lote-etiqueta="Reactivar"
+                class="px-3 py-1.5 rounded-md bg-exito-500 hover:bg-exito-600 text-white text-sm font-medium transition-colors">
+                Reactivar
+            </button>
+            <button type="button" data-lote-limpiar
+                class="px-3 py-1.5 rounded-md text-primary-700 hover:bg-primary-200 text-sm font-medium transition-colors">
+                Cancelar
+            </button>
+        </div>
         <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left border-collapse">
                 <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">
+                                                <th class="px-3 py-3 bg-superficie-card w-10">
+                            <input type="checkbox" data-lote-todos aria-label="Seleccionar todos"
+                                class="size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-2 focus:ring-primary-600/20">
+                        </th>
+<th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">
                             Descripción / ET</th>
                         <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Material
                         </th>
@@ -73,7 +98,12 @@
                 <tbody class="divide-y divide-superficie-borde">
                     {% for product in products %}
                     <tr class="hover:bg-superficie-suave/50 transition-colors group">
-                        <td class="px-6 py-5">
+                                                <td class="px-3 py-3">
+                            <input type="checkbox" data-lote-item="{{ product.id }}"
+                                aria-label="Seleccionar {{ product.name }}"
+                                class="size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-2 focus:ring-primary-600/20">
+                        </td>
+<td class="px-6 py-5">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-texto-fuerte">{{ product.name }}</span>
                                 <span class="text-2xs font-mono text-texto-tenue mt-0.5">{{ product.et_number }}</span>

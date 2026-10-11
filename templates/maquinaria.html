@@ -76,11 +76,36 @@
     <!-- Data Table -->
     <div
         class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden">
+        {# Barra de acciones en lote: aparece al elegir al menos una fila. #}
+        <div data-lote-barra data-lote-ruta="/maquinaria/accion-en-lote" hidden
+            class="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-superficie-borde bg-primary-100">
+            <span class="text-sm text-primary-700">
+                <strong data-lote-cuenta>0</strong> seleccionado(s)
+            </span>
+            <input type="text" data-lote-motivo placeholder="Motivo (opcional)"
+                class="text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-1.5 outline-none">
+            <button type="button" data-lote-accion="desactivar" data-lote-etiqueta="Desactivar"
+                class="px-3 py-1.5 rounded-md bg-peligro-500 hover:bg-peligro-600 text-white text-sm font-medium transition-colors">
+                Desactivar
+            </button>
+            <button type="button" data-lote-accion="reactivar" data-lote-etiqueta="Reactivar"
+                class="px-3 py-1.5 rounded-md bg-exito-500 hover:bg-exito-600 text-white text-sm font-medium transition-colors">
+                Reactivar
+            </button>
+            <button type="button" data-lote-limpiar
+                class="px-3 py-1.5 rounded-md text-primary-700 hover:bg-primary-200 text-sm font-medium transition-colors">
+                Cancelar
+            </button>
+        </div>
         <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left border-collapse">
                 <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave border-b border-superficie-borde">
-                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave tracking-normal whitespace-nowrap bg-superficie-card" scope="col">N° Serie</th>
+                                                <th class="px-3 py-3 bg-superficie-card w-10">
+                            <input type="checkbox" data-lote-todos aria-label="Seleccionar todos"
+                                class="size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-2 focus:ring-primary-600/20">
+                        </th>
+<th class="px-2 py-2 text-2xs font-bold text-texto-suave tracking-normal whitespace-nowrap bg-superficie-card" scope="col">N° Serie</th>
                         <th class="px-2 py-2 text-2xs font-bold text-texto-suave tracking-normal whitespace-nowrap bg-superficie-card" scope="col">Maquinaria / Modelo</th>
                         <th class="px-2 py-2 text-2xs font-bold text-texto-suave tracking-normal whitespace-nowrap bg-superficie-card" scope="col">Cliente</th>
                         <th class="px-2 py-2 text-2xs font-bold text-texto-suave tracking-normal whitespace-nowrap bg-superficie-card" scope="col">Planta</th>
@@ -95,7 +120,12 @@
                 <tbody class="divide-y divide-superficie-borde">
                     {% for machine in machines %}
                     <tr data-row class="hover:bg-superficie-suave transition-colors group">
-                        <td class="px-2 py-2 text-2xs font-mono text-texto-base whitespace-nowrap">
+                                                <td class="px-3 py-3">
+                            <input type="checkbox" data-lote-item="{{ machine.id }}"
+                                aria-label="Seleccionar {{ machine.brand }} {{ machine.model }}"
+                                class="size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-2 focus:ring-primary-600/20">
+                        </td>
+<td class="px-2 py-2 text-2xs font-mono text-texto-base whitespace-nowrap">
                             {{ machine.serial_number }}
                         </td>
                         <td class="px-2 py-2 whitespace-nowrap">
