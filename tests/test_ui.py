@@ -486,7 +486,9 @@ def test_los_modales_usan_los_tres_tamanos_del_componente():
     en seguimiento, el modal de crear medía max-w-2xl y el de editar lo mismo
     medía max-w-lg. Ahora todos caen en uno de los tres tamaños.
     """
-    PERMITIDOS = {"max-w-sm", "max-w-lg", "max-w-3xl", "max-w-4xl"}
+    # Los cuatro tamaños del componente, más los que aún tienen los modales
+    # escritos a mano mientras se migran.
+    PERMITIDOS = {"max-w-sm", "max-w-lg", "max-w-3xl", "max-w-5xl", "max-w-4xl"}
     ofensores = []
     for nombre, texto in _plantillas_aplicacion():
         for m in re.finditer(r'<div[^>]*role="dialog"[^>]*>', texto):

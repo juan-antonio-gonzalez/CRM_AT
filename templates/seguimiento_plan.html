@@ -6,7 +6,7 @@
 <h2 class="text-lg lg:text-xl font-black text-texto-fuerte tracking-tight">Seguimiento Plan de Acción</h2>
 {% endblock %}
 
-{% from "_ui.html" import indicador %}
+{% from "_ui.html" import indicador, modal, pie_modal %}
 {% block content %}
 <div class="h-full flex flex-col gap-6 w-full max-w-[1600px] mx-auto animate-fade-in duration-500">
     
@@ -181,171 +181,137 @@
 </div>
 
 <!-- Edit Tracking Modal -->
-<div id="newTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="newTrackingModal-title">
-    <div class="bg-superficie-card w-full max-w-lg rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
-            <div class="flex items-center gap-3">
-                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                    <span class="material-symbols-rounded" aria-hidden="true">playlist_add</span>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-texto-fuerte" id="newTrackingModal-title">Nueva tarea de seguimiento</h3>
-                    <p class="text-xs font-bold text-texto-suave">Para acciones que no nacen de una visita técnica</p>
-                </div>
-            </div>
-            <button type="button" id="btn-cerrar-nueva" class="p-2 text-texto-tenue hover:text-texto-base transition-colors" aria-label="Cerrar">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
+{% call modal('newTrackingModal', 'Nueva tarea de seguimiento', 'formulario', 'playlist_add', 'primario', 'Para acciones que no nacen de una visita técnica') %}
+    <form method="POST" action="/seguimiento-plan/nueva" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <div>
+            <label for="new-task" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Tarea <span class="text-peligro-500">*</span></label>
+            <textarea id="new-task" name="task" required rows="2"
+                placeholder="Qué hay que hacer..."
+                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
         </div>
-        <form method="POST" action="/seguimiento-plan/nueva" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <label for="new-task" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Tarea <span class="text-peligro-500">*</span></label>
-                <textarea id="new-task" name="task" required rows="2"
-                    placeholder="Qué hay que hacer..."
-                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label for="new-customer" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Cliente</label>
-                    <select id="new-customer" name="customer_name"
-                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
-                        <option value="">Sin cliente</option>
-                        {% for cli in clientes %}
-                        <option value="{{ cli.name }}">{{ cli.name }}{% if cli.plant %} — {{ cli.plant }}{% endif %}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div>
-                    <label for="new-et" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">N° ET</label>
-                    <input type="text" id="new-et" name="et_number"
-                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
-                </div>
-                <div>
-                    <label for="new-responsible" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Responsable</label>
-                    <input type="text" id="new-responsible" name="responsible"
-                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
-                </div>
-                <div>
-                    <label for="new-due" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Plazo</label>
-                    <input type="text" id="new-due" name="due_date" placeholder="DD/MM/YYYY"
-                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
-                </div>
-            </div>
-            <div>
-                <span class="block text-2xs font-black text-texto-suave tracking-normal mb-2">Estado inicial</span>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Estado inicial">
-                    {% for valor, texto in [('Pendiente', 'Pendiente'), ('En curso', 'En curso'), ('Finalizado', 'Finalizado'), ('Cancelado', 'Cancelado')] %}
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="status" value="{{ valor }}" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" {% if loop.first %}checked{% endif %} />
-                        <div class="px-3 py-2.5 text-center rounded-xl border border-superficie-borde text-2xs font-black tracking-normal text-texto-suave peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
-                    </label>
+                <label for="new-customer" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Cliente</label>
+                <select id="new-customer" name="customer_name"
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
+                    <option value="">Sin cliente</option>
+                    {% for cli in clientes %}
+                    <option value="{{ cli.name }}">{{ cli.name }}{% if cli.plant %} — {{ cli.plant }}{% endif %}</option>
                     {% endfor %}
-                </div>
+                </select>
             </div>
             <div>
-                <label for="new-observations" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Observaciones</label>
-                <textarea id="new-observations" name="observations" rows="2"
-                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
+                <label for="new-et" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">N° ET</label>
+                <input type="text" id="new-et" name="et_number"
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
-            <div class="flex justify-end gap-3 pt-2">
-                <button type="button" id="btn-cancelar-nueva"
-                    class="px-5 py-3 rounded-xl border border-superficie-borde text-texto-base font-black text-2xs tracking-normal hover:bg-superficie-suave transition-all">Cancelar</button>
-                <button type="submit"
-                    class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-2xs tracking-normal transition-all shadow-lg shadow-primary/20">Crear tarea</button>
+            <div>
+                <label for="new-responsible" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Responsable</label>
+                <input type="text" id="new-responsible" name="responsible"
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
-        </form>
-    </div>
-</div>
-
-<div id="editTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editTrackingModal-title">
-    <div class="bg-superficie-card w-full max-w-lg rounded-lg overflow-hidden border border-superficie-borde shadow-pop flex flex-col max-h-[90vh]">
-        <div class="px-6 py-5 border-b border-superficie-borde flex justify-between items-center bg-superficie-suave/50">
-            <div class="flex items-center gap-3">
-                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                    <span class="material-symbols-rounded" aria-hidden="true">edit_square</span>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-texto-fuerte" id="editTrackingModal-title">Editar Seguimiento</h3>
-                    <p class="text-xs font-bold text-texto-suave">Actualiza detalles o cambia el estado</p>
-                </div>
+            <div>
+                <label for="new-due" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Plazo</label>
+                <input type="text" id="new-due" name="due_date" placeholder="DD/MM/YYYY"
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
-            <button id="btn-close-edit-modal" class="p-2 text-texto-tenue hover:text-texto-base hover:bg-superficie-suave rounded-xl transition-all" aria-label="Cerrar">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
         </div>
-        <form id="editTrackingForm" method="POST" class="flex flex-col overflow-hidden h-full">
-            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-            <input type="hidden" name="et_number" id="edit-et-number" value="">
-            <div class="p-6 overflow-y-auto flex-1 space-y-5">
-                <!-- Task -->
-                <div class="space-y-2">
-                    <label for="edit-task" class="text-xs font-bold text-texto-suave tracking-normal block">Tarea Requerida</label>
-                    <textarea name="task" id="edit-task" required rows="2" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Responsible -->
-                    <div class="space-y-2">
-                        <label for="edit-responsible" class="text-xs font-bold text-texto-suave tracking-normal block">Responsable</label>
-                        <input type="text" name="responsible" id="edit-responsible" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
-                    </div>
-                    <!-- Due Date -->
-                    <div class="space-y-2">
-                        <label for="edit-due-date" class="text-xs font-bold text-texto-suave tracking-normal block">Fecha Límite</label>
-                        <input type="text" name="due_date" id="edit-due-date" placeholder="DD/MM/YYYY" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
-                    </div>
-                </div>
+        <div>
+            <span class="block text-2xs font-black text-texto-suave tracking-normal mb-2">Estado inicial</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Estado inicial">
+                {% for valor, texto in [('Pendiente', 'Pendiente'), ('En curso', 'En curso'), ('Finalizado', 'Finalizado'), ('Cancelado', 'Cancelado')] %}
+                <label class="relative cursor-pointer">
+                    <input type="radio" name="status" value="{{ valor }}" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" {% if loop.first %}checked{% endif %} />
+                    <div class="px-3 py-2.5 text-center rounded-xl border border-superficie-borde text-2xs font-black tracking-normal text-texto-suave peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <label for="new-observations" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Observaciones</label>
+            <textarea id="new-observations" name="observations" rows="2"
+                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
+        </div>
+            {% call pie_modal() %}
+            <button type="button" id="btn-cancelar-nueva"
+                class="px-5 py-3 rounded-xl border border-superficie-borde text-texto-base font-black text-2xs tracking-normal hover:bg-superficie-suave transition-all">Cancelar</button>
+            <button type="submit"
+                class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-2xs tracking-normal transition-all shadow-lg shadow-primary/20">Crear tarea</button>
+            {% endcall %}
+        {% endcall %}
 
-                <!-- Status -->
-                <div class="space-y-2">
-                    <label id="estado" class="text-xs font-bold text-texto-suave tracking-normal block">Estado</label>
-                    <div class="grid grid-cols-4 gap-2" role="radiogroup" aria-labelledby="estado">
-                        <label for="status-pending" class="cursor-pointer relative overflow-hidden">
-                            <input type="radio" name="status" id="status-pending" value="Pendiente" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-peligro-500 peer-checked:bg-peligro-50 transition-all">
-                                <span class="text-2xs font-bold text-texto-base peer-checked:text-peligro-600 block tracking-normal">Pendiente</span>
-                            </div>
-                        </label>
-                        <label for="status-in-progress" class="cursor-pointer relative overflow-hidden">
-                            <input type="radio" name="status" id="status-in-progress" value="En curso" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-alerta-500 peer-checked:bg-alerta-50 transition-all">
-                                <span class="text-2xs font-bold text-texto-base peer-checked:text-alerta-600 block tracking-normal">En curso</span>
-                            </div>
-                        </label>
-                        <label for="status-done" class="cursor-pointer relative overflow-hidden">
-                            <input type="radio" name="status" id="status-done" value="Finalizado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-exito-500 peer-checked:bg-exito-50 transition-all">
-                                <span class="text-2xs font-bold text-texto-base peer-checked:text-exito-600 block tracking-normal">Finalizado</span>
-                            </div>
-                        </label>
-                        <label for="status-canceled" class="cursor-pointer relative overflow-hidden">
-                            <input type="radio" name="status" id="status-canceled" value="Cancelado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-superficie-fuerte peer-checked:bg-superficie-suave transition-all">
-                                <span class="text-2xs font-bold text-texto-base peer-checked:text-texto-base block tracking-normal">Cancelado</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Observations -->
-                <div class="space-y-2">
-                    <label for="edit-observations" class="text-xs font-bold text-texto-suave tracking-normal block">Observaciones del Seguimiento</label>
-                    <textarea name="observations" id="edit-observations" rows="3" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" placeholder="Agregue notas o avances sobre esta tarea..."></textarea>
-                </div>
+{% call modal('editTrackingModal', 'Editar seguimiento', 'formulario', 'edit_square', 'primario', 'Actualizá los detalles o cambiá el estado') %}
+    <form id="editTrackingForm" method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+        <input type="hidden" name="et_number" id="edit-et-number" value="">
+        <div class="p-6 overflow-y-auto flex-1 space-y-5">
+            <!-- Task -->
+            <div class="space-y-2">
+                <label for="edit-task" class="text-xs font-bold text-texto-suave tracking-normal block">Tarea Requerida</label>
+                <textarea name="task" id="edit-task" required rows="2" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
             </div>
             
-            <div class="p-6 border-t border-superficie-borde bg-superficie-suave/50 flex gap-3">
-                <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-superficie-borde text-texto-base font-bold text-xs tracking-normal hover:bg-white transition-all shadow-sm">
-                    Cancelar
-                </button>
-                <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs tracking-normal transition-all shadow-lg shadow-primary/20">
-                    Guardar Cambios
-                </button>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Responsible -->
+                <div class="space-y-2">
+                    <label for="edit-responsible" class="text-xs font-bold text-texto-suave tracking-normal block">Responsable</label>
+                    <input type="text" name="responsible" id="edit-responsible" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
+                </div>
+                <!-- Due Date -->
+                <div class="space-y-2">
+                    <label for="edit-due-date" class="text-xs font-bold text-texto-suave tracking-normal block">Fecha Límite</label>
+                    <input type="text" name="due_date" id="edit-due-date" placeholder="DD/MM/YYYY" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
+                </div>
             </div>
-        </form>
-    </div>
-</div>
+
+            <!-- Status -->
+            <div class="space-y-2">
+                <label id="estado" class="text-xs font-bold text-texto-suave tracking-normal block">Estado</label>
+                <div class="grid grid-cols-4 gap-2" role="radiogroup" aria-labelledby="estado">
+                    <label for="status-pending" class="cursor-pointer relative overflow-hidden">
+                        <input type="radio" name="status" id="status-pending" value="Pendiente" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-peligro-500 peer-checked:bg-peligro-50 transition-all">
+                            <span class="text-2xs font-bold text-texto-base peer-checked:text-peligro-600 block tracking-normal">Pendiente</span>
+                        </div>
+                    </label>
+                    <label for="status-in-progress" class="cursor-pointer relative overflow-hidden">
+                        <input type="radio" name="status" id="status-in-progress" value="En curso" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-alerta-500 peer-checked:bg-alerta-50 transition-all">
+                            <span class="text-2xs font-bold text-texto-base peer-checked:text-alerta-600 block tracking-normal">En curso</span>
+                        </div>
+                    </label>
+                    <label for="status-done" class="cursor-pointer relative overflow-hidden">
+                        <input type="radio" name="status" id="status-done" value="Finalizado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-exito-500 peer-checked:bg-exito-50 transition-all">
+                            <span class="text-2xs font-bold text-texto-base peer-checked:text-exito-600 block tracking-normal">Finalizado</span>
+                        </div>
+                    </label>
+                    <label for="status-canceled" class="cursor-pointer relative overflow-hidden">
+                        <input type="radio" name="status" id="status-canceled" value="Cancelado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
+                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-superficie-fuerte peer-checked:bg-superficie-suave transition-all">
+                            <span class="text-2xs font-bold text-texto-base peer-checked:text-texto-base block tracking-normal">Cancelado</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Observations -->
+            <div class="space-y-2">
+                <label for="edit-observations" class="text-xs font-bold text-texto-suave tracking-normal block">Observaciones del Seguimiento</label>
+                <textarea name="observations" id="edit-observations" rows="3" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" placeholder="Agregue notas o avances sobre esta tarea..."></textarea>
+            </div>
+        </div>
+        
+{% call pie_modal() %}
+            <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-superficie-borde text-texto-base font-bold text-xs tracking-normal hover:bg-white transition-all shadow-sm">
+                Cancelar
+            </button>
+            <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs tracking-normal transition-all shadow-lg shadow-primary/20">
+                Guardar Cambios
+            </button>
+{% endcall %}
+{% endcall %}
 {% endblock %}
 
 {% block scripts %}
@@ -354,31 +320,16 @@
     // Este módulo sólo permitía editar y eliminar: las tareas nacían únicamente
     // de la tabla 9 de una visita, así que no había forma de registrar una acción
     // surgida de una llamada o una reunión.
+    // El modal pasó al componente: el cierre, Escape, el clic en el fondo y el
+    // foco los maneja el controlador compartido (app.js). Acá sólo queda conectar
+    // los botones propios.
     (function () {
-        var modal = document.getElementById('newTrackingModal');
         var abrir = document.getElementById('btn-nueva-tarea');
-        var cerrar = document.getElementById('btn-cerrar-nueva');
         var cancelar = document.getElementById('btn-cancelar-nueva');
-        if (!modal || !abrir) return;
+        if (!abrir) return;
 
-        function mostrar() {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            var primero = document.getElementById('new-task');
-            if (primero) primero.focus();
-        }
-        function ocultar() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        abrir.addEventListener('click', mostrar);
-        if (cerrar) cerrar.addEventListener('click', ocultar);
-        if (cancelar) cancelar.addEventListener('click', ocultar);
-        modal.addEventListener('click', function (e) { if (e.target === modal) ocultar(); });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) ocultar();
-        });
+        abrir.addEventListener('click', function () { abrirModal('newTrackingModal'); });
+        if (cancelar) cancelar.addEventListener('click', function () { cerrarModal('newTrackingModal'); });
     })();
 
     function openEditModal(id, task, responsible, dueDate, status, obs, et) {
@@ -404,17 +355,14 @@
         else if (s === 'Cancelado') document.getElementById('status-canceled').checked = true;
         else document.getElementById('status-pending').checked = true; // fallback
 
-        document.getElementById('editTrackingModal').classList.remove('hidden');
-        document.getElementById('editTrackingModal').classList.add('flex');
+        abrirModal('editTrackingModal');
     }
 
     function closeEditModal() {
-        document.getElementById('editTrackingModal').classList.remove('flex');
-        document.getElementById('editTrackingModal').classList.add('hidden');
+        cerrarModal('editTrackingModal');
     }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btn-close-edit-modal')?.addEventListener('click', closeEditModal);
     document.getElementById('btn-cancel-edit-modal')?.addEventListener('click', closeEditModal);
 
     // CSP-safe: edit buttons via data attributes

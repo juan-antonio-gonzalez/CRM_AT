@@ -97,7 +97,7 @@
      * Cierre: esquina superior derecha, siempre, con data-modal-close.
 
    Parámetros:
-     id, titulo, tamano ('confirmar' | 'formulario' | 'amplio'),
+     id, titulo, tamano ('confirmar' | 'formulario' | 'amplio' | 'grande'),
      icono, tono_icono, descripcion
 
    Contrato de identificadores (para que el JavaScript tenga a qué apuntar):
@@ -110,7 +110,7 @@
    Para cerrarlo desde el código: window.cerrarModal('{{ id }}').
 #}
 {% macro modal(id, titulo, tamano='formulario', icono=None, tono_icono='primario', descripcion=None) %}
-{% set anchos = {'confirmar': 'max-w-sm', 'formulario': 'max-w-lg', 'amplio': 'max-w-3xl'} %}
+{% set anchos = {'confirmar': 'max-w-sm', 'formulario': 'max-w-lg', 'amplio': 'max-w-3xl', 'grande': 'max-w-5xl'} %}
 {% set tonos = {
     'neutro':   'bg-superficie-suave text-texto-base',
     'primario': 'bg-primary-50 text-primary-600',
