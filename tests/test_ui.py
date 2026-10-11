@@ -468,21 +468,11 @@ def test_las_plantillas_cierran_todos_los_divs():
     cambiaba según el ancho de la ventana. Por eso el usuario lo describía como
     "se ajusta y al segundo vuelve a esa posición".
     """
-    # Desbalances que ya existían antes de este trabajo. Se listan para que la
-    # prueba siga siendo útil: uno NUEVO falla, y estos quedan a la vista en vez
-    # de escondidos. No se corrigen a ciegas porque agregar o quitar un </div>
-    # sin entender la estructura de cada plantilla puede romper su layout.
-    CONOCIDOS = {
-        "_relevamiento_partial.html": 1,   # envoltorio propio; lo cierra el padre
-        "control_at.html": -1,             # un </div> de más
-        "relevamiento.html": 1,            # envoltorio sin cerrar
-        "nuevo_relevamiento2.html": 2,     # ska-body y ska-container sin cerrar
-    }
     ofensores = []
     for nombre, texto in _plantillas_aplicacion():
         limpio = re.sub(r'\{#.*?#\}', '', texto, flags=re.S)
         limpio = re.sub(r'<script.*?</script>', '', limpio, flags=re.S)
         saldo = len(re.findall(r'<div\b', limpio)) - len(re.findall(r'</div>', limpio))
-        if saldo and saldo != CONOCIDOS.get(nombre):
+        if saldo:
             ofensores.append(f"{nombre}: {saldo:+d}")
-    assert not ofensores, f"divs desbalanceados nuevos: {ofensores}"
+    assert not ofensores, f"plantillas con divs desbalanceados: {ofensores}"

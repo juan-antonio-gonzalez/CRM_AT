@@ -172,13 +172,13 @@
                             <div>
                                 <label class="text-2xs font-black text-texto-tenue tracking-normal block mb-1">Criticidad</label>
                                 <div class="flex gap-2">
-                                    {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
+                                    {% for val,color,icon in [('baja','exito','check_circle'),('media','alerta','warning'),('alta','peligro','error')] %}
                                     <label class="flex-1 cursor-pointer">
                                         <input {% if (survey_data.get('criticidad_e1') or 'baja')==val %}checked{% endif %}
                                             class="peer sr-only" name="criticidad_e1" value="{{ val }}" type="radio" />
-                                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
-                                            <span class="block text-2xs font-bold text- color -600 mb-1 tracking-normal">{{ val|capitalize }}</span>
-                                            <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
+                                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 color -500/10 transition-all">
+                                            <span class="block text-2xs font-bold text-{{ color }}-600 mb-1 tracking-normal">{{ val|capitalize }}</span>
+                                            <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                         </div>
                                     </label>
                                     {% endfor %}
@@ -310,13 +310,13 @@
                         <div>
                             <label class="text-2xs font-black text-texto-tenue tracking-normal block mb-1">Criticidad</label>
                             <div class="flex gap-1.5">
-                                {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
+                                {% for val,color,icon in [('baja','exito','check_circle'),('media','alerta','warning'),('alta','peligro','error')] %}
                                 <label class="flex-1 cursor-pointer">
                                     <input {% if (survey_data.get('criticidad_e2') or 'baja')==val %}checked{% endif %}
                                         class="peer sr-only" name="criticidad_e2" value="{{ val }}" type="radio" />
-                                    <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
-                                        <span class="block text-2xs font-bold text- color -600 mb-1 tracking-normal">{{ val|capitalize }}</span>
-                                        <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
+                                    <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 color -500/10 transition-all">
+                                        <span class="block text-2xs font-bold text-{{ color }}-600 mb-1 tracking-normal">{{ val|capitalize }}</span>
+                                        <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                     </div>
                                 </label>
                                 {% endfor %}
@@ -380,13 +380,13 @@
                     <div>
                         <label class="text-2xs font-black text-texto-tenue tracking-normal block mb-1">Criticidad</label>
                         <div class="flex gap-1.5">
-                            {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
+                            {% for val,color,icon in [('baja','exito','check_circle'),('media','alerta','warning'),('alta','peligro','error')] %}
                             <label class="flex-1 cursor-pointer">
                                 <input {% if (survey_data.get('criticidad_e3') or 'baja')==val %}checked{% endif %}
                                     class="peer sr-only" name="criticidad_e3" value="{{ val }}" type="radio" />
-                                <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
-                                    <span class="block text-2xs font-bold text- color -600 mb-1 tracking-normal">{{ val|capitalize }}</span>
-                                    <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
+                                <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-{{ color }}-500 peer-checked:bg-{{ color }}-50 color -500/10 transition-all">
+                                    <span class="block text-2xs font-bold text-{{ color }}-600 mb-1 tracking-normal">{{ val|capitalize }}</span>
+                                    <span class="material-symbols-rounded text-{{ color }}-500 text-lg" aria-hidden="true">{{ icon }}</span>
                                 </div>
                             </label>
                             {% endfor %}
@@ -645,4 +645,4 @@
         </div>
     </div>
 </div>
-
+</div>

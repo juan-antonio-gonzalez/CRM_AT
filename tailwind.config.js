@@ -27,6 +27,25 @@ module.exports = {
     "./templates/**/*.html",
     "./static/js/**/*.js",
   ],
+  // Tailwind busca nombres de clase literales en el código. Cuando una clase se
+  // arma con una interpolación de Jinja, como
+  //
+  //     class="peer-checked:border-{{ color }}-500"
+  //
+  // el nombre final (`peer-checked:border-exito-500`) nunca aparece en el fuente,
+  // así que Tailwind no genera la regla y el color no se aplica. Eso rompía el
+  // selector de criticidad del relevamiento.
+  //
+  // Se listan sólo las clases que de verdad se interpolan: `color` toma los
+  // valores exito, alerta y peligro. Un patrón amplio generaba 756 KB de CSS en
+  // lugar de 52 KB.
+  safelist: [
+    ...[
+      "text-{{c}}-600", "text-{{c}}-500", "border-{{c}}-500", "bg-{{c}}-50",
+      "peer-checked:border-{{c}}-500", "peer-checked:bg-{{c}}-50",
+      "peer-checked:text-{{c}}-500",
+    ].flatMap((t) => ["exito", "alerta", "peligro"].map((c) => t.replace("{{c}}", c))),
+  ],
   theme: {
     extend: {
       colors: {

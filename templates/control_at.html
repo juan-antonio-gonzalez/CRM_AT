@@ -26,9 +26,10 @@
         {{ indicador("Visita pendiente", kpi.pendientes_sum, "alerta", "hourglass_empty") }}
         {{ indicador("Visita fuera de cronograma", kpi.fuera_cronograma, "alerta", "schedule") }}
         {{ indicador("Avance del plan", kpi.avance_pct ~ "%", "info", "trending_up") }}
-            <p class="text-2xs text-texto-tenue mt-1.5 font-bold">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
-        </div>
     </div>
+    {# El detalle iba dentro de la grilla, así que se dibujaba como un noveno
+       azulejo y descuadraba las seis columnas. Va debajo, como pie de la fila. #}
+    <p class="text-2xs text-texto-tenue mt-1.5">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
 
     <!-- Filters -->
     <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
