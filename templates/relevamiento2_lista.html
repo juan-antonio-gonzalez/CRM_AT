@@ -86,20 +86,20 @@
 
     <!-- Surveys Table -->
     <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Máquina</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Planta</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Asistente</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Línea</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card text-right whitespace-nowrap" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Máquina</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Planta</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Asistente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Línea</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="surveyTableBody" class="divide-y divide-superficie-borde">
@@ -116,7 +116,7 @@
                     {% set tech_adv = fd.get('technical_advisor', '') or (cust.technical_advisor if cust else '') %}
                     <tr class="visit-row hover:bg-superficie-suave/50 transition-colors"
                         data-planta="{{ cli_plant }}" data-linea="{{ mach_line }}">
-                        <td class="px-6 py-5 text-sm font-bold text-texto-fuerte">#{{ s.id }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-texto-fuerte text-right tabular-nums">#{{ s.id }}</td>
                         <td class="px-6 py-5 text-sm text-texto-base">{{ s.fecha or '' }}</td>
                         <td class="px-6 py-5">
                             {% if cli_name %}

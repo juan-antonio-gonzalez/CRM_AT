@@ -818,3 +818,85 @@ def test_los_modulos_no_usan_nombres_sin_definir():
             if faltan:
                 ofensores.append(f"{os.path.basename(ruta)}: {faltan[:6]}")
     assert not ofensores, f"nombres sin definir: {ofensores}"
+
+
+# ── Tablas de listado ──────────────────────────────────────────────────────
+LISTADOS_CON_TABLA = [
+    "visitas2_lista.html", "clientes.html", "maquinaria.html", "productos.html",
+    "minutas_lista.html", "historial_at.html", "control_at.html",
+    "relevamiento2_lista.html", "relevamiento_infraestructura_lista.html",
+    "seguimiento_plan.html", "usuarios.html",
+]
+
+
+def test_las_tablas_de_listado_tienen_encabezado_pegajoso():
+    """Al bajar por una lista larga se perdían de vista las columnas.
+
+    `sticky` no alcanza por sí solo: si el contenedor sólo tiene `overflow-x-auto`,
+    se crea un contenedor de desplazamiento y el encabezado no se ancla a nada. Por
+    eso el contenedor necesita además un alto máximo.
+    """
+    problemas = []
+    for nombre in LISTADOS_CON_TABLA:
+        ruta = os.path.join(PLANTILLAS, nombre)
+        if not os.path.exists(ruta):
+            continue
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        if "<table" not in texto:
+            continue
+        tiene_thead_pegajoso = re.search(r"<thead[^>]*class=\"[^\"]*sticky top-0", texto)
+        if not tiene_thead_pegajoso:
+            problemas.append(f"{nombre}: thead sin sticky top-0")
+            continue
+        # Y el contenedor tiene que poder desplazarse en vertical.
+        contenedor = re.search(r'<div class="(overflow-\w+[^"]*)"', texto)
+        if contenedor and "max-h-" not in contenedor.group(1):
+            problemas.append(f"{nombre}: el contenedor no tiene alto máximo")
+    assert not problemas, f"tablas sin encabezado pegajoso: {problemas}"
+
+
+def test_las_columnas_numericas_van_a_la_derecha():
+    """Los números a la izquierda, mezclados con texto, no se comparan de un vistazo."""
+    NUMERICAS = {"Estándar", "Premium", "Total", "Nº", "Cantidad"}
+    problemas = []
+    for nombre in LISTADOS_CON_TABLA:
+        ruta = os.path.join(PLANTILLAS, nombre)
+        if not os.path.exists(ruta):
+            continue
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        for m in re.finditer(r"<th\b([^>]*)>([\s\S]*?)</th>", texto):
+            etiqueta = re.sub(r"<[^>]+>|\s+", " ", m.group(2)).strip()
+            if etiqueta in NUMERICAS and "text-right" not in m.group(1):
+                problemas.append(f"{nombre}: «{etiqueta}» sin alinear")
+    assert not problemas, f"columnas numéricas sin alinear: {problemas}"
+
+
+def test_las_celdas_de_columnas_numericas_usan_tabular_nums():
+    """`tabular-nums` alinea los dígitos entre filas: sin eso bailan."""
+    problemas = []
+    for nombre in LISTADOS_CON_TABLA:
+        ruta = os.path.join(PLANTILLAS, nombre)
+        if not os.path.exists(ruta):
+            continue
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        for tabla in re.finditer(r"<table\b[\s\S]*?</table>", texto):
+            ths = list(re.finditer(r"<th\b[^>]*>([\s\S]*?)</th>", tabla.group(0)))
+            indices = {i for i, t in enumerate(ths)
+                       if re.sub(r"<[^>]+>|\s+", " ", t.group(1)).strip()
+                       in {"Estándar", "Premium", "Total", "Nº", "Cantidad"}}
+            if not indices:
+                continue
+            tbody = re.search(r"<tbody[\s\S]*?</tbody>", tabla.group(0))
+            if not tbody:
+                continue
+            fila = re.search(r"<tr\b[\s\S]*?</tr>", tbody.group(0))
+            if not fila:
+                continue
+            tds = list(re.finditer(r"<td\b([^>]*)>", fila.group(0)))
+            for i in indices:
+                if i < len(tds) and "tabular-nums" not in tds[i].group(1):
+                    problemas.append(f"{nombre}: columna {i} sin tabular-nums")
+    assert not problemas, f"celdas numéricas sin tabular-nums: {problemas}"

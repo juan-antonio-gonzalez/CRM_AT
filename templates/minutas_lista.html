@@ -104,23 +104,23 @@
             </div>
         </div>
         {% if minutas %}
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Objetivo</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card text-right whitespace-nowrap" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Objetivo</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
                     {% for m in minutas %}
                     {% set fd = m.form_data or {} %}
                     <tr data-row class="hover:bg-superficie-suave transition-colors">
-                        <td class="px-6 py-5 text-sm font-bold text-texto-fuerte">#{{ m.id }}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-texto-fuerte text-right tabular-nums">#{{ m.id }}</td>
                         <td class="px-6 py-5 text-sm text-texto-base">{{ m.fecha or '—' }}</td>
                         <td class="px-6 py-5 text-sm text-texto-base max-w-[200px] truncate">{{ fd.get('objetivo','—') }}</td>
                         <td class="px-6 py-5 text-sm text-texto-base">{{ fd.get('tipoReunion','—') }}</td>

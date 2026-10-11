@@ -100,21 +100,21 @@
         </div>
         </div>
         {% if visits %}
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
                         <th scope="col" tabindex="0" aria-sort="{{ 'descending' if sort == 'fecha_desc' else 'ascending' }}"
-                            class="px-4 py-3 text-xs font-semibold text-texto-suave tracking-normal cursor-pointer select-none w-[11%] whitespace-nowrap"
+                            class="px-4 py-3 text-xs font-semibold text-texto-suave tracking-normal cursor-pointer select-none w-[11%] whitespace-nowrap bg-superficie-card"
                             onclick="window.location.href='?sort={% if sort == 'fecha_desc' %}fecha_asc{% else %}fecha_desc{% endif %}'"
                             onkeydown="if(event.key==='Enter'||event.key===' '||event.key==='Spacebar'){event.preventDefault();this.click();}">
                             Fecha
                             <span class="material-symbols-rounded text-base align-middle ml-1" aria-hidden="true">{% if sort == 'fecha_desc' %}expand_more{% else %}expand_less{% endif %}</span>
                         </th>
-                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave w-[38%]" scope="col">Cliente (Planta)</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave whitespace-nowrap w-[17%]" scope="col">AT</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave whitespace-nowrap w-[17%]" scope="col">Estado</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave text-right whitespace-nowrap w-[17%]" scope="col">Acciones</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave w-[38%] bg-superficie-card" scope="col">Cliente (Planta)</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave whitespace-nowrap w-[17%] bg-superficie-card" scope="col">AT</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave whitespace-nowrap w-[17%] bg-superficie-card" scope="col">Estado</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-texto-suave text-right whitespace-nowrap w-[17%] bg-superficie-card" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">

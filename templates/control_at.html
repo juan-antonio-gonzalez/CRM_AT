@@ -96,19 +96,19 @@
             </button>
         </div>
         {% if rows %}
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left" id="tabla-control-at">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Premium</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Total</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Vigente desde</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Vigente hasta</th>
-                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card whitespace-nowrap text-right whitespace-nowrap" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card whitespace-nowrap text-right whitespace-nowrap" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card whitespace-nowrap text-right whitespace-nowrap" scope="col">Total</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -147,9 +147,9 @@
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-sm text-texto-base text-right">{{ std }}</td>
-                        <td class="px-6 py-4 text-sm text-texto-base text-right">{{ prem }}</td>
-                        <td class="px-6 py-4 text-sm font-bold text-texto-fuerte text-right">{{ total_vis }}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base text-right tabular-nums">{{ std }}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base text-right tabular-nums">{{ prem }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-texto-fuerte text-right tabular-nums">{{ total_vis }}</td>
                         <td class="px-6 py-4 text-xs text-texto-suave whitespace-nowrap">{{ r.valid_from.strftime('%d/%m/%Y') if r.valid_from else '—' }}</td>
                         <td class="px-6 py-4 text-xs text-texto-suave whitespace-nowrap">{% if r.valid_to %}{{ r.valid_to.strftime('%d/%m/%Y') }}{% else %}<span class="text-texto-tenue">—</span>{% endif %}</td>
                         <td class="px-6 py-4 text-center">

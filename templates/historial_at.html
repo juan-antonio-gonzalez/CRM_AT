@@ -139,18 +139,18 @@
             <span class="text-2xs font-bold text-texto-tenue tracking-normal">{{ filters.desde or 'Inicio' }} → {{ filters.hasta or 'Hoy' }}</span>
         </div>
         {% if historial %}
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Estatus</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Premium</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Inicio</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fin</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">AT</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Estatus</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card whitespace-nowrap text-right whitespace-nowrap" scope="col">Estándar</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card whitespace-nowrap text-right whitespace-nowrap" scope="col">Premium</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Inicio</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Fin</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -169,8 +169,8 @@
                             <span class="inline-block px-2 py-0.5 rounded-lg bg-alerta-50 text-alerta-600 text-2xs font-semibold tracking-normal">Prospecto</span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-3 text-sm text-texto-base text-right">{{ h.standard_visits or 0 }}</td>
-                        <td class="px-6 py-3 text-sm text-texto-base text-right">{{ h.premium_visits or 0 }}</td>
+                        <td class="px-6 py-3 text-sm text-texto-base text-right tabular-nums">{{ h.standard_visits or 0 }}</td>
+                        <td class="px-6 py-3 text-sm text-texto-base text-right tabular-nums">{{ h.premium_visits or 0 }}</td>
                         <td class="px-6 py-3 text-sm text-texto-base">{{ h.valid_from.strftime('%d/%m/%Y') if h.valid_from else '—' }}</td>
                         <td class="px-6 py-3 text-sm">
                             {% if h.valid_to %}
@@ -253,14 +253,14 @@
             {% endif %}
         </div>
         {% if fuadera %}
-        <div class="overflow-x-auto">
+        <div class="overflow-auto max-h-[70vh]">
             <table class="w-full text-left">
-                <thead>
+                <thead class="sticky top-0 z-10 bg-superficie-card">
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Motivo</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">AT</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Motivo</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
