@@ -1009,9 +1009,10 @@ def test_los_controles_conservan_su_borde():
     """
     import re as re_mod
 
+    # `_relevamiento_partial.html` y `relevamiento.html` se eliminaron por ser
+    # código muerto: nada los enlazaba y usaban `technical_surveys` (v1), una tabla
+    # con 0 filas superada por el módulo de relevamiento2.
     esperados = {
-        "_relevamiento_partial.html": "peer-checked:",
-        "relevamiento.html": "peer-checked:",
         "agenda.html": "overflow-hidden",
     }
     faltan = []
