@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Configuración</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Configuración</h2>
     <p class="text-2xs text-texto-suave font-bold">Gestión de Listas Auxiliares</p>
 </div>
 {% endblock %}
@@ -13,14 +13,14 @@
 <div class="max-w-7xl mx-auto space-y-4 animate-fade-in pb-10">
     <!-- Header Section -->
     <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-superficie-card p-4 rounded-xl border border-superficie-borde">
         <div class="flex flex-col gap-0.5">
-            <h2 class="text-xl font-black text-texto-fuerte tracking-tight">Tablas Auxiliares</h2>
+            <h2 class="text-xl font-semibold text-texto-fuerte tracking-tight">Tablas Auxiliares</h2>
             <p class="text-texto-suave text-2xs font-bold tracking-wide">Gestión de catálogos del sistema</p>
         </div>
         <div class="flex gap-2">
             <a href="/relevamiento"
-                class="bg-white border border-superficie-borde text-texto-base px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all hover:bg-superficie-suave">
+                class="bg-superficie-card border border-superficie-borde text-texto-base px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all hover:bg-superficie-suave">
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">arrow_back</span>
                 Cerrar
             </a>
@@ -32,18 +32,18 @@
 
         <!-- ASESORES TÉCNICOS (AT) -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">engineering</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">AT Asignados</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">AT Asignados</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-advisor" type="text" aria-label="Nuevo Asesor Técnico" placeholder="Nuevo AT..." 
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-advisor"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Asesor Técnico">
@@ -79,18 +79,18 @@
 
         <!-- DISEÑADORES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">draw</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Diseñadores</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Diseñadores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-designer" type="text" aria-label="Nuevo Diseñador" placeholder="Nuevo Diseñador..." 
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-designer"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Diseñador">
@@ -126,18 +126,18 @@
 
         <!-- COMERCIALES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">assignment_ind</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Comerciales</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Comerciales</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-commercial" type="text" aria-label="Nuevo Comercial" placeholder="Nuevo Comercial..." 
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-commercial"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Comercial">
@@ -173,18 +173,18 @@
 
         <!-- SECTORES INDUSTRIALES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">factory</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Sectores</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Sectores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-sector" type="text" aria-label="Nuevo Sector" placeholder="Nuevo Sector..." 
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-sector"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Sector">
@@ -220,18 +220,18 @@
 
         <!-- TIPOS DE MAQUINARIA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">precision_manufacturing</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Maquinaria</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Maquinaria</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-machine-type" type="text" aria-label="Nuevo Tipo de Máquina" placeholder="Nuevo Tipo..." 
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-machine-type"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Máquina">
@@ -267,18 +267,18 @@
 
         <!-- TIPO DE FORMADO -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">square_foot</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Tipo de Formado</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Tipo de Formado</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-formado" type="text" aria-label="Nuevo Tipo de Formado" placeholder="Nuevo tipo..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-formado"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Formado">
@@ -314,18 +314,18 @@
 
         <!-- CIERRE INFERIOR -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">handyman</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Cierre Inferior</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Cierre Inferior</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-cierre-inferior" type="text" aria-label="Nuevo Tipo de Cierre Inferior" placeholder="Nuevo tipo..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-cierre-inferior"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Cierre Inferior">
@@ -361,18 +361,18 @@
 
         <!-- NOMBRE DE CLIENTE -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Nombre de Cliente</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Nombre de Cliente</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-client-name" type="text" aria-label="Nuevo Nombre de Cliente" placeholder="Nuevo nombre..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-client-name"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Nombre de Cliente">
@@ -408,18 +408,18 @@
 
         <!-- PLANTA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">business</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Planta</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Planta</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-plant-name" type="text" aria-label="Nueva Planta" placeholder="Nueva planta..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-plant-name"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Planta">
@@ -455,18 +455,18 @@
 
         <!-- MOTIVO DE VISITA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">topic</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Motivo de Visita</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Motivo de Visita</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-visit-type" type="text" aria-label="Nuevo Motivo de Visita" placeholder="Nuevo motivo..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-visit-type"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Motivo de Visita">
@@ -501,18 +501,18 @@
 
         <!-- PLANTA DISTRIBUIDORA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">warehouse</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Planta Distribuidora</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Planta Distribuidora</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-distributor-plant" type="text" aria-label="Nueva Planta Distribuidora" placeholder="Nueva planta..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-distributor-plant"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Planta Distribuidora">
@@ -547,18 +547,18 @@
 
         <!-- TEMAS DE CALIDAD -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">quality</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Temas de Calidad</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Temas de Calidad</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-tema-calidad" type="text" aria-label="Nuevo Tema de Calidad" placeholder="Nuevo tema..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-tema-calidad"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tema de Calidad">
@@ -593,18 +593,18 @@
 
         <!-- CALIDAD AT -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
             <div
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">build</span>
-                    <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Calidad AT</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Calidad AT</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-calidad-at" type="text" aria-label="Nuevo Tema de Calidad AT" placeholder="Nuevo tema..."
-                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-calidad-at"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tema de Calidad AT">
@@ -641,17 +641,17 @@
 
 <!-- Member Sector -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde flex flex-col">
         <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">category</span>
-                <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Sector / Departamento</h3>
+                <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Sector / Departamento</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
             <div class="flex gap-2">
                 <input id="input-member-sector" type="text" aria-label="Nuevo Sector de Integrante" placeholder="Nuevo sector..."
-                    class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                    class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                     oninput="this.value = this.value.toUpperCase()">
                 <button id="btn-add-member-sector"
                     class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Sector de Integrante">
@@ -685,17 +685,17 @@
     </div>
 
     <!-- Contact Names -->
-    <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde flex flex-col">
         <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                <h3 class="font-black text-xs text-texto-fuerte tracking-tight">Nombres de Contacto</h3>
+                <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Nombres de Contacto</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
             <div class="flex gap-2">
                 <input id="input-contact-name" type="text" aria-label="Nuevo Nombre de Contacto" placeholder="Nuevo nombre..."
-                    class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                    class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                     oninput="this.value = this.value.toUpperCase()">
                 <button id="btn-add-contact-name"
                     class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Nombre de Contacto">

@@ -28,7 +28,7 @@
     </div>
 
     <!-- Filters and Actions -->
-    <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm mb-6">
+    <div class="bg-superficie-card p-4 rounded-xl border border-superficie-borde mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-end w-full">
             <div class="flex flex-col gap-1.5 w-full">
                 <label for="filterCliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
@@ -71,7 +71,7 @@
                     Limpiar
                 </button>
                 <a href="/relevamiento2/nuevo"
-                    class="bg-primary hover:bg-primary/90 text-white font-bold px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 h-full w-full lg:w-auto">
+                    class="bg-primary hover:bg-primary/90 text-white font-bold px-6 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-primary/20 h-full w-full lg:w-auto">
                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">add</span>
                     Nuevo Relevamiento
                 </a>
@@ -84,21 +84,21 @@
     </div>
 
     <!-- Surveys Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Máquina</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Planta</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Asistente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Línea</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Máquina</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Planta</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Asistente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Línea</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="surveyTableBody" class="divide-y divide-superficie-borde">
@@ -207,23 +207,23 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">
                     Anterior
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">
                     Anterior
                 </span>
                 {% endif %}
 
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center">
                         {{ p }}
                     </span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ns.qs }}"
-                        class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
+                        class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
                         {{ p }}
                     </a>
                     {% endif %}
@@ -231,11 +231,11 @@
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">
                     Siguiente
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">
                     Siguiente
                 </span>
                 {% endif %}

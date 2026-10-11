@@ -2,7 +2,7 @@
 
 {% block title %}Biblioteca de Productos | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Productos</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Productos</h2>
     <p class="text-2xs text-texto-suave font-bold">Biblioteca Técnica</p>
 </div>
 {% endblock %}
@@ -11,17 +11,17 @@
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
 
     <!-- Filters and Search -->
-    <form method="GET" action="/productos" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
+    <form method="GET" action="/productos" class="bg-superficie-card p-4 rounded-lg border border-superficie-borde">
         <div class="flex flex-wrap items-end gap-3">
             <div class="relative flex-1 min-w-[200px]">
-                <label for="filtro-q" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Buscar</label>
+                <label for="filtro-q" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Buscar</label>
                 <div class="relative">
                     <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
                     <input id="filtro-q" name="q" value="{{ q or '' }}" placeholder="Descripción, material o ET..." class="w-full pl-9 pr-4 py-2 bg-superficie-suave border border-superficie-borde rounded-lg text-xs font-bold">
                 </div>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="filtro-material" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Material</label>
+                <label for="filtro-material" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Material</label>
                 <select id="filtro-material" name="material" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Corrugado Doble" {% if selected_material=="Corrugado Doble" %}selected{% endif %}>Corrugado Doble</option>
@@ -29,14 +29,14 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[120px]">
-                <label for="filtro-status" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Estado</label>
+                <label for="filtro-status" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Estado</label>
                 <select id="filtro-status" name="status" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Activo" {% if selected_status=="Activo" %}selected{% endif %}>Activo</option>
                     <option value="Inactivo" {% if selected_status=="Inactivo" %}selected{% endif %}>Inactivo</option>
                 </select>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold tracking-normal hover:bg-primary/90">Filtrar</button>
             <a href="/productos" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <a href="/nuevo-producto" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
@@ -47,24 +47,24 @@
 
     <!-- Table Section -->
     <div
-        class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">
                             Descripción / ET</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Material
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Material
                         </th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">
                             Dimensiones</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Ruta
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Ruta
                             Fabricación</th>
                         <th
-                            class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">
+                            class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">
                             Estado</th>
                         <th
-                            class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">
+                            class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">
                             Acciones</th>
                     </tr>
                 </thead>
@@ -137,28 +137,28 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">Anterior</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">Anterior</span>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">Anterior</span>
                 {% endif %}
 
                 {% for p in range(1, pagination.total_pages + 1) %}
                 {% if p == pagination.page %}
-                <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center"
+                <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center"
                     aria-current="page">{{ p }}</span>
                 {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                 <a href="?page={{ p }}{{ ns.qs }}"
-                    class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
+                    class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
                 {% endif %}
                 {% endfor %}
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">Siguiente</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">Siguiente</span>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>

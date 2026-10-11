@@ -3,7 +3,7 @@
 {% block title %}Seguimiento Plan de Acción - CRM-AT{% endblock %}
 
 {% block header_extra %}
-<h2 class="text-lg lg:text-xl font-black text-texto-fuerte tracking-tight">Seguimiento Plan de Acción</h2>
+<h2 class="text-lg lg:text-xl font-semibold text-texto-fuerte tracking-tight">Seguimiento Plan de Acción</h2>
 {% endblock %}
 
 {% from "_ui.html" import indicador, modal, pie_modal %}
@@ -26,10 +26,10 @@
     </div>
 
     <!-- Main Content Area: Table -->
-    <div class="flex-1 bg-white rounded-3xl border border-superficie-borde shadow-sm flex flex-col overflow-hidden relative">
-        <div class="flex flex-wrap px-6 py-5 border-b border-superficie-borde justify-between items-center gap-3 bg-white z-10">
+    <div class="flex-1 bg-superficie-card rounded-lg border border-superficie-borde flex flex-col overflow-hidden relative">
+        <div class="flex flex-wrap px-6 py-5 border-b border-superficie-borde justify-between items-center gap-3 bg-superficie-card z-10">
             <div>
-                <h3 class="text-lg font-black text-texto-fuerte">Listado de Tareas</h3>
+                <h3 class="text-lg font-semibold text-texto-fuerte">Listado de Tareas</h3>
                 <p class="text-sm text-texto-suave">Seguimiento de planes de acción generados a partir de visitas técnicas.</p>
             </div>
             <div class="flex items-center gap-2">
@@ -57,7 +57,7 @@
                     {% endif %}
                 </form>
                 <button type="button" id="btn-nueva-tarea"
-                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-black text-2xs tracking-normal shadow-lg shadow-primary/20 transition-all flex items-center gap-1.5">
+                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-semibold text-2xs tracking-normal shadow-primary/20 transition-all flex items-center gap-1.5">
                     <span class="material-symbols-rounded text-base" aria-hidden="true">add</span>
                     Nueva tarea
                 </button>
@@ -67,7 +67,7 @@
         <div class="flex-1 overflow-auto bg-superficie-suave/50">
             <table class="w-full text-left border-collapse whitespace-nowrap min-w-[1000px]">
                 <thead>
-                    <tr class="bg-white sticky top-0 z-10 shadow-sm">
+                    <tr class="bg-superficie-card sticky top-0 z-10">
                         <th class="px-6 py-4 text-xs font-bold text-texto-tenue tracking-normal border-b border-superficie-borde" scope="col">Fecha / Cliente</th>
                         <th class="px-6 py-4 text-xs font-bold text-texto-tenue tracking-normal border-b border-superficie-borde" scope="col">Tarea Requerida</th>
                         <th class="px-6 py-4 text-xs font-bold text-texto-tenue tracking-normal border-b border-superficie-borde" scope="col">Responsable / Límite</th>
@@ -147,7 +147,7 @@
                         <!-- Acciones -->
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="btn-open-edit-seg p-2 text-texto-tenue hover:text-primary hover:bg-white rounded-xl transition-all shadow-sm"
+                                <button class="btn-open-edit-seg p-2 text-texto-tenue hover:text-primary hover:bg-superficie-card rounded-xl transition-all"
                                     data-id="{{ item.id }}" data-task="{{ item.task | escape }}" data-responsible="{{ item.responsible | escape }}" data-due="{{ item.due_date | escape }}" data-status="{{ item.status | escape }}" data-obs="{{ (item.observations or '') | escape }}" data-et="{{ item.et_number or '' }}"
                                      aria-label="Editar seguimiento">
                                     <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
@@ -155,7 +155,7 @@
                                 <form id="delete-form-{{ item.id }}" action="/seguimiento-plan/{{ item.id }}/eliminar" method="POST" class="inline">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="button"
-                                        class="btn-delete-seg p-2 text-texto-tenue hover:text-peligro-500 hover:bg-white rounded-xl transition-all shadow-sm material-symbols-rounded text-[20px]"
+                                        class="btn-delete-seg p-2 text-texto-tenue hover:text-peligro-500 hover:bg-superficie-card rounded-xl transition-all material-symbols-rounded text-[20px]"
                                         data-form-id="delete-form-{{ item.id }}"
                                         <span  aria-hidden="true">delete</span>
                                     </button>
@@ -185,14 +185,14 @@
     <form method="POST" action="/seguimiento-plan/nueva" class="space-y-4">
         <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
         <div>
-            <label for="new-task" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Tarea <span class="text-peligro-500">*</span></label>
+            <label for="new-task" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">Tarea <span class="text-peligro-500">*</span></label>
             <textarea id="new-task" name="task" required rows="2"
                 placeholder="Qué hay que hacer..."
                 class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <label for="new-customer" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Cliente</label>
+                <label for="new-customer" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">Cliente</label>
                 <select id="new-customer" name="customer_name"
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
                     <option value="">Sin cliente</option>
@@ -202,42 +202,42 @@
                 </select>
             </div>
             <div>
-                <label for="new-et" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">N° ET</label>
+                <label for="new-et" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">N° ET</label>
                 <input type="text" id="new-et" name="et_number"
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
             <div>
-                <label for="new-responsible" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Responsable</label>
+                <label for="new-responsible" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">Responsable</label>
                 <input type="text" id="new-responsible" name="responsible"
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
             <div>
-                <label for="new-due" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Plazo</label>
+                <label for="new-due" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">Plazo</label>
                 <input type="text" id="new-due" name="due_date" placeholder="DD/MM/YYYY"
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
             </div>
         </div>
         <div>
-            <span class="block text-2xs font-black text-texto-suave tracking-normal mb-2">Estado inicial</span>
+            <span class="block text-2xs font-semibold text-texto-suave tracking-normal mb-2">Estado inicial</span>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Estado inicial">
                 {% for valor, texto in [('Pendiente', 'Pendiente'), ('En curso', 'En curso'), ('Finalizado', 'Finalizado'), ('Cancelado', 'Cancelado')] %}
                 <label class="relative cursor-pointer">
                     <input type="radio" name="status" value="{{ valor }}" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" {% if loop.first %}checked{% endif %} />
-                    <div class="px-3 py-2.5 text-center rounded-xl border border-superficie-borde text-2xs font-black tracking-normal text-texto-suave peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
+                    <div class="px-3 py-2.5 text-center rounded-xl border border-superficie-borde text-2xs font-semibold tracking-normal text-texto-suave peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
                 </label>
                 {% endfor %}
             </div>
         </div>
         <div>
-            <label for="new-observations" class="block text-2xs font-black text-texto-suave tracking-normal mb-1">Observaciones</label>
+            <label for="new-observations" class="block text-2xs font-semibold text-texto-suave tracking-normal mb-1">Observaciones</label>
             <textarea id="new-observations" name="observations" rows="2"
                 class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
         </div>
             {% call pie_modal() %}
             <button type="button" id="btn-cancelar-nueva"
-                class="px-5 py-3 rounded-xl border border-superficie-borde text-texto-base font-black text-2xs tracking-normal hover:bg-superficie-suave transition-all">Cancelar</button>
+                class="px-5 py-3 rounded-xl border border-superficie-borde text-texto-base font-semibold text-2xs tracking-normal hover:bg-superficie-suave transition-all">Cancelar</button>
             <button type="submit"
-                class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-2xs tracking-normal transition-all shadow-lg shadow-primary/20">Crear tarea</button>
+                class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-2xs tracking-normal transition-all shadow-primary/20">Crear tarea</button>
             {% endcall %}
             </form>
         {% endcall %}
@@ -305,10 +305,10 @@
         </div>
         
 {% call pie_modal() %}
-            <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-superficie-borde text-texto-base font-bold text-xs tracking-normal hover:bg-white transition-all shadow-sm">
+            <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-superficie-borde text-texto-base font-bold text-xs tracking-normal hover:bg-superficie-card transition-all">
                 Cancelar
             </button>
-            <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs tracking-normal transition-all shadow-lg shadow-primary/20">
+            <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs tracking-normal transition-all shadow-primary/20">
                 Guardar Cambios
             </button>
 {% endcall %}

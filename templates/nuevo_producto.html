@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Productos</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Productos</h2>
     <p class="text-2xs text-texto-suave font-bold">Registro Técnico</p>
 </div>
 {% endblock %}
@@ -13,46 +13,46 @@
 <div class="max-w-5xl mx-auto space-y-10 animate-fade-in pb-20">
     <!-- Header -->
     <div
-        class="flex items-center justify-between bg-white p-8 rounded-3xl border border-superficie-borde shadow-sm">
+        class="flex items-center justify-between bg-superficie-card p-8 rounded-lg border border-superficie-borde">
         <div class="flex flex-col gap-1">
-            <h1 class="text-3xl font-black text-texto-fuerte tracking-tight leading-none">Nuevo Producto
+            <h1 class="text-3xl font-semibold text-texto-fuerte tracking-tight leading-none">Nuevo Producto
             </h1>
             <p class="text-texto-suave text-sm italic">Ingreso coordinado de especificaciones técnicas
                 y requerimientos de producción.</p>
         </div>
-        <div class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+        <div class="size-14 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
             <span class="material-symbols-rounded text-[32px]" aria-hidden="true">inventory_2</span>
         </div>
     </div>
 
     <!-- Form Container -->
     <form action="/nuevo-producto" method="POST"
-        class="space-y-12 bg-white p-10 rounded-3xl shadow-xl  border border-superficie-borde">
+        class="space-y-12 bg-superficie-card p-10 rounded-lg  border border-superficie-borde">
         <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
         <!-- Section: General Info -->
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">settings_input_component</span>
-                <h3 class="text-xs font-black text-texto-fuerte">
+                <h3 class="text-xs font-semibold text-texto-fuerte">
                     Especificaciones Generales</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-2">
-                    <label for="name" class="text-2xs font-black text-texto-tenue tracking-normal">Descripción del
+                    <label for="name" class="text-2xs font-semibold text-texto-tenue tracking-normal">Descripción del
                         Producto</label>
                     <input name="name" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold text-texto-fuerte placeholder:text-texto-tenue"
                         placeholder="Ej: Caja de Cartón Reforzada Premium" type="text"  id="name"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="et-number" class="text-2xs font-black text-texto-tenue tracking-normal">Número de ET
+                    <label for="et-number" class="text-2xs font-semibold text-texto-tenue tracking-normal">Número de ET
                         (Especificación Técnica)</label>
                     <input name="et_number" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold"
                         placeholder="Ej: ET-2024-042" type="text"  id="et-number"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="material" class="text-2xs font-black text-texto-tenue tracking-normal">Material
+                    <label for="material" class="text-2xs font-semibold text-texto-tenue tracking-normal">Material
                         Principal</label>
                     <select name="material" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="material">
@@ -63,14 +63,14 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="manufacturing-route" class="text-2xs font-black text-texto-tenue tracking-normal">Ruta de Fabricación
+                    <label for="manufacturing-route" class="text-2xs font-semibold text-texto-tenue tracking-normal">Ruta de Fabricación
                         Estimada</label>
                     <input name="manufacturing_route"
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         placeholder="Ej: Corte > Impresión > Pegado" type="text"  id="manufacturing-route"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="status" class="text-2xs font-black text-texto-tenue tracking-normal">Estatus</label>
+                    <label for="status" class="text-2xs font-semibold text-texto-tenue tracking-normal">Estatus</label>
                     <select name="status" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Activo" selected>Activo</option>
@@ -84,53 +84,53 @@
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">square_foot</span>
-                <h3 class="text-xs font-black text-texto-fuerte">Dimensiones
+                <h3 class="text-xs font-semibold text-texto-fuerte">Dimensiones
                     Técnicas (mm)</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div
-                    class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
+                    class="space-y-3 bg-superficie-suave p-6 rounded-lg border border-superficie-borde">
                     <label for="dimensions-l"
-                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Largo
+                        class="text-2xs font-semibold text-texto-tenue tracking-normal block text-center">Largo
                         (L)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">-</button>
                         <input name="dimensions_l"
-                            class="w-20 bg-transparent border-none text-center text-xl font-black text-texto-fuerte p-0 focus:ring-0"
+                            class="w-20 bg-transparent border-none text-center text-xl font-semibold text-texto-fuerte p-0 focus:ring-0"
                             type="number" value="400"  id="dimensions-l"/>
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">+</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">+</button>
                     </div>
                 </div>
                 <div
-                    class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
+                    class="space-y-3 bg-superficie-suave p-6 rounded-lg border border-superficie-borde">
                     <label for="dimensions-a"
-                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Ancho
+                        class="text-2xs font-semibold text-texto-tenue tracking-normal block text-center">Ancho
                         (A)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">-</button>
                         <input name="dimensions_a"
-                            class="w-20 bg-transparent border-none text-center text-xl font-black text-texto-fuerte p-0 focus:ring-0"
+                            class="w-20 bg-transparent border-none text-center text-xl font-semibold text-texto-fuerte p-0 focus:ring-0"
                             type="number" value="300"  id="dimensions-a"/>
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">+</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">+</button>
                     </div>
                 </div>
                 <div
-                    class="space-y-3 bg-superficie-suave p-6 rounded-2xl border border-superficie-borde">
+                    class="space-y-3 bg-superficie-suave p-6 rounded-lg border border-superficie-borde">
                     <label for="dimensions-h"
-                        class="text-2xs font-black text-texto-tenue tracking-normal block text-center">Alto
+                        class="text-2xs font-semibold text-texto-tenue tracking-normal block text-center">Alto
                         (H)</label>
                     <div class="flex items-center justify-center gap-4">
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">-</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">-</button>
                         <input name="dimensions_h"
-                            class="w-20 bg-transparent border-none text-center text-xl font-black text-texto-fuerte p-0 focus:ring-0"
+                            class="w-20 bg-transparent border-none text-center text-xl font-semibold text-texto-fuerte p-0 focus:ring-0"
                             type="number" value="200"  id="dimensions-h"/>
                         <button type="button"
-                            class="size-8 rounded-full bg-white shadow-sm border border-superficie-borde">+</button>
+                            class="size-8 rounded-full bg-superficie-card border border-superficie-borde">+</button>
                     </div>
                 </div>
             </div>
@@ -140,18 +140,18 @@
         <section>
             <div class="flex items-center gap-3 mb-6">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">upload_file</span>
-                <h3 class="text-xs font-black text-texto-fuerte">Gestión de
+                <h3 class="text-xs font-semibold text-texto-fuerte">Gestión de
                     Archivos Técnicos</h3>
             </div>
             <div
-                class="group relative border-2 border-dashed border-superficie-borde rounded-3xl p-12 text-center bg-superficie-suave/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
+                class="group relative border-2 border-dashed border-superficie-borde rounded-lg p-12 text-center bg-superficie-suave/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
                 <div class="flex flex-col items-center gap-4">
                     <div
-                        class="size-16 rounded-full bg-white shadow-xl flex items-center justify-center text-texto-tenue group-hover:text-primary transition-colors">
+                        class="size-16 rounded-full bg-superficie-card flex items-center justify-center text-texto-tenue group-hover:text-primary transition-colors">
                         <span class="material-symbols-rounded text-4xl" aria-hidden="true">cloud_upload</span>
                     </div>
                     <div>
-                        <p class="text-sm font-black text-texto-fuerte mb-1 tracking-normal">
+                        <p class="text-sm font-semibold text-texto-fuerte mb-1 tracking-normal">
                             Subir Planos Industriales</p>
                         <p class="text-2xs text-texto-suave font-bold tracking-tight">Formatos aceptados:
                             PDF, DXF, PNG, JPEG (Máx 25MB)</p>
@@ -164,10 +164,10 @@
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-6 pt-10 border-t border-superficie-borde">
             <a href="/productos"
-                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar
+                class="text-xs font-semibold text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar
                 Registro</a>
             <button type="submit"
-                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs shadow-2xl shadow-primary/30 transition-all">
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-lg font-semibold text-xs shadow-primary/30 transition-all">
                 Guardar Especificación
             </button>
         </div>

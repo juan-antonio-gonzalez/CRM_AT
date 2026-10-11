@@ -56,7 +56,7 @@
             class="fixed inset-y-0 left-0 z-50 w-64 bg-brand-navy flex flex-col px-3 py-4 transform -translate-x-full lg:translate-x-0 lg:static lg:flex-shrink-0 transition-transform duration-300 ease-in-out">
             {% block sidebar %}
             <!-- Logo (fijo) -->
-            <a href="/" class="flex items-center shrink-0 px-1 py-1 rounded-md hover:bg-white/5 transition-colors"
+            <a href="/" class="flex items-center shrink-0 px-1 py-1 rounded-md hover:bg-superficie-card/5 transition-colors"
                 aria-label="Ir al inicio">
                 <img src="{{ static_url('img/logo-aplicacionat.svg') }}"
                     alt="AplicacionAT" class="h-8 w-auto" width="168" height="40">
@@ -73,22 +73,22 @@
                     <div class="flex flex-col gap-0.5">
                         <span
                             class="text-2xs font-bold text-primary-300 tracking-normal px-3 mb-1">Análisis</span>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'dashboard' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'dashboard' %} sidebar-active {% endif %}"
                             href="/" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">dashboard</span>
                             <span class="text-xs font-semibold">KPIs - AT</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'kpi_calidad' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'kpi_calidad' %} sidebar-active {% endif %}"
                             href="/kpi-calidad" {% if active_page == 'kpi_calidad' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">ssid_chart</span>
                             <span class="text-xs font-semibold">KPIs Calidad AT</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'control_at' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'control_at' %} sidebar-active {% endif %}"
                             href="/control-at" {% if active_page == 'control_at' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
                             <span class="text-xs font-semibold">KPIs Asignación AT</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'historial_at' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'historial_at' %} sidebar-active {% endif %}"
                             href="/historial-at" {% if active_page == 'historial_at' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">history</span>
                             <span class="text-xs font-semibold">Historial Asignación AT</span>
@@ -99,22 +99,22 @@
                     <div class="flex flex-col gap-0.5">
                         <span
                             class="text-2xs font-bold text-primary-300 tracking-normal px-3 mb-1">Operaciones</span>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'clientes' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'clientes' %} sidebar-active {% endif %}"
                             href="/clientes" {% if active_page == 'clientes' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">group</span>
                             <span class="text-xs font-semibold">Biblioteca de Clientes</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'organigrama' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'organigrama' %} sidebar-active {% endif %}"
                             href="/organigrama" {% if active_page == 'organigrama' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">account_tree</span>
                             <span class="text-xs font-semibold">Organigrama</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'productos' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'productos' %} sidebar-active {% endif %}"
                             href="/productos" {% if active_page == 'productos' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">inventory_2</span>
                             <span class="text-xs font-semibold">Biblioteca de Productos</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'maquinaria' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'maquinaria' %} sidebar-active {% endif %}"
                             href="/maquinaria" {% if active_page == 'maquinaria' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">precision_manufacturing</span>
                             <span class="text-xs font-semibold">Biblioteca de Máquinas</span>
@@ -125,49 +125,49 @@
                     <div class="flex flex-col gap-0.5">
                         <span
                             class="text-2xs font-bold text-primary-300 tracking-normal px-3 mb-1">Gestión</span>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'relevamiento2' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'relevamiento2' %} sidebar-active {% endif %}"
                             href="/relevamiento2" {% if active_page == 'relevamiento2' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">summarize</span>
                             <span class="text-xs font-semibold">Relevamiento Técnico</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'visitas2' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'visitas2' %} sidebar-active {% endif %}"
                             href="/visitas2" {% if active_page == 'visitas2' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">assignment</span>
                             <span class="text-xs font-semibold">Visitas Técnicas</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'minutas' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'minutas' %} sidebar-active {% endif %}"
                             href="/minutas" {% if active_page == 'minutas' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">description</span>
                             <span class="text-xs font-semibold">Minutas</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'infraestructura' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'infraestructura' %} sidebar-active {% endif %}"
                             href="/relevamiento-infraestructura" {% if active_page == 'infraestructura' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">factory</span>
                             <span class="text-xs font-semibold">Infraestructura & Logística</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'seguimiento' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'seguimiento' %} sidebar-active {% endif %}"
                             href="/seguimiento-plan" {% if active_page == 'seguimiento' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">checklist_rtl</span>
                             <span class="text-xs font-semibold">Seguimiento Plan</span>
                         </a>
                         {% if request.state.user and request.state.user.role == 'admin' %}
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'papelera' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'papelera' %} sidebar-active {% endif %}"
                             href="/papelera" {% if active_page == 'papelera' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">delete_sweep</span>
                             <span class="text-xs font-semibold">Papelera</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'usuarios' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'usuarios' %} sidebar-active {% endif %}"
                             href="/auth/usuarios" {% if active_page == 'usuarios' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">manage_accounts</span>
                             <span class="text-xs font-semibold">Usuarios</span>
                         </a>
                         {% endif %}
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'agenda' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'agenda' %} sidebar-active {% endif %}"
                             href="/agenda" {% if active_page == 'agenda' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">calendar_month</span>
                             <span class="text-xs font-semibold">Agenda de Visitas</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'configuracion' %} sidebar-active {% endif %}"
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-superficie-card/10 hover:text-white transition-colors {% if active_page == 'configuracion' %} sidebar-active {% endif %}"
                             href="/configuracion" {% if active_page == 'configuracion' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">settings</span>
                             <span class="text-xs font-semibold">Tablas Auxiliares</span>
@@ -199,7 +199,7 @@
         <div class="flex-1 flex flex-col overflow-hidden print:overflow-visible print:h-auto">
             <!-- Global Header -->
             <header
-                class="h-16 lg:h-20 flex-shrink-0 bg-white border-b border-superficie-borde flex items-center justify-between px-4 lg:px-10 print:hidden">
+                class="h-16 lg:h-20 flex-shrink-0 bg-superficie-card border-b border-superficie-borde flex items-center justify-between px-4 lg:px-10 print:hidden">
                 {% block header %}
                 <div class="flex items-center gap-3 lg:gap-6">
                     <!-- Mobile Hamburger -->
@@ -214,7 +214,7 @@
                 <div class="flex items-center gap-6">
                     {% if not request.state.user %}
                     <a href="/auth/login"
-                        class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-primary/20">
+                        class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-primary/20">
                         Iniciar Sesión
                     </a>
                     {% endif %}
@@ -224,7 +224,7 @@
 
             <!-- Scrollable Content -->
             <main
-                class="flex-1 overflow-y-auto bg-superficie-suave p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
+                class="flex-1 overflow-y-auto bg-superficie-suave p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-superficie-card">
                 {% block content %}{% endblock %}
             </main>
         </div>

@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Organigrama</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Organigrama</h2>
     <p class="text-2xs text-texto-suave font-bold">Estructura del Equipo</p>
 </div>
 {% endblock %}
@@ -21,7 +21,7 @@
 </style>
 <div class="max-w-5xl mx-auto space-y-4 animate-fade-in pb-10">
 
-    <section class="bg-white border border-superficie-borde px-4 py-3 rounded-xl shadow-sm no-print">
+    <section class="bg-superficie-card border border-superficie-borde px-4 py-3 rounded-xl no-print">
         <label for="customerSelect" class="sr-only">Seleccionar cliente</label>
         <div class="flex items-center gap-3">
             <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">groups</span>
@@ -178,7 +178,7 @@ function construirArbol(team) {
 }
 
 function iconoInicial(nodo) {
-    return `<div class="size-9 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary font-black text-xs shrink-0" aria-hidden="true">${escaparHtml(getInitials(nodo.name))}</div>`;
+    return `<div class="size-9 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary font-semibold text-xs shrink-0" aria-hidden="true">${escaparHtml(getInitials(nodo.name))}</div>`;
 }
 
 function renderNodo(nodo) {
@@ -231,7 +231,7 @@ function renderOrgChart(team) {
 
     if (!team || !team.length) {
         contenedor.innerHTML = `
-        <div class="text-center py-12 bg-white rounded-2xl border border-superficie-borde shadow-sm">
+        <div class="text-center py-12 bg-superficie-card rounded-lg border border-superficie-borde">
             <span class="material-symbols-rounded text-4xl text-texto-tenue" aria-hidden="true">groups_off</span>
             <p class="text-xs font-bold text-texto-tenue mt-2">Este cliente no tiene equipo registrado</p>
         </div>`;
@@ -243,7 +243,7 @@ function renderOrgChart(team) {
 
     if (!arbol.raices.length) {
         contenedor.innerHTML = `
-        <div class="text-center py-12 bg-white rounded-2xl border border-alerta-200 shadow-sm">
+        <div class="text-center py-12 bg-superficie-card rounded-lg border border-alerta-200">
             <span class="material-symbols-rounded text-4xl text-alerta-400" aria-hidden="true">account_tree</span>
             <p class="text-xs font-bold text-texto-suave mt-2">No se pudo armar la jerarquía: revisá los campos "reporta a".</p>
         </div>`;
@@ -265,7 +265,7 @@ function renderOrgChart(team) {
             ? `<ul class="list-disc list-inside space-y-0.5">${avisos.map(a => `<li>${escaparHtml(a)}</li>`).join('')}</ul>`
             : '';
         html += `
-        <div class="bg-alerta-50 border border-alerta-200 rounded-2xl px-5 py-4">
+        <div class="bg-alerta-50 border border-alerta-200 rounded-lg px-5 py-4">
             <div class="flex items-start gap-2">
                 <span class="material-symbols-rounded text-alerta-500 text-lg" aria-hidden="true">warning</span>
                 <div class="text-xs text-alerta-800 space-y-1">
@@ -281,10 +281,10 @@ function renderOrgChart(team) {
         if (!raices.length) return;
         const enEsteSector = mostrados.get(sector) || 0;
         html += `
-        <div class="org-tarjeta bg-white rounded-2xl border border-superficie-borde shadow-sm overflow-hidden" data-sector="${escaparHtml(sector)}">
+        <div class="org-tarjeta bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden" data-sector="${escaparHtml(sector)}">
             <div class="px-5 py-3 bg-superficie-suave/50 border-b border-superficie-borde flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">folder</span>
-                <h3 class="text-xs font-black text-texto-fuerte tracking-normal break-words">${escaparHtml(sector)}</h3>
+                <h3 class="text-xs font-semibold text-texto-fuerte tracking-normal break-words">${escaparHtml(sector)}</h3>
                 <span class="ml-auto text-2xs font-bold text-texto-tenue">${enEsteSector} miembro${enEsteSector !== 1 ? 's' : ''}</span>
             </div>
             <div class="p-5">

@@ -27,7 +27,7 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
+    <div class="bg-superficie-card p-4 rounded-xl border border-superficie-borde">
         <form method="GET" action="/historial-at" class="flex flex-wrap items-end justify-between gap-4">
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
                 <label for="filtro-cliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
@@ -85,43 +85,43 @@
 
     <!-- Distribución por estatus / AT / cliente -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
             <div class="px-6 py-4 border-b border-superficie-borde">
-                <p class="text-xs font-black text-texto-base tracking-normal">Por Estatus</p>
+                <p class="text-xs font-semibold text-texto-base tracking-normal">Por Estatus</p>
             </div>
             <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
                 {% for st, cant in por_status %}
                 <div class="flex items-center justify-between">
                     <span class="text-2xs font-bold text-texto-base">{{ st }}</span>
-                    <span class="text-xs font-black text-texto-fuerte">{{ cant }}</span>
+                    <span class="text-xs font-semibold text-texto-fuerte">{{ cant }}</span>
                 </div>
                 {% endfor %}
                 {% if not por_status %}<p class="text-xs text-texto-tenue">Sin datos.</p>{% endif %}
             </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
             <div class="px-6 py-4 border-b border-superficie-borde">
-                <p class="text-xs font-black text-texto-base tracking-normal">Períodos por AT</p>
+                <p class="text-xs font-semibold text-texto-base tracking-normal">Períodos por AT</p>
             </div>
             <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
                 {% for a, cant in por_at %}
                 <div class="flex items-center justify-between">
                     <span class="text-2xs font-bold text-texto-base">{{ a }}</span>
-                    <span class="text-xs font-black text-texto-fuerte">{{ cant }}</span>
+                    <span class="text-xs font-semibold text-texto-fuerte">{{ cant }}</span>
                 </div>
                 {% endfor %}
                 {% if not por_at %}<p class="text-xs text-texto-tenue">Sin datos.</p>{% endif %}
             </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
             <div class="px-6 py-4 border-b border-superficie-borde">
-                <p class="text-xs font-black text-texto-base tracking-normal">Períodos por Cliente</p>
+                <p class="text-xs font-semibold text-texto-base tracking-normal">Períodos por Cliente</p>
             </div>
             <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
                 {% for c, cant in por_cliente %}
                 <div class="flex items-center justify-between">
                     <span class="text-2xs font-bold text-texto-base">{{ c }}</span>
-                    <span class="text-xs font-black text-texto-fuerte">{{ cant }}</span>
+                    <span class="text-xs font-semibold text-texto-fuerte">{{ cant }}</span>
                 </div>
                 {% endfor %}
                 {% if not por_cliente %}<p class="text-xs text-texto-tenue">Sin datos.</p>{% endif %}
@@ -130,11 +130,11 @@
     </div>
 
     <!-- Historial -->
-    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-texto-tenue text-xl" aria-hidden="true">history</span>
-                <p class="text-xs font-black text-texto-base tracking-normal">Historial de Asignaciones</p>
+                <p class="text-xs font-semibold text-texto-base tracking-normal">Historial de Asignaciones</p>
             </div>
             <span class="text-2xs font-bold text-texto-tenue tracking-normal">{{ filters.desde or 'Inicio' }} → {{ filters.hasta or 'Hoy' }}</span>
         </div>
@@ -143,14 +143,14 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Estatus</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Premium</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Inicio</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Fin</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Estatus</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Premium</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Inicio</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fin</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -160,13 +160,13 @@
                         <td class="px-6 py-3 text-sm text-texto-base">{{ h.technical_advisor or '—' }}</td>
                         <td class="px-6 py-3">
                             {% if h.status == 'Inactivo' %}
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-superficie-suave text-texto-suave text-2xs font-black tracking-normal">Inactivo</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-superficie-suave text-texto-suave text-2xs font-semibold tracking-normal">Inactivo</span>
                             {% elif h.status == 'Fuera de cronograma' %}
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-peligro-50 text-peligro-600 text-2xs font-black tracking-normal">Fuera de Cronograma</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-peligro-50 text-peligro-600 text-2xs font-semibold tracking-normal">Fuera de Cronograma</span>
                             {% elif h.status == 'Cliente' %}
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-exito-50 text-exito-600 text-2xs font-black tracking-normal">Cliente</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-exito-50 text-exito-600 text-2xs font-semibold tracking-normal">Cliente</span>
                             {% else %}
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-alerta-50 text-alerta-600 text-2xs font-black tracking-normal">Prospecto</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-alerta-50 text-alerta-600 text-2xs font-semibold tracking-normal">Prospecto</span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-3 text-sm text-texto-base text-right">{{ h.standard_visits or 0 }}</td>
@@ -176,14 +176,14 @@
                             {% if h.valid_to %}
                             <span class="text-texto-suave">{{ h.valid_to.strftime('%d/%m/%Y') }}</span>
                             {% else %}
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-exito-50 text-exito-600 text-2xs font-black tracking-normal">Vigente</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-exito-50 text-exito-600 text-2xs font-semibold tracking-normal">Vigente</span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-3 text-right">
                             <form method="POST" action="/historial-at/eliminar/{{ h.id }}"
                                 class="delete-periodo-form" data-confirm="¿Eliminar este período de {{ h.customer_name }}? Esta acción no se puede deshacer.">
                                 <button type="submit"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-peligro-50 text-peligro-600 hover:bg-peligro-100 transition-all text-2xs font-black tracking-normal">
+                                    class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-peligro-50 text-peligro-600 hover:bg-peligro-100 transition-all text-2xs font-semibold tracking-normal">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                     Eliminar
                                 </button>
@@ -208,23 +208,23 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center">{{ p }}</span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ('&' + qs) if qs else '' }}"
-                        class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">Siguiente</span>
                 {% endif %}
             </div>
             {% endif %}
@@ -244,12 +244,12 @@
     </div>
 
     <!-- Visitas fuera de cronograma -->
-    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="flex items-center gap-2 px-6 py-4 border-b border-superficie-borde">
             <span class="material-symbols-rounded text-alerta-500 text-xl" aria-hidden="true">event_busy</span>
-            <p class="text-xs font-black text-texto-base tracking-normal">Visitas Fuera de Cronograma</p>
+            <p class="text-xs font-semibold text-texto-base tracking-normal">Visitas Fuera de Cronograma</p>
             {% if fuadera %}
-            <span class="ml-auto text-2xs font-black text-alerta-600 bg-alerta-50 px-2 py-1 rounded-lg">{{ fuadera|length }}</span>
+            <span class="ml-auto text-2xs font-semibold text-alerta-600 bg-alerta-50 px-2 py-1 rounded-lg">{{ fuadera|length }}</span>
             {% endif %}
         </div>
         {% if fuadera %}
@@ -257,10 +257,10 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-suave tracking-normal" scope="col">Motivo</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Motivo</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -270,7 +270,7 @@
                         <td class="px-6 py-3 text-sm font-bold text-texto-fuerte">{{ f.cliente }}{% if f.plant %}<br><span class="text-2xs text-texto-tenue font-normal">{{ f.plant }}</span>{% endif %}</td>
                         <td class="px-6 py-3 text-sm text-texto-base">{{ f.at or '—' }}</td>
                         <td class="px-6 py-3">
-                            <span class="inline-block px-2 py-0.5 rounded-lg bg-peligro-50 text-peligro-600 text-2xs font-black tracking-normal">{{ f.motivo }}</span>
+                            <span class="inline-block px-2 py-0.5 rounded-lg bg-peligro-50 text-peligro-600 text-2xs font-semibold tracking-normal">{{ f.motivo }}</span>
                         </td>
                     </tr>
                     {% endfor %}

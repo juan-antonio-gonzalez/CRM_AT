@@ -2,7 +2,7 @@
 
 {% block title %}Infraestructura & Logística | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Infraestructura</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Infraestructura</h2>
     <p class="text-2xs text-texto-suave font-bold">Relevamiento de Planta & Logística</p>
 </div>
 {% endblock %}
@@ -12,10 +12,10 @@
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     
     <!-- Filters -->
-    <form method="GET" action="/relevamiento-infraestructura" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
+    <form method="GET" action="/relevamiento-infraestructura" class="bg-superficie-card p-4 rounded-lg border border-superficie-borde">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Cliente</label>
                 <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
@@ -24,7 +24,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Asistente Técnico</label>
+                <label for="asistente" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Asistente Técnico</label>
                 <select name="asistente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
@@ -32,7 +32,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold tracking-normal hover:bg-primary/90">Filtrar</button>
             <a href="/relevamiento-infraestructura" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <a href="/relevamiento-infraestructura/nuevo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
@@ -50,16 +50,16 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl border border-superficie-borde overflow-hidden shadow-sm">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-superficie-borde bg-superficie-suave/50">
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Cliente / Planta</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Asistente Técnico</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal" scope="col">Estado</th>
-                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal" scope="col">Cliente / Planta</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal" scope="col">Asistente Técnico</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">

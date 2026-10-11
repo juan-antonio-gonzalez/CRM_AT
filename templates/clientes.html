@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Clientes</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Clientes</h2>
     <p class="text-2xs text-texto-suave font-bold">Gestión de Cuentas</p>
 </div>
 {% endblock %}
@@ -15,7 +15,7 @@
 
     <!-- Filters and Search -->
     <section
-        class="bg-white border border-superficie-borde px-4 py-3 rounded-xl shadow-sm">
+        class="bg-superficie-card border border-superficie-borde px-4 py-3 rounded-xl">
         <form method="GET" action="/clientes" class="flex flex-col sm:flex-row sm:items-center gap-3">
             <div class="relative flex-1">
                 <label for="clientes-q" class="sr-only">Buscar cliente por empresa, planta o sector</label>
@@ -27,17 +27,17 @@
             </div>
             {% if q %}
             <a href="/clientes"
-                class="text-2xs font-black text-texto-suave hover:text-primary transition-colors tracking-normal">Limpiar</a>
+                class="text-2xs font-semibold text-texto-suave hover:text-primary transition-colors tracking-normal">Limpiar</a>
             {% endif %}
             <button type="submit"
                 class="bg-primary-700 text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
             <a href="/clientes/exportar-excel"
-                class="bg-exito-600 hover:bg-exito-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-exito-600/20">
+                class="bg-exito-600 hover:bg-exito-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">download</span>
                 <span class="whitespace-nowrap">Exportar Excel</span>
             </a>
             <button type="button" id="btn-nuevo-cliente"
-                class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-lg shadow-primary/10">
+                class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all shadow-primary/10">
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">person_add</span>
                 <span class="whitespace-nowrap">Nuevo Cliente</span>
             </button>
@@ -53,16 +53,16 @@
     </div>
     <!-- Data Table -->
     <div
-        class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden">
+        class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Empresa / Sector</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Ubicación</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal" scope="col">Equipo</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Status</th>
-                        <th class="px-4 py-3 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
+                        <th class="px-4 py-3 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Empresa / Sector</th>
+                        <th class="px-4 py-3 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Ubicación</th>
+                        <th class="px-4 py-3 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Equipo</th>
+                        <th class="px-4 py-3 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Status</th>
+                        <th class="px-4 py-3 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -70,15 +70,15 @@
                     <tr data-row class="hover:bg-superficie-suave/50 transition-colors group opacity-60 if not customer.is_active else">
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-black text-2xs border border-primary/10">
+                                <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-semibold text-2xs border border-primary/10">
                                     {{ customer.name[:2]|upper }}
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-texto-fuerte">{{ customer.name }}</span>
                                     {% if not customer.is_active %}
-                                    <span class="text-2xs font-black text-peligro-500 tracking-tighter mt-0.5">INACTIVO</span>
+                                    <span class="text-2xs font-semibold text-peligro-500 tracking-tighter mt-0.5">INACTIVO</span>
                                     {% endif %}
-                                    <span class="text-2xs font-black text-texto-tenue tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
+                                    <span class="text-2xs font-semibold text-texto-tenue tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
                                 </div>
                             </div>
                         </td>
@@ -90,24 +90,24 @@
                         </td>
                         <td class="px-4 py-3 text-xs">
                             <div class="flex flex-row gap-1">
-                                <div class="size-5 rounded-full bg-superficie-suave flex items-center justify-center text-2xs font-black text-texto-suave border border-superficie-borde" title="Comercial: {{ customer.assigned_commercial }}">
+                                <div class="size-5 rounded-full bg-superficie-suave flex items-center justify-center text-2xs font-semibold text-texto-suave border border-superficie-borde" title="Comercial: {{ customer.assigned_commercial }}">
                                     {{ customer.assigned_commercial[:1]|upper if customer.assigned_commercial else '?' }}
                                 </div>
-                                <div class="size-5 rounded-full bg-primary/10 flex items-center justify-center text-2xs font-black text-primary border border-primary/20" title="Técnico: {{ customer.technical_advisor }}">
+                                <div class="size-5 rounded-full bg-primary/10 flex items-center justify-center text-2xs font-semibold text-primary border border-primary/20" title="Técnico: {{ customer.technical_advisor }}">
                                     {{ customer.technical_advisor[:1]|upper if customer.technical_advisor else '?' }}
                                 </div>
-                                <div class="size-5 rounded-full bg-alerta-500/10 flex items-center justify-center text-2xs font-black text-alerta-600 border border-alerta-500/20" title="Diseñador: {{ customer.designer }}">
+                                <div class="size-5 rounded-full bg-alerta-500/10 flex items-center justify-center text-2xs font-semibold text-alerta-600 border border-alerta-500/20" title="Diseñador: {{ customer.designer }}">
                                     {{ customer.designer[:1]|upper if customer.designer else '?' }}
                                 </div>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-center">
                             {% if not customer.is_active %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black bg-peligro-100 text-peligro-700">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-semibold bg-peligro-100 text-peligro-700">
                                 Inactivo
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black {% if customer.relevamiento_status == 'Completado' %} bg-exito-100 text-exito-700 {% elif customer.relevamiento_status == 'En Proceso' %} bg-alerta-100 text-alerta-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-semibold {% if customer.relevamiento_status == 'Completado' %} bg-exito-100 text-exito-700 {% elif customer.relevamiento_status == 'En Proceso' %} bg-alerta-100 text-alerta-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
                                 {{ customer.relevamiento_status }}
                             </span>
                             {% endif %}
@@ -155,7 +155,7 @@
 </div>
 
 {% if pagination.total_pages > 1 %}
-<div class="flex items-center justify-between px-4 py-3 bg-white border-t border-superficie-borde rounded-b-xl">
+<div class="flex items-center justify-between px-4 py-3 bg-superficie-card border-t border-superficie-borde rounded-b-xl">
     <div class="text-2xs font-bold text-texto-tenue tracking-normal">
         Página {{ pagination.page }} de {{ pagination.total_pages }}
         <span class="mx-1">·</span>
@@ -164,23 +164,23 @@
     <div class="flex items-center gap-1">
         {% if pagination.has_prev %}
         <a href="?page={{ pagination.page - 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Anterior
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">
             Anterior
         </span>
         {% endif %}
 
         {% for p in range(1, pagination.total_pages + 1) %}
             {% if p == pagination.page %}
-            <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">
+            <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center">
                 {{ p }}
             </span>
             {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
             <a href="?page={{ p }}{% if q %}&q={{ q }}{% endif %}"
-                class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
+                class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
                 {{ p }}
             </a>
             {% endif %}
@@ -188,11 +188,11 @@
 
         {% if pagination.has_next %}
         <a href="?page={{ pagination.page + 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Siguiente
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">
             Siguiente
         </span>
         {% endif %}
@@ -207,9 +207,9 @@
             {% include "_cliente_form_fields.html" with context %}
 {% call pie_modal() %}
                 <button type="button" id="btn-cancel-nuevo-cliente"
-                    class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
+                    class="text-xs font-semibold text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
                 <button type="submit"
-                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg shadow-primary/30 transition-all">
+                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-semibold text-xs shadow-primary/30 transition-all">
                     Registrar Cliente
                 </button>
 {% endcall %}
@@ -585,7 +585,7 @@
                         <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                         </button>
-                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
+                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
                             <div class="flex gap-2">
                                 <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
@@ -608,7 +608,7 @@
                         <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                         </button>
-                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
+                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
                             <div class="flex gap-2">
                                 <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
@@ -789,7 +789,7 @@
                         <button type="button" class="team-add-name-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo contacto" aria-label="Crear nuevo contacto">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                         </button>
-                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
+                        <div class="team-add-name-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
                             <div class="flex gap-2">
                                 <input type="text" placeholder="Nuevo nombre..." aria-label="Nombre del nuevo contacto" class="team-add-name-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-name-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
@@ -812,7 +812,7 @@
                         <button type="button" class="team-add-sector-btn size-7 shrink-0 rounded-lg bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" title="Crear nuevo sector" aria-label="Crear nuevo sector">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                         </button>
-                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-white rounded-xl border border-superficie-borde shadow-xl p-2 min-w-[220px]">
+                        <div class="team-add-sector-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
                             <div class="flex gap-2">
                                 <input type="text" placeholder="Nuevo sector..." aria-label="Nombre del nuevo sector" class="team-add-sector-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
                                 <button type="button" class="team-add-sector-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>

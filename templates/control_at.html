@@ -32,7 +32,7 @@
     <p class="text-2xs text-texto-tenue mt-1.5">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
 
     <!-- Filters -->
-    <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
+    <div class="bg-superficie-card p-4 rounded-xl border border-superficie-borde">
         <form id="filter-form" method="GET" action="/control-at" class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
                 <label for="cliente" class="text-2xs font-bold text-texto-tenue tracking-normal">Cliente</label>
@@ -84,11 +84,11 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
             <p class="text-xs text-texto-suave font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
             <button type="button" id="btn-nueva-asignacion"
-                class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-black text-xs tracking-normal shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-semibold text-xs tracking-normal shadow-primary/20 transition-all flex items-center gap-2">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
                 Nueva Asignación
             </button>
@@ -98,15 +98,15 @@
             <table class="w-full text-left" id="tabla-control-at">
                 <thead>
                     <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">AT</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Premium</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-right" scope="col">Total</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Vigente desde</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal" scope="col">Vigente hasta</th>
-                        <th class="px-6 py-5 text-2xs font-black text-texto-suave tracking-normal text-center" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right" scope="col">Total</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
@@ -189,23 +189,23 @@
             <div class="flex items-center gap-1">
                 {% if page > 1 %}
                 <a href="?page={{ page - 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, total_pages + 1) %}
                     {% if p == page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center">{{ p }}</span>
                     {% elif p >= page - 2 and p <= page + 2 %}
                     <a href="?page={{ p }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                        class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if page * per_page < total %}
                 <a href="?page={{ page + 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
@@ -294,7 +294,7 @@
                         Cancelar
                     </button>
                     <button type="button" id="modal-save"
-                        class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-primary/20">
+                        class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-primary/20">
                         Guardar
                     </button>
 {% endcall %}

@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Maquinaria</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Maquinaria</h2>
     <p class="text-2xs text-texto-suave font-bold">Edición de Activo</p>
 </div>
 {% endblock %}
@@ -13,31 +13,31 @@
 <div class="max-w-5xl mx-auto space-y-10 animate-fade-in pb-20">
     <!-- Header -->
     <div
-        class="flex items-center justify-between bg-white p-8 rounded-3xl border border-superficie-borde shadow-sm">
+        class="flex items-center justify-between bg-superficie-card p-8 rounded-lg border border-superficie-borde">
         <div class="flex flex-col gap-1">
-            <h1 class="text-3xl font-black text-texto-fuerte tracking-tight leading-none">Editar Máquina
+            <h1 class="text-3xl font-semibold text-texto-fuerte tracking-tight leading-none">Editar Máquina
             </h1>
             <p class="text-texto-suave text-sm italic">Actualización de parámetros del equipo
                 industrial.</p>
         </div>
-        <div class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+        <div class="size-14 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
             <span class="material-symbols-rounded text-[32px]" aria-hidden="true">precision_manufacturing</span>
         </div>
     </div>
 
     <!-- Form Container -->
     <form action="/editar-maquinaria/{{ machine.id }}" method="POST"
-        class="space-y-12 bg-white p-10 rounded-3xl shadow-xl  border border-superficie-borde">
+        class="space-y-12 bg-superficie-card p-10 rounded-lg  border border-superficie-borde">
         <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
         <section>
             <div class="flex items-center gap-3 mb-8 pb-4 border-b border-superficie-borde">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">settings</span>
-                <h3 class="text-xs font-black text-texto-fuerte">Información
+                <h3 class="text-xs font-semibold text-texto-fuerte">Información
                     del Equipo</h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-2">
-                    <label for="client_select" class="text-2xs font-black text-texto-tenue tracking-normal">Cliente
+                    <label for="client_select" class="text-2xs font-semibold text-texto-tenue tracking-normal">Cliente
                         Asignado</label>
                     <select id="client_select" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
@@ -49,7 +49,7 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="plant_select" class="text-2xs font-black text-texto-tenue tracking-normal">Planta
+                    <label for="plant_select" class="text-2xs font-semibold text-texto-tenue tracking-normal">Planta
                         Asignada</label>
                     <select id="plant_select" name="customer_id" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
@@ -61,7 +61,7 @@
                     <input type="hidden" id="plant_assigned" name="plant_assigned" value="{{ machine.plant_assigned }}">
                 </div>
                 <div class="space-y-2">
-                    <label for="machine-type" class="text-2xs font-black text-texto-tenue tracking-normal">Tipo de
+                    <label for="machine-type" class="text-2xs font-semibold text-texto-tenue tracking-normal">Tipo de
                         Máquina</label>
                     <select name="machine_type" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="machine-type">
@@ -73,32 +73,32 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="serial-number" class="text-2xs font-black text-texto-tenue tracking-normal">Número de
+                    <label for="serial-number" class="text-2xs font-semibold text-texto-tenue tracking-normal">Número de
                         Serie</label>
                     <input name="serial_number" value="{{ machine.serial_number }}" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-texto-fuerte"
                         type="text"  id="serial-number"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="brand" class="text-2xs font-black text-texto-tenue tracking-normal">Marca</label>
+                    <label for="brand" class="text-2xs font-semibold text-texto-tenue tracking-normal">Marca</label>
                     <input name="brand" value="{{ machine.brand }}" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         type="text"  id="brand"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="model-name" class="text-2xs font-black text-texto-tenue tracking-normal">Modelo</label>
+                    <label for="model-name" class="text-2xs font-semibold text-texto-tenue tracking-normal">Modelo</label>
                     <input name="model_name" value="{{ machine.model }}" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         type="text"  id="model-name"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="line" class="text-2xs font-black text-texto-tenue tracking-normal">Línea</label>
+                    <label for="line" class="text-2xs font-semibold text-texto-tenue tracking-normal">Línea</label>
                     <input name="line" value="{{ machine.line or '' }}"
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         type="text" style="text-transform:;" placeholder="Ej: LÍNEA 1"  id="line"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="status" class="text-2xs font-black text-texto-tenue tracking-normal">Estado</label>
+                    <label for="status" class="text-2xs font-semibold text-texto-tenue tracking-normal">Estado</label>
                     <select name="status" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Operativo" {% if machine.status=="Operativo" %}selected{% endif %}>Operativo
@@ -115,9 +115,9 @@
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-6 pt-10 border-t border-superficie-borde">
             <a href="/maquinaria"
-                class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</a>
+                class="text-xs font-semibold text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</a>
             <button type="submit"
-                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-2xl font-black text-xs shadow-2xl shadow-primary/30 transition-all">
+                class="bg-primary hover:bg-primary/90 text-white px-12 py-4 rounded-lg font-semibold text-xs shadow-primary/30 transition-all">
                 Guardar Cambios
             </button>
         </div>

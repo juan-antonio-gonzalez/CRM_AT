@@ -14,15 +14,15 @@
     <div class="min-h-full flex items-center justify-center p-6">
         <div class="w-full max-w-md">
             <div class="text-center mb-10">
-                <div class="size-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/20 mx-auto mb-4">
+                <div class="size-16 rounded-lg bg-primary flex items-center justify-center text-white shadow-primary/20 mx-auto mb-4">
                     <span class="material-symbols-rounded text-3xl" aria-hidden="true">package_2</span>
                 </div>
-                <h1 class="text-2xl font-black text-texto-fuerte tracking-tight">CRM-AT</h1>
+                <h1 class="text-2xl font-semibold text-texto-fuerte tracking-tight">CRM-AT</h1>
                 <p class="text-sm text-texto-suave font-medium mt-1">Gestión Operativa</p>
             </div>
 
-            <div class="bg-white rounded-3xl border border-superficie-borde shadow-2xl p-8">
-                <h2 class="text-lg font-black text-texto-fuerte mb-6">Iniciar Sesión</h2>
+            <div class="bg-superficie-card rounded-lg border border-superficie-borde p-8">
+                <h2 class="text-lg font-semibold text-texto-fuerte mb-6">Iniciar Sesión</h2>
 
                 {% if error %}
                 <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-peligro-50 border border-peligro-200 text-peligro-700 text-sm font-semibold mb-6">
@@ -33,7 +33,7 @@
 
                 <form method="POST" action="/auth/login" class="space-y-5" id="loginForm">
                     <div class="space-y-2">
-                        <label for="login-username" class="text-2xs font-black text-texto-tenue tracking-normal">Usuario o Correo</label>
+                        <label for="login-username" class="text-2xs font-semibold text-texto-tenue tracking-normal">Usuario o Correo</label>
                         <div class="relative">
                             <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue" aria-hidden="true">person</span>
                             <input id="login-username" name="username" required
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label for="login-password" class="text-2xs font-black text-texto-tenue tracking-normal">Contraseña</label>
+                        <label for="login-password" class="text-2xs font-semibold text-texto-tenue tracking-normal">Contraseña</label>
                         <div class="relative">
                             <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue" aria-hidden="true">lock</span>
                             <input id="login-password" name="password" type="password" required
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <button type="submit"
-                        class="w-full bg-primary hover:bg-primary/90 text-white py-3.5 rounded-xl font-black text-xs tracking-normal shadow-lg shadow-primary/30 transition-all">
+                        class="w-full bg-primary hover:bg-primary/90 text-white py-3.5 rounded-xl font-semibold text-xs tracking-normal shadow-primary/30 transition-all">
                         Ingresar
                     </button>
                 </form>

@@ -4,7 +4,7 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">Maquinaria</h2>
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Maquinaria</h2>
     <p class="text-2xs text-texto-suave font-bold">Activos Industriales</p>
 </div>
 {% endblock %}
@@ -28,10 +28,10 @@
     {% endif %}
 
     <!-- Filters -->
-    <form method="GET" action="/maquinaria" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
+    <form method="GET" action="/maquinaria" class="bg-superficie-card p-4 rounded-lg border border-superficie-borde">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Cliente</label>
                 <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
@@ -40,7 +40,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Asistente Técnico</label>
+                <label for="asistente" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Asistente Técnico</label>
                 <select name="asistente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
@@ -49,13 +49,13 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="q" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Buscar Equipo</label>
+                <label for="q" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Buscar Equipo</label>
                 <div class="relative">
                     <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
                     <input name="q" value="{{ q or '' }}" placeholder="N° de serie, marca o modelo..." class="w-full pl-9 pr-4 py-2 bg-superficie-suave border border-superficie-borde rounded-lg text-xs font-bold" id="q">
                 </div>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold tracking-normal hover:bg-primary/90">Filtrar</button>
             <a href="/maquinaria" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <button type="button" id="btn-new-machine" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
@@ -74,7 +74,7 @@
 
     <!-- Data Table -->
     <div
-        class="bg-white rounded-xl border border-superficie-borde shadow-sm overflow-hidden">
+        class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -184,7 +184,7 @@
 {% if q %}{% set ns.qs = ns.qs + '&q=' + q|urlencode %}{% endif %}
 
 {% if pagination.total_pages > 1 %}
-<div class="flex items-center justify-between px-4 py-3 bg-white border border-superficie-borde rounded-xl -mt-2">
+<div class="flex items-center justify-between px-4 py-3 bg-superficie-card border border-superficie-borde rounded-xl -mt-2">
     <div class="text-2xs font-bold text-texto-tenue tracking-normal">
         Página {{ pagination.page }} de {{ pagination.total_pages }}
         <span class="mx-1">·</span>
@@ -193,23 +193,23 @@
     <div class="flex items-center gap-1">
         {% if pagination.has_prev %}
         <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Anterior
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">
             Anterior
         </span>
         {% endif %}
 
         {% for p in range(1, pagination.total_pages + 1) %}
             {% if p == pagination.page %}
-            <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">
+            <span class="size-8 rounded-lg bg-primary text-white text-2xs font-semibold flex items-center justify-center">
                 {{ p }}
             </span>
             {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
             <a href="?page={{ p }}{{ ns.qs }}"
-                class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
+                class="size-8 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
                 {{ p }}
             </a>
             {% endif %}
@@ -217,11 +217,11 @@
 
         {% if pagination.has_next %}
         <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-suave hover:bg-superficie-suave tracking-normal transition-colors">
             Siguiente
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue tracking-normal cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-semibold text-texto-tenue tracking-normal cursor-default">
             Siguiente
         </span>
         {% endif %}
@@ -239,7 +239,7 @@
             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="client_select" class="text-2xs font-black text-texto-tenue tracking-normal">Cliente *</label>
+                    <label for="client_select" class="text-2xs font-semibold text-texto-tenue tracking-normal">Cliente *</label>
                     <select id="client_select" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccionar cliente...</option>
@@ -249,7 +249,7 @@
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="plant_select" class="text-2xs font-black text-texto-tenue tracking-normal">Planta *</label>
+                    <label for="plant_select" class="text-2xs font-semibold text-texto-tenue tracking-normal">Planta *</label>
                     <select id="plant_select" name="customer_id" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccione un cliente primero</option>
@@ -259,7 +259,7 @@
             </div>
 
             <div class="space-y-1.5">
-                <label for="machine-type" class="text-2xs font-black text-texto-tenue tracking-normal">Tipo de Máquina *</label>
+                <label for="machine-type" class="text-2xs font-semibold text-texto-tenue tracking-normal">Tipo de Máquina *</label>
                 <select name="machine_type" required
                     class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold" id="machine-type">
                     <option value="">Seleccionar tipo...</option>
@@ -271,13 +271,13 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="serial-number" class="text-2xs font-black text-texto-tenue tracking-normal">N° de Serie *</label>
+                    <label for="serial-number" class="text-2xs font-semibold text-texto-tenue tracking-normal">N° de Serie *</label>
                     <input name="serial_number" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="SN-XXXXX" type="text" oninput="this.value = this.value.toUpperCase()"  id="serial-number"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="brand" class="text-2xs font-black text-texto-tenue tracking-normal">Marca *</label>
+                    <label for="brand" class="text-2xs font-semibold text-texto-tenue tracking-normal">Marca *</label>
                     <input name="brand" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: ATLAS COPCO" type="text" oninput="this.value = this.value.toUpperCase()"  id="brand"/>
@@ -286,13 +286,13 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="model-name" class="text-2xs font-black text-texto-tenue tracking-normal">Modelo *</label>
+                    <label for="model-name" class="text-2xs font-semibold text-texto-tenue tracking-normal">Modelo *</label>
                     <input name="model_name" required
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: GA 37VSD" type="text" oninput="this.value = this.value.toUpperCase()"  id="model-name"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="line" class="text-2xs font-black text-texto-tenue tracking-normal">Línea</label>
+                    <label for="line" class="text-2xs font-semibold text-texto-tenue tracking-normal">Línea</label>
                     <input name="line"
                         class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: LÍNEA 1" type="text" oninput="this.value = this.value.toUpperCase()"  id="line"/>
@@ -301,9 +301,9 @@
 
 {% call pie_modal() %}
                 <button type="button" id="btn-cancel-new-machine"
-                    class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
+                    class="text-xs font-semibold text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
                 <button type="submit"
-                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg shadow-primary/30 transition-all">
+                    class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-semibold text-xs shadow-primary/30 transition-all">
                     Registrar Máquina
                 </button>
 {% endcall %}
