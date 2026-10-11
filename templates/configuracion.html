@@ -50,13 +50,13 @@
                         <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div id="list-advisor" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                <div id="list-advisor" class=" max-h-[200px] overflow-y-auto pr-1">
                     {% if not advisors %}
                     <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in advisors %}
                     <div id="item-advisor-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -97,13 +97,13 @@
                         <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div id="list-designer" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                <div id="list-designer" class=" max-h-[200px] overflow-y-auto pr-1">
                     {% if not designers %}
                     <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in designers %}
                     <div id="item-designer-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -144,13 +144,13 @@
                         <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div id="list-commercial" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                <div id="list-commercial" class=" max-h-[200px] overflow-y-auto pr-1">
                     {% if not commercials %}
                     <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in commercials %}
                     <div id="item-commercial-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -191,13 +191,13 @@
                         <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div id="list-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                <div id="list-sector" class=" max-h-[200px] overflow-y-auto pr-1">
                     {% if not sectors %}
                     <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in sectors %}
                     <div id="item-sector-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -244,7 +244,7 @@
                     {% endif %}
                     {% for item in machine_types %}
                     <div id="item-machine-type-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -285,13 +285,13 @@
                         <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
                     </button>
                 </div>
-                <div id="list-formado" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                <div id="list-formado" class=" max-h-[200px] overflow-y-auto pr-1">
                     {% if not formado_types %}
                     <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
                     {% endif %}
                     {% for item in formado_types %}
                     <div id="item-formado-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -338,7 +338,7 @@
                     {% endif %}
                     {% for item in inferior_closure_types %}
                     <div id="item-cierre-inferior-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -385,7 +385,7 @@
                     {% endif %}
                     {% for item in client_names %}
                     <div id="item-client-name-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -432,7 +432,7 @@
                     {% endif %}
                     {% for item in plant_names %}
                     <div id="item-plant-name-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
@@ -479,7 +479,7 @@
                     {% endif %}
                     {% for item in visit_types %}
                     <div id="item-visit-type-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
@@ -525,7 +525,7 @@
                     {% endif %}
                     {% for item in distributor_plants %}
                     <div id="item-distributor-plant-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
@@ -571,7 +571,7 @@
                     {% endif %}
                     {% for item in quality_topics %}
                     <div id="item-tema-calidad-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="tema-calidad" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
@@ -617,7 +617,7 @@
                     {% endif %}
                     {% for item in quality_at_topics %}
                     <div id="item-calidad-at-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                         <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
                             <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="calidad-at" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
@@ -664,7 +664,7 @@
                 {% endif %}
                 {% for item in member_sectors %}
                 <div id="item-member-sector-{{ item.id }}"
-                    class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                    class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                     <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                     <div class="flex items-center gap-0.5">
                         <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="member-sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
@@ -708,7 +708,7 @@
                 {% endif %}
                 {% for item in contact_names_list %}
                 <div id="item-contact-name-{{ item.id }}"
-                    class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                    class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
                     <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                     <div class="flex items-center gap-0.5">
                         <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="contact-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
