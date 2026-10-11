@@ -65,33 +65,43 @@ def _modales(texto):
     return salida
 
 
-def test_todos_los_modales_comparten_el_fondo():
-    """Había dos opacidades mezcladas (40% y 60%) más un tercer valor suelto."""
-    usados = set()
+def test_ninguna_plantilla_escribe_un_modal_a_mano():
+    """Todos los modales salen del componente `_ui.html`.
+
+    Estas pruebas verificaban antes que los modales escritos a mano compartieran
+    fondo, radio y tamaño de título, y en su momento encontraron tres opacidades
+    mezcladas y cuatro tamaños distintos. Con los 16 modales ya migrados no queda
+    ninguno a mano, así que lo que corresponde verificar es eso: que nadie vuelva
+    a escribir un diálogo suelto, porque es de donde salían las diferencias.
+    """
+    sueltos = []
     for nombre, texto in _plantillas_aplicacion():
-        for _id, contenedor, _panel, _titulo in _modales(texto):
-            usados.add(next((t for t in re.findall(r"bg-(?:black|slate)\S*", contenedor)), "-"))
-    assert usados == {"bg-black/50"}, f"el fondo del modal varía: {sorted(usados)}"
+        for _id, _contenedor, _panel, _titulo in _modales(texto):
+            sueltos.append(nombre)
+    assert not sueltos, (
+        f"hay modales escritos a mano en lugar de usar el macro: {sorted(set(sueltos))}"
+    )
 
 
-def test_todos_los_modales_comparten_radio_de_panel():
-    """Convivían rounded-2xl, rounded-3xl y rounded-lg en los mismos elementos."""
-    usados = set()
-    for nombre, texto in _plantillas_aplicacion():
-        for _id, _cont, panel, _titulo in _modales(texto):
-            if panel:
-                usados.add(next((t for t in re.findall(r"rounded-\S+", panel)), "-"))
-    assert usados <= {"rounded-lg"}, f"el radio del panel varía: {sorted(usados)}"
+def test_el_componente_define_el_aspecto_de_todos_los_modales():
+    """El fondo, el radio y el título se definen en un solo lugar.
 
+    Antes convivían dos opacidades de fondo (40% y 60%), tres radios de panel
+    (rounded-2xl, rounded-3xl, rounded-lg) y cuatro tamaños de título. Al estar
+    todo en el macro, alcanza con verificar que el macro los fije.
+    """
+    with open(os.path.join(PLANTILLAS, "_ui.html"), encoding="utf-8") as fh:
+        componente = fh.read()
+    m = re.search(r"\{% macro modal\(.*?\{% endmacro %\}", componente, re.S)
+    assert m, "no se encontró el macro modal en _ui.html"
+    cuerpo = m.group(0)
 
-def test_todos_los_titulos_de_modal_miden_igual():
-    """Había text-sm, text-lg, text-xl y text-2xl en 21 modales."""
-    usados = set()
-    for nombre, texto in _plantillas_aplicacion():
-        for _id, _cont, _panel, titulo in _modales(texto):
-            if titulo:
-                usados.add(next((t for t in re.findall(r"text-(?:xs|sm|base|lg|xl|2xl)", titulo)), "-"))
-    assert usados <= {"text-lg"}, f"el tamaño del título varía: {sorted(usados)}"
+    assert "bg-black/50" in cuerpo, "el macro no fija el fondo del diálogo"
+    assert "rounded-lg" in cuerpo, "el macro no fija el radio del panel"
+    assert "text-lg" in cuerpo, "el macro no fija el tamaño del título"
+    # Los cuatro tamaños, para que no aparezcan anchos sueltos.
+    for tamano in ("max-w-sm", "max-w-lg", "max-w-3xl", "max-w-5xl"):
+        assert tamano in cuerpo, f"falta el tamaño {tamano} en el componente"
 
 
 def test_ningun_modal_conserva_el_fondo_superpuesto():

@@ -224,16 +224,7 @@
 </div>
 
 <!-- Assignment Modal -->
-<div id="asignacion-modal-container" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div id="asignacion-modal" class="relative w-full max-w-lg hidden">
-        <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
-            <div class="p-6 space-y-5">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="modal-title">Nueva Asignación</h3>
-                    <button type="button" id="modal-close" class="p-1 text-texto-tenue hover:text-texto-base transition-colors" aria-label="Cerrar">
-                        <span class="material-symbols-rounded" aria-hidden="true">close</span>
-                    </button>
-                </div>
+{% call modal('asignacion-modal-container', 'Nueva asignación', 'formulario', 'assignment', 'primario') %}
                 <input type="hidden" id="edit-assignment-id" value="">
                 <div class="space-y-4">
                     <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-superficie-suave rounded-xl">
@@ -297,7 +288,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex gap-3 pt-2">
+{% call pie_modal() %}
                     <button type="button" id="modal-cancel"
                         class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold tracking-normal transition-all">
                         Cancelar
@@ -306,11 +297,8 @@
                         class="flex-1 px-5 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-primary/20">
                         Guardar
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% endcall %}
+{% endcall %}
 
 <!-- Delete Confirmation Modal -->
 {% call modal('delete-modal-container', 'Eliminar asignación', 'confirmar', 'delete_forever', 'peligro') %}
@@ -344,7 +332,7 @@ function toDateStr(d) {
 
 function openModal(title, data) {
     var infoBlock = document.getElementById('modal-info');
-    document.getElementById('modal-title').textContent = title;
+    document.getElementById('asignacion-modal-container-titulo').textContent = title;
     if (data) {
         document.getElementById('edit-assignment-id').value = data.id || '';
         document.getElementById('modal-cliente').value = data.cliente || '';
@@ -379,7 +367,6 @@ function closeModal() {
     cerrarModal('asignacion-modal-container');
 }
 
-document.getElementById('modal-close').addEventListener('click', closeModal);
 document.getElementById('modal-cancel').addEventListener('click', closeModal);
 modalContainer.addEventListener('click', function(e) {
     if (e.target === this) closeModal();
