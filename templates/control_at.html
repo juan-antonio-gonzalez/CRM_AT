@@ -13,88 +13,19 @@
     </div>
 </div>
 {% endblock %}
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">business</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Clientes</p>
-                <p class="text-xl font-black text-texto-fuerte">{{ kpi.total_clientes }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-info-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-info-500 text-xl" aria-hidden="true">assignment</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Estándar</p>
-                <p class="text-xl font-black text-info-600">{{ kpi.total_std }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-info-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-info-500 text-xl" aria-hidden="true">workspace_premium</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Premium</p>
-                <p class="text-xl font-black text-info-600">{{ kpi.total_prem }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-exito-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-exito-500 text-xl" aria-hidden="true">summarize</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Total Visitas Asignadas</p>
-                <p class="text-xl font-black text-exito-600">{{ kpi.total_vis_sum }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-exito-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-exito-500 text-xl" aria-hidden="true">check_circle</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Finalizada</p>
-                <p class="text-xl font-black text-exito-600">{{ kpi.realizadas_sum }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-alerta-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-alerta-500 text-xl" aria-hidden="true">hourglass_empty</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Pendiente</p>
-                <p class="text-xl font-black text-alerta-600">{{ kpi.pendientes_sum }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-alerta-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-alerta-500 text-xl" aria-hidden="true">schedule</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Fuera de Cronograma</p>
-                <p class="text-xl font-black text-alerta-600">{{ kpi.fuera_cronograma }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Avance</p>
-            <div class="flex items-baseline gap-2 mt-1">
-                <p class="text-3xl font-black text-info-600">{{ kpi.avance_pct }}%</p>
-                <span class="text-2xl">
-                    {% if kpi.avance_pct > 100 %}🤩
-                    {% elif kpi.avance_pct >= 100 %}😊
-                    {% elif kpi.avance_pct >= 50 %}😐
-                    {% else %}😟
-                    {% endif %}
-                </span>
-            </div>
-            <div class="mt-3 h-2 w-full bg-superficie-suave rounded-full overflow-hidden">
-                <div class="h-full bg-exito-500" style="width: {{ kpi.avance_pct if kpi.avance_pct <= 100 else 100 }}%"></div>
-            </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Clientes", kpi.total_clientes, "neutro", "business") }}
+        {{ indicador("Visita estándar", kpi.total_std, "info", "assignment") }}
+        {{ indicador("Visita premium", kpi.total_prem, "info", "workspace_premium") }}
+        {{ indicador("Total visitas asignadas", kpi.total_vis_sum, "exito", "summarize") }}
+        {{ indicador("Visita finalizada", kpi.realizadas_sum, "exito", "check_circle") }}
+        {{ indicador("Visita pendiente", kpi.pendientes_sum, "alerta", "hourglass_empty") }}
+        {{ indicador("Visita fuera de cronograma", kpi.fuera_cronograma, "alerta", "schedule") }}
+        {{ indicador("Avance del plan", kpi.avance_pct ~ "%", "info", "trending_up") }}
             <p class="text-2xs text-texto-tenue mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
         </div>
     </div>

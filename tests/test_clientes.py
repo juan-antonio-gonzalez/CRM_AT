@@ -153,20 +153,31 @@ def test_las_estadisticas_no_cambian_al_pasar_de_pagina(client, db_session, admi
         _crear(client, csrf, i)
 
     def stats(html):
-        # Los valores de las tarjetas de relevamiento.
-        return re.findall(r'<h4 class="text-lg font-black[^"]*">\s*(\d+)\s*</h4>', html)
+        # Los indicadores los genera el componente _ui.html: la etiqueta va en un
+        # <p> con title y la cifra en el <p> siguiente. Se leen por la etiqueta,
+        # no por la clase de color, para que el test no dependa del aspecto.
+        pares = re.findall(
+            r'<p class="[^"]*" title="([^"]+)">[^<]*</p>\s*<p class="[^"]*tabular-nums[^"]*">\s*([^<]+?)\s*</p>',
+            html)
+        return {etiqueta.strip().lower(): valor.strip() for etiqueta, valor in pares}
 
     p1 = stats(client.get("/clientes?per_page=10&page=1").text)
     p2 = stats(client.get("/clientes?per_page=10&page=2").text)
     p3 = stats(client.get("/clientes?per_page=10&page=3").text)
 
-    assert p1, "no se encontraron las tarjetas de estadísticas"
+    assert p1, "no se encontraron los indicadores de estadísticas"
     assert p1 == p2 == p3, (
         f"las estadísticas cambian al paginar: página 1 -> {p1}, "
         f"página 2 -> {p2}, página 3 -> {p3}"
     )
-    # Y el total debe ser el conjunto completo, no el de una página.
-    assert "25" in p1, f"el total no es 25: {p1}"
+    # Y el total debe ser el conjunto completo, no el de una página. Se compara
+    # contra la base en lugar de un número fijo, porque otras pruebas pueden
+    # haber dejado clientes.
+    reales = db_session.query(models.Customer).filter(
+        models.Customer.is_active.is_(True)).count()
+    assert p1.get("total clientes") == str(reales), (
+        f"el indicador dice {p1.get('total clientes')} y en la base hay {reales}"
+    )
 
 
 # ── Edición ────────────────────────────────────────────────────────────────

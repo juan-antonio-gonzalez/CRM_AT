@@ -7,6 +7,7 @@
 </div>
 {% endblock %}
 
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     
@@ -41,23 +42,11 @@
     </form>
 
     <!-- Indicators -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Total Relevos</p>
-            <p class="text-3xl font-black text-texto-fuerte">{{ stats.total }}</p>
-        </div>
-        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">En Proceso</p>
-            <p class="text-3xl font-black text-alerta-500">{{ stats.en_proceso }}</p>
-        </div>
-        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Completados</p>
-            <p class="text-3xl font-black text-primary">{{ stats.completados }}</p>
-        </div>
-        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Pendientes</p>
-            <p class="text-3xl font-black text-texto-tenue">{{ stats.pendientes }}</p>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Total relevos", stats.total, "neutro") }}
+        {{ indicador("En proceso", stats.en_proceso, "alerta") }}
+        {{ indicador("Completados", stats.completados, "primario") }}
+        {{ indicador("Pendientes", stats.pendientes, "neutro") }}
     </div>
 
     <!-- Table -->

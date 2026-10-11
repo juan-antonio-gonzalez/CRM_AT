@@ -9,6 +9,7 @@
 </div>
 {% endblock %}
 
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
 
@@ -44,23 +45,11 @@
     </section>
 
     <!-- Stats Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="bg-white p-3.5 rounded-xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-0.5">Total Clientes</p>
-            <h4 class="text-lg font-black text-texto-fuerte">{{ stats.total }}</h4>
-        </div>
-        <div class="bg-white p-3.5 rounded-xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-0.5">En Relevamiento</p>
-            <h4 class="text-lg font-black text-alerta-500">{{ stats.en_relevamiento }}</h4>
-        </div>
-        <div class="bg-white p-3.5 rounded-xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-0.5">Completados</p>
-            <h4 class="text-lg font-black text-exito-500">{{ stats.completados }}</h4>
-        </div>
-        <div class="bg-white p-3.5 rounded-xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-0.5">Pendiente</p>
-            <h4 class="text-lg font-black text-primary">{{ stats.pendientes }}</h4>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Total clientes", stats.total, "neutro") }}
+        {{ indicador("En relevamiento", stats.en_relevamiento, "alerta") }}
+        {{ indicador("Completados", stats.completados, "exito") }}
+        {{ indicador("Pendiente", stats.pendientes, "primario") }}
     </div>
     <!-- Data Table -->
     <div

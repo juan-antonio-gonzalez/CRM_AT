@@ -6,62 +6,23 @@
 <h2 class="text-lg lg:text-xl font-black text-texto-fuerte tracking-tight">Seguimiento Plan de Acción</h2>
 {% endblock %}
 
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="h-full flex flex-col gap-6 w-full max-w-[1600px] mx-auto animate-fade-in duration-500">
     
     <!-- Top Configuration Bar (KPIs) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <!-- Total -->
-        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-superficie-suave flex items-center justify-center text-texto-suave">
-                <span class="material-symbols-rounded" aria-hidden="true">format_list_bulleted</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Total Tareas</p>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-texto-fuerte">{{ total_tareas }}</h3>
-                </div>
-            </div>
-        </div>
+        {{ indicador("Total tareas", total_tareas, "neutro", "format_list_bulleted") }}
         
         <!-- Pendientes -->
-        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-peligro-50 flex items-center justify-center text-peligro-500">
-                <span class="material-symbols-rounded" aria-hidden="true">hourglass_empty</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Pendientes</p>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-texto-fuerte">{{ pendientes }}</h3>
-                </div>
-            </div>
-        </div>
+        {{ indicador("Pendientes", pendientes, "neutro", "hourglass_empty") }}
 
         <!-- En curso -->
-        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-alerta-50 flex items-center justify-center text-alerta-500">
-                <span class="material-symbols-rounded" aria-hidden="true">construction</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">En curso</p>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-texto-fuerte">{{ en_curso }}</h3>
-                </div>
-            </div>
-        </div>
+        {{ indicador("En curso", en_curso, "neutro", "construction") }}
 
         <!-- Finalizadas -->
-        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-exito-50 flex items-center justify-center text-exito-500">
-                <span class="material-symbols-rounded" aria-hidden="true">task_alt</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Finalizadas</p>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-texto-fuerte">{{ finalizadas }}</h3>
-                </div>
-            </div>
-        </div>
+        {{ indicador("Finalizadas", finalizadas, "neutro", "task_alt") }}
     </div>
 
     <!-- Main Content Area: Table -->

@@ -8,21 +8,13 @@
     </div>
 </div>
 {% endblock %}
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
-    <div class="grid grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Total Visitas</p>
-            <p class="text-3xl font-black text-texto-fuerte mt-1">{{ stats.total_visitas }}</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Estándar</p>
-            <p class="text-3xl font-black text-info-600 mt-1">{{ stats.total_estandar }}</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
-            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Premium</p>
-            <p class="text-3xl font-black text-info-600 mt-1">{{ stats.total_premium }}</p>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Total visitas", stats.total_visitas, "neutro") }}
+        {{ indicador("Estándar", stats.total_estandar, "info") }}
+        {{ indicador("Premium", stats.total_premium, "info") }}
     </div>
 
     <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm overflow-hidden">

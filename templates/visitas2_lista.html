@@ -13,52 +13,15 @@
     </div>
 </div>
 {% endblock %}
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">assignment_turned_in</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-suave uppercase tracking-widest">Realizadas</p>
-                <p class="text-2xl font-black text-texto-fuerte">{{ stats.hechas }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-info-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-info-500 text-2xl" aria-hidden="true">calendar_month</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-info-600 uppercase tracking-widest">Programadas</p>
-                <p class="text-2xl font-black text-info-600">{{ stats.programadas }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-alerta-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-alerta-500 text-2xl" aria-hidden="true">hourglass_top</span>
-            </div>
-            <div>
-                {# Antes decía "Pendientes" y contaba las visitas "En proceso", que en la
-                   tabla se muestran como "En proceso": la misma visita tenía dos nombres. #}
-                <p class="text-2xs font-bold text-alerta-600 uppercase tracking-widest">En proceso</p>
-                <p class="text-2xl font-black text-alerta-600">{{ stats.en_proceso }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-peligro-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-peligro-500 text-2xl" aria-hidden="true">cancel</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-peligro-600 uppercase tracking-widest">Canceladas</p>
-                <p class="text-2xl font-black text-peligro-600">{{ stats.canceladas }}</p>
-            </div>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Realizadas", stats.hechas, "neutro", "assignment_turned_in") }}
+        {{ indicador("Programadas", stats.programadas, "info", "calendar_month") }}
+        {{ indicador("En proceso", stats.en_proceso, "alerta", "hourglass_top") }}
+        {{ indicador("Canceladas", stats.canceladas, "peligro", "cancel") }}
     </div>
 
     <!-- Filtros -->

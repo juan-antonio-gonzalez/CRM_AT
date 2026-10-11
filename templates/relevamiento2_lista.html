@@ -16,50 +16,15 @@
 </div>
 {% endblock %}
 
+{% from "_ui.html" import indicador %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-superficie-suave flex items-center justify-center">
-                <span class="material-symbols-rounded text-texto-suave text-2xl" aria-hidden="true">precision_manufacturing</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-suave uppercase tracking-widest">Pendientes</p>
-                <p class="text-2xl font-black text-texto-base">{{ stats.pendientes }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">assignment</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-texto-suave uppercase tracking-widest">Total Relevados</p>
-                <p class="text-2xl font-black text-texto-fuerte">{{ stats.total }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-exito-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-exito-500 text-2xl" aria-hidden="true">check_circle</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-exito-600 uppercase tracking-widest">Completados</p>
-                <p class="text-2xl font-black text-exito-600">{{ stats.completados }}</p>
-            </div>
-        </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-alerta-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-alerta-500 text-2xl" aria-hidden="true">hourglass_top</span>
-            </div>
-            <div>
-                <p class="text-2xs font-bold text-alerta-600 uppercase tracking-widest">En Proceso</p>
-                <p class="text-2xl font-black text-alerta-600">{{ stats.en_proceso }}</p>
-            </div>
-        </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        {{ indicador("Pendientes", stats.pendientes, "neutro", "precision_manufacturing") }}
+        {{ indicador("Total relevados", stats.total, "neutro", "assignment") }}
+        {{ indicador("Completados", stats.completados, "exito", "check_circle") }}
+        {{ indicador("En proceso", stats.en_proceso, "alerta", "hourglass_top") }}
     </div>
 
     <!-- Filters and Actions -->
