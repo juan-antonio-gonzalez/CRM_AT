@@ -1,3 +1,4 @@
+{% from "_ui.html" import modal %}
 <form id="surveyForm" method="POST" action="/relevamiento/{{ machine.id }}" class="h-full">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
     <input type="hidden" name="finalize" id="finalizeInput" value="false">
@@ -621,28 +622,20 @@
 </form>
 
 <!-- Auxiliary Management Modal -->
-<div id="manageEntityModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
-    <div class="bg-superficie-card rounded-lg shadow-pop w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-superficie-borde">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde shrink-0">
-            <h3 id="manageEntityTitle" class="text-lg font-bold text-texto-fuerte tracking-normal">Gestionar</h3>
-            <button type="button" onclick="document.getElementById('manageEntityModal').classList.add('hidden')" class="size-8 rounded-lg flex items-center justify-center text-texto-tenue hover:text-texto-base hover:bg-superficie-suave transition-all" aria-label="Cerrar">
-                <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
-            </button>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="flex gap-2">
-                <input id="manageEntityInput" type="text" placeholder="Nuevo elemento..."
-                    class="flex-1 bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none">
-                <button id="manageEntityAddBtn" type="button"
-                    class="bg-primary text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-primary/90 transition-all whitespace-nowrap flex items-center gap-1.5">
-                    <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                    Agregar
-                </button>
-            </div>
-            <div id="manageEntityList" class="space-y-1.5 overflow-y-auto max-h-[260px]">
-                <p class="text-center py-8 text-texto-tenue text-xs font-bold italic">Cargando...</p>
-            </div>
-        </div>
+{% call modal('manageEntityModal', 'Gestionar', 'formulario', 'list_alt', 'primario') %}
+<div class="space-y-4">
+    <div class="flex gap-2">
+        <input id="manageEntityInput" type="text" aria-label="Nombre del nuevo elemento" placeholder="Nuevo elemento..."
+            class="flex-1 bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
+        <button id="manageEntityAddBtn" type="button"
+            class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
+            Agregar
+        </button>
+    </div>
+    <div id="manageEntityList" class="space-y-1.5 overflow-y-auto max-h-[260px]">
+        <p class="text-center py-8 text-texto-tenue text-xs italic">Cargando...</p>
     </div>
 </div>
+{% endcall %}
 </div>
