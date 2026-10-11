@@ -928,3 +928,97 @@ def test_no_hay_codigo_despues_de_un_return():
                             f"({nodo.name}): {len(nodo.body) - i - 1} sentencia(s) "
                             f"inalcanzable(s)")
     assert not ofensores, f"código después de un return: {ofensores}"
+
+
+def _es_caja_de_seccion(tag, contexto=""):
+    """Un contenedor que agrupa contenido: borde + radio, y no es un control.
+
+    Se excluyen a propósito los controles: una opción seleccionable o un control
+    segmentado **necesitan** su borde para verse como tales. Y los popovers, que van
+    posicionados en absoluto y flotan sobre el formulario, no anidan nada.
+    """
+    import re as re_mod
+    m = re_mod.search(r'class="([^"]*)"', tag, re_mod.S)
+    if not m:
+        return False
+    clases = m.group(1)
+    if not (re_mod.search(r'\bborder\b', clases) and re_mod.search(r'\brounded-\w+\b', clases)):
+        return False
+    # Controles y elementos flotantes: el borde es su affordance, no agrupan nada.
+    if "absolute" in clases:
+        return False
+    if "peer-checked:" in clases or "peer " in clases:
+        return False
+    if re_mod.search(r'\bsize-\d+|\bsize-\[', clases):
+        return False
+    if re_mod.search(r'\bpx-\d+(\.\d+)?\s+py-|rounded-full', clases):
+        return False
+    # Control segmentado: un grupo de botones. El borde los agrupa como una sola
+    # pieza; no es una tarjeta de contenido.
+    if contexto.lstrip().startswith("<button"):
+        return False
+    return True
+
+
+def test_no_hay_cajas_de_seccion_dentro_de_otra():
+    """Una tarjeta con borde dentro de otra hace la pantalla ruidosa.
+
+    En Tablas Auxiliares había quince: cada ítem de un catálogo era una tarjeta
+    dentro de la tarjeta de la sección. Se reemplazaron por filas con separador.
+
+    Esta prueba **no** marca los controles: una opción seleccionable o un control
+    segmentado necesitan su borde, y un popover va posicionado en absoluto. Marcarlos
+    llevaría a «arreglar» algo que funciona.
+    """
+    import glob as glob_module
+    import re as re_mod
+
+    PROTEGIDAS = {"nueva_visita2.html", "nueva_minuta.html", "_ui.html",
+                  "nuevo_relevamiento2.html", "relevamiento_ver.html",
+                  "infraestructura_reporte.html", "relevamiento_reporte.html",
+                  "cliente_reporte.html"}
+    ofensores = []
+    for ruta in sorted(glob_module.glob(os.path.join(PLANTILLAS, "*.html"))):
+        nombre = os.path.basename(ruta)
+        if nombre in PROTEGIDAS:
+            continue
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        pila = []
+        for m in re_mod.finditer(r'<div\b[^>]*>|</div>', texto, re_mod.S):
+            token = m.group(0)
+            if token.startswith("</"):
+                if pila:
+                    pila.pop()
+                continue
+            caja = _es_caja_de_seccion(token, texto[m.end():m.end() + 120])
+            if caja and any(pila):
+                ofensores.append(f"{nombre}:{texto[:m.start()].count(chr(10)) + 1}")
+            pila.append(caja)
+
+    assert not ofensores, (
+        f"cajas de sección dentro de otra caja de sección: {ofensores}. "
+        f"Se reemplazan por un título de sección y separadores."
+    )
+
+
+def test_los_controles_conservan_su_borde():
+    """El reverso de la prueba anterior: no hay que «limpiar» los controles.
+
+    Una opción seleccionable sin borde es indistinguible de un texto suelto.
+    """
+    import re as re_mod
+
+    esperados = {
+        "_relevamiento_partial.html": "peer-checked:",
+        "relevamiento.html": "peer-checked:",
+        "agenda.html": "overflow-hidden",
+    }
+    faltan = []
+    for archivo, marca in esperados.items():
+        ruta = os.path.join(PLANTILLAS, archivo)
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        if marca not in texto:
+            faltan.append(f"{archivo} (falta {marca})")
+    assert not faltan, f"controles que perdieron su borde: {faltan}"
