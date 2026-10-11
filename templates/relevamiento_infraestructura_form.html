@@ -2,36 +2,51 @@
 
 {% block title %}Formulario de Infraestructura | CRM-AT{% endblock %}
 
+{# El título va en la barra superior, como en el resto de las pantallas.
+   Antes vivía dentro de una barra fija en el contenido, así que quedaba más
+   abajo que el de todas las demás páginas. #}
+{% block header_extra %}
+<div class="flex items-center gap-4 min-w-0">
+    <a href="/relevamiento-infraestructura"
+        class="p-2 rounded-md border border-superficie-borde text-texto-suave hover:text-primary-600 hover:border-primary-300 transition-colors shrink-0"
+        title="Volver al listado" aria-label="Volver al listado">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col min-w-0">
+        <h1 class="text-base sm:text-xl font-bold text-texto-fuerte tracking-tight truncate">
+            {% if survey %}Editar relevamiento{% else %}Nuevo relevamiento{% endif %}
+        </h1>
+        <p class="text-2xs text-texto-suave">Infraestructura &amp; Logística</p>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <form id="infraForm" action="/relevamiento-infraestructura{% if survey %}/{{ survey.id }}{% endif %}" method="POST" class="max-w-5xl mx-auto space-y-8 animate-fade-in pb-20">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
     <input type="hidden" name="preview_mode" id="preview_mode" value="false">
-    
-    <!-- Top Nav / Header -->
-    <div class="flex items-center justify-between bg-white/80 backdrop-blur-xl p-4 rounded-2xl border border-slate-200 sticky top-4 z-50 shadow-sm">
-        <div class="flex items-center gap-4">
-            <a href="/relevamiento-infraestructura" class="p-2 hover:bg-slate-100 rounded-xl transition-colors" aria-label="Volver al listado">
-                <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
-            </a>
-            <div>
-                <h1 class="text-base font-black text-slate-900 uppercase tracking-tight">
-                    {% if survey %}Editar Relevamiento{% else %}Nuevo Relevamiento{% endif %}
-                </h1>
-                <p class="text-2xs text-slate-500 font-bold uppercase">Infraestructura & Logística</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <select name="status" class="form-select text-2xs font-bold uppercase rounded-lg border-slate-200 focus:ring-primary">
+
+    {# Barra de acciones. Queda pegada al desplazarse porque el formulario es
+       largo. El estado va a la izquierda y las acciones a la derecha, así la
+       barra no queda con la mitad vacía. #}
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-superficie-card border border-superficie-borde p-3 rounded-lg sticky top-4 z-50 shadow-card">
+        <div class="flex items-center gap-2">
+            <label for="infra-status" class="text-2xs font-bold uppercase text-texto-suave">Estado</label>
+            <select id="infra-status" name="status" class="form-select text-2xs font-bold uppercase rounded-md border-superficie-fuerte focus:ring-primary-600">
                 <option value="Pendiente" {% if survey and survey.status == "Pendiente" %}selected{% endif %}>Pendiente</option>
                 <option value="En Proceso" {% if survey and survey.status == "En Proceso" or not survey %}selected{% endif %}>En Proceso</option>
                 <option value="Completado" {% if survey and survey.status == "Completado" %}selected{% endif %}>Completado</option>
             </select>
-            <button type="button" id="btn-infra-preview" class="bg-indigo-600 hover:bg-indigo-700 text-white text-2xs font-black uppercase px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
-                <span class="material-symbols-rounded !text-sm" aria-hidden="true">visibility</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" id="btn-infra-preview"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-2xs font-bold uppercase hover:bg-superficie-suave transition-colors">
+                <span class="material-symbols-rounded text-base" aria-hidden="true">visibility</span>
                 <span class="hidden sm:inline">Previsualizar</span>
             </button>
-            <button type="submit" class="bg-primary text-white text-2xs font-black uppercase px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
-                <span class="material-symbols-rounded !text-sm" aria-hidden="true">save</span>
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-2xs font-bold uppercase transition-colors">
+                <span class="material-symbols-rounded text-base" aria-hidden="true">save</span>
                 <span class="hidden sm:inline">Guardar</span>
             </button>
         </div>
