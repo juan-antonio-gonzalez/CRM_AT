@@ -593,8 +593,7 @@
         const btnCancel = document.getElementById('btn-cancel-nuevo-cliente');
 
         function openModal() {
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            abrirModal('nuevoClienteModal');
         }
 
         function closeModal() {
@@ -761,9 +760,7 @@
       const editModalContent = document.getElementById('editarClienteModalContent');
       
       function openEditModal(customerId) {
-          editModal.classList.remove('hidden');
-          editModal.classList.add('flex');
-          document.body.style.overflow = 'hidden';
+          abrirModal('editarClienteModal');
           
           // Show loading state
           editModalContent.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded" aria-hidden="true">hourglass_top</span> <p class="mt-2">Cargando datos del cliente...</p></div>';
@@ -1041,7 +1038,7 @@
             'designer': 'Diseñador',
         };
         document.getElementById('manageEntityTitle').textContent = 'Gestionar:' + (labels[entityType] || entityType);
-        document.getElementById('manageEntityModal').classList.remove('hidden');
+        abrirModal('manageEntityModal')
         loadManageEntityList(entityType);
         document.getElementById('manageEntityInput').value = '';
         document.getElementById('manageEntityInput').focus();
@@ -1093,7 +1090,7 @@
             if (e.target === this) this.classList.add('hidden');
         });
         document.getElementById('manageEntityCloseBtn')?.addEventListener('click', function() {
-            document.getElementById('manageEntityModal').classList.add('hidden');
+            cerrarModal('manageEntityModal')
         });
     });
 </script>

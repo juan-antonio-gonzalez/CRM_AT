@@ -386,23 +386,18 @@
 
     // --- New Machine Modal ---
     function openNewMachineModal() {
-        const modal = document.getElementById('newMachineModal');
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+        abrirModal('newMachineModal');
     }
 
     function closeNewMachineModal() {
-        const modal = document.getElementById('newMachineModal');
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
+        cerrarModal('newMachineModal');
     }
 
     // --- Edit Machine Modal ---
     function openEditMachineModal(machineId) {
         const modal = document.getElementById('editMachineModal');
         const content = document.getElementById('editMachineModalContent');
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+        abrirModal('editMachineModal');
         content.innerHTML = '<div class="text-center py-12 text-texto-tenue"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
         fetch(`/editar-maquinaria/${machineId}/partial`)
             .then(response => response.text())
@@ -452,8 +447,7 @@
 
     function closeEditMachineModal() {
         const modal = document.getElementById('editMachineModal');
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
+        cerrarModal('editMachineModal');
         document.getElementById('editMachineModalContent').innerHTML = '';
     }
 
@@ -461,8 +455,7 @@
     
     function closeRelevamientoModal() {
         const modal = document.getElementById('relevamientoModal');
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
+        cerrarModal('relevamientoModal');
         document.getElementById('relevamientoModalContent').innerHTML = '';
     }
 

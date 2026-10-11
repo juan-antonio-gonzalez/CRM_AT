@@ -496,3 +496,53 @@ def test_los_modales_usan_los_tres_tamanos_del_componente():
                 linea = texto[:m.start()].count("\n") + 1
                 ofensores.append(f"{nombre}:{linea} usa {ancho.group(0)}")
     assert not ofensores, f"modales con ancho fuera del sistema: {ofensores}"
+
+
+def test_los_modales_se_abren_centrados():
+    """Abrir un modal quitando sólo `hidden` lo deja pegado arriba a la izquierda.
+
+    El contenedor del diálogo es
+
+        fixed inset-0 hidden items-center justify-center ...
+
+    `items-center` y `justify-center` sólo funcionan con `display: flex`. El
+    controlador compartido (`abrirModal`) quita `hidden` **y agrega `flex`**. Cinco
+    modales de cuatro plantillas tenían su propia función que sólo quitaba
+    `hidden`, así que el diálogo aparecía en la esquina y el fondo oscuro cubría un
+    cuarto de pantalla.
+
+    Esta prueba falla si alguna plantilla abre un modal sin centrarlo.
+    """
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        if 'role="dialog"' not in texto:
+            continue
+        # Sólo los identificadores que de verdad declaran un diálogo. Filtrar por
+        # el nombre no alcanza: `modal-info` es un bloque de información *dentro*
+        # del modal, y alternarlo no tiene por qué centrar nada.
+        dialogos = set()
+        for m in re.finditer(r'<div[^>]*>', texto):
+            etiqueta = m.group(0)
+            if 'role="dialog"' not in etiqueta:
+                continue
+            idd = re.search(r'id="([^"]+)"', etiqueta)
+            if idd:
+                dialogos.add(idd.group(1))
+        variables = {}
+        for m in re.finditer(
+                r"(\w+)\s*=\s*document\.getElementById\('([^']+)'\)", texto):
+            if m.group(2) in dialogos:
+                variables[m.group(1)] = m.group(2)
+        for var, idd in variables.items():
+            # ¿Se abre quitando `hidden` a esa variable?
+            abre = re.search(re.escape(var) + r"\.classList\.remove\('hidden'\)", texto)
+            if not abre:
+                continue
+            # Formas válidas: pasa por el controlador, o agrega `flex` él mismo.
+            usa_controlador = f"abrirModal('{idd}')" in texto
+            agrega_flex = re.search(
+                re.escape(var) + r"\.classList\.add\('flex'\)", texto)
+            if not usa_controlador and not agrega_flex:
+                linea = texto[:abre.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea} abre {idd} sin centrar")
+    assert not ofensores, f"modales que se abren descuadrados: {ofensores}"

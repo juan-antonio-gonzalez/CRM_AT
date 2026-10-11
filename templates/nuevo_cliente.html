@@ -748,7 +748,7 @@
             'designer': 'Diseñador',
         };
         document.getElementById('manageEntityTitle').textContent = 'Gestionar:' + (labels[entityType] || entityType);
-        document.getElementById('manageEntityModal').classList.remove('hidden');
+        abrirModal('manageEntityModal')
         loadManageEntityList(entityType);
         document.getElementById('manageEntityInput').value = '';
         document.getElementById('manageEntityInput').focus();
@@ -800,7 +800,7 @@
             if (e.target === this) this.classList.add('hidden');
         });
         document.getElementById('manageEntityCloseBtn')?.addEventListener('click', function() {
-            document.getElementById('manageEntityModal').classList.add('hidden');
+            cerrarModal('manageEntityModal')
         });
 
     });

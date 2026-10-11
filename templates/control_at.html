@@ -386,13 +386,11 @@ function openModal(title, data) {
         document.getElementById('modal-valid-from').value = '';
         document.getElementById('modal-valid-to').value = '';
     }
-    modalContainer.classList.remove('hidden');
-    modal.classList.remove('hidden');
+    abrirModal('asignacion-modal-container');
 }
 
 function closeModal() {
-    modal.classList.add('hidden');
-    modalContainer.classList.add('hidden');
+    cerrarModal('asignacion-modal-container');
 }
 
 document.getElementById('modal-close').addEventListener('click', closeModal);
@@ -485,13 +483,13 @@ document.getElementById('modal-save').addEventListener('click', function() {
 function openDeleteModal(id, name) {
     document.getElementById('delete-assignment-id').value = id;
     document.getElementById('delete-message').textContent = '¿Eliminar asignación AT para "' + name + '"?';
-    document.getElementById('delete-modal-container').classList.remove('hidden');
-    document.getElementById('delete-modal').classList.remove('hidden');
+    abrirModal('delete-modal-container')
+    abrirModal('delete-modal')
 }
 
 function closeDeleteModal() {
-    document.getElementById('delete-modal').classList.add('hidden');
-    document.getElementById('delete-modal-container').classList.add('hidden');
+    cerrarModal('delete-modal')
+    cerrarModal('delete-modal-container')
 }
 
 document.getElementById('delete-cancel').addEventListener('click', closeDeleteModal);
