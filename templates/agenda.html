@@ -2,22 +2,22 @@
 {% block title %}Agenda de Visitas | CRM-AT{% endblock %}
 {% block header_extra %}
 <div class="flex flex-col ml-2 lg:ml-4 min-w-0">
-    <h2 class="text-sm sm:text-xl font-bold text-slate-900 leading-tight font-display tracking-tight truncate">Agenda de Visitas</h2>
-    <p class="hidden lg:block text-xs text-slate-500 font-medium">Vista calendario de visitas técnicas.</p>
+    <h2 class="text-sm sm:text-xl font-bold text-texto-fuerte leading-tight font-display tracking-tight truncate">Agenda de Visitas</h2>
+    <p class="hidden lg:block text-xs text-texto-suave font-medium">Vista calendario de visitas técnicas.</p>
 </div>
 {% endblock %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-6 animate-fade-in">
     <!-- Toolbar -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+    <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
             <button id="btn-prev"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors" aria-label="Mes anterior">
+                class="p-2 rounded-lg hover:bg-superficie-suave text-texto-base transition-colors" aria-label="Mes anterior">
                 <span class="material-symbols-rounded text-xl" aria-hidden="true">chevron_left</span>
             </button>
             <h3 id="calendar-title" class="text-lg font-bold text-texto-fuerte min-w-[200px] text-center">Junio 2026</h3>
             <button id="btn-next"
-                class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors" aria-label="Mes siguiente">
+                class="p-2 rounded-lg hover:bg-superficie-suave text-texto-base transition-colors" aria-label="Mes siguiente">
                 <span class="material-symbols-rounded text-xl" aria-hidden="true">chevron_right</span>
             </button>
             <button id="btn-today"
@@ -32,19 +32,19 @@
                 Agendar visita
             </button>
             <select id="filter-cliente"
-                class="form-select bg-slate-50 border-slate-200 rounded-lg text-xs font-bold px-3 py-2 focus:ring-primary focus:border-primary">
+                class="form-select bg-superficie-suave border-superficie-borde rounded-lg text-xs font-bold px-3 py-2 focus:ring-primary focus:border-primary">
                 <option value="">Todos los clientes</option>
                 {% for c in clientes %}
                 <option value="{{ c.id }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
                 {% endfor %}
             </select>
-            <div class="flex rounded-lg border border-slate-200 overflow-hidden">
+            <div class="flex rounded-lg border border-superficie-borde overflow-hidden">
                 <button id="view-month" type="button" aria-pressed="true"
                     class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors">
                     Mes
                 </button>
                 <button id="view-week" type="button" aria-pressed="false"
-                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors">
+                    class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave text-texto-base hover:bg-superficie-suave transition-colors">
                     Semana
                 </button>
             </div>
@@ -52,16 +52,16 @@
     </div>
 
     <!-- Calendar Grid -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
         <!-- Weekday headers -->
-        <div id="weekday-header" class="grid grid-cols-7 bg-slate-50/50 border-b border-slate-200">
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Lun</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Mar</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Mié</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Jue</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Vie</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Sáb</div>
-            <div class="px-3 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center">Dom</div>
+        <div id="weekday-header" class="grid grid-cols-7 bg-superficie-suave/50 border-b border-superficie-borde">
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Lun</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Mar</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Mié</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Jue</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Vie</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Sáb</div>
+            <div class="px-3 py-3 text-2xs font-black text-texto-suave uppercase tracking-widest text-center">Dom</div>
         </div>
         <!-- Calendar body -->
         <div id="calendar-body" class="min-h-[600px]">
@@ -71,33 +71,33 @@
 
     <!-- Visit detail popover -->
     <div id="visit-popover"
-        class="hidden fixed z-50 bg-white rounded-2xl shadow-2xl border border-slate-200 p-5 w-80"
+        class="hidden fixed z-50 bg-white rounded-2xl shadow-2xl border border-superficie-borde p-5 w-80"
         style="display:none;">
         <div class="flex items-start justify-between mb-3">
-            <h4 id="popover-title" class="text-sm font-bold text-slate-900 pr-4"></h4>
-            <button id="popover-close" class="text-slate-400 hover:text-slate-600" aria-label="Cerrar">
+            <h4 id="popover-title" class="text-sm font-bold text-texto-fuerte pr-4"></h4>
+            <button id="popover-close" class="text-texto-tenue hover:text-texto-base" aria-label="Cerrar">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
             </button>
         </div>
-        <div class="space-y-2 text-xs text-slate-600">
+        <div class="space-y-2 text-xs text-texto-base">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-[16px] text-primary" aria-hidden="true">calendar_today</span>
                 <span id="popover-date" class="font-semibold"></span>
             </div>
             <div class="flex items-center gap-2">
-                <span class="material-symbols-rounded text-[16px] text-slate-400" aria-hidden="true">badge</span>
+                <span class="material-symbols-rounded text-[16px] text-texto-tenue" aria-hidden="true">badge</span>
                 <span id="popover-advisor"></span>
             </div>
             <div class="flex items-center gap-2">
-                <span class="material-symbols-rounded text-[16px] text-slate-400" aria-hidden="true">group</span>
+                <span class="material-symbols-rounded text-[16px] text-texto-tenue" aria-hidden="true">group</span>
                 <span id="popover-participants"></span>
             </div>
             <div class="flex items-start gap-2">
-                <span class="material-symbols-rounded text-[16px] text-slate-400 mt-0.5" aria-hidden="true">flag</span>
+                <span class="material-symbols-rounded text-[16px] text-texto-tenue mt-0.5" aria-hidden="true">flag</span>
                 <span id="popover-objetivo" class="flex-1"></span>
             </div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-2">
+        <div class="mt-4 pt-3 border-t border-superficie-borde flex flex-col gap-2">
             <div class="flex gap-2">
                 <a id="popover-link" href="#"
                     class="flex-1 text-center px-3 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold transition-colors">
@@ -107,7 +107,7 @@
                     class="px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center"></span>
             </div>
             <button id="popover-cancel-btn"
-                class="w-full px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition-colors">
+                class="w-full px-3 py-2 bg-peligro-50 hover:bg-peligro-100 text-peligro-600 rounded-xl text-xs font-bold transition-colors">
                 Cancelar visita
             </button>
         </div>
@@ -123,9 +123,9 @@
                     <input type="hidden" name="form_data" id="agenda-form-data">
                     <div class="space-y-4">
                         <div>
-                            <label for="agenda-cliente" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Cliente *</label>
+                            <label for="agenda-cliente" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Cliente *</label>
                             <select id="agenda-cliente" data-modal-focus required
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
+                                class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar —</option>
                                 {% for c in clientes %}
                                 <option value="{{ c.id }}">{{ c.name }} ({{ c.plant or 'Sin planta' }})</option>
@@ -133,14 +133,14 @@
                             </select>
                         </div>
                         <div>
-                            <label for="agenda-fecha" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Fecha *</label>
+                            <label for="agenda-fecha" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Fecha *</label>
                             <input type="date" id="agenda-fecha" required min="{{ today }}"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
+                                class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                         </div>
                         <div>
-                            <label for="agenda-at" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Asistente Técnico (AT) *</label>
+                            <label for="agenda-at" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Asistente Técnico (AT) *</label>
                             <select id="agenda-at" required
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary">
+                                class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm font-bold text-texto-fuerte focus:ring-2 focus:ring-primary">
                                 <option value="">— Seleccionar AT —</option>
                                 {% for at_name in ats_asignados %}
                                 <option value="{{ at_name }}">{{ at_name }}</option>
@@ -149,44 +149,44 @@
                             <span id="cliente-at-map" style="display:none;"></span>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Objetivo *</label>
+                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Objetivo *</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <label for="visita-programada" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="visita-programada" class="flex items-center gap-2 bg-superficie-suave rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Visita programada" id="visita-programada">
-                                    <span class="text-xs font-bold text-slate-600">Visita programada</span>
+                                    <span class="text-xs font-bold text-texto-base">Visita programada</span>
                                 </label>
-                                <label for="no-conformidad" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="no-conformidad" class="flex items-center gap-2 bg-superficie-suave rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Análisis No conformidad" id="no-conformidad">
-                                    <span class="text-xs font-bold text-slate-600">No conformidad</span>
+                                    <span class="text-xs font-bold text-texto-base">No conformidad</span>
                                 </label>
-                                <label for="seguimiento" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="seguimiento" class="flex items-center gap-2 bg-superficie-suave rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Seguimiento" id="seguimiento">
-                                    <span class="text-xs font-bold text-slate-600">Seguimiento</span>
+                                    <span class="text-xs font-bold text-texto-base">Seguimiento</span>
                                 </label>
-                                <label for="solicitud-del-cliente" class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2.5 cursor-pointer">
+                                <label for="solicitud-del-cliente" class="flex items-center gap-2 bg-superficie-suave rounded-xl px-3 py-2.5 cursor-pointer">
                                     <input type="checkbox" class="agenda-obj rounded text-primary" value="Solicitud del cliente" id="solicitud-del-cliente">
-                                    <span class="text-xs font-bold text-slate-600">Solicitud del cliente</span>
+                                    <span class="text-xs font-bold text-texto-base">Solicitud del cliente</span>
                                 </label>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Participantes SWA *</label>
+                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Participantes SWA *</label>
                             <div id="agenda-swa-list" class="space-y-1.5"></div>
                             <button type="button" id="btn-add-swa" class="text-xs font-bold text-primary hover:text-primary/80 flex items-center gap-1 mt-1">
                                 <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span> Agregar SWA
                             </button>
                         </div>
                         <div>
-                            <label class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Participantes Cliente *</label>
+                            <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Participantes Cliente *</label>
                             <div id="agenda-cli-list" class="space-y-1.5"></div>
                             <button type="button" id="btn-add-cli" class="text-xs font-bold text-primary hover:text-primary/80 flex items-center gap-1 mt-1">
                                 <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span> Agregar Cliente
                             </button>
                         </div>
                         <div>
-                            <label for="agenda-observaciones" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1.5">Observaciones</label>
+                            <label for="agenda-observaciones" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Observaciones</label>
                             <textarea id="agenda-observaciones" rows="2"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary"></textarea>
+                                class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-4 py-3 text-sm text-texto-fuerte focus:ring-2 focus:ring-primary"></textarea>
                         </div>
                     </div>
                     <div class="flex gap-3 pt-4">
@@ -195,7 +195,7 @@
                             Guardar como programado
                         </button>
                         <button type="button" id="btn-cancel-create" data-modal-close="create-modal-container"
-                            class="px-6 py-3.5 text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors">
+                            class="px-6 py-3.5 text-xs font-black text-texto-tenue hover:text-texto-base uppercase tracking-widest transition-colors">
                             Cancelar
                         </button>
                     </div>
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (callback) callback(data);
                 else render();
             })
-            .catch(function() { calendarBody.innerHTML = '<div class="p-12 text-center text-slate-400"><span class="material-symbols-rounded text-4xl mb-2" aria-hidden="true">error</span><p class="text-sm font-bold">Error al cargar visitas</p></div>'; });
+            .catch(function() { calendarBody.innerHTML = '<div class="p-12 text-center text-texto-tenue"><span class="material-symbols-rounded text-4xl mb-2" aria-hidden="true">error</span><p class="text-sm font-bold">Error al cargar visitas</p></div>'; });
     }
 
     function groupVisitsByDate(visits) {
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         titleEl.textContent = monthNames[date.getMonth()] + '' + date.getFullYear();
 
-        var html = '<div class="grid grid-cols-7 divide-x divide-y divide-slate-100">';
+        var html = '<div class="grid grid-cols-7 divide-x divide-y divide-superficie-borde">';
         var todayStr = fmtDate(new Date());
         while (d <= end) {
             var ds = fmtDate(d);
@@ -335,15 +335,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
         var todayStr = fmtDate(new Date());
 
-        var html = '<div class="grid grid-cols-7 divide-x divide-slate-100" style="min-height:500px">';
+        var html = '<div class="grid grid-cols-7 divide-x divide-superficie-borde" style="min-height:500px">';
         for (var i = 0; i < 7; i++) {
             var ds = fmtDate(d);
             var isToday = ds === todayStr;
             var dayVisits = grouped[ds] || [];
 
             html += '<div class="cal-day p-2 flex flex-col (isToday today : )" tabindex="0" role="button" data-date="' + ds + '" aria-label="' + escapeHtml(dayAriaLabel(d, dayVisits.length)) + '">';
-            html += '<div class="cal-day-header flex flex-col items-center py-2 border-b border-slate-100 mb-2">';
-            html += '<span class="text-2xs font-bold text-slate-400 uppercase tracking-wider">' + daysOfWeek[i] + '</span>';
+            html += '<div class="cal-day-header flex flex-col items-center py-2 border-b border-superficie-borde mb-2">';
+            html += '<span class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">' + daysOfWeek[i] + '</span>';
             html += '<span class="cal-day-num text-sm mt-1 (isToday bg-primary text-white : )">' + d.getDate() + '</span>';
             html += '</div>';
             html += '<div class="flex-1 overflow-y-auto space-y-1">';
@@ -431,16 +431,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('popover-objetivo').textContent = this.dataset.objetivo || '—';
                 var statusEl = document.getElementById('popover-status');
                 if (status === 'Finalizado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-emerald-100 text-emerald-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-exito-100 text-exito-700';
                     statusEl.textContent = 'Finalizado';
                 } else if (status === 'Programado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-purple-100 text-purple-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-info-100 text-info-700';
                     statusEl.textContent = 'Programado';
                 } else if (status === 'Cancelado') {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-red-100 text-red-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-peligro-100 text-peligro-700';
                     statusEl.textContent = 'Cancelado';
                 } else {
-                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-amber-100 text-amber-700';
+                    statusEl.className = 'px-3 py-2 rounded-xl text-2xs font-black uppercase inline-flex items-center bg-alerta-100 text-alerta-700';
                     statusEl.textContent = 'En proceso';
                 }
                 document.getElementById('popover-link').href = this.dataset.url;
@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
         viewMonthBtn.setAttribute('aria-pressed', 'true');
         viewWeekBtn.setAttribute('aria-pressed', 'false');
         viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 bg-slate-800 text-slate-600 text-slate-400 hover:bg-slate-100 hover:bg-slate-700 transition-colors';
+        viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
         loadAndRender();
     });
     viewWeekBtn.addEventListener('click', function() {
@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
         viewWeekBtn.setAttribute('aria-pressed', 'true');
         viewMonthBtn.setAttribute('aria-pressed', 'false');
         viewWeekBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-primary text-white transition-colors';
-        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-50 bg-slate-800 text-slate-600 text-slate-400 hover:bg-slate-100 hover:bg-slate-700 transition-colors';
+        viewMonthBtn.className = 'px-4 py-2 text-xs font-black uppercase tracking-wider bg-superficie-suave bg-primary-700 text-texto-base text-texto-tenue hover:bg-superficie-suave hover:bg-primary-700 transition-colors';
         loadAndRender();
     });
     filterCliente.addEventListener('change', function() { loadAndRender(); });
@@ -621,9 +621,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var container = document.getElementById(listId);
         var row = document.createElement('div');
         row.className = 'agenda-part-row flex gap-1.5 items-center';
-        row.innerHTML = '<input type="text" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary" placeholder="Nombre">'
-            + '<input type="text" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-900 focus:ring-2 focus:ring-primary" placeholder="Rol">'
-            + '<button type="button" class="text-red-400 hover:text-red-500 flex-shrink-0" aria-label="Eliminar participante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">remove_circle</span></button>';
+        row.innerHTML = '<input type="text" class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-2 text-sm font-medium text-texto-fuerte focus:ring-2 focus:ring-primary" placeholder="Nombre">'
+            + '<input type="text" class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-2 text-sm font-medium text-texto-fuerte focus:ring-2 focus:ring-primary" placeholder="Rol">'
+            + '<button type="button" class="text-peligro-400 hover:text-peligro-500 flex-shrink-0" aria-label="Eliminar participante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">remove_circle</span></button>';
         row.querySelector('button').addEventListener('click', function() { row.remove(); });
         container.appendChild(row);
     }

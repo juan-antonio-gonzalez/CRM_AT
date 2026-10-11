@@ -19,53 +19,53 @@
     </div>
 
     {% if success %}
-    <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold mb-6">
+    <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-exito-50 border border-exito-200 text-exito-700 text-sm font-semibold mb-6">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">check_circle</span>
         <span>{{ success }}</span>
     </div>
     {% endif %}
 
     {% if error %}
-    <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold mb-6">
+    <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-peligro-50 border border-peligro-200 text-peligro-700 text-sm font-semibold mb-6">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
         <span>{{ error }}</span>
     </div>
     {% endif %}
 
-    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl shadow-slate-200/20">
+    <div class="bg-white rounded-3xl border border-superficie-borde overflow-hidden shadow-xl ">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-slate-50">
-                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Usuario</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Nombre</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Email</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Rol</th>
-                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="text-right px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Acciones</th>
+                    <tr class="bg-superficie-suave">
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Usuario</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Nombre</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Email</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Rol</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="text-right px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for u in users %}
-                    <tr class="hover:bg-slate-50/50 transition-colors">
+                    <tr class="hover:bg-superficie-suave/50 transition-colors">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="size-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-sm">
                                     {{ u.username[:2].upper() }}
                                 </div>
-                                <span class="font-bold text-sm text-slate-900">{{ u.username }}</span>
+                                <span class="font-bold text-sm text-texto-fuerte">{{ u.username }}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ u.full_name or '-' }}</td>
-                        <td class="px-6 py-4 text-sm text-slate-600">{{ u.email }}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base font-medium">{{ u.full_name or '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base">{{ u.email }}</td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 if u.role admin else bg-slate-100 text-slate-600">
+                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-black uppercase tracking-wider bg-info-100 text-info-700 if u.role admin else bg-superficie-suave text-texto-base">
                                 {{ u.role }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 if u.is_active else text-red-500">
-                                <span class="size-2 rounded-full bg-emerald-500 if u.is_active else bg-red-500"></span>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-exito-600 if u.is_active else text-peligro-500">
+                                <span class="size-2 rounded-full bg-exito-500 if u.is_active else bg-peligro-500"></span>
                                 {{ 'Activo' if u.is_active else 'Inactivo' }}
                             </span>
                         </td>
@@ -74,12 +74,12 @@
                                 <form action="/auth/usuarios/{{ u.id }}/toggle" method="POST" class="inline">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                     <button type="submit"
-                                        class="p-2 rounded-lg text-slate-400 hover:text- red if u.is_active else emerald -500 transition-colors border border-slate-100 hover:bg-slate-50"
+                                        class="p-2 rounded-lg text-texto-tenue hover:text- red if u.is_active else emerald -500 transition-colors border border-superficie-borde hover:bg-superficie-suave"
                                         title="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario" aria-label="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario">
                                         <span class="material-symbols-rounded text-lg" aria-hidden="true">{{ 'block' if u.is_active else 'check_circle' }}</span>
                                     </button>
                                 </form>
-                                <button data-user-id="{{ u.id }}" data-username="{{ u.username }}" class="btn-show-reset p-2 rounded-lg text-slate-400 hover:text-amber-500 transition-colors border border-slate-100 hover:bg-slate-50"
+                                <button data-user-id="{{ u.id }}" data-username="{{ u.username }}" class="btn-show-reset p-2 rounded-lg text-texto-tenue hover:text-alerta-500 transition-colors border border-superficie-borde hover:bg-superficie-suave"
                                     
                                     title="Resetear contraseña" aria-label="Resetear contraseña">
                                     <span class="material-symbols-rounded text-lg" aria-hidden="true">key</span>

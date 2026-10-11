@@ -3,48 +3,48 @@
 {% block header_extra %}
 <div class="flex items-center gap-3">
     <div class="flex flex-col">
-        <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">KPIs Asignación AT</h2>
-        <p class="text-2xs text-slate-500 font-bold uppercase">Planificación de visitas técnicas</p>
+        <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">KPIs Asignación AT</h2>
+        <p class="text-2xs text-texto-suave font-bold uppercase">Planificación de visitas técnicas</p>
     </div>
 </div>
 {% endblock %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <div class="grid grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Total Visitas</p>
-            <p class="text-3xl font-black text-slate-900 mt-1">{{ stats.total_visitas }}</p>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
+            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Total Visitas</p>
+            <p class="text-3xl font-black text-texto-fuerte mt-1">{{ stats.total_visitas }}</p>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Estándar</p>
-            <p class="text-3xl font-black text-blue-600 mt-1">{{ stats.total_estandar }}</p>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
+            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Estándar</p>
+            <p class="text-3xl font-black text-info-600 mt-1">{{ stats.total_estandar }}</p>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Premium</p>
-            <p class="text-3xl font-black text-purple-600 mt-1">{{ stats.total_premium }}</p>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
+            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Premium</p>
+            <p class="text-3xl font-black text-info-600 mt-1">{{ stats.total_premium }}</p>
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="bg-slate-50">
-                        <th class="text-left px-4 py-3 text-2xs font-bold text-slate-400 uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="text-left px-4 py-3 text-2xs font-bold text-slate-400 uppercase tracking-widest" scope="col">AT</th>
-                        <th class="text-center px-4 py-3 text-2xs font-bold text-slate-400 uppercase tracking-widest" scope="col">Estándar</th>
-                        <th class="text-center px-4 py-3 text-2xs font-bold text-slate-400 uppercase tracking-widest" scope="col">Premium</th>
-                        <th class="text-center px-4 py-3 text-2xs font-bold text-slate-400 uppercase tracking-widest" scope="col">Total</th>
+                    <tr class="bg-superficie-suave">
+                        <th class="text-left px-4 py-3 text-2xs font-bold text-texto-tenue uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="text-left px-4 py-3 text-2xs font-bold text-texto-tenue uppercase tracking-widest" scope="col">AT</th>
+                        <th class="text-center px-4 py-3 text-2xs font-bold text-texto-tenue uppercase tracking-widest" scope="col">Estándar</th>
+                        <th class="text-center px-4 py-3 text-2xs font-bold text-texto-tenue uppercase tracking-widest" scope="col">Premium</th>
+                        <th class="text-center px-4 py-3 text-2xs font-bold text-texto-tenue uppercase tracking-widest" scope="col">Total</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for row in table_data %}
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-4 py-3 font-semibold text-slate-700">{{ row.cliente }}</td>
-                        <td class="px-4 py-3 text-slate-500">{{ row.at }}</td>
-                        <td class="px-4 py-3 text-center font-bold text-blue-600">{{ row.estandar }}</td>
-                        <td class="px-4 py-3 text-center font-bold text-purple-600">{{ row.premium }}</td>
-                        <td class="px-4 py-3 text-center font-black text-slate-900">{{ row.total }}</td>
+                    <tr class="hover:bg-superficie-suave transition-colors">
+                        <td class="px-4 py-3 font-semibold text-texto-base">{{ row.cliente }}</td>
+                        <td class="px-4 py-3 text-texto-suave">{{ row.at }}</td>
+                        <td class="px-4 py-3 text-center font-bold text-info-600">{{ row.estandar }}</td>
+                        <td class="px-4 py-3 text-center font-bold text-info-600">{{ row.premium }}</td>
+                        <td class="px-4 py-3 text-center font-black text-texto-fuerte">{{ row.total }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

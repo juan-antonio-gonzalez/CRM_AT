@@ -12,10 +12,18 @@
 
 
 {# ── Indicador ───────────────────────────────────────────────────────────────
-   La cifra es el elemento más importante del bloque: tamaño grande y color con
-   contraste AA. Antes las cifras usaban emerald-500 (2.54:1) y amber-500
-   (2.15:1), que no llegan al mínimo de 4.5:1: los números más mirados eran los
-   menos legibles. #}
+   Azulejo compacto: etiqueta arriba, cifra abajo. Pensado para entrar todos en
+   UNA sola fila en pantallas anchas (12 columnas desde 1280px) y repartirse en
+   varias filas en pantallas chicas.
+
+   La cifra va en color para que se pueda leer de un vistazo qué está bien y qué
+   requiere atención. Los tonos son los semánticos del sistema, elegidos para
+   pasar contraste AA sobre blanco (exito 5.48:1, alerta 5.02:1, peligro 6.47:1,
+   info 5.93:1). No se usan los tonos 400 ni los 500 de Tailwind, que daban
+   2.15:1 y eran ilegibles.
+
+   `tabular-nums` alinea los dígitos entre azulejos, y la etiqueta se recorta con
+   puntos suspensivos si no entra, con el texto completo en el `title`. #}
 {% macro indicador(etiqueta, valor, tono='neutro', icono=None) %}
 {% set tonos = {
     'neutro':   'text-texto-fuerte',
@@ -25,16 +33,9 @@
     'peligro':  'text-peligro-500',
     'info':     'text-info-500',
 } %}
-<div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-4 flex items-start gap-3">
-    {% if icono %}
-    <span class="size-9 rounded-md bg-primary-50 text-primary-600 flex items-center justify-center shrink-0" aria-hidden="true">
-        <span class="material-symbols-rounded text-lg">{{ icono }}</span>
-    </span>
-    {% endif %}
-    <div class="min-w-0">
-        <p class="text-2xs font-semibold uppercase tracking-wide text-texto-suave">{{ etiqueta }}</p>
-        <p class="text-2xl font-bold {{ tonos.get(tono, tonos['neutro']) }} leading-tight mt-1">{{ valor }}</p>
-    </div>
+<div class="bg-superficie-card border border-superficie-borde rounded-md px-2.5 py-2 min-w-0">
+    <p class="text-2xs font-medium text-texto-suave truncate" title="{{ etiqueta }}">{{ etiqueta }}</p>
+    <p class="text-lg font-bold tabular-nums leading-tight {{ tonos.get(tono, tonos['neutro']) }}">{{ valor }}</p>
 </div>
 {% endmacro %}
 

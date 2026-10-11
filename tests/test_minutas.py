@@ -40,7 +40,7 @@ def _seed(db, cantidad=8):
 
 
 def _filas(html):
-    return html.count('<tr class="hover:bg-slate-50')
+    return html.count('<tr data-row')
 
 
 def test_sin_filtros_lista_todo(client, db_session, admin_cookie):

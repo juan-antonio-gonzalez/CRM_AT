@@ -224,7 +224,7 @@ def test_filtros_de_visitas(client, db_session, admin_cookie):
 
     def filas(**params):
         qs = "&".join(f"{k}={v}" for k, v in params.items())
-        return client.get(f"/visitas2?{qs}").text.count('<tr class="hover:bg-slate-50')
+        return client.get(f"/visitas2?{qs}").text.count('<tr data-row')
 
     assert filas() == 2
     assert filas(estado="Finalizado") == 1

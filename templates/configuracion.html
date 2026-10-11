@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Configuración</h2>
-    <p class="text-2xs text-slate-500 font-bold uppercase">Gestión de Listas Auxiliares</p>
+    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Configuración</h2>
+    <p class="text-2xs text-texto-suave font-bold uppercase">Gestión de Listas Auxiliares</p>
 </div>
 {% endblock %}
 
@@ -13,14 +13,14 @@
 <div class="max-w-7xl mx-auto space-y-4 animate-fade-in pb-10">
     <!-- Header Section -->
     <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
         <div class="flex flex-col gap-0.5">
-            <h2 class="text-xl font-black text-slate-900 tracking-tight">Tablas Auxiliares</h2>
-            <p class="text-slate-500 text-2xs uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
+            <h2 class="text-xl font-black text-texto-fuerte tracking-tight">Tablas Auxiliares</h2>
+            <p class="text-texto-suave text-2xs uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
         </div>
         <div class="flex gap-2">
             <a href="/relevamiento"
-                class="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all hover:bg-slate-50">
+                class="bg-white border border-superficie-borde text-texto-base px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all hover:bg-superficie-suave">
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">arrow_back</span>
                 Cerrar
             </a>
@@ -32,18 +32,18 @@
 
         <!-- ASESORES TÉCNICOS (AT) -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">engineering</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">AT Asignados</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">AT Asignados</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-advisor" type="text" aria-label="Nuevo Asesor Técnico" placeholder="Nuevo AT..." 
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-advisor"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Asesor Técnico">
@@ -52,21 +52,21 @@
                 </div>
                 <div id="list-advisor" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not advisors %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in advisors %}
                     <div id="item-advisor-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/advisor/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="advisor" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -79,18 +79,18 @@
 
         <!-- DISEÑADORES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">draw</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Diseñadores</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Diseñadores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-designer" type="text" aria-label="Nuevo Diseñador" placeholder="Nuevo Diseñador..." 
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-designer"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Diseñador">
@@ -99,21 +99,21 @@
                 </div>
                 <div id="list-designer" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not designers %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in designers %}
                     <div id="item-designer-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/designer/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="designer" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -126,18 +126,18 @@
 
         <!-- COMERCIALES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">assignment_ind</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Comerciales</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Comerciales</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-commercial" type="text" aria-label="Nuevo Comercial" placeholder="Nuevo Comercial..." 
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-commercial"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Comercial">
@@ -146,21 +146,21 @@
                 </div>
                 <div id="list-commercial" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not commercials %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in commercials %}
                     <div id="item-commercial-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/commercial/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="commercial" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -173,18 +173,18 @@
 
         <!-- SECTORES INDUSTRIALES -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">factory</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Sectores</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Sectores</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-sector" type="text" aria-label="Nuevo Sector" placeholder="Nuevo Sector..." 
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-sector"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Sector">
@@ -193,21 +193,21 @@
                 </div>
                 <div id="list-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not sectors %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in sectors %}
                     <div id="item-sector-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/sector/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -220,18 +220,18 @@
 
         <!-- TIPOS DE MAQUINARIA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">precision_manufacturing</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Maquinaria</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Maquinaria</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-machine-type" type="text" aria-label="Nuevo Tipo de Máquina" placeholder="Nuevo Tipo..." 
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-machine-type"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Máquina">
@@ -240,21 +240,21 @@
                 </div>
                 <div id="list-machine-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not machine_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in machine_types %}
                     <div id="item-machine-type-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/machine-type/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="machine-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -267,18 +267,18 @@
 
         <!-- TIPO DE FORMADO -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">square_foot</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Tipo de Formado</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Tipo de Formado</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-formado" type="text" aria-label="Nuevo Tipo de Formado" placeholder="Nuevo tipo..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-formado"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Formado">
@@ -287,21 +287,21 @@
                 </div>
                 <div id="list-formado" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not formado_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in formado_types %}
                     <div id="item-formado-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/formado/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="formado" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -314,18 +314,18 @@
 
         <!-- CIERRE INFERIOR -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">handyman</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Cierre Inferior</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Cierre Inferior</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-cierre-inferior" type="text" aria-label="Nuevo Tipo de Cierre Inferior" placeholder="Nuevo tipo..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-cierre-inferior"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tipo de Cierre Inferior">
@@ -334,21 +334,21 @@
                 </div>
                 <div id="list-cierre-inferior" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not inferior_closure_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in inferior_closure_types %}
                     <div id="item-cierre-inferior-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/cierre-inferior/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="cierre-inferior" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -361,18 +361,18 @@
 
         <!-- NOMBRE DE CLIENTE -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Nombre de Cliente</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Nombre de Cliente</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-client-name" type="text" aria-label="Nuevo Nombre de Cliente" placeholder="Nuevo nombre..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-client-name"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Nombre de Cliente">
@@ -381,21 +381,21 @@
                 </div>
                 <div id="list-client-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not client_names %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in client_names %}
                     <div id="item-client-name-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/client-name/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="client-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -408,18 +408,18 @@
 
         <!-- PLANTA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">business</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Planta</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Planta</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-plant-name" type="text" aria-label="Nueva Planta" placeholder="Nueva planta..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-plant-name"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Planta">
@@ -428,21 +428,21 @@
                 </div>
                 <div id="list-plant-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not plant_names %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in plant_names %}
                     <div id="item-plant-name-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}"
                                   aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/plant-name/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="plant-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -455,18 +455,18 @@
 
         <!-- MOTIVO DE VISITA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">topic</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Motivo de Visita</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Motivo de Visita</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-visit-type" type="text" aria-label="Nuevo Motivo de Visita" placeholder="Nuevo motivo..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-visit-type"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Motivo de Visita">
@@ -475,20 +475,20 @@
                 </div>
                 <div id="list-visit-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not visit_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in visit_types %}
                     <div id="item-visit-type-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/visit-type/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -501,18 +501,18 @@
 
         <!-- PLANTA DISTRIBUIDORA -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">warehouse</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Planta Distribuidora</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Planta Distribuidora</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-distributor-plant" type="text" aria-label="Nueva Planta Distribuidora" placeholder="Nueva planta..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-distributor-plant"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Planta Distribuidora">
@@ -521,20 +521,20 @@
                 </div>
                 <div id="list-distributor-plant" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not distributor_plants %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in distributor_plants %}
                     <div id="item-distributor-plant-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/distributor-plant/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="distributor-plant" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -547,18 +547,18 @@
 
         <!-- TEMAS DE CALIDAD -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">quality</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Temas de Calidad</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Temas de Calidad</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-tema-calidad" type="text" aria-label="Nuevo Tema de Calidad" placeholder="Nuevo tema..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-tema-calidad"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tema de Calidad">
@@ -567,20 +567,20 @@
                 </div>
                 <div id="list-tema-calidad" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_topics %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_topics %}
                     <div id="item-tema-calidad-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="tema-calidad" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="tema-calidad" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/tema-calidad/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="tema-calidad" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="tema-calidad" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -593,18 +593,18 @@
 
         <!-- CALIDAD AT -->
         <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden flex flex-col">
             <div
-                class="p-3.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">build</span>
-                    <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Calidad AT</h3>
+                    <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Calidad AT</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
                     <input id="input-calidad-at" type="text" aria-label="Nuevo Tema de Calidad AT" placeholder="Nuevo tema..."
-                        class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-calidad-at"
                         class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Tema de Calidad AT">
@@ -613,20 +613,20 @@
                 </div>
                 <div id="list-calidad-at" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_at_topics %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_at_topics %}
                     <div id="item-calidad-at-{{ item.id }}"
-                        class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                        <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                        class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                         <div class="flex items-center gap-0.5">
-                            <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="calidad-at" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="calidad-at" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                             </button>
                             <form action="/configuracion/delete/calidad-at/{{ item.id }}" method="POST" class="inline"
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="calidad-at" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="calidad-at" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>
@@ -641,17 +641,17 @@
 
 <!-- Member Sector -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+    <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
+        <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">category</span>
-                <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Sector / Departamento</h3>
+                <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Sector / Departamento</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
             <div class="flex gap-2">
                 <input id="input-member-sector" type="text" aria-label="Nuevo Sector de Integrante" placeholder="Nuevo sector..."
-                    class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                    class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                     oninput="this.value = this.value.toUpperCase()">
                 <button id="btn-add-member-sector"
                     class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Sector de Integrante">
@@ -660,20 +660,20 @@
             </div>
             <div id="list-member-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not member_sectors %}
-                <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                 {% endif %}
                 {% for item in member_sectors %}
                 <div id="item-member-sector-{{ item.id }}"
-                    class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                    <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                    class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                    <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                     <div class="flex items-center gap-0.5">
-                        <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="member-sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                        <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="member-sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                         </button>
                         <form action="/configuracion/delete/member-sector/{{ item.id }}" method="POST" class="inline"
                             data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                            <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="member-sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                            <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="member-sector" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                             </button>
                         </form>
@@ -685,17 +685,17 @@
     </div>
 
     <!-- Contact Names -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+    <div class="bg-white rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
+        <div class="px-4 py-3 border-b border-superficie-borde flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">badge</span>
-                <h3 class="font-black text-xs text-slate-800 uppercase tracking-tight">Nombres de Contacto</h3>
+                <h3 class="font-black text-xs text-texto-fuerte uppercase tracking-tight">Nombres de Contacto</h3>
             </div>
         </div>
         <div class="p-4 space-y-3 flex-1">
             <div class="flex gap-2">
                 <input id="input-contact-name" type="text" aria-label="Nuevo Nombre de Contacto" placeholder="Nuevo nombre..."
-                    class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                    class="flex-1 bg-white border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                     oninput="this.value = this.value.toUpperCase()">
                 <button id="btn-add-contact-name"
                     class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Nombre de Contacto">
@@ -704,20 +704,20 @@
             </div>
             <div id="list-contact-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not contact_names_list %}
-                <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold uppercase italic">No hay elementos</p>
                 {% endif %}
                 {% for item in contact_names_list %}
                 <div id="item-contact-name-{{ item.id }}"
-                    class="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100 group">
-                    <span class="text-xs font-bold text-slate-700">{{ item.name }}</span>
+                    class="flex items-center justify-between p-2 bg-superficie-suave/50 rounded-lg border border-superficie-borde group">
+                    <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
                     <div class="flex items-center gap-0.5">
-                        <button class="btn-edit text-slate-400 hover:text-primary p-1 transition-colors" title="Editar" data-entity="contact-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                        <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="contact-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
                             <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
                         </button>
                         <form action="/configuracion/delete/contact-name/{{ item.id }}" method="POST" class="inline"
                             data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                            <button type="submit" class="btn-delete text-slate-400 hover:text-red-500 p-1 transition-colors" title="Eliminar" data-entity="contact-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                            <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="contact-name" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                 <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                             </button>
                         </form>
@@ -734,8 +734,7 @@
    componente ya resuelve las dos. #}
 {% from "_ui.html" import modal, pie_modal %}
 
-{% call modal("edit-modal", "Editar elemento", "formulario", "edit", "primario",
-              "Actualizar el nombre del catálogo") %}
+{% call modal("edit-modal", "Editar elemento", "formulario", "edit", "primario", "Actualizar el nombre del catálogo") %}
 <div>
     <label for="modal-edit-input" class="block text-sm font-semibold text-texto-base mb-1">Nuevo nombre</label>
     <input id="modal-edit-input" type="text" data-modal-focus

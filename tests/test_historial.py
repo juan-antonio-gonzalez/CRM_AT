@@ -32,7 +32,7 @@ def _seed(db, cantidad=8):
 
 
 def _filas(html):
-    return html.count('<tr class="hover:bg')
+    return html.count('<tr data-row')
 
 
 def test_pagina_inicial_muestra_solo_el_tamano_de_pagina(client, db_session, admin_cookie):

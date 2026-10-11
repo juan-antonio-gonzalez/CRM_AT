@@ -187,3 +187,80 @@ def _a_px(valor):
     if isinstance(v, str) and v.endswith("px"):
         return float(v[:-2])
     return 999
+
+
+# ── Fase 4: barrido de colores ─────────────────────────────────────────────
+# Familias de color de Tailwind que ya no deben usarse: sus tonos no estaban
+# elegidos para pasar contraste y convivían 99 valores distintos.
+_FAMILIAS_FUERA = (
+    "slate|gray|zinc|neutral|stone|red|rose|pink|orange|amber|yellow|lime|green|"
+    "emerald|teal|cyan|sky|blue|indigo|purple|violet|fuchsia"
+)
+_ROLES_COLOR = (
+    "bg|text|border|ring|divide|from|to|via|fill|stroke|shadow|placeholder|"
+    "accent|decoration|outline"
+)
+
+
+def test_las_plantillas_usan_los_colores_del_sistema():
+    """Quedaban 2998 usos de colores sueltos en 99 valores distintos, elegidos a
+    mano. Ahora todo sale de los tokens, que están verificados por contraste."""
+    patron = re.compile(r"\b(?:" + _ROLES_COLOR + r")-(?:" + _FAMILIAS_FUERA + r")-[0-9]{2,3}")
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in set(patron.findall(texto)):
+            ofensores.append(f"{nombre}: {m}")
+    assert not ofensores, (
+        f"{len(ofensores)} colores fuera del sistema, por ejemplo: {sorted(ofensores)[:6]}"
+    )
+
+
+def test_los_colores_semanticos_pasan_contraste():
+    """El tono 500 de cada familia semántica es el que se usa para texto y cifras,
+    así que tiene que pasar AA. Antes eran emerald-500 (2.54:1), amber-500
+    (2.15:1) y slate-400 (2.56:1): los números más mirados, los menos legibles."""
+    import json
+    import subprocess
+
+    r = subprocess.run(
+        ["node", "-e",
+         "const r=require('tailwindcss/resolveConfig');"
+         "const c=require('./tailwind.config.js');"
+         "console.log(JSON.stringify(r(c).theme.colors))"],
+        cwd=RAIZ, capture_output=True, text=True, timeout=60,
+    )
+    if r.returncode != 0:
+        pytest.skip("no se pudo resolver la configuración de Tailwind")
+    colores = json.loads(r.stdout)
+
+    def luminancia(hexa):
+        hexa = hexa.lstrip("#")
+        canales = [int(hexa[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+        f = lambda v: v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+        rojo, verde, azul = (f(c) for c in canales)
+        return 0.2126 * rojo + 0.7152 * verde + 0.0722 * azul
+
+    def contraste(a, b="#ffffff"):
+        l1, l2 = sorted([luminancia(a), luminancia(b)], reverse=True)
+        return (l1 + 0.05) / (l2 + 0.05)
+
+    fallan = []
+    for familia in ("exito", "alerta", "peligro", "info"):
+        tono = colores.get(familia, {}).get("500")
+        if not tono:
+            fallan.append(f"{familia}-500 no existe")
+            continue
+        r_contraste = contraste(tono)
+        if r_contraste < 4.5:
+            fallan.append(f"{familia}-500 ({tono}) da {r_contraste:.2f}:1")
+    # Y los grises de texto.
+    for nombre in ("fuerte", "base", "suave", "tenue"):
+        tono = colores.get("texto", {}).get(nombre)
+        if not tono:
+            fallan.append(f"texto-{nombre} no existe")
+            continue
+        r_contraste = contraste(tono)
+        if r_contraste < 4.5:
+            fallan.append(f"texto-{nombre} ({tono}) da {r_contraste:.2f}:1")
+
+    assert not fallan, f"colores que no pasan AA sobre blanco: {fallan}"

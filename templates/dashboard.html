@@ -35,23 +35,25 @@
 
 <div class="max-w-[1600px] mx-auto space-y-6 animate-fade-in pb-10">
 
-    {# ── Indicadores: una sola grilla ─────────────────────────────────────── #}
+    {# ── Indicadores: dos filas parejas ─────────────────────────────────────
+       12 azulejos en 6 columnas desde 1024px: dos filas de 6, proporcionadas.
+       En pantallas chicas bajan a 4, 3 y 2 columnas, siempre con filas parejas.
+       Las cifras van en color para que se lea de un vistazo qué está bien y qué
+       requiere atención. #}
     <section aria-label="Indicadores principales">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            {{ indicador("Clientes en cartera", clientes.total, "neutro", "group") }}
-            {{ indicador("Visitas realizadas", visitas.finalizado, "exito", "assignment_turned_in") }}
-            {{ indicador("Avance de visitas", visitas.avance_pct ~ "%", "primario", "trending_up") }}
-            {{ indicador("Máquinas relevadas", maquinas.survey_progress ~ "%", "info", "precision_manufacturing") }}
-
-            {{ indicador("Clientes activos", clientes.activos, "exito", "check_circle") }}
-            {{ indicador("Clientes inactivos", clientes.prospectos, "alerta", "pause_circle") }}
-            {{ indicador("Visitas en borrador", visitas.borrador, "alerta", "edit_note") }}
-            {{ indicador("Objetivo total AT", visitas.total_asignadas_at, "neutro", "flag") }}
-
-            {{ indicador("Total de visitas", visitas.total, "neutro", "assignment") }}
-            {{ indicador("Minutas de reunión", minutas.total, "neutro", "description") }}
-            {{ indicador("Minutas finalizadas", minutas.finalizado, "exito", "task_alt") }}
-            {{ indicador("Minutas en borrador", minutas.borrador, "alerta", "draft") }}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            {{ indicador("Clientes en cartera", clientes.total, "neutro") }}
+            {{ indicador("Clientes activos", clientes.activos, "exito") }}
+            {{ indicador("Clientes inactivos", clientes.prospectos, "alerta") }}
+            {{ indicador("Total de visitas", visitas.total, "neutro") }}
+            {{ indicador("Visitas realizadas", visitas.finalizado, "exito") }}
+            {{ indicador("Visitas en borrador", visitas.borrador, "alerta") }}
+            {{ indicador("Avance de visitas", visitas.avance_pct ~ "%", "primario") }}
+            {{ indicador("Objetivo total AT", visitas.total_asignadas_at, "info") }}
+            {{ indicador("Máquinas relevadas", maquinas.survey_progress ~ "%", "info") }}
+            {{ indicador("Minutas de reunión", minutas.total, "neutro") }}
+            {{ indicador("Minutas finalizadas", minutas.finalizado, "exito") }}
+            {{ indicador("Minutas en borrador", minutas.borrador, "alerta") }}
         </div>
     </section>
 

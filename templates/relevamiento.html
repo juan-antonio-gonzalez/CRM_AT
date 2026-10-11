@@ -5,7 +5,7 @@
 {% block sidebar %}
 <div class="flex flex-col h-full">
     <!-- Header -->
-    <div class="p-5 border-b border-slate-200">
+    <div class="p-5 border-b border-superficie-borde">
         <div class="flex items-center gap-3">
             <div
                 class="size-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
@@ -13,7 +13,7 @@
             </div>
             <div>
                 <h1 class="text-sm font-black leading-tight uppercase tracking-tight">Relevamiento</h1>
-                <p class="text-2xs text-slate-500 uppercase font-bold">{{ machine.brand }} {{
+                <p class="text-2xs text-texto-suave uppercase font-bold">{{ machine.brand }} {{
                     machine.model }}</p>
             </div>
         </div>
@@ -22,88 +22,88 @@
     <!-- Tree Navigation -->
     <nav class="flex-1 px-3 py-4 overflow-y-auto space-y-1 scrollbar-hide">
         <!-- Volver -->
-        <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-500 hover:text-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-wider"
+        <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-texto-suave hover:text-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-wider"
             href="/relevamiento">
             <span class="material-symbols-rounded text-[18px]" aria-hidden="true">arrow_back</span>
             Volver a Relevamientos
         </a>
 
-        <hr class="my-3 border-slate-200" />
+        <hr class="my-3 border-superficie-borde" />
 
         <!-- 1. Info Cliente -->
         <a href="#sec-info-cliente"
-            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-all group"
+            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-texto-base hover:bg-superficie-suave transition-all group"
             data-section="sec-info-cliente">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true">person</span>
+                class="material-symbols-rounded text-[20px] text-texto-tenue group-hover:text-primary transition-colors" aria-hidden="true">person</span>
             <span class="text-sm font-semibold">Información Cliente</span>
         </a>
 
         <!-- 2. Maquinaria -->
         <a href="#sec-maquinaria"
-            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-all group"
+            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-texto-base hover:bg-superficie-suave transition-all group"
             data-section="sec-maquinaria">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true">precision_manufacturing</span>
+                class="material-symbols-rounded text-[20px] text-texto-tenue group-hover:text-primary transition-colors" aria-hidden="true">precision_manufacturing</span>
             <span class="text-sm font-semibold">Especificaciones Máquina</span>
         </a>
 
         <!-- 3. Estaciones (Parent with children) -->
         <div class="space-y-0.5">
             <button data-tree-toggle="tree-estaciones"
-                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-all group">
+                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-texto-base hover:bg-superficie-suave transition-all group">
                 <div class="flex items-center gap-2.5">
                     <span
-                        class="material-symbols-rounded text-[20px] text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true">factory</span>
+                        class="material-symbols-rounded text-[20px] text-texto-tenue group-hover:text-primary transition-colors" aria-hidden="true">factory</span>
                     <span class="text-sm font-semibold">Estaciones</span>
                 </div>
-                <span class="material-symbols-rounded text-[16px] text-slate-400 transition-transform"
+                <span class="material-symbols-rounded text-[16px] text-texto-tenue transition-transform"
                     id="tree-estaciones-icon" aria-hidden="true">expand_more</span>
             </button>
-            <div id="tree-estaciones" class="ml-5 pl-3 border-l-2 border-slate-200 space-y-0.5">
+            <div id="tree-estaciones" class="ml-5 pl-3 border-l-2 border-superficie-borde space-y-0.5">
                 <a href="#sec-estacion-1"
-                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-50 transition-all text-xs font-medium"
+                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-texto-suave hover:bg-superficie-suave transition-all text-xs font-medium"
                     data-section="sec-estacion-1">
-                    <span class="size-1.5 bg-emerald-500 rounded-full"></span>
+                    <span class="size-1.5 bg-exito-500 rounded-full"></span>
                     Est. 1 — Armado
                 </a>
                 <a href="#sec-estacion-2"
-                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-50 transition-all text-xs font-medium"
+                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-texto-suave hover:bg-superficie-suave transition-all text-xs font-medium"
                     data-section="sec-estacion-2">
-                    <span class="size-1.5 bg-emerald-500 rounded-full"></span>
+                    <span class="size-1.5 bg-exito-500 rounded-full"></span>
                     Est. 2 — Formado
                 </a>
                 <a href="#sec-estacion-3"
-                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-50 transition-all text-xs font-medium"
+                    class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg text-texto-suave hover:bg-superficie-suave transition-all text-xs font-medium"
                     data-section="sec-estacion-3">
-                    <span class="size-1.5 bg-slate-300 rounded-full"></span>
+                    <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>
                     Est. 3 — Cierre
                 </a>
             </div>
         </div>
 
-        <hr class="my-3 border-slate-200" />
+        <hr class="my-3 border-superficie-borde" />
 
         <!-- Resumen Final -->
         <a href="#sec-resumen"
-            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition-all group"
+            class="nav-link flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-texto-base hover:bg-superficie-suave transition-all group"
             data-section="sec-resumen">
             <span
-                class="material-symbols-rounded text-[20px] text-slate-400 group-hover:text-primary transition-colors" aria-hidden="true">assignment</span>
+                class="material-symbols-rounded text-[20px] text-texto-tenue group-hover:text-primary transition-colors" aria-hidden="true">assignment</span>
             <span class="text-sm font-semibold">Resumen Final</span>
         </a>
     </nav>
 
     <!-- User footer -->
-    <div class="p-4 border-t border-slate-200">
-        <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-xl">
+    <div class="p-4 border-t border-superficie-borde">
+        <div class="flex items-center gap-3 p-2.5 bg-superficie-suave rounded-xl">
             <div
                 class="size-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-2xs">
                 {{ customer.assigned_commercial[:2]|upper if customer.assigned_commercial else 'AT' }}
             </div>
             <div class="flex flex-col overflow-hidden">
                 <span class="text-xs font-bold truncate">{{ customer.assigned_commercial or 'Asignado' }}</span>
-                <span class="text-2xs text-slate-500 truncate">Comercial Asignado</span>
+                <span class="text-2xs text-texto-suave truncate">Comercial Asignado</span>
             </div>
         </div>
     </div>
@@ -120,12 +120,12 @@
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
             <button type="button" data-preview-survey
-                class="bg-indigo-600 hover:bg-indigo-700 text-white text-2xs sm:text-xs font-black uppercase py-2 px-3 sm:px-5 rounded-lg transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
+                class="bg-info-600 hover:bg-info-700 text-white text-2xs sm:text-xs font-black uppercase py-2 px-3 sm:px-5 rounded-lg transition-all shadow-lg shadow-info-600/20 flex items-center gap-2">
                 <span class="material-symbols-rounded !text-[18px]" aria-hidden="true">visibility</span>
                 <span class="hidden sm:inline">Previsualizar</span>
             </button>
             <button type="button" data-submit-survey="false"
-                class="bg-white border border-slate-200 text-slate-700 text-xs font-bold py-2 px-3 sm:px-5 rounded-lg hover:bg-slate-50 transition-all">
+                class="bg-white border border-superficie-borde text-texto-base text-xs font-bold py-2 px-3 sm:px-5 rounded-lg hover:bg-superficie-suave transition-all">
                 Guardar Borrador
             </button>
             <button type="button" data-submit-survey="true"
@@ -136,11 +136,11 @@
     </div>
     <!-- Barra de Progreso -->
     <div class="flex items-center gap-4">
-        <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-            <div id="progressMain" class="h-full bg-emerald-500 transition-all duration-500" style="width: 0%"></div>
+        <div class="flex-1 h-2 bg-superficie-suave rounded-full overflow-hidden">
+            <div id="progressMain" class="h-full bg-exito-500 transition-all duration-500" style="width: 0%"></div>
         </div>
         <span id="progressText"
-            class="text-2xs font-black text-slate-500 uppercase tracking-widest min-w-[40px]">0%</span>
+            class="text-2xs font-black text-texto-suave uppercase tracking-widest min-w-[40px]">0%</span>
     </div>
 </div>
 {% endblock %}
@@ -153,28 +153,28 @@
     <div class="max-w-6xl mx-auto space-y-6 animate-fade-in pb-8">
         <!-- Seccion: Info Cliente -->
         <section id="sec-info-cliente">
-            <div class="border-b border-slate-100 pb-1 mb-4">
+            <div class="border-b border-superficie-borde pb-1 mb-4">
                 <h3 class="text-sm font-black text-primary uppercase tracking-wider">Información del Cliente</h3>
-                <p class="text-xs text-slate-500 mt-1">Datos principales del cliente y equipo relevado.</p>
+                <p class="text-xs text-texto-suave mt-1">Datos principales del cliente y equipo relevado.</p>
             </div>
             <div
-                class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-superficie-borde">
                 <div class="space-y-1.5">
-                    <label class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cliente</label>
-                    <div class="text-sm font-bold text-slate-900">{{ customer.name }}</div>
+                    <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cliente</label>
+                    <div class="text-sm font-bold text-texto-fuerte">{{ customer.name }}</div>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-2xs font-black text-slate-400 uppercase tracking-widest">Planta</label>
-                    <div class="text-sm font-bold text-slate-900">{{ customer.plant or 'Sin especificar' }}</div>
+                    <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Planta</label>
+                    <div class="text-sm font-bold text-texto-fuerte">{{ customer.plant or 'Sin especificar' }}</div>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-2xs font-black text-slate-400 uppercase tracking-widest">Máquina</label>
-                    <div class="text-sm font-bold text-slate-900">{{ machine.brand }} {{ machine.model }} — {{ machine.serial_number }}</div>
+                    <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Máquina</label>
+                    <div class="text-sm font-bold text-texto-fuerte">{{ machine.brand }} {{ machine.model }} — {{ machine.serial_number }}</div>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="technical-advisor" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Asistente Técnico</label>
+                    <label for="technical-advisor" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Asistente Técnico</label>
                     <select name="technical_advisor"
-                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor">
                         <option value="">Seleccionar asistente...</option>
                         {% for advisor in advisors %}
                         <option value="{{ advisor.name }}" {% if survey_data.get('technical_advisor') == advisor.name or (not survey_data.get('technical_advisor') and customer.technical_advisor == advisor.name) %}selected{% endif %}>
@@ -188,33 +188,33 @@
 
         <!-- Seccion: Especificaciones Maquinaria -->
         <section id="sec-maquinaria">
-            <div class="border-b border-slate-100 pb-1 mb-4">
+            <div class="border-b border-superficie-borde pb-1 mb-4">
                 <h3 class="text-sm font-black text-primary uppercase tracking-wider">Especificaciones de Maquinaria</h3>
-                <p class="text-xs text-slate-500 mt-1">Detalles técnicos del equipo a instalar o relevar.</p>
+                <p class="text-xs text-texto-suave mt-1">Detalles técnicos del equipo a instalar o relevar.</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-superficie-borde overflow-hidden">
                 <div class="p-4 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
-                            <label for="maquinaria-capacidad" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Velocidad Objetivo (Cajas/Min)</label>
+                            <label for="maquinaria-capacidad" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Velocidad Objetivo (Cajas/Min)</label>
                             <input name="maquinaria_capacidad"
-                                class="w-full bg-slate-50 border border-emerald-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
+                                class="w-full bg-superficie-suave border border-exito-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-exito-500/10 transition-all font-bold"
                                 placeholder="45" type="number" value="{{ survey_data.get('maquinaria_capacidad', '45') }}"  id="maquinaria-capacidad"/>
-                            <div class="flex items-center gap-1 text-emerald-600 mt-1">
+                            <div class="flex items-center gap-1 text-exito-600 mt-1">
                                 <span class="material-symbols-rounded text-xs" aria-hidden="true">check_circle</span>
                                 <span class="text-2xs font-medium">Valor dentro del rango óptimo (10-100)</span>
                             </div>
                         </div>
                         <div class="space-y-1.5">
-                            <label for="maquinaria-ppm" class="text-2xs font-black text-slate-400 uppercase tracking-widest">PPM Promedio</label>
+                            <label for="maquinaria-ppm" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">PPM Promedio</label>
                             <input name="maquinaria_ppm"
-                                class="w-full bg-slate-50 border border-emerald-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
+                                class="w-full bg-superficie-suave border border-exito-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-exito-500/10 transition-all font-bold"
                                 placeholder="40" type="number" value="{{ survey_data.get('maquinaria_ppm', '40') }}"  id="maquinaria-ppm"/>
-                            <p class="text-2xs text-slate-500 font-medium mt-1">Rango estándar: 0 - 200 PPM</p>
+                            <p class="text-2xs text-texto-suave font-medium mt-1">Rango estándar: 0 - 200 PPM</p>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-2xs font-black text-slate-400 uppercase tracking-widest block">Tipo de Impresión</label>
+                        <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest block">Tipo de Impresión</label>
                         {% set impresiones = survey_data.get('tipo_impresion', []) %}
                         {% set impresiones = [impresiones] if impresiones is string else impresiones %}
                         <div class="flex gap-1.5">
@@ -222,7 +222,7 @@
                             <label for="tipo-impresion{{ loop.index }}" class="flex-1 cursor-pointer">
                                 <input {% if 'Impresión' ~ letra in impresiones %}checked{% endif %}
                                     class="peer sr-only" name="tipo_impresion" value="Impresión {{ letra }}" type="checkbox"  id="tipo-impresion{{ loop.index }}"/>
-                                <div class="p-2 text-center border-2 border-slate-200 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary transition-all text-xs font-bold text-slate-700">
+                                <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary transition-all text-xs font-bold text-texto-base">
                                     Impresión {{ letra }}
                                 </div>
                             </label>
@@ -230,13 +230,13 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label id="tipo-de-slotter" class="text-2xs font-black text-slate-400 uppercase tracking-widest block">Tipo de Slotter</label>
+                        <label id="tipo-de-slotter" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block">Tipo de Slotter</label>
                         <div class="grid grid-cols-2 gap-1.5" role="radiogroup" aria-labelledby="tipo-de-slotter">
                             {% for slotter in ['Slotter Desplazado','Slotter Centrado'] %}
                             <label for="tipo-slotter{{ loop.index }}" class="cursor-pointer">
                                 <input {% if survey_data.get('tipo_slotter')==slotter %}checked{% endif %}
                                     class="peer sr-only" name="tipo_slotter" value="{{ slotter }}" type="radio"  id="tipo-slotter{{ loop.index }}"/>
-                                <div class="p-2 text-center border-2 border-slate-200 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary transition-all text-xs font-bold text-slate-700">
+                                <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary transition-all text-xs font-bold text-texto-base">
                                     {{ slotter }}
                                 </div>
                             </label>
@@ -244,35 +244,35 @@
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <label for="maquinaria-obs" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Observaciones</label>
+                        <label for="maquinaria-obs" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Observaciones</label>
                         <textarea name="maquinaria_obs"
-                            class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none"
+                            class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none"
                             placeholder="Notas adicionales sobre la maquinaria..."
                             rows="3" id="maquinaria-obs">{{ survey_data.get('maquinaria_obs', '') }}</textarea>
                     </div>
                 </div>
             </div>
         </section>
-        <hr class="border-slate-200" />
+        <hr class="border-superficie-borde" />
         <!-- Seccion: Estaciones -->
         <section>
-            <div class="border-b border-slate-100 pb-1 mb-4">
+            <div class="border-b border-superficie-borde pb-1 mb-4">
                 <h3 class="text-sm font-black text-primary uppercase tracking-wider">Control de Estaciones</h3>
-                <p class="text-xs text-slate-500 mt-1">Parametrización técnica por etapa de armado.</p>
+                <p class="text-xs text-texto-suave mt-1">Parametrización técnica por etapa de armado.</p>
             </div>
             <div class="space-y-6">
-                <details id="sec-estacion-1" class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm group">
-                    <summary class="px-4 py-2.5 bg-slate-50/50 border-b border-slate-200 flex items-center justify-between list-none cursor-pointer">
+                <details id="sec-estacion-1" class="bg-white border border-superficie-borde rounded-xl overflow-hidden shadow-sm group">
+                    <summary class="px-4 py-2.5 bg-superficie-suave/50 border-b border-superficie-borde flex items-center justify-between list-none cursor-pointer">
                         <div class="flex items-center gap-3">
-                            <span class="size-1.5 bg-emerald-500 rounded-full"></span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Estación 1: Alimentación (Feeder)</span>
+                            <span class="size-1.5 bg-exito-500 rounded-full"></span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-texto-suave">Estación 1: Alimentación (Feeder)</span>
                         </div>
-                        <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
+                        <span class="material-symbols-rounded text-texto-tenue text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                     </summary>
                     <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="space-y-1.5">
-                            <label for="e1-toma-cajas" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Posición del cargador</label>
-                            <select name="e1_toma_cajas" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-toma-cajas">
+                            <label for="e1-toma-cajas" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Posición del cargador</label>
+                            <select name="e1_toma_cajas" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-toma-cajas">
                                 <option value="">Seleccionar...</option>
                                 <option {% if survey_data.get('e1_toma_cajas')=='Horizontal' %}selected{% endif %}>Horizontal</option>
                                 <option {% if survey_data.get('e1_toma_cajas')=='Vertical' %}selected{% endif %}>Vertical</option>
@@ -280,42 +280,42 @@
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label for="e1-tipo-vacio" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Vacío</label>
-                            <select name="e1_tipo_vacio" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-tipo-vacio">
+                            <label for="e1-tipo-vacio" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Vacío</label>
+                            <select name="e1_tipo_vacio" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e1-tipo-vacio">
                                 <option value="">Seleccionar...</option>
                                 <option {% if survey_data.get('e1_tipo_vacio')=='Venturi' %}selected{% endif %}>Venturi</option>
                                 <option {% if survey_data.get('e1_tipo_vacio')=='Bomba de vacío' %}selected{% endif %}>Bomba de vacío</option>
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label for="e1-cant-ventosas" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
+                            <label for="e1-cant-ventosas" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cantidad de Ventosas</label>
                             <input name="e1_cant_ventosas" value="{{ survey_data.get('e1_cant_ventosas', '4') }}"
-                                class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                                class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                                 type="number"  id="e1-cant-ventosas"/>
                         </div>
                     </div>
                     <div class="px-6 pb-2">
-                        <div class="border-t border-slate-100 pt-4 space-y-3">
+                        <div class="border-t border-superficie-borde pt-4 space-y-3">
                             <div class="flex items-center gap-4">
                                 <label for="e1-centerline" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e1_centerline')=='on' %}checked{% endif %}
                                         name="e1_centerline" class="rounded text-primary focus:ring-primary" id="e1-centerline" type="checkbox" />
-                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere Center Line</span>
+                                    <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere Center Line</span>
                                 </label>
                                 <label for="e1-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e1_requires_sqt')=='on' %}checked{% endif %}
                                         name="e1_requires_sqt" class="rounded text-primary focus:ring-primary" id="e1-requires-sqt" type="checkbox" />
-                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere SQT</span>
+                                    <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere SQT</span>
                                 </label>
                             </div>
                             <div>
-                                <label id="criticidad" class="text-2xs font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                                <label id="criticidad" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block mb-1">Criticidad</label>
                                 <div class="flex gap-2" role="radiogroup" aria-labelledby="criticidad">
                                     {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
                                     <label for="criticidad-e1{{ loop.index }}" class="flex-1 cursor-pointer">
                                         <input {% if (survey_data.get('criticidad_e1') or 'baja')==val %}checked{% endif %}
                                             class="peer sr-only" name="criticidad_e1" value="{{ val }}" type="radio"  id="criticidad-e1{{ loop.index }}"/>
-                                        <div class="p-2 text-center border-2 border-slate-200 rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
+                                        <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
                                             <span class="block text-2xs font-bold text- color -600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
                                             <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
                                         </div>
@@ -326,55 +326,55 @@
                         </div>
                     </div>
                     <div class="px-4 pb-4 space-y-1">
-                        <label for="e1_obs" class="text-2xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                            FODA <span id="e1-obs-required" class="text-rose-500 hidden">*</span>
+                        <label for="e1_obs" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-1">
+                            FODA <span id="e1-obs-required" class="text-peligro-500 hidden">*</span>
                         </label>
                         <textarea name="e1_obs" id="e1_obs"
-                            class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
+                            class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
                             placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa...">{{ survey_data.get('e1_obs', '') }}</textarea>
                     </div>
                     <div id="e1-sqt-values-container" class="hidden px-4 pb-4">
-                        <div class="border-t border-slate-100 pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="border-t border-superficie-borde pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div class="space-y-2">
-                                    <label for="e1_sqt_nominal" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_nominal" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Valor
                                         Nominal SQT *</label>
                                     <input type="text" name="e1_sqt_nominal" id="e1_sqt_nominal"
                                         value="{{ survey_data.get('e1_sqt_nominal', '') }}"
-                                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                                         placeholder="Nominal...">
                                 </div>
                                 <div class="space-y-2">
-                                    <label for="e1_sqt_min" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_min" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Valor
                                         Mínimo SQT *</label>
                                     <input type="text" name="e1_sqt_min" id="e1_sqt_min"
                                         value="{{ survey_data.get('e1_sqt_min', '') }}"
-                                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                                         placeholder="Mínimo...">
                                 </div>
                                 <div class="space-y-2">
-                                    <label for="e1_sqt_max" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Valor
+                                    <label for="e1_sqt_max" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Valor
                                         Máximo SQT *</label>
                                     <input type="text" name="e1_sqt_max" id="e1_sqt_max"
                                         value="{{ survey_data.get('e1_sqt_max', '') }}"
-                                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                                         placeholder="Máximo...">
                                 </div>
                         </div>
                     </div>
             </details>
             <!-- Estación 2: Formado y Escuadrado -->
-            <details id="sec-estacion-2" class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm group">
-                <summary class="px-4 py-2.5 bg-slate-50/50 border-b border-slate-200 flex items-center justify-between list-none cursor-pointer">
+            <details id="sec-estacion-2" class="bg-white border border-superficie-borde rounded-xl overflow-hidden shadow-sm group">
+                <summary class="px-4 py-2.5 bg-superficie-suave/50 border-b border-superficie-borde flex items-center justify-between list-none cursor-pointer">
                     <div class="flex items-center gap-2">
-                        <span class="size-1.5 bg-emerald-500 rounded-full"></span>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Estaci&oacute;n 2: Formado y Escuadrado</span>
+                        <span class="size-1.5 bg-exito-500 rounded-full"></span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-texto-suave">Estaci&oacute;n 2: Formado y Escuadrado</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
+                    <span class="material-symbols-rounded text-texto-tenue text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="space-y-1.5">
-                        <label for="e2-tipo-formado" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Formado</label>
-                        <select name="e2_tipo_formado" id="e2-tipo-formado" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <label for="e2-tipo-formado" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Formado</label>
+                        <select name="e2_tipo_formado" id="e2-tipo-formado" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_tipo_formado')=='Por mandril formador' %}selected{% endif %}>Por mandril formador</option>
                             <option {% if survey_data.get('e2_tipo_formado')=='Por escuadradores con ventosas' %}selected{% endif %}>Por escuadradores con ventosas</option>
@@ -382,8 +382,8 @@
                         </select>
                     </div>
                     <div class="space-y-1.5">
-                        <label for="e2-cierre-inferior" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cierre Inferior</label>
-                        <select name="e2_cierre_inferior" id="e2-cierre-inferior" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <label for="e2-cierre-inferior" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cierre Inferior</label>
+                        <select name="e2_cierre_inferior" id="e2-cierre-inferior" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_cierre_inferior')=='Por prensas' %}selected{% endif %}>Por prensas</option>
                             <option {% if survey_data.get('e2_cierre_inferior')=='Por predobladores' %}selected{% endif %}>Por predobladores</option>
@@ -391,41 +391,41 @@
                         </select>
                     </div>
                     <div class="space-y-1.5" id="e2-vacio-container">
-                        <label for="e2-tipo-vacio" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Vac&iacute;o</label>
-                        <select name="e2_tipo_vacio" id="e2-tipo-vacio" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <label for="e2-tipo-vacio" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Vac&iacute;o</label>
+                        <select name="e2_tipo_vacio" id="e2-tipo-vacio" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option {% if survey_data.get('e2_tipo_vacio')=='Venturi' %}selected{% endif %}>Venturi</option>
                             <option {% if survey_data.get('e2_tipo_vacio')=='Bomba de vac&iacute;o' %}selected{% endif %}>Bomba de vac&iacute;o</option>
                         </select>
                     </div>
                     <div class="space-y-1.5" id="e2-ventosas-container">
-                        <label for="e2_ventosas" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cantidad de Ventosas</label>
+                        <label for="e2_ventosas" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cantidad de Ventosas</label>
                         <input name="e2_ventosas" id="e2_ventosas" value="{{ survey_data.get('e2_ventosas', '2') }}"
-                            class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number" />
+                            class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number" />
                     </div>
                 </div>
                 <div class="px-4 pb-2">
-                    <div class="border-t border-slate-100 pt-4 space-y-3">
+                    <div class="border-t border-superficie-borde pt-4 space-y-3">
                         <div class="flex items-center gap-4">
                             <label for="e2-centerline" class="flex items-center gap-2 cursor-pointer">
                                 <input {% if survey_data.get('e2_centerline')=='on' %}checked{% endif %}
                                     name="e2_centerline" class="rounded text-primary focus:ring-primary" id="e2-centerline" type="checkbox" />
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere Center Line</span>
+                                <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere Center Line</span>
                             </label>
                             <label for="e2-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                                 <input {% if survey_data.get('e2_requires_sqt')=='on' %}checked{% endif %}
                                     name="e2_requires_sqt" class="rounded text-primary focus:ring-primary" id="e2-requires-sqt" type="checkbox" />
-                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere SQT</span>
+                                <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere SQT</span>
                             </label>
                         </div>
                         <div>
-                            <label id="criticidad-2" class="text-2xs font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                            <label id="criticidad-2" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block mb-1">Criticidad</label>
                             <div class="flex gap-1.5" role="radiogroup" aria-labelledby="criticidad-2">
                                 {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
                                 <label for="criticidad-e2{{ loop.index }}" class="flex-1 cursor-pointer">
                                     <input {% if (survey_data.get('criticidad_e2') or 'baja')==val %}checked{% endif %}
                                         class="peer sr-only" name="criticidad_e2" value="{{ val }}" type="radio"  id="criticidad-e2{{ loop.index }}"/>
-                                    <div class="p-2 text-center border-2 border-slate-200 rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
+                                    <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
                                         <span class="block text-2xs font-bold text- color -600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
                                         <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
                                     </div>
@@ -436,20 +436,20 @@
                     </div>
                 </div>
                 <div class="px-4 pb-4 space-y-1">
-                    <label for="e2_obs" class="text-2xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                        FODA <span id="e2-obs-required" class="text-rose-500 hidden">*</span>
+                    <label for="e2_obs" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-1">
+                        FODA <span id="e2-obs-required" class="text-peligro-500 hidden">*</span>
                     </label>
                     <textarea name="e2_obs" id="e2_obs"
-                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
                         placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa...">{{ survey_data.get('e2_obs', '') }}</textarea>
                 </div>
                 <div id="e2-sqt-values-container" class="hidden px-4 pb-4">
-                    <div class="border-t border-slate-100 pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="border-t border-superficie-borde pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                         {% for label, field in [('Valor Nominal','e2_sqt_nominal'),('Valor M&iacute;nimo','e2_sqt_min'),('Valor M&aacute;ximo','e2_sqt_max')] %}
                         <div class="space-y-1.5">
-                            <label for="{{ field }}" class="text-2xs font-black text-slate-400 uppercase tracking-widest">{{ label }} SQT *</label>
+                            <label for="{{ field }}" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">{{ label }} SQT *</label>
                             <input type="text" name="{{ field }}" id="{{ field }}" value="{{ survey_data.get(field, '') }}"
-                                class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                                class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                                 placeholder="{{ label.split()[-1] }}...">
                         </div>
                         {% endfor %}
@@ -458,31 +458,31 @@
             </details>
 
             <!-- Estaci&oacute;n 3: Sistema de Cierre -->
-            <details id="sec-estacion-3" class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm group">
-                <summary class="px-4 py-2.5 bg-slate-50/50 border-b border-slate-200 flex items-center justify-between list-none cursor-pointer">
+            <details id="sec-estacion-3" class="bg-white border border-superficie-borde rounded-xl overflow-hidden shadow-sm group">
+                <summary class="px-4 py-2.5 bg-superficie-suave/50 border-b border-superficie-borde flex items-center justify-between list-none cursor-pointer">
                     <div class="flex items-center gap-2">
-                        <span class="size-1.5 bg-slate-300 rounded-full"></span>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Estaci&oacute;n 3: Sistema de Cierre</span>
+                        <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-texto-suave">Estaci&oacute;n 3: Sistema de Cierre</span>
                     </div>
-                    <span class="material-symbols-rounded text-slate-400 text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
+                    <span class="material-symbols-rounded text-texto-tenue text-lg transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
                 </summary>
                 <div class="p-4 space-y-3">
                     <div class="space-y-1.5">
-                        <label for="e3-tipo-cierre" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Cierre</label>
-                        <select name="e3_tipo_cierre" id="e3-tipo-cierre" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <label for="e3-tipo-cierre" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Cierre</label>
+                        <select name="e3_tipo_cierre" id="e3-tipo-cierre" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
                             <option value="">Seleccionar...</option>
                             <option value="Hotmelt" {% if survey_data.get('e3_tipo_cierre')=='Hotmelt' %}selected{% endif %}>Hotmelt</option>
                             <option value="Cinta" {% if survey_data.get('e3_tipo_cierre')=='Cinta' %}selected{% endif %}>Cinta</option>
                         </select>
                     </div>
                     <div>
-                        <label id="criticidad-3" class="text-2xs font-black text-slate-400 uppercase tracking-widest block mb-1">Criticidad</label>
+                        <label id="criticidad-3" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block mb-1">Criticidad</label>
                         <div class="flex gap-1.5" role="radiogroup" aria-labelledby="criticidad-3">
                             {% for val,color,icon in [('baja','emerald','check_circle'),('media','amber','warning'),('alta','rose','error')] %}
                             <label for="criticidad-e3{{ loop.index }}" class="flex-1 cursor-pointer">
                                 <input {% if (survey_data.get('criticidad_e3') or 'baja')==val %}checked{% endif %}
                                     class="peer sr-only" name="criticidad_e3" value="{{ val }}" type="radio"  id="criticidad-e3{{ loop.index }}"/>
-                                <div class="p-2 text-center border-2 border-slate-200 rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
+                                <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border- color -500 peer-checked:bg- color -50 color -500/10 transition-all">
                                     <span class="block text-2xs font-bold text- color -600 mb-1 uppercase tracking-widest">{{ val|capitalize }}</span>
                                     <span class="material-symbols-rounded text- color -500 text-lg" aria-hidden="true">{{ icon }}</span>
                                 </div>
@@ -492,68 +492,68 @@
                     </div>
                 </div>
                 <div class="px-4 pb-2">
-                    <div class="border-t border-slate-100 pt-4 space-y-3">
+                    <div class="border-t border-superficie-borde pt-4 space-y-3">
                         <label for="e3-requires-sqt" class="flex items-center gap-2 cursor-pointer">
                             <input {% if survey_data.get('e3_requires_sqt') == 'on' %}checked{% endif %}
                                 name="e3_requires_sqt" class="rounded text-primary focus:ring-primary" id="e3-requires-sqt" type="checkbox" />
-                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere SQT</span>
+                            <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere SQT</span>
                         </label>
                     </div>
                 </div>
                 <!-- Hotmelt Section -->
                 <div id="e3-hotmelt-section" class="px-4 pb-4 space-y-3 transition-all">
-                    <div class="border-t border-slate-100 pt-4">
-                        <h4 class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-3">Hotmelt</h4>
+                    <div class="border-t border-superficie-borde pt-4">
+                        <h4 class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-3">Hotmelt</h4>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div class="space-y-1.5">
-                                <label for="e3-marca-adhesivo" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Marca Adhesivo</label>
+                                <label for="e3-marca-adhesivo" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Marca Adhesivo</label>
                                 <input name="e3_marca_adhesivo" value="{{ survey_data.get('e3_marca_adhesivo', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-adhesivo"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-adhesivo"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-proveedor" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Proveedor</label>
+                                <label for="e3-proveedor" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Proveedor</label>
                                 <input name="e3_proveedor" value="{{ survey_data.get('e3_proveedor', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-proveedor"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-proveedor"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-tipo-adhesivo" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo Adhesivo</label>
-                                <select name="e3_tipo_adhesivo" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-adhesivo">
+                                <label for="e3-tipo-adhesivo" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo Adhesivo</label>
+                                <select name="e3_tipo_adhesivo" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-adhesivo">
                                     <option {% if survey_data.get('e3_tipo_adhesivo')=='Base EVA' %}selected{% endif %}>Base EVA</option>
                                     <option {% if survey_data.get('e3_tipo_adhesivo')=='Base metaloceno' %}selected{% endif %}>Base metaloceno</option>
                                 </select>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-tipo-colero" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo Colero</label>
-                                <select name="e3_tipo_colero" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-colero">
+                                <label for="e3-tipo-colero" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo Colero</label>
+                                <select name="e3_tipo_colero" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="e3-tipo-colero">
                                     <option {% if survey_data.get('e3_tipo_colero')=='Digital' %}selected{% endif %}>Digital</option>
                                     <option {% if survey_data.get('e3_tipo_colero')=='Anal&oacute;gico' %}selected{% endif %}>Anal&oacute;gico</option>
                                 </select>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-marca-colero" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Marca Colero</label>
+                                <label for="e3-marca-colero" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Marca Colero</label>
                                 <input name="e3_marca_colero" value="{{ survey_data.get('e3_marca_colero', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-colero"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-colero"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3_temp" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Temp. M&iacute;n/M&aacute;x</label>
+                                <label for="e3_temp" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Temp. M&iacute;n/M&aacute;x</label>
                                 <input name="e3_temp" id="e3_temp" value="{{ survey_data.get('e3_temp', '178°C') }}"
-                                    class="w-full bg-slate-50 border border-amber-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
+                                    class="w-full bg-superficie-suave border border-alerta-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-alerta-500/10 transition-all font-bold"
                                     placeholder="160-180°C" type="text" title="Temperatura del adhesivo en °C. Rango recomendado: 160-180°C" />
-                                <div class="flex items-center gap-1 text-amber-600 mt-1">
+                                <div class="flex items-center gap-1 text-alerta-600 mt-1">
                                     <span class="material-symbols-rounded text-xs" aria-hidden="true">warning</span>
                                     <span class="text-2xs font-medium">Cerca del l&iacute;mite m&aacute;ximo (180°C)</span>
                                 </div>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-gramos-caja" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Gramos por Caja</label>
+                                <label for="e3-gramos-caja" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Gramos por Caja</label>
                                 <input name="e3_gramos_caja" value="{{ survey_data.get('e3_gramos_caja', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number"  id="e3-gramos-caja"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="number"  id="e3-gramos-caja"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-presion-aire" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Presi&oacute;n Aire (Bar)</label>
+                                <label for="e3-presion-aire" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Presi&oacute;n Aire (Bar)</label>
                                 <input name="e3_presion_aire" value="{{ survey_data.get('e3_presion_aire', '8.5') }}"
-                                    class="w-full bg-slate-50 border border-rose-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-rose-500/10 transition-all font-bold" step="0.1" type="number"  id="e3-presion-aire"/>
-                                <div class="flex items-center gap-1 text-rose-600 mt-1">
+                                    class="w-full bg-superficie-suave border border-peligro-500 rounded-xl p-4 text-sm focus:ring-4 focus:ring-peligro-500/10 transition-all font-bold" step="0.1" type="number"  id="e3-presion-aire"/>
+                                <div class="flex items-center gap-1 text-peligro-600 mt-1">
                                     <span class="material-symbols-rounded text-xs" aria-hidden="true">error</span>
                                     <span class="text-2xs font-medium">Presi&oacute;n excede el rango (M&aacute;x 7.0 bar)</span>
                                 </div>
@@ -563,24 +563,24 @@
                 </div>
                 <!-- Cinta Section -->
                 <div id="e3-cinta-section" class="px-4 pb-4 space-y-3 transition-all hidden">
-                    <div class="border-t border-slate-100 pt-4">
-                        <h4 class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-3">Embalaje Secundario (Cinta)</h4>
+                    <div class="border-t border-superficie-borde pt-4">
+                        <h4 class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-3">Embalaje Secundario (Cinta)</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="space-y-1.5">
-                                <label for="e3-tipo-cinta" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Cinta</label>
+                                <label for="e3-tipo-cinta" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Cinta</label>
                                 <input name="e3_tipo_cinta" value="{{ survey_data.get('e3_tipo_cinta', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-tipo-cinta"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-tipo-cinta"/>
                             </div>
                             <div class="space-y-1.5">
-                                <label for="e3-marca-cinta" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Marca de Cinta</label>
+                                <label for="e3-marca-cinta" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Marca de Cinta</label>
                                 <input name="e3_marca_cinta" value="{{ survey_data.get('e3_marca_cinta', '') }}"
-                                    class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-cinta"/>
+                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" type="text"  id="e3-marca-cinta"/>
                             </div>
                             <div class="flex items-end pb-1">
                                 <label for="cinta-cl" class="flex items-center gap-2 cursor-pointer">
                                     <input {% if survey_data.get('e3_cinta_cl')=='on' %}checked{% endif %}
                                         name="e3_cinta_cl" class="rounded text-primary focus:ring-primary" id="cinta-cl" type="checkbox" />
-                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Requiere Center Line</span>
+                                    <span class="text-xs font-bold text-texto-suave uppercase tracking-wider">Requiere Center Line</span>
                                 </label>
                             </div>
                         </div>
@@ -588,23 +588,23 @@
                 </div>
                 <!-- SQT Values Station 3 -->
                 <div id="e3-sqt-values-container" class="hidden px-4 pb-4">
-                    <div class="border-t border-slate-100 pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="border-t border-superficie-borde pt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                         {% for label, field in [('Valor Nominal','e3_sqt_nominal'),('Valor M&iacute;nimo','e3_sqt_min'),('Valor M&aacute;ximo','e3_sqt_max')] %}
                         <div class="space-y-1.5">
-                            <label class="text-2xs font-black text-slate-400 uppercase tracking-widest">{{ label }} SQT *</label>
+                            <label class="text-2xs font-black text-texto-tenue uppercase tracking-widest">{{ label }} SQT *</label>
                             <input type="text" name="{{ field }}" id="{{ field }}" value="{{ survey_data.get(field, '') }}"
-                                class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                                class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                                 placeholder="{{ label.split()[-1] }}...">
                         </div>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="px-4 pb-4 space-y-1">
-                    <label for="e3_obs" class="text-2xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                        FODA <span id="e3-obs-required" class="text-rose-500 hidden">*</span>
+                    <label for="e3_obs" class="text-2xs font-black text-texto-tenue uppercase tracking-widest flex items-center gap-1">
+                        FODA <span id="e3-obs-required" class="text-peligro-500 hidden">*</span>
                     </label>
                     <textarea name="e3_obs" id="e3_obs"
-                        class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none min-h-[60px]"
                         placeholder="Fortalezas, Oportunidades, Debilidades y Amenazas detectadas en esta etapa...">{{ survey_data.get('e3_obs', '') }}</textarea>
                 </div>
             </details>
@@ -612,7 +612,7 @@
 
         <!-- Secci&oacute;n: Equipo de Relevamiento -->
         <section id="sec-equipo">
-            <div class="border-b border-slate-100 pb-1 mb-4">
+            <div class="border-b border-superficie-borde pb-1 mb-4">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-sm font-black text-primary uppercase tracking-wider">Equipo de producci&oacute;n</h3>
@@ -624,18 +624,18 @@
                     </button>
                 </div>
             </div>
-            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="bg-white border border-superficie-borde rounded-xl overflow-hidden shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse" id="teamTable">
                         <thead>
-                            <tr class="bg-slate-50/50 border-b border-slate-200">
-                                <th class="px-4 py-2 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Nombre Completo</th>
-                                <th class="px-4 py-2 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Cargo / Funci&oacute;n</th>
-                                <th class="px-4 py-2 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Observaciones</th>
-                                <th class="px-4 py-2 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Acciones</th>
+                            <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
+                                <th class="px-4 py-2 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Nombre Completo</th>
+                                <th class="px-4 py-2 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Cargo / Funci&oacute;n</th>
+                                <th class="px-4 py-2 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Observaciones</th>
+                                <th class="px-4 py-2 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 bg-white">
+                        <tbody class="divide-y divide-superficie-borde bg-white">
                             {% set team_names = survey_data.get('team_name', []) %}
                             {% set team_names = [team_names] if team_names is string else team_names %}
                             {% set team_roles = survey_data.get('team_role', []) %}
@@ -644,22 +644,22 @@
                             {% set team_obs = [team_obs] if team_obs is string else team_obs %}
                             {% if team_names|length > 0 %}
                                 {% for i in range(team_names|length) %}
-                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                <tr class="hover:bg-superficie-suave/50 transition-colors">
                                     <td class="px-4 py-2"><input name="team_name" value="{{ team_names[i] }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Nombre..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_role" value="{{ team_roles[i] if i < team_roles|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" value="{{ team_obs[i] if i < team_obs|length else '' }}" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-texto-tenue hover:text-peligro-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             {% else %}
-                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                <tr class="hover:bg-superficie-suave/50 transition-colors">
                                     <td class="px-4 py-2"><input name="team_name" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Nombre..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_role" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Cargo..." type="text" /></td>
                                     <td class="px-4 py-2"><input name="team_obs" class="w-full bg-transparent border-none text-xs font-bold focus:ring-0 p-0" placeholder="Observaciones..." type="text" /></td>
                                     <td class="px-4 py-2 text-center">
-                                        <button type="button" class="p-1 text-slate-300 hover:text-red-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
+                                        <button type="button" class="p-1 text-texto-tenue hover:text-peligro-500 transition-colors" aria-label="Eliminar integrante"><span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete_sweep</span></button>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -667,21 +667,21 @@
                     </table>
                 </div>
             </div>
-            <div class="mt-4 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                <label for="relev-obs-equipo" class="text-2xs font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones del equipo de producci&oacute;n</label>
-                <textarea name="relev_obs_equipo" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
+            <div class="mt-4 bg-white border border-superficie-borde rounded-xl p-4 shadow-sm">
+                <label for="relev-obs-equipo" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block mb-2">Observaciones del equipo de producci&oacute;n</label>
+                <textarea name="relev_obs_equipo" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
                     placeholder="Observaciones del equipo de relevamiento..." id="relev-obs-equipo">{{ survey_data.get('relev_obs_equipo', '') }}</textarea>
             </div>
         </section>
 
         <section id="sec-resumen">
-            <div class="border-b border-slate-100 pb-1 mb-4">
+            <div class="border-b border-superficie-borde pb-1 mb-4">
                 <h3 class="text-sm font-black text-primary uppercase tracking-wider">Resumen Final y Observaciones</h3>
-                <p class="text-xs text-slate-500 mt-1">Conclusiones generales del relevamiento t&eacute;cnico.</p>
+                <p class="text-xs text-texto-suave mt-1">Conclusiones generales del relevamiento t&eacute;cnico.</p>
             </div>
-            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                <label for="relev-obs-generales" class="text-2xs font-black text-slate-400 uppercase tracking-widest block mb-2">Observaciones Generales</label>
-                <textarea name="relev_obs_generales" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
+            <div class="bg-white border border-superficie-borde rounded-xl p-4 shadow-sm">
+                <label for="relev-obs-generales" class="text-2xs font-black text-texto-tenue uppercase tracking-widest block mb-2">Observaciones Generales</label>
+                <textarea name="relev_obs_generales" class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold min-h-[80px] resize-none"
                     placeholder="Conclusiones finales..." id="relev-obs-generales">{{ survey_data.get('relev_obs_generales', '') }}</textarea>
             </div>
         </section>
@@ -689,7 +689,7 @@
         <!-- Botones de Acci&oacute;n -->
         <div class="flex justify-end gap-4 pt-4">
             <button type="button" data-submit-survey="false"
-                class="px-5 py-2.5 text-sm font-bold text-slate-700 bg-white border-2 border-slate-200 hover:bg-slate-50 rounded-xl transition-all">
+                class="px-5 py-2.5 text-sm font-bold text-texto-base bg-white border-2 border-superficie-borde hover:bg-superficie-suave rounded-xl transition-all">
                 Guardar Borrador
             </button>
             <button type="button" data-submit-survey="true"
@@ -785,14 +785,14 @@
             if (obs) {
                 obs.required = true;
                 obs.placeholder = "Observaciones requeridas...";
-                obs.classList.add('ring-1', 'ring-rose-500/50');
+                obs.classList.add('ring-1', 'ring-peligro-500/50');
             }
             if (obsMarker) obsMarker.classList.remove('hidden');
         } else {
             if (obs) {
                 obs.required = false;
                 obs.placeholder = "";
-                obs.classList.remove('ring-1', 'ring-rose-500/50');
+                obs.classList.remove('ring-1', 'ring-peligro-500/50');
             }
             if (obsMarker) obsMarker.classList.add('hidden');
         }
@@ -1046,13 +1046,13 @@
                     // Remove active from all
                     document.querySelectorAll('.nav-link').forEach(l => {
                         l.classList.remove('bg-primary/10', 'text-primary', 'font-bold');
-                        l.classList.add('text-slate-600', 'text-slate-400');
+                        l.classList.add('text-texto-base', 'text-texto-tenue');
                     });
                     // Set active
                     const activeLink = document.querySelector(`.nav-link[data-section="${entry.target.id}"]`);
                     if (activeLink) {
                         activeLink.classList.add('bg-primary/10', 'text-primary', 'font-bold');
-                        activeLink.classList.remove('text-slate-600', 'text-slate-400');
+                        activeLink.classList.remove('text-texto-base', 'text-texto-tenue');
                     }
                 }
             });
@@ -1090,7 +1090,7 @@
                         const fragment = document.createDocumentFragment();
                         data.forEach(product => {
                             const div = document.createElement('div');
-                            div.className = 'px-4 py-3 border-b border-slate-100 border-slate-700 last:border-0 hover:bg-slate-50 hover:bg-slate-700/50 cursor-pointer transition-colors';
+                            div.className = 'px-4 py-3 border-b border-superficie-borde border-superficie-fuerte last:border-0 hover:bg-superficie-suave hover:bg-primary-700/50 cursor-pointer transition-colors';
                             const et = product.et_number || '';
                             const desc = product.description || '';
                             const mat = product.material || '';
@@ -1105,7 +1105,7 @@
                             titleDiv.textContent = et;
                             div.appendChild(titleDiv);
                             const descDiv = document.createElement('div');
-                            descDiv.className = 'text-xs text-slate-500 truncate';
+                            descDiv.className = 'text-xs text-texto-suave truncate';
                             descDiv.textContent = desc;
                             div.appendChild(descDiv);
                             fragment.appendChild(div);
@@ -1136,8 +1136,8 @@
         matInput.value = material;
 
         // Visual state
-        etInput.classList.remove('text-primary', 'text-amber-500');
-        etInput.classList.add('text-emerald-600');
+        etInput.classList.remove('text-primary', 'text-alerta-500');
+        etInput.classList.add('text-exito-600');
 
         // Cleanup UI
         container.classList.add('hidden');
@@ -1178,7 +1178,7 @@
                 descInput.value = data.description;
                 matInput.value = data.material;
                 input.classList.remove('text-primary');
-                input.classList.add('text-emerald-600');
+                input.classList.add('text-exito-600');
 
                 // Clear any existing "Add" button
                 const oldAddBtn = actionContainer.querySelector('.add-to-lib-btn');
@@ -1186,13 +1186,13 @@
             } else {
                 // Not found
                 input.classList.remove('text-primary');
-                input.classList.add('text-amber-500');
+                input.classList.add('text-alerta-500');
 
                 // Show "Add to library" button if not already there
                 if (!actionContainer.querySelector('.add-to-lib-btn')) {
                     const addBtn = document.createElement('button');
                     addBtn.type = "button";
-                    addBtn.className = "add-to-lib-btn text-amber-500 hover:text-emerald-600 transition-colors";
+                    addBtn.className = "add-to-lib-btn text-alerta-500 hover:text-exito-600 transition-colors";
                     addBtn.title = "Cargar en biblioteca";
                     addBtn.innerHTML = '<span class="material-symbols-rounded text-sm" aria-hidden="true">library_add</span>';
                     addBtn.onclick = () => saveToLibrary(row);
@@ -1225,8 +1225,8 @@
             const result = await response.json();
             if (result.status === 'success' || result.status === 'exists') {
                 if (addBtn) addBtn.remove();
-                row.querySelector('.et-input').classList.remove('text-amber-500');
-                row.querySelector('.et-input').classList.add('text-emerald-600');
+                row.querySelector('.et-input').classList.remove('text-alerta-500');
+                row.querySelector('.et-input').classList.add('text-exito-600');
             }
             alert(result.message);
         } catch (err) {

@@ -8,7 +8,7 @@
     <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
 </head>
-<body class="h-full bg-background-light font-display text-slate-900">
+<body class="h-full bg-background-light font-display text-texto-fuerte">
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="min-h-full flex items-center justify-center p-6">
@@ -17,15 +17,15 @@
                 <div class="size-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/20 mx-auto mb-4">
                     <span class="material-symbols-rounded text-3xl" aria-hidden="true">package_2</span>
                 </div>
-                <h1 class="text-2xl font-black text-slate-900 tracking-tight">CRM-AT</h1>
-                <p class="text-sm text-slate-500 font-medium mt-1">Gestión Operativa</p>
+                <h1 class="text-2xl font-black text-texto-fuerte tracking-tight">CRM-AT</h1>
+                <p class="text-sm text-texto-suave font-medium mt-1">Gestión Operativa</p>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-8">
-                <h2 class="text-lg font-black text-slate-900 mb-6">Iniciar Sesión</h2>
+            <div class="bg-white rounded-3xl border border-superficie-borde shadow-2xl p-8">
+                <h2 class="text-lg font-black text-texto-fuerte mb-6">Iniciar Sesión</h2>
 
                 {% if error %}
-                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold mb-6">
+                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-peligro-50 border border-peligro-200 text-peligro-700 text-sm font-semibold mb-6">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
                     <span>{{ error }}</span>
                 </div>
@@ -33,20 +33,20 @@
 
                 <form method="POST" action="/auth/login" class="space-y-5" id="loginForm">
                     <div class="space-y-2">
-                        <label for="login-username" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Usuario o Correo</label>
+                        <label for="login-username" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Usuario o Correo</label>
                         <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">person</span>
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue" aria-hidden="true">person</span>
                             <input id="login-username" name="username" required
-                                class="w-full bg-slate-50 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
+                                class="w-full bg-superficie-suave border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-texto-fuerte placeholder:text-texto-tenue focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="usuario@ejemplo.com" />
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label for="login-password" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
+                        <label for="login-password" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Contraseña</label>
                         <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">lock</span>
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue" aria-hidden="true">lock</span>
                             <input id="login-password" name="password" type="password" required
-                                class="w-full bg-slate-50 border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:ring-4 focus:ring-primary/10 transition-all"
+                                class="w-full bg-superficie-suave border-none rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-texto-fuerte placeholder:text-texto-tenue focus:ring-4 focus:ring-primary/10 transition-all"
                                 placeholder="••••••••" />
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                     </button>
                 </form>
 
-                <p class="text-center text-xs text-slate-400 font-medium mt-6">
+                <p class="text-center text-xs text-texto-tenue font-medium mt-6">
                     ¿No tienes cuenta?
                     <a href="/auth/register" class="text-primary font-bold hover:underline">Crear cuenta</a>
                 </p>

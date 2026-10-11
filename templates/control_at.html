@@ -3,13 +3,13 @@
 {% block header_extra %}
 <div class="hidden lg:flex items-center gap-4 ml-4">
     <a href="/"
-        class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 transition-all"
+        class="p-2 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-suave hover:text-primary hover:border-primary/30 transition-all"
         title="Volver al Dashboard" aria-label="Volver al Dashboard">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
     </a>
     <div class="flex flex-col">
-        <h2 class="text-xl font-bold text-slate-900 leading-tight font-display tracking-tight">Control de Asignación AT</h2>
-        <p class="text-xs text-slate-500 font-medium">Seguimiento de visitas técnicas asignadas y realizadas por cliente.</p>
+        <h2 class="text-xl font-bold text-texto-fuerte leading-tight font-display tracking-tight">Control de Asignación AT</h2>
+        <p class="text-xs text-texto-suave font-medium">Seguimiento de visitas técnicas asignadas y realizadas por cliente.</p>
     </div>
 </div>
 {% endblock %}
@@ -17,73 +17,73 @@
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
             <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">business</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Clientes</p>
-                <p class="text-xl font-black text-slate-900">{{ kpi.total_clientes }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Clientes</p>
+                <p class="text-xl font-black text-texto-fuerte">{{ kpi.total_clientes }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-blue-500 text-xl" aria-hidden="true">assignment</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-info-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-info-500 text-xl" aria-hidden="true">assignment</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Estándar</p>
-                <p class="text-xl font-black text-blue-600">{{ kpi.total_std }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Estándar</p>
+                <p class="text-xl font-black text-info-600">{{ kpi.total_std }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-purple-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-purple-500 text-xl" aria-hidden="true">workspace_premium</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-info-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-info-500 text-xl" aria-hidden="true">workspace_premium</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Premium</p>
-                <p class="text-xl font-black text-purple-600">{{ kpi.total_prem }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Premium</p>
+                <p class="text-xl font-black text-info-600">{{ kpi.total_prem }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-emerald-500 text-xl" aria-hidden="true">summarize</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-exito-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-exito-500 text-xl" aria-hidden="true">summarize</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Total Visitas Asignadas</p>
-                <p class="text-xl font-black text-emerald-600">{{ kpi.total_vis_sum }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Total Visitas Asignadas</p>
+                <p class="text-xl font-black text-exito-600">{{ kpi.total_vis_sum }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-teal-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-teal-500 text-xl" aria-hidden="true">check_circle</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-exito-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-exito-500 text-xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Finalizada</p>
-                <p class="text-xl font-black text-teal-600">{{ kpi.realizadas_sum }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Finalizada</p>
+                <p class="text-xl font-black text-exito-600">{{ kpi.realizadas_sum }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-amber-500 text-xl" aria-hidden="true">hourglass_empty</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-alerta-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-alerta-500 text-xl" aria-hidden="true">hourglass_empty</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Pendiente</p>
-                <p class="text-xl font-black text-amber-600">{{ kpi.pendientes_sum }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Pendiente</p>
+                <p class="text-xl font-black text-alerta-600">{{ kpi.pendientes_sum }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-10 rounded-xl bg-orange-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-orange-500 text-xl" aria-hidden="true">schedule</span>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-xl bg-alerta-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-alerta-500 text-xl" aria-hidden="true">schedule</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Fuera de Cronograma</p>
-                <p class="text-xl font-black text-orange-600">{{ kpi.fuera_cronograma }}</p>
+                <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Visita Fuera de Cronograma</p>
+                <p class="text-xl font-black text-alerta-600">{{ kpi.fuera_cronograma }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Avance</p>
+        <div class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
+            <p class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">Avance</p>
             <div class="flex items-baseline gap-2 mt-1">
-                <p class="text-3xl font-black text-sky-600">{{ kpi.avance_pct }}%</p>
+                <p class="text-3xl font-black text-info-600">{{ kpi.avance_pct }}%</p>
                 <span class="text-2xl">
                     {% if kpi.avance_pct > 100 %}🤩
                     {% elif kpi.avance_pct >= 100 %}😊
@@ -92,26 +92,26 @@
                     {% endif %}
                 </span>
             </div>
-            <div class="mt-3 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div class="h-full bg-emerald-500" style="width: {{ kpi.avance_pct if kpi.avance_pct <= 100 else 100 }}%"></div>
+            <div class="mt-3 h-2 w-full bg-superficie-suave rounded-full overflow-hidden">
+                <div class="h-full bg-exito-500" style="width: {{ kpi.avance_pct if kpi.avance_pct <= 100 else 100 }}%"></div>
             </div>
-            <p class="text-2xs text-slate-400 mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
+            <p class="text-2xs text-texto-tenue mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
         </div>
     </div>
 
     <!-- Filters -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+    <div class="bg-white p-4 rounded-xl border border-superficie-borde shadow-sm">
         <form id="filter-form" method="GET" action="/control-at" class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="cliente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <label for="cliente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Cliente</label>
                 <input type="text" name="cliente" value="{{ filters.cliente }}"
-                    class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary"
+                    class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary"
                     placeholder="Buscar cliente..." id="cliente">
             </div>
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="at" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">AT</label>
+                <label for="at" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">AT</label>
                 <select name="at"
-                    class="form-select w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="at">
+                    class="form-select w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="at">
                     <option value="">Todos</option>
                     {% for a in at_list %}
                     <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
@@ -119,19 +119,19 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="estandar" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estándar</label>
+                <label for="estandar" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estándar</label>
                 <input type="number" name="estandar" value="{{ filters.estandar or '' }}" min="0" placeholder="Cant."
-                    class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="estandar">
+                    class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="estandar">
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="premium" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Premium</label>
+                <label for="premium" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Premium</label>
                 <input type="number" name="premium" value="{{ filters.premium or '' }}" min="0" placeholder="Cant."
-                    class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="premium">
+                    class="form-input w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="premium">
             </div>
             <div class="flex flex-col gap-1 w-40">
-                <label for="status" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                <label for="status" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estado</label>
                 <select name="status"
-                    class="form-select w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="status">
+                    class="form-select w-full h-[34px] bg-superficie-suave border-superficie-borde rounded-lg text-xs focus:ring-primary focus:border-primary" id="status">
                     <option value="">Todos</option>
                     <option value="Activo" {% if filters.status == 'Activo' %}selected{% endif %}>Activo</option>
                     <option value="Inactivo" {% if filters.status == 'Inactivo' %}selected{% endif %}>Inactivo</option>
@@ -144,7 +144,7 @@
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">search</span>
                 </button>
                 <a href="/control-at"
-                    class="bg-slate-100 hover:bg-slate-200 text-slate-500 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
+                    class="bg-superficie-suave hover:bg-superficie-fuerte text-texto-suave px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center" aria-label="Limpiar filtros">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>
                 </a>
             </div>
@@ -152,9 +152,9 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-            <p class="text-xs text-slate-500 font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
+    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
+            <p class="text-xs text-texto-suave font-bold">{{ total }} cliente{{ 's' if total != 1 else '' }}</p>
             <button type="button" id="btn-nueva-asignacion"
                 class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
@@ -165,26 +165,26 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left" id="tabla-control-at">
                 <thead>
-                    <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">AT</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Premium</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Total</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente desde</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente hasta</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Acciones</th>
+                    <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Total</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-center" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for r in rows %}
                     {% set std = r.standard_visits or 0 %}
                     {% set prem = r.premium_visits or 0 %}
                     {% set total_vis = std + prem %}
                     {% set realizadas = visit_counts.get(r.customer_id, 0) %}
                     {% set pendientes = total_vis - realizadas %}
-                    <tr class="hover:bg-slate-50 transition-colors"
+                    <tr data-row class="hover:bg-superficie-suave transition-colors"
                         data-assignment-id="{{ r.assignment_id or '' }}"
                         data-customer-name="{{ r.name }}"
                         data-at="{{ r.technical_advisor or '' }}"
@@ -195,39 +195,39 @@
                         data-pendientes="{{ pendientes }}"
                         data-valid-from="{{ r.valid_from.strftime('%Y-%m-%d') if r.valid_from else '' }}"
                         data-valid-to="{{ r.valid_to.strftime('%Y-%m-%d') if r.valid_to else '' }}">
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ r.name }}<br><span class="text-2xs text-slate-400 font-normal">{{ r.plant or '—' }}</span></td>
-                        <td class="px-6 py-4 text-sm text-slate-600">{{ r.technical_advisor or '—' }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-texto-fuerte">{{ r.name }}<br><span class="text-2xs text-texto-tenue font-normal">{{ r.plant or '—' }}</span></td>
+                        <td class="px-6 py-4 text-sm text-texto-base">{{ r.technical_advisor or '—' }}</td>
                         <td class="px-6 py-4 text-center">
                             {% set est = r.status or 'Activo' %}
                             {% if est == 'Activo' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
-                                <span class="size-1.5 bg-emerald-500 rounded-full"></span>Activo
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-exito-100 text-exito-700 uppercase">
+                                <span class="size-1.5 bg-exito-500 rounded-full"></span>Activo
                             </span>
                             {% elif est == 'Fuera de Cronograma' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
-                                <span class="size-1.5 bg-amber-500 rounded-full"></span>Fuera de Cronograma
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700 uppercase">
+                                <span class="size-1.5 bg-alerta-500 rounded-full"></span>Fuera de Cronograma
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-slate-100 text-slate-500 uppercase">
-                                <span class="size-1.5 bg-slate-400 rounded-full"></span>Inactivo
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave uppercase">
+                                <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>Inactivo
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-sm text-slate-600 text-right">{{ std }}</td>
-                        <td class="px-6 py-4 text-sm text-slate-600 text-right">{{ prem }}</td>
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900 text-right">{{ total_vis }}</td>
-                        <td class="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">{{ r.valid_from.strftime('%d/%m/%Y') if r.valid_from else '—' }}</td>
-                        <td class="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">{% if r.valid_to %}{{ r.valid_to.strftime('%d/%m/%Y') }}{% else %}<span class="text-slate-300">—</span>{% endif %}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base text-right">{{ std }}</td>
+                        <td class="px-6 py-4 text-sm text-texto-base text-right">{{ prem }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-texto-fuerte text-right">{{ total_vis }}</td>
+                        <td class="px-6 py-4 text-xs text-texto-suave whitespace-nowrap">{{ r.valid_from.strftime('%d/%m/%Y') if r.valid_from else '—' }}</td>
+                        <td class="px-6 py-4 text-xs text-texto-suave whitespace-nowrap">{% if r.valid_to %}{{ r.valid_to.strftime('%d/%m/%Y') }}{% else %}<span class="text-texto-tenue">—</span>{% endif %}</td>
                         <td class="px-6 py-4 text-center">
                             <div class="flex items-center justify-center gap-1.5">
                                 {% if r.assignment_id %}
                                 <button type="button"
-                                    class="btn-edit-asignacion p-1.5 bg-slate-50 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100"
+                                    class="btn-edit-asignacion p-1.5 bg-superficie-suave rounded-lg text-texto-tenue hover:text-primary transition-all border border-superficie-borde"
                                     title="Editar" aria-label="Editar">
                                     <span class="material-symbols-rounded text-[16px]" aria-hidden="true">edit</span>
                                 </button>
                                 <button type="button"
-                                    class="btn-delete-asignacion p-1.5 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100"
+                                    class="btn-delete-asignacion p-1.5 bg-superficie-suave rounded-lg text-texto-tenue hover:text-peligro-500 transition-all border border-superficie-borde"
                                     title="Eliminar"
                                     data-id="{{ r.assignment_id }}"
                                     data-name="{{ r.name }}" aria-label="Eliminar">
@@ -235,7 +235,7 @@
                                 </button>
                                 {% else %}
                                 <button type="button"
-                                    class="btn-create-asignacion p-1.5 bg-slate-50 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100"
+                                    class="btn-create-asignacion p-1.5 bg-superficie-suave rounded-lg text-texto-tenue hover:text-exito-500 transition-all border border-superficie-borde"
                                     title="Crear asignación"
                                     data-customer="{{ r.name }}" aria-label="Crear asignación">
                                     <span class="material-symbols-rounded text-[16px]" aria-hidden="true">add_circle</span>
@@ -250,42 +250,42 @@
         </div>
 
         {% if total_pages > 1 %}
-        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 border-t border-slate-100">
-            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
+        <div class="flex items-center justify-between px-6 py-4 bg-superficie-suave/50 border-t border-superficie-borde">
+            <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
                 Página {{ page }} de {{ total_pages }}
             </div>
             <div class="flex items-center gap-1">
                 {% if page > 1 %}
                 <a href="?page={{ page - 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, total_pages + 1) %}
                     {% if p == page %}
                     <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
                     {% elif p >= page - 2 and p <= page + 2 %}
                     <a href="?page={{ p }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                        class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if page * per_page < total %}
                 <a href="?page={{ page + 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
-        <div class="px-6 py-3 bg-slate-50/50 border-t border-slate-100">
-            <span class="text-2xs font-bold text-slate-500">{{ total }} cliente{{ 's' if total != 1 else '' }}</span>
+        <div class="px-6 py-3 bg-superficie-suave/50 border-t border-superficie-borde">
+            <span class="text-2xs font-bold text-texto-suave">{{ total }} cliente{{ 's' if total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% else %}
         <div class="px-6 py-16 text-center">
-            <span class="material-symbols-rounded text-4xl text-slate-300 mb-3" aria-hidden="true">ssid_chart</span>
-            <p class="text-sm text-slate-500">No se encontraron clientes con los filtros aplicados.</p>
+            <span class="material-symbols-rounded text-4xl text-texto-tenue mb-3" aria-hidden="true">ssid_chart</span>
+            <p class="text-sm text-texto-suave">No se encontraron clientes con los filtros aplicados.</p>
         </div>
         {% endif %}
     </div>
@@ -297,26 +297,26 @@
         <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
             <div class="p-6 space-y-5">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="modal-title">Nueva Asignación</h3>
-                    <button type="button" id="modal-close" class="p-1 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
+                    <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="modal-title">Nueva Asignación</h3>
+                    <button type="button" id="modal-close" class="p-1 text-texto-tenue hover:text-texto-base transition-colors" aria-label="Cerrar">
                         <span class="material-symbols-rounded" aria-hidden="true">close</span>
                     </button>
                 </div>
                 <input type="hidden" id="edit-assignment-id" value="">
                 <div class="space-y-4">
-                    <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-slate-50 rounded-xl">
+                    <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-superficie-suave rounded-xl">
                         <div>
-                            <label class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Realizadas</label>
-                            <p id="modal-realizadas" class="text-sm font-bold text-emerald-600 mt-0.5">0</p>
+                            <label class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Realizadas</label>
+                            <p id="modal-realizadas" class="text-sm font-bold text-exito-600 mt-0.5">0</p>
                         </div>
                         <div>
-                            <label class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Pendientes</label>
-                            <p id="modal-pendientes" class="text-sm font-bold text-amber-600 mt-0.5">0</p>
+                            <label class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Pendientes</label>
+                            <p id="modal-pendientes" class="text-sm font-bold text-alerta-600 mt-0.5">0</p>
                         </div>
                     </div>
                     <div>
-                        <label for="modal-cliente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
-                        <select id="modal-cliente" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        <label for="modal-cliente" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Cliente</label>
+                        <select id="modal-cliente" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar cliente...</option>
                             {% for c in customer_names %}
                             <option value="{{ c }}">{{ c }}</option>
@@ -324,8 +324,8 @@
                         </select>
                     </div>
                     <div>
-                        <label for="modal-at" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">AT Asignado</label>
-                        <select id="modal-at" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        <label for="modal-at" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">AT Asignado</label>
+                        <select id="modal-at" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar AT...</option>
                             {% for a in advisors %}
                             <option value="{{ a }}">{{ a }}</option>
@@ -334,19 +334,19 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-estandar" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Visitas Estándar</label>
+                            <label for="modal-estandar" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Visitas Estándar</label>
                             <input type="number" id="modal-estandar" value="0" min="0"
-                                class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                                class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-premium" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Visitas Premium</label>
+                            <label for="modal-premium" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Visitas Premium</label>
                             <input type="number" id="modal-premium" value="0" min="0"
-                                class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                                class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                     </div>
                     <div>
-                        <label for="modal-estado" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estado</label>
-                        <select id="modal-estado" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                        <label for="modal-estado" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Estado</label>
+                        <select id="modal-estado" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="Activo">Activo</option>
                             <option value="Inactivo">Inactivo</option>
                             <option value="Fuera de Cronograma">Fuera de Cronograma</option>
@@ -354,20 +354,20 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-valid-from" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Vigente desde</label>
+                            <label for="modal-valid-from" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Vigente desde</label>
                             <input type="date" id="modal-valid-from"
-                                class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                                class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-valid-to" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Vigente hasta</label>
+                            <label for="modal-valid-to" class="text-2xs font-bold text-texto-tenue uppercase tracking-wider">Vigente hasta</label>
                             <input type="date" id="modal-valid-to"
-                                class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                                class="form-input w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                     </div>
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" id="modal-cancel"
-                        class="flex-1 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
                         Cancelar
                     </button>
                     <button type="button" id="modal-save"
@@ -386,23 +386,23 @@
         <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
             <div class="p-6 space-y-5">
                 <div class="flex items-center gap-4">
-                    <div class="size-12 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-rounded text-red-500 text-2xl" aria-hidden="true">delete_forever</span>
+                    <div class="size-12 rounded-2xl bg-peligro-50 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded text-peligro-500 text-2xl" aria-hidden="true">delete_forever</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
-                        <p class="text-sm text-slate-500 mt-0.5" id="delete-message">¿Estás seguro?</p>
+                        <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
+                        <p class="text-sm text-texto-suave mt-0.5" id="delete-message">¿Estás seguro?</p>
                     </div>
                 </div>
                 <input type="hidden" id="delete-assignment-id" value="">
                 <input type="hidden" id="delete-csrf" value="{{ request.state.csrf_token or '' }}">
                 <div class="flex gap-3 pt-2">
                     <button type="button" id="delete-cancel"
-                        class="flex-1 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
                         Cancelar
                     </button>
                     <button type="button" id="delete-confirm"
-                        class="flex-1 px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-red-500/20">
+                        class="flex-1 px-5 py-2 bg-peligro-500 hover:bg-peligro-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-peligro-500/20">
                         Eliminar
                     </button>
                 </div>

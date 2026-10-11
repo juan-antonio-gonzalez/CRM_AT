@@ -125,7 +125,13 @@ def test_listado_muestra_busqueda_y_paginacion(client, db_session, admin_cookie)
 
     # Y por sector: los tres coinciden.
     html = client.get("/clientes?q=Metalurgia").text
-    assert html.count('class="customer-row"') == 3 or html.count("<tr") >= 4
+    # Se mira el cuerpo de la tabla de resultados. No se exige un total exacto de
+    # filas, porque la página puede traer otras tablas; lo que importa es que los
+    # tres clientes creados estén listados.
+    cuerpo = html.split("<tbody", 1)[1].split("</tbody>", 1)[0]
+    assert cuerpo.count("<tr data-row") >= 3
+    for i in range(3):
+        assert f"Cliente Prueba {i}" in cuerpo
 
 
 def test_las_estadisticas_describen_todo_el_conjunto(client, db_session, admin_cookie):

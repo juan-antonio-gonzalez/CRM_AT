@@ -4,8 +4,8 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Maquinaria</h2>
-    <p class="text-2xs text-slate-500 font-bold uppercase">Activos Industriales</p>
+    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Maquinaria</h2>
+    <p class="text-2xs text-texto-suave font-bold uppercase">Activos Industriales</p>
 </div>
 {% endblock %}
 
@@ -19,7 +19,7 @@
     {% endif %}
 
     {% if selected_customer or selected_asistente or q %}
-    <div class="flex items-center gap-2 text-2xs font-semibold text-slate-500">
+    <div class="flex items-center gap-2 text-2xs font-semibold text-texto-suave">
         <span class="material-symbols-rounded text-base" aria-hidden="true">filter_alt</span>
         Mostrando equipos filtrados
         <a href="/maquinaria" class="ml-2 text-2xs uppercase tracking-wider hover:text-primary underline">Limpiar filtros</a>
@@ -27,11 +27,11 @@
     {% endif %}
 
     <!-- Filters -->
-    <form method="GET" action="/maquinaria" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+    <form method="GET" action="/maquinaria" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
-                <select name="cliente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
+                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Cliente</label>
+                <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
                     <option value="{{ c.id }}" {% if selected_customer_id == c.id %}selected{% endif %}>{{ c.name }}</option>
@@ -39,8 +39,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
-                <select name="asistente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
+                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Asistente Técnico</label>
+                <select name="asistente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor.name }}" {% if selected_asistente == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
@@ -48,14 +48,14 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="q" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Buscar Equipo</label>
+                <label for="q" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Buscar Equipo</label>
                 <div class="relative">
-                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-lg" aria-hidden="true">search</span>
-                    <input name="q" value="{{ q or '' }}" placeholder="N° de serie, marca o modelo..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold" id="q">
+                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
+                    <input name="q" value="{{ q or '' }}" placeholder="N° de serie, marca o modelo..." class="w-full pl-9 pr-4 py-2 bg-superficie-suave border border-superficie-borde rounded-lg text-xs font-bold" id="q">
                 </div>
             </div>
             <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
-            <a href="/maquinaria" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-2 py-1.5">Limpiar</a>
+            <a href="/maquinaria" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <button type="button" id="btn-new-machine" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
                 Nueva Máquina
@@ -65,47 +65,47 @@
 
     <!-- Indicators -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Máquinas</p>
-            <p class="text-3xl font-black text-slate-900">{{ stats.total }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Total Máquinas</p>
+            <p class="text-3xl font-black text-texto-fuerte">{{ stats.total }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">En Relevamiento</p>
-            <p class="text-3xl font-black text-amber-500">{{ stats.en_proceso }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">En Relevamiento</p>
+            <p class="text-3xl font-black text-alerta-500">{{ stats.en_proceso }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Completados</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Completados</p>
             <p class="text-3xl font-black text-primary">{{ stats.completados }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Pendiente</p>
-            <p class="text-3xl font-black text-blue-500">{{ stats.pendientes }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Pendiente</p>
+            <p class="text-3xl font-black text-info-500">{{ stats.pendientes }}</p>
         </div>
     </div>
 
     <!-- Data Table -->
     <div
-        class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        class="bg-white rounded-xl border border-superficie-borde shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200">
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">N° Serie</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">Maquinaria / Modelo</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">Cliente</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">Planta</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">Asistente</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Tipo</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap" scope="col">Línea</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Estado</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap" scope="col">Relevamiento</th>
-                        <th class="px-2 py-2 text-2xs font-bold text-slate-500 uppercase tracking-wider text-right whitespace-nowrap" scope="col">Acciones</th>
+                    <tr class="bg-superficie-suave border-b border-superficie-borde">
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">N° Serie</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">Maquinaria / Modelo</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">Cliente</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">Planta</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">Asistente</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider text-center whitespace-nowrap" scope="col">Tipo</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider whitespace-nowrap" scope="col">Línea</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider text-center whitespace-nowrap" scope="col">Estado</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider text-center whitespace-nowrap" scope="col">Relevamiento</th>
+                        <th class="px-2 py-2 text-2xs font-bold text-texto-suave uppercase tracking-wider text-right whitespace-nowrap" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for machine in machines %}
-                    <tr class="hover:bg-slate-50 transition-colors group">
-                        <td class="px-2 py-2 text-2xs font-mono text-slate-600 whitespace-nowrap">
+                    <tr data-row class="hover:bg-superficie-suave transition-colors group">
+                        <td class="px-2 py-2 text-2xs font-mono text-texto-base whitespace-nowrap">
                             {{ machine.serial_number }}
                         </td>
                         <td class="px-2 py-2 whitespace-nowrap">
@@ -120,52 +120,52 @@
                                 {{ machine.customer.name }}
                             </a>
                             {% else %}
-                            <span class="text-2xs text-slate-400 italic">Sin asignar</span>
+                            <span class="text-2xs text-texto-tenue italic">Sin asignar</span>
                             {% endif %}
                         </td>
                         <td class="px-2 py-2 text-2xs whitespace-nowrap">{{ machine.plant_assigned }}</td>
                         <td class="px-2 py-2 whitespace-nowrap">
-                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-bold bg-slate-100 text-slate-600 uppercase">
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-bold bg-superficie-suave text-texto-base uppercase">
                                 {{ machine.customer.technical_advisor if machine.customer else 'Sin Asignar' }}
                             </span>
                         </td>
                         <td class="px-2 py-2 text-center whitespace-nowrap">
                             <span
-                                class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-bold bg-blue-50 text-blue-600 border border-blue-100 uppercase tracking-wider">
+                                class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-bold bg-info-50 text-info-600 border border-info-100 uppercase tracking-wider">
                                 {{ machine.machine_type or 'Sin Tipo' }}
                             </span>
                         </td>
-                        <td class="px-2 py-2 text-2xs font-bold uppercase text-slate-600 whitespace-nowrap">{{
+                        <td class="px-2 py-2 text-2xs font-bold uppercase text-texto-base whitespace-nowrap">{{
                             machine.line or '' }}</td>
                         <td class="px-2 py-2 whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
                                 <span
-                                    class="size-1.5 rounded-full % if machine.status Operativo % bg-emerald-500 % else % bg-amber-500 % endif %"></span>
+                                    class="size-1.5 rounded-full % if machine.status Operativo % bg-exito-500 % else % bg-alerta-500 % endif %"></span>
                                 <span class="text-2xs">{{ machine.status }}</span>
                             </div>
                         </td>
                         <td class="px-2 py-2 text-center whitespace-nowrap">
                             {% if machine.relevamiento_status == 'Completado' %}
                             <span
-                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
-                                <span class="size-1 bg-emerald-500 rounded-full"></span>Completado
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-exito-100 text-exito-700 uppercase">
+                                <span class="size-1 bg-exito-500 rounded-full"></span>Completado
                             </span>
                             {% elif machine.relevamiento_status == 'En Proceso' %}
                             <span
-                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
-                                <span class="size-1 bg-amber-500 rounded-full animate-pulse"></span>En Proceso
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700 uppercase">
+                                <span class="size-1 bg-alerta-500 rounded-full animate-pulse"></span>En Proceso
                             </span>
                             {% else %}
                             <span
-                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-slate-100 text-slate-500 uppercase">
-                                <span class="size-1 bg-slate-400 rounded-full"></span>Pendiente
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-superficie-suave text-texto-suave uppercase">
+                                <span class="size-1 bg-superficie-fuerte rounded-full"></span>Pendiente
                             </span>
                             {% endif %}
                         </td>
                         <td class="px-2 py-2 text-right whitespace-nowrap">
                             <div class="flex justify-end gap-1 transition-opacity">
                                 <button type="button" data-edit-machine="{{ machine.id }}"
-                                    class="p-1 text-slate-400 hover:text-primary transition-colors bg-slate-50 rounded-lg border border-slate-100 btn-edit-machine"
+                                    class="p-1 text-texto-tenue hover:text-primary transition-colors bg-superficie-suave rounded-lg border border-superficie-borde btn-edit-machine"
                                     title="Editar Máquina" aria-label="Editar Máquina">
                                     <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">edit</span>
                                 </button>
@@ -174,7 +174,7 @@
                                     >
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-1 text-slate-400 hover:text-red-500 transition-colors bg-slate-50 rounded-lg border border-slate-100"
+                                        class="p-1 text-texto-tenue hover:text-peligro-500 transition-colors bg-superficie-suave rounded-lg border border-superficie-borde"
                                         title="Eliminar Máquina" aria-label="Eliminar Máquina">
                                         <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">delete</span>
                                     </button>
@@ -195,8 +195,8 @@
 {% if q %}{% set ns.qs = ns.qs + '&q=' + q|urlencode %}{% endif %}
 
 {% if pagination.total_pages > 1 %}
-<div class="flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl -mt-2">
-    <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
+<div class="flex items-center justify-between px-4 py-3 bg-white border border-superficie-borde rounded-xl -mt-2">
+    <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
         Página {{ pagination.page }} de {{ pagination.total_pages }}
         <span class="mx-1">·</span>
         {{ pagination.total }} máquina{{ 's' if pagination.total != 1 else '' }}
@@ -204,11 +204,11 @@
     <div class="flex items-center gap-1">
         {% if pagination.has_prev %}
         <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave uppercase tracking-widest transition-colors">
             Anterior
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue uppercase tracking-widest cursor-default">
             Anterior
         </span>
         {% endif %}
@@ -220,7 +220,7 @@
             </span>
             {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
             <a href="?page={{ p }}{{ ns.qs }}"
-                class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
+                class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">
                 {{ p }}
             </a>
             {% endif %}
@@ -228,19 +228,19 @@
 
         {% if pagination.has_next %}
         <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-            class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave uppercase tracking-widest transition-colors">
             Siguiente
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue uppercase tracking-widest cursor-default">
             Siguiente
         </span>
         {% endif %}
     </div>
 </div>
 {% else %}
-<div class="px-3 py-2 bg-slate-50 flex items-center justify-between border-t border-slate-200 rounded-b-xl">
-    <span class="text-2xs text-slate-500 font-medium">{{ pagination.total }} máquina{{ 's' if pagination.total != 1 else '' }}</span>
+<div class="px-3 py-2 bg-superficie-suave flex items-center justify-between border-t border-superficie-borde rounded-b-xl">
+    <span class="text-2xs text-texto-suave font-medium">{{ pagination.total }} máquina{{ 's' if pagination.total != 1 else '' }}</span>
 </div>
 {% endif %}
 
@@ -249,13 +249,13 @@
     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="newMachineModal-title">
     <div
         class="bg-superficie-card w-full max-w-lg rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-        <div class="flex items-center justify-between p-6 border-b border-slate-100">
+        <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
             <div class="flex items-center gap-3">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
-                <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="newMachineModal-title">Nueva Máquina</h3>
+                <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="newMachineModal-title">Nueva Máquina</h3>
             </div>
             <button type="button" id="btn-close-new-machine-modal"
-                class="size-10 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
                 <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
@@ -263,9 +263,9 @@
             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="client_select" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cliente *</label>
+                    <label for="client_select" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Cliente *</label>
                     <select id="client_select" required
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccionar cliente...</option>
                         {% for name in unique_customer_names %}
                         <option value="{{ name }}">{{ name }}</option>
@@ -273,9 +273,9 @@
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="plant_select" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Planta *</label>
+                    <label for="plant_select" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Planta *</label>
                     <select id="plant_select" name="customer_id" required
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold">
                         <option value="">Seleccione un cliente primero</option>
                     </select>
                     <input type="hidden" id="plant_assigned" name="plant_assigned">
@@ -283,9 +283,9 @@
             </div>
 
             <div class="space-y-1.5">
-                <label for="machine-type" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de Máquina *</label>
+                <label for="machine-type" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Tipo de Máquina *</label>
                 <select name="machine_type" required
-                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold" id="machine-type">
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold" id="machine-type">
                     <option value="">Seleccionar tipo...</option>
                     {% for type in machine_types %}
                     <option value="{{ type.name }}">{{ type.name }}</option>
@@ -295,37 +295,37 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="serial-number" class="text-2xs font-black text-slate-400 uppercase tracking-widest">N° de Serie *</label>
+                    <label for="serial-number" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">N° de Serie *</label>
                     <input name="serial_number" required
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="SN-XXXXX" type="text" oninput="this.value = this.value.toUpperCase()"  id="serial-number"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="brand" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Marca *</label>
+                    <label for="brand" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Marca *</label>
                     <input name="brand" required
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: ATLAS COPCO" type="text" oninput="this.value = this.value.toUpperCase()"  id="brand"/>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label for="model-name" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Modelo *</label>
+                    <label for="model-name" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Modelo *</label>
                     <input name="model_name" required
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: GA 37VSD" type="text" oninput="this.value = this.value.toUpperCase()"  id="model-name"/>
                 </div>
                 <div class="space-y-1.5">
-                    <label for="line" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Línea</label>
+                    <label for="line" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Línea</label>
                     <input name="line"
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 font-bold"
                         placeholder="Ej: LÍNEA 1" type="text" oninput="this.value = this.value.toUpperCase()"  id="line"/>
                 </div>
             </div>
 
-            <div class="flex items-center justify-end gap-4 pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-end gap-4 pt-4 border-t border-superficie-borde">
                 <button type="button" id="btn-cancel-new-machine"
-                    class="text-xs font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors">Cancelar</button>
+                    class="text-xs font-black text-texto-tenue hover:text-texto-fuerte uppercase tracking-widest transition-colors">Cancelar</button>
                 <button type="submit"
                     class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
                     Registrar Máquina
@@ -340,18 +340,18 @@
     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editMachineModal-title">
     <div
         class="bg-superficie-card w-full max-w-lg rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-        <div class="flex items-center justify-between p-6 border-b border-slate-100">
+        <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
             <div class="flex items-center gap-3">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
-                <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="editMachineModal-title">Editar Máquina</h3>
+                <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="editMachineModal-title">Editar Máquina</h3>
             </div>
             <button type="button" id="btn-close-edit-machine-modal"
-                class="size-10 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors" aria-label="Cerrar">
+                class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
                 <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
         <div id="editMachineModalContent">
-            <div class="text-center py-12 text-slate-400">
+            <div class="text-center py-12 text-texto-tenue">
                 <span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span>
                 <p class="text-sm font-bold">Cargando datos del equipo...</p>
             </div>
@@ -414,7 +414,7 @@
         const content = document.getElementById('editMachineModalContent');
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        content.innerHTML = '<div class="text-center py-12 text-slate-400"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
+        content.innerHTML = '<div class="text-center py-12 text-texto-tenue"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span><p class="text-sm font-bold">Cargando datos del equipo...</p></div>';
         fetch(`/editar-maquinaria/${machineId}/partial`)
             .then(response => response.text())
             .then(html => {
@@ -422,7 +422,7 @@
                 initializeEditMachineForm();
             })
             .catch(error => {
-                content.innerHTML = '<div class="text-center py-12 text-red-400"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">error</span><p class="text-sm font-bold">Error al cargar los datos del equipo.</p></div>';
+                content.innerHTML = '<div class="text-center py-12 text-peligro-400"><span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">error</span><p class="text-sm font-bold">Error al cargar los datos del equipo.</p></div>';
             });
     }
 

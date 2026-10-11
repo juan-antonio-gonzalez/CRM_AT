@@ -54,30 +54,30 @@
 
 {% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Error {{ code }}</h2>
-    <p class="text-2xs text-slate-500 font-bold uppercase">{{ heading }}</p>
+    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Error {{ code }}</h2>
+    <p class="text-2xs text-texto-suave font-bold uppercase">{{ heading }}</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto flex items-center justify-center py-10 lg:py-20 animate-fade-in">
     <section role="alert" aria-labelledby="error-title"
-        class="w-full bg-white rounded-3xl border border-slate-200 shadow-sm p-8 lg:p-12 text-center space-y-6">
+        class="w-full bg-white rounded-3xl border border-superficie-borde shadow-sm p-8 lg:p-12 text-center space-y-6">
 
         <div class="size-20 rounded-3xl bg-primary/5 flex items-center justify-center text-primary mx-auto"
             aria-hidden="true">
             <span class="material-symbols-rounded text-[44px]" aria-hidden="true">{{ code_icons.get(code, 'error') }}</span>
         </div>
 
-        <p class="text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-none"
+        <p class="text-6xl lg:text-7xl font-black text-texto-fuerte tracking-tighter leading-none"
             aria-hidden="true">{{ code }}</p>
 
         <div class="space-y-2">
             <h1 id="error-title"
-                class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                class="text-2xl lg:text-3xl font-black text-texto-fuerte tracking-tight">
                 {{ heading }}
             </h1>
-            <p class="text-sm lg:text-base text-slate-500 leading-relaxed max-w-xl mx-auto">
+            <p class="text-sm lg:text-base text-texto-suave leading-relaxed max-w-xl mx-auto">
                 {{ detail }}
             </p>
         </div>
@@ -90,18 +90,18 @@
             </a>
             {% if request.state.user %}
             <a href="/auth/perfil"
-                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-slate-200 text-slate-600 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 transition-all">
+                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-superficie-borde text-texto-base font-black text-xs uppercase tracking-[0.2em] hover:bg-superficie-suave transition-all">
                 Ir a mi perfil
             </a>
             {% else %}
             <a href="/auth/login"
-                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-slate-200 text-slate-600 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-50 transition-all">
+                class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border border-superficie-borde text-texto-base font-black text-xs uppercase tracking-[0.2em] hover:bg-superficie-suave transition-all">
                 Iniciar sesión
             </a>
             {% endif %}
         </div>
 
-        <p class="text-2xs text-slate-400 font-bold uppercase tracking-widest pt-2">
+        <p class="text-2xs text-texto-tenue font-bold uppercase tracking-widest pt-2">
             Si el problema persiste, contactá al administrador del sistema.
         </p>
     </section>

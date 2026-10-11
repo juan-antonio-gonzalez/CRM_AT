@@ -2,8 +2,8 @@
 
 {% block title %}Infraestructura & Logística | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
-    <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Infraestructura</h2>
-    <p class="text-2xs text-slate-500 font-bold uppercase">Relevamiento de Planta & Logística</p>
+    <h2 class="text-sm font-black text-texto-fuerte uppercase tracking-tighter">Infraestructura</h2>
+    <p class="text-2xs text-texto-suave font-bold uppercase">Relevamiento de Planta & Logística</p>
 </div>
 {% endblock %}
 
@@ -11,11 +11,11 @@
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     
     <!-- Filters -->
-    <form method="GET" action="/relevamiento-infraestructura" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+    <form method="GET" action="/relevamiento-infraestructura" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
-                <select name="cliente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
+                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Cliente</label>
+                <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
                     <option value="{{ c.id }}" {% if selected_customer_id == c.id %}selected{% endif %}>{{ c.name }}</option>
@@ -23,8 +23,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
-                <select name="asistente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
+                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-texto-tenue mb-1">Asistente Técnico</label>
+                <select name="asistente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
                     <option value="{{ advisor.name }}" {% if selected_asistente == advisor.name %}selected{% endif %}>{{ advisor.name }}</option>
@@ -32,7 +32,7 @@
                 </select>
             </div>
             <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-primary/90">Filtrar</button>
-            <a href="/relevamiento-infraestructura" class="text-xs font-bold text-slate-400 hover:text-slate-600 px-2 py-1.5">Limpiar</a>
+            <a href="/relevamiento-infraestructura" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
             <a href="/relevamiento-infraestructura/nuevo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto">
                 <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
                 Nuevo Relevamiento
@@ -42,78 +42,78 @@
 
     <!-- Indicators -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Relevos</p>
-            <p class="text-3xl font-black text-slate-900">{{ stats.total }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Total Relevos</p>
+            <p class="text-3xl font-black text-texto-fuerte">{{ stats.total }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">En Proceso</p>
-            <p class="text-3xl font-black text-amber-500">{{ stats.en_proceso }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">En Proceso</p>
+            <p class="text-3xl font-black text-alerta-500">{{ stats.en_proceso }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Completados</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Completados</p>
             <p class="text-3xl font-black text-primary">{{ stats.completados }}</p>
         </div>
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Pendientes</p>
-            <p class="text-3xl font-black text-slate-300">{{ stats.pendientes }}</p>
+        <div class="bg-white rounded-2xl border border-superficie-borde p-5 shadow-sm">
+            <p class="text-2xs font-black text-texto-tenue uppercase tracking-widest mb-1">Pendientes</p>
+            <p class="text-3xl font-black text-texto-tenue">{{ stats.pendientes }}</p>
         </div>
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="bg-white rounded-2xl border border-superficie-borde overflow-hidden shadow-sm">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-slate-100 bg-slate-50/50">
-                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Cliente / Planta</th>
-                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Asistente Técnico</th>
-                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                    <tr class="border-b border-superficie-borde bg-superficie-suave/50">
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Cliente / Planta</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Asistente Técnico</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-2xs font-black text-texto-tenue uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for s in surveys %}
-                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                    <tr data-row class="hover:bg-superficie-suave/50 transition-colors group">
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
-                                <span class="text-sm font-bold text-slate-900">{{ s.customer.name }}</span>
+                                <span class="text-sm font-bold text-texto-fuerte">{{ s.customer.name }}</span>
                                 <span class="text-2xs font-bold text-primary uppercase">{{ s.plant }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-xs font-semibold text-slate-600">{{ s.technical_advisor }}</span>
+                            <span class="text-xs font-semibold text-texto-base">{{ s.technical_advisor }}</span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-xs font-medium text-slate-500">{{ s.date.strftime('%d/%m/%Y') if s.date else '-' }}</span>
+                            <span class="text-xs font-medium text-texto-suave">{{ s.date.strftime('%d/%m/%Y') if s.date else '-' }}</span>
                         </td>
                         <td class="px-6 py-4">
                             {% if s.status == 'Completado' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 text-2xs font-bold uppercase tracking-wider">
-                                <span class="size-1.5 bg-emerald-500 rounded-full"></span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-exito-100 text-exito-600 text-2xs font-bold uppercase tracking-wider">
+                                <span class="size-1.5 bg-exito-500 rounded-full"></span>
                                 Completado
                             </span>
                             {% elif s.status == 'En Proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-600 text-2xs font-bold uppercase tracking-wider">
-                                <span class="size-1.5 bg-amber-500 rounded-full"></span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-alerta-100 text-alerta-600 text-2xs font-bold uppercase tracking-wider">
+                                <span class="size-1.5 bg-alerta-500 rounded-full"></span>
                                 En Proceso
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-2xs font-bold uppercase tracking-wider">
-                                <span class="size-1.5 bg-slate-400 rounded-full"></span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-superficie-suave text-texto-suave text-2xs font-bold uppercase tracking-wider">
+                                <span class="size-1.5 bg-superficie-fuerte rounded-full"></span>
                                 Pendiente
                             </span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2 transition-opacity">
-                                <a href="/relevamiento-infraestructura/{{ s.id }}" class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100" title="Editar Relevamiento" aria-label="Editar Relevamiento">
+                                <a href="/relevamiento-infraestructura/{{ s.id }}" class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-primary transition-all border border-superficie-borde" title="Editar Relevamiento" aria-label="Editar Relevamiento">
                                     <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                                 </a>
                                 <form action="/relevamiento-infraestructura/eliminar/{{ s.id }}" method="POST" class="inline delete-infra-form" data-confirm="¿Estás seguro de que deseas eliminar permanentemente este relevamiento de infraestructura de {{ s.customer.name }} - {{ s.plant }}?">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
-                                    <button type="submit" class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-rose-500 transition-all border border-slate-100" title="Eliminar Relevamiento" aria-label="Eliminar Relevamiento">
+                                    <button type="submit" class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-peligro-500 transition-all border border-superficie-borde" title="Eliminar Relevamiento" aria-label="Eliminar Relevamiento">
                                         <span class="material-symbols-rounded text-[20px]" aria-hidden="true">delete</span>
                                     </button>
                                 </form>
@@ -125,8 +125,8 @@
                     <tr>
                         <td colspan="5" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center gap-3">
-                                <span class="material-symbols-rounded text-4xl text-slate-200" aria-hidden="true">contract_edit</span>
-                                <p class="text-sm font-bold text-slate-400">No hay relevamientos registrados</p>
+                                <span class="material-symbols-rounded text-4xl text-texto-tenue" aria-hidden="true">contract_edit</span>
+                                <p class="text-sm font-bold text-texto-tenue">No hay relevamientos registrados</p>
                                 <a href="/relevamiento-infraestructura/nuevo" class="text-xs font-bold text-primary hover:underline">Crear el primero</a>
                             </div>
                         </td>

@@ -3,7 +3,7 @@
 {% block title %}Seguimiento Plan de Acción - CRM-AT{% endblock %}
 
 {% block header_extra %}
-<h2 class="text-lg lg:text-xl font-black text-slate-800 tracking-tight">Seguimiento Plan de Acción</h2>
+<h2 class="text-lg lg:text-xl font-black text-texto-fuerte tracking-tight">Seguimiento Plan de Acción</h2>
 {% endblock %}
 
 {% block content %}
@@ -12,87 +12,87 @@
     <!-- Top Configuration Bar (KPIs) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <!-- Total -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-superficie-suave flex items-center justify-center text-texto-suave">
                 <span class="material-symbols-rounded" aria-hidden="true">format_list_bulleted</span>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total Tareas</p>
+                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Total Tareas</p>
                 <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-slate-900">{{ total_tareas }}</h3>
+                    <h3 class="text-2xl font-black text-texto-fuerte">{{ total_tareas }}</h3>
                 </div>
             </div>
         </div>
         
         <!-- Pendientes -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
+        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-peligro-50 flex items-center justify-center text-peligro-500">
                 <span class="material-symbols-rounded" aria-hidden="true">hourglass_empty</span>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pendientes</p>
+                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Pendientes</p>
                 <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-slate-900">{{ pendientes }}</h3>
+                    <h3 class="text-2xl font-black text-texto-fuerte">{{ pendientes }}</h3>
                 </div>
             </div>
         </div>
 
         <!-- En curso -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
+        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-alerta-50 flex items-center justify-center text-alerta-500">
                 <span class="material-symbols-rounded" aria-hidden="true">construction</span>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">En curso</p>
+                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">En curso</p>
                 <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-slate-900">{{ en_curso }}</h3>
+                    <h3 class="text-2xl font-black text-texto-fuerte">{{ en_curso }}</h3>
                 </div>
             </div>
         </div>
 
         <!-- Finalizadas -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500">
+        <div class="bg-white rounded-2xl p-5 border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-exito-50 flex items-center justify-center text-exito-500">
                 <span class="material-symbols-rounded" aria-hidden="true">task_alt</span>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Finalizadas</p>
+                <p class="text-xs font-bold text-texto-suave uppercase tracking-wider mb-1">Finalizadas</p>
                 <div class="flex items-baseline gap-2">
-                    <h3 class="text-2xl font-black text-slate-900">{{ finalizadas }}</h3>
+                    <h3 class="text-2xl font-black text-texto-fuerte">{{ finalizadas }}</h3>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content Area: Table -->
-    <div class="flex-1 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden relative">
-        <div class="flex flex-wrap px-6 py-5 border-b border-slate-200 justify-between items-center gap-3 bg-white z-10">
+    <div class="flex-1 bg-white rounded-3xl border border-superficie-borde shadow-sm flex flex-col overflow-hidden relative">
+        <div class="flex flex-wrap px-6 py-5 border-b border-superficie-borde justify-between items-center gap-3 bg-white z-10">
             <div>
-                <h3 class="text-lg font-black text-slate-900">Listado de Tareas</h3>
-                <p class="text-sm text-slate-500">Seguimiento de planes de acción generados a partir de visitas técnicas.</p>
+                <h3 class="text-lg font-black text-texto-fuerte">Listado de Tareas</h3>
+                <p class="text-sm text-texto-suave">Seguimiento de planes de acción generados a partir de visitas técnicas.</p>
             </div>
             <div class="flex items-center gap-2">
                 <form method="GET" action="/seguimiento-plan" class="flex flex-wrap items-center gap-2">
                     <label for="s-q" class="sr-only">Buscar tarea</label>
                     <input id="s-q" name="q" type="search" value="{{ q }}"
                         placeholder="Buscar tarea, cliente, responsable..."
-                        class="w-56 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                        class="w-56 bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <label for="s-estado" class="sr-only">Filtrar por estado</label>
                     <select id="s-estado" name="estado"
-                        class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                        class="bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                         <option value="">Todos los estados</option>
                         {% for e in ['Pendiente', 'En curso', 'Finalizado', 'Cancelado'] %}
                         <option value="{{ e }}" {% if estado == e %}selected{% endif %}>{{ e }}</option>
                         {% endfor %}
                     </select>
                     <button type="submit"
-                        class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:text-primary transition-all"
+                        class="p-2 bg-superficie-suave border border-superficie-borde rounded-xl text-texto-suave hover:text-primary transition-all"
                         aria-label="Filtrar" title="Filtrar">
                         <span class="material-symbols-rounded text-lg" aria-hidden="true">filter_alt</span>
                     </button>
                     {% if q or estado %}
                     <a href="/seguimiento-plan"
-                        class="px-3 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-2xs uppercase tracking-widest hover:bg-slate-50 transition-all">Limpiar</a>
+                        class="px-3 py-2 rounded-xl border border-superficie-borde text-texto-base font-bold text-2xs uppercase tracking-widest hover:bg-superficie-suave transition-all">Limpiar</a>
                     {% endif %}
                 </form>
                 <button type="button" id="btn-nueva-tarea"
@@ -103,38 +103,38 @@
             </div>
         </div>
 
-        <div class="flex-1 overflow-auto bg-slate-50/50">
+        <div class="flex-1 overflow-auto bg-superficie-suave/50">
             <table class="w-full text-left border-collapse whitespace-nowrap min-w-[1000px]">
                 <thead>
                     <tr class="bg-white sticky top-0 z-10 shadow-sm">
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200" scope="col">Fecha / Cliente</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200" scope="col">Tarea Requerida</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200" scope="col">Responsable / Límite</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 text-center" scope="col">Estado</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200 text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-xs font-bold text-texto-tenue uppercase tracking-wider border-b border-superficie-borde" scope="col">Fecha / Cliente</th>
+                        <th class="px-6 py-4 text-xs font-bold text-texto-tenue uppercase tracking-wider border-b border-superficie-borde" scope="col">Tarea Requerida</th>
+                        <th class="px-6 py-4 text-xs font-bold text-texto-tenue uppercase tracking-wider border-b border-superficie-borde" scope="col">Responsable / Límite</th>
+                        <th class="px-6 py-4 text-xs font-bold text-texto-tenue uppercase tracking-wider border-b border-superficie-borde text-center" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-xs font-bold text-texto-tenue uppercase tracking-wider border-b border-superficie-borde text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for item in trackings %}
-                    <tr class="hover:bg-blue-50/50 transition-colors group">
+                    <tr data-row class="hover:bg-info-50/50 transition-colors group">
                         <!-- Fecha y Cliente -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="size-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs shrink-0 bg-blue-50 text-blue-500">
+                                <div class="size-10 rounded-xl bg-superficie-suave flex items-center justify-center text-texto-suave font-bold text-xs shrink-0 bg-info-50 text-info-500">
                                     {{ item.visit_date.strftime('%d/%m') if item.visit_date else '--/--' }}
                                 </div>
                                 <div class="flex flex-col min-w-0">
-                                    <p class="text-sm font-bold text-slate-900 truncate" title="{{ item.customer_name }}">{{ item.customer_name }}</p>
-                                    <p class="text-xs text-slate-500 truncate" title="{{ item.plant }}">{{ item.plant or 'S/P' }}</p>
+                                    <p class="text-sm font-bold text-texto-fuerte truncate" title="{{ item.customer_name }}">{{ item.customer_name }}</p>
+                                    <p class="text-xs text-texto-suave truncate" title="{{ item.plant }}">{{ item.plant or 'S/P' }}</p>
                                 </div>
                             </div>
                         </td>
 
                         <!-- Tarea Requerida -->
-                        <td class="px-6 py-4 text-sm font-medium text-slate-700">
+                        <td class="px-6 py-4 text-sm font-medium text-texto-base">
                             <div class="flex items-center gap-2">
                                 {% if item.et_number %}
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-semibold bg-blue-100 text-blue-700 whitespace-nowrap">{{ item.et_number }}</span>
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-semibold bg-info-100 text-info-700 whitespace-nowrap">{{ item.et_number }}</span>
                                 {% endif %}
                                 <div class="max-w-[240px] truncate" title="{{ item.task }}">
                                     {{ item.task }}
@@ -145,8 +145,8 @@
                         <!-- Responsable y Fecha -->
                         <td class="px-6 py-4">
                             <div class="flex flex-col min-w-0">
-                                <p class="text-sm font-bold text-slate-700 truncate">{{ item.responsible or 'Sin Asignar' }}</p>
-                                <div class="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+                                <p class="text-sm font-bold text-texto-base truncate">{{ item.responsible or 'Sin Asignar' }}</p>
+                                <div class="flex items-center gap-1 text-xs text-texto-suave mt-0.5">
                                     <span class="material-symbols-rounded text-[14px]" aria-hidden="true">event</span>
                                     {{ item.due_date or 'No Definida' }}
                                 </div>
@@ -157,27 +157,27 @@
                         <td class="px-6 py-4 text-center">
                             {% set st = item.status | lower %}
                             {% if st == 'pendiente' or st == 'pending' %}
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-xs font-bold border border-rose-100">
-                                <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-peligro-50 text-peligro-600 rounded-full text-xs font-bold border border-peligro-100">
+                                <span class="size-1.5 rounded-full bg-peligro-500 animate-pulse"></span>
                                 Pendiente
                             </span>
                             {% elif st == 'en curso' or st == 'en_curso' or st == 'in_progress' or st == 'progress' or st == 'en proceso' %}
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-xs font-bold border border-amber-100">
-                                <span class="size-1.5 rounded-full bg-amber-500"></span>
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-alerta-50 text-alerta-600 rounded-full text-xs font-bold border border-alerta-100">
+                                <span class="size-1.5 rounded-full bg-alerta-500"></span>
                                 En curso
                             </span>
                             {% elif st == 'finalizado' or st == 'done' or st == 'completado' or st == 'completed' %}
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold border border-emerald-100">
-                                <span class="size-1.5 rounded-full bg-emerald-500"></span>
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-exito-50 text-exito-600 rounded-full text-xs font-bold border border-exito-100">
+                                <span class="size-1.5 rounded-full bg-exito-500"></span>
                                 Finalizado
                             </span>
                             {% elif st == 'cancelado' or st == 'canceled' %}
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-bold border border-slate-200">
-                                <span class="size-1.5 rounded-full bg-slate-400"></span>
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-superficie-suave text-texto-suave rounded-full text-xs font-bold border border-superficie-borde">
+                                <span class="size-1.5 rounded-full bg-superficie-fuerte"></span>
                                 Cancelado
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold">
+                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-superficie-suave text-texto-base rounded-full text-xs font-bold">
                                 {{ item.status }}
                             </span>
                             {% endif %}
@@ -186,7 +186,7 @@
                         <!-- Acciones -->
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="btn-open-edit-seg p-2 text-slate-400 hover:text-primary hover:bg-white rounded-xl transition-all shadow-sm"
+                                <button class="btn-open-edit-seg p-2 text-texto-tenue hover:text-primary hover:bg-white rounded-xl transition-all shadow-sm"
                                     data-id="{{ item.id }}" data-task="{{ item.task | escape }}" data-responsible="{{ item.responsible | escape }}" data-due="{{ item.due_date | escape }}" data-status="{{ item.status | escape }}" data-obs="{{ (item.observations or '') | escape }}" data-et="{{ item.et_number or '' }}"
                                      aria-label="Editar seguimiento">
                                     <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
@@ -194,7 +194,7 @@
                                 <form id="delete-form-{{ item.id }}" action="/seguimiento-plan/{{ item.id }}/eliminar" method="POST" class="inline">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="button"
-                                        class="btn-delete-seg p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-xl transition-all shadow-sm material-symbols-rounded text-[20px]"
+                                        class="btn-delete-seg p-2 text-texto-tenue hover:text-peligro-500 hover:bg-white rounded-xl transition-all shadow-sm material-symbols-rounded text-[20px]"
                                         data-form-id="delete-form-{{ item.id }}"
                                         <span  aria-hidden="true">delete</span>
                                     </button>
@@ -204,9 +204,9 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="5" class="px-6 py-20 text-center text-slate-500">
+                        <td colspan="5" class="px-6 py-20 text-center text-texto-suave">
                             <div class="flex flex-col items-center justify-center gap-3">
-                                <span class="material-symbols-rounded text-6xl text-slate-200" aria-hidden="true">fact_check</span>
+                                <span class="material-symbols-rounded text-6xl text-texto-tenue" aria-hidden="true">fact_check</span>
                                 <p class="text-lg font-bold">No hay tareas de seguimiento</p>
                                 <p class="text-sm">Se generarán automáticamente al guardar el "Plan de Acción" de una visita.</p>
                             </div>
@@ -222,33 +222,33 @@
 <!-- Edit Tracking Modal -->
 <div id="newTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="newTrackingModal-title">
     <div class="bg-superficie-card w-full max-w-2xl rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-superficie-borde">
             <div class="flex items-center gap-3">
                 <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <span class="material-symbols-rounded" aria-hidden="true">playlist_add</span>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900" id="newTrackingModal-title">Nueva tarea de seguimiento</h3>
-                    <p class="text-xs font-bold text-slate-500">Para acciones que no nacen de una visita técnica</p>
+                    <h3 class="text-lg font-bold text-texto-fuerte" id="newTrackingModal-title">Nueva tarea de seguimiento</h3>
+                    <p class="text-xs font-bold text-texto-suave">Para acciones que no nacen de una visita técnica</p>
                 </div>
             </div>
-            <button type="button" id="btn-cerrar-nueva" class="p-2 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
+            <button type="button" id="btn-cerrar-nueva" class="p-2 text-texto-tenue hover:text-texto-base transition-colors" aria-label="Cerrar">
                 <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
         <form method="POST" action="/seguimiento-plan/nueva" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
             <div>
-                <label for="new-task" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Tarea <span class="text-red-500">*</span></label>
+                <label for="new-task" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Tarea <span class="text-peligro-500">*</span></label>
                 <textarea id="new-task" name="task" required rows="2"
                     placeholder="Qué hay que hacer..."
-                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 resize-none"></textarea>
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="new-customer" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Cliente</label>
+                    <label for="new-customer" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Cliente</label>
                     <select id="new-customer" name="customer_name"
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
                         <option value="">Sin cliente</option>
                         {% for cli in clientes %}
                         <option value="{{ cli.name }}">{{ cli.name }}{% if cli.plant %} — {{ cli.plant }}{% endif %}</option>
@@ -256,40 +256,40 @@
                     </select>
                 </div>
                 <div>
-                    <label for="new-et" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">N° ET</label>
+                    <label for="new-et" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">N° ET</label>
                     <input type="text" id="new-et" name="et_number"
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
                 </div>
                 <div>
-                    <label for="new-responsible" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Responsable</label>
+                    <label for="new-responsible" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Responsable</label>
                     <input type="text" id="new-responsible" name="responsible"
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
                 </div>
                 <div>
-                    <label for="new-due" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Plazo</label>
+                    <label for="new-due" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Plazo</label>
                     <input type="text" id="new-due" name="due_date" placeholder="DD/MM/YYYY"
-                        class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900">
+                        class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte">
                 </div>
             </div>
             <div>
-                <span class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-2">Estado inicial</span>
+                <span class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-2">Estado inicial</span>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Estado inicial">
                     {% for valor, texto in [('Pendiente', 'Pendiente'), ('En curso', 'En curso'), ('Finalizado', 'Finalizado'), ('Cancelado', 'Cancelado')] %}
                     <label class="relative cursor-pointer">
                         <input type="radio" name="status" value="{{ valor }}" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" {% if loop.first %}checked{% endif %} />
-                        <div class="px-3 py-2.5 text-center rounded-xl border border-slate-200 text-2xs font-black uppercase tracking-wider text-slate-500 peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
+                        <div class="px-3 py-2.5 text-center rounded-xl border border-superficie-borde text-2xs font-black uppercase tracking-wider text-texto-suave peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-primary transition-all">{{ texto }}</div>
                     </label>
                     {% endfor %}
                 </div>
             </div>
             <div>
-                <label for="new-observations" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Observaciones</label>
+                <label for="new-observations" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Observaciones</label>
                 <textarea id="new-observations" name="observations" rows="2"
-                    class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 resize-none"></textarea>
+                    class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
             </div>
             <div class="flex justify-end gap-3 pt-2">
                 <button type="button" id="btn-cancelar-nueva"
-                    class="px-5 py-3 rounded-xl border border-slate-200 text-slate-600 font-black text-2xs uppercase tracking-widest hover:bg-slate-50 transition-all">Cancelar</button>
+                    class="px-5 py-3 rounded-xl border border-superficie-borde text-texto-base font-black text-2xs uppercase tracking-widest hover:bg-superficie-suave transition-all">Cancelar</button>
                 <button type="submit"
                     class="px-5 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-2xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20">Crear tarea</button>
             </div>
@@ -299,17 +299,17 @@
 
 <div id="editTrackingModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editTrackingModal-title">
     <div class="bg-superficie-card w-full max-w-lg rounded-lg overflow-hidden border border-superficie-borde shadow-pop flex flex-col max-h-[90vh]">
-        <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <div class="px-6 py-5 border-b border-superficie-borde flex justify-between items-center bg-superficie-suave/50">
             <div class="flex items-center gap-3">
                 <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <span class="material-symbols-rounded" aria-hidden="true">edit_square</span>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-slate-900" id="editTrackingModal-title">Editar Seguimiento</h3>
-                    <p class="text-xs font-bold text-slate-500">Actualiza detalles o cambia el estado</p>
+                    <h3 class="text-lg font-bold text-texto-fuerte" id="editTrackingModal-title">Editar Seguimiento</h3>
+                    <p class="text-xs font-bold text-texto-suave">Actualiza detalles o cambia el estado</p>
                 </div>
             </div>
-            <button id="btn-close-edit-modal" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all" aria-label="Cerrar">
+            <button id="btn-close-edit-modal" class="p-2 text-texto-tenue hover:text-texto-base hover:bg-superficie-suave rounded-xl transition-all" aria-label="Cerrar">
                 <span class="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
         </div>
@@ -319,49 +319,49 @@
             <div class="p-6 overflow-y-auto flex-1 space-y-5">
                 <!-- Task -->
                 <div class="space-y-2">
-                    <label for="edit-task" class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Tarea Requerida</label>
-                    <textarea name="task" id="edit-task" required rows="2" class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 resize-none"></textarea>
+                    <label for="edit-task" class="text-xs font-bold text-texto-suave uppercase tracking-wider block">Tarea Requerida</label>
+                    <textarea name="task" id="edit-task" required rows="2" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte resize-none"></textarea>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4">
                     <!-- Responsible -->
                     <div class="space-y-2">
-                        <label for="edit-responsible" class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Responsable</label>
-                        <input type="text" name="responsible" id="edit-responsible" class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900" />
+                        <label for="edit-responsible" class="text-xs font-bold text-texto-suave uppercase tracking-wider block">Responsable</label>
+                        <input type="text" name="responsible" id="edit-responsible" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
                     </div>
                     <!-- Due Date -->
                     <div class="space-y-2">
-                        <label for="edit-due-date" class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Fecha Límite</label>
-                        <input type="text" name="due_date" id="edit-due-date" placeholder="DD/MM/YYYY" class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-slate-900" />
+                        <label for="edit-due-date" class="text-xs font-bold text-texto-suave uppercase tracking-wider block">Fecha Límite</label>
+                        <input type="text" name="due_date" id="edit-due-date" placeholder="DD/MM/YYYY" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" />
                     </div>
                 </div>
 
                 <!-- Status -->
                 <div class="space-y-2">
-                    <label id="estado" class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Estado</label>
+                    <label id="estado" class="text-xs font-bold text-texto-suave uppercase tracking-wider block">Estado</label>
                     <div class="grid grid-cols-4 gap-2" role="radiogroup" aria-labelledby="estado">
                         <label for="status-pending" class="cursor-pointer relative overflow-hidden">
                             <input type="radio" name="status" id="status-pending" value="Pendiente" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-slate-100 rounded-xl peer-checked:border-rose-500 peer-checked:bg-rose-50 transition-all">
-                                <span class="text-2xs font-bold text-slate-600 peer-checked:text-rose-600 block uppercase tracking-wider">Pendiente</span>
+                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-peligro-500 peer-checked:bg-peligro-50 transition-all">
+                                <span class="text-2xs font-bold text-texto-base peer-checked:text-peligro-600 block uppercase tracking-wider">Pendiente</span>
                             </div>
                         </label>
                         <label for="status-in-progress" class="cursor-pointer relative overflow-hidden">
                             <input type="radio" name="status" id="status-in-progress" value="En curso" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-slate-100 rounded-xl peer-checked:border-amber-500 peer-checked:bg-amber-50 transition-all">
-                                <span class="text-2xs font-bold text-slate-600 peer-checked:text-amber-600 block uppercase tracking-wider">En curso</span>
+                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-alerta-500 peer-checked:bg-alerta-50 transition-all">
+                                <span class="text-2xs font-bold text-texto-base peer-checked:text-alerta-600 block uppercase tracking-wider">En curso</span>
                             </div>
                         </label>
                         <label for="status-done" class="cursor-pointer relative overflow-hidden">
                             <input type="radio" name="status" id="status-done" value="Finalizado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-slate-100 rounded-xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
-                                <span class="text-2xs font-bold text-slate-600 peer-checked:text-emerald-600 block uppercase tracking-wider">Finalizado</span>
+                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-exito-500 peer-checked:bg-exito-50 transition-all">
+                                <span class="text-2xs font-bold text-texto-base peer-checked:text-exito-600 block uppercase tracking-wider">Finalizado</span>
                             </div>
                         </label>
                         <label for="status-canceled" class="cursor-pointer relative overflow-hidden">
                             <input type="radio" name="status" id="status-canceled" value="Cancelado" class="peer absolute inset-0 opacity-0 cursor-pointer z-10" />
-                            <div class="p-2 text-center border-2 border-slate-100 rounded-xl peer-checked:border-slate-500 peer-checked:bg-slate-50 transition-all">
-                                <span class="text-2xs font-bold text-slate-600 peer-checked:text-slate-600 block uppercase tracking-wider">Cancelado</span>
+                            <div class="p-2 text-center border-2 border-superficie-borde rounded-xl peer-checked:border-superficie-fuerte peer-checked:bg-superficie-suave transition-all">
+                                <span class="text-2xs font-bold text-texto-base peer-checked:text-texto-base block uppercase tracking-wider">Cancelado</span>
                             </div>
                         </label>
                     </div>
@@ -369,13 +369,13 @@
 
                 <!-- Observations -->
                 <div class="space-y-2">
-                    <label for="edit-observations" class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Observaciones del Seguimiento</label>
-                    <textarea name="observations" id="edit-observations" rows="3" class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-slate-900" placeholder="Agregue notas o avances sobre esta tarea..."></textarea>
+                    <label for="edit-observations" class="text-xs font-bold text-texto-suave uppercase tracking-wider block">Observaciones del Seguimiento</label>
+                    <textarea name="observations" id="edit-observations" rows="3" class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-texto-fuerte" placeholder="Agregue notas o avances sobre esta tarea..."></textarea>
                 </div>
             </div>
             
-            <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex gap-3">
-                <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-sm">
+            <div class="p-6 border-t border-superficie-borde bg-superficie-suave/50 flex gap-3">
+                <button type="button" id="btn-cancel-edit-modal" class="flex-1 px-4 py-3 rounded-xl border border-superficie-borde text-texto-base font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-sm">
                     Cancelar
                 </button>
                 <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20">

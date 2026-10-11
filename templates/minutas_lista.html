@@ -3,13 +3,13 @@
 {% block header_extra %}
 <div class="hidden lg:flex items-center gap-4 ml-4">
     <a href="/"
-        class="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 transition-all"
+        class="p-2 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-suave hover:text-primary hover:border-primary/30 transition-all"
         title="Volver al Dashboard" aria-label="Volver al Dashboard">
         <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
     </a>
     <div class="flex flex-col">
-        <h2 class="text-xl font-bold text-slate-900 leading-tight font-display tracking-tight">Minutas de Reunión</h2>
-        <p class="text-xs text-slate-500 font-medium">Registro de actas y minutas de reuniones de equipo.</p>
+        <h2 class="text-xl font-bold text-texto-fuerte leading-tight font-display tracking-tight">Minutas de Reunión</h2>
+        <p class="text-xs text-texto-suave font-medium">Registro de actas y minutas de reuniones de equipo.</p>
     </div>
 </div>
 {% endblock %}
@@ -17,49 +17,49 @@
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
             <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">description</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-slate-500 uppercase tracking-widest">Total Minutas</p>
-                <p class="text-2xl font-black text-slate-900">{{ stats.total }}</p>
+                <p class="text-2xs font-bold text-texto-suave uppercase tracking-widest">Total Minutas</p>
+                <p class="text-2xl font-black text-texto-fuerte">{{ stats.total }}</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-emerald-500 text-2xl" aria-hidden="true">check_circle</span>
+        <div class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-exito-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-exito-500 text-2xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-emerald-600 uppercase tracking-widest">Finalizadas</p>
-                <p class="text-2xl font-black text-emerald-600">{{ stats.finalizadas }}</p>
+                <p class="text-2xs font-bold text-exito-600 uppercase tracking-widest">Finalizadas</p>
+                <p class="text-2xl font-black text-exito-600">{{ stats.finalizadas }}</p>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div class="size-12 rounded-xl bg-amber-50 flex items-center justify-center">
-                <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">edit_note</span>
+        <div class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex items-center gap-4">
+            <div class="size-12 rounded-xl bg-alerta-50 flex items-center justify-center">
+                <span class="material-symbols-rounded text-alerta-500 text-2xl" aria-hidden="true">edit_note</span>
             </div>
             <div>
-                <p class="text-2xs font-bold text-amber-600 uppercase tracking-widest">Borradores</p>
-                <p class="text-2xl font-black text-amber-600">{{ stats.borradores }}</p>
+                <p class="text-2xs font-bold text-alerta-600 uppercase tracking-widest">Borradores</p>
+                <p class="text-2xl font-black text-alerta-600">{{ stats.borradores }}</p>
             </div>
         </div>
     </div>
 
     <!-- Filtros -->
     <form method="GET" action="/minutas"
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        class="bg-white p-5 rounded-2xl border border-superficie-borde shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex-1 min-w-[200px]">
-                <label for="f-q" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Buscar</label>
+                <label for="f-q" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Buscar</label>
                 <input id="f-q" name="q" type="search" value="{{ filtros.q or '' }}"
                     placeholder="Objetivo, lugar, redactor, fecha..."
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div class="min-w-[140px]">
-                <label for="f-estado" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Estado</label>
+                <label for="f-estado" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Estado</label>
                 <select id="f-estado" name="estado"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
                     {% for e in estados %}
                     <option value="{{ e }}" {% if filtros.estado == e %}selected{% endif %}>{{ e }}</option>
@@ -67,9 +67,9 @@
                 </select>
             </div>
             <div class="min-w-[170px]">
-                <label for="f-tipo" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Tipo de reunión</label>
+                <label for="f-tipo" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Tipo de reunión</label>
                 <select id="f-tipo" name="tipo"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
                     {% for t in tipos %}
                     <option value="{{ t }}" {% if filtros.tipo == t %}selected{% endif %}>{{ t }}</option>
@@ -77,20 +77,20 @@
                 </select>
             </div>
             <div class="min-w-[150px]">
-                <label for="f-redactor" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Redactor</label>
+                <label for="f-redactor" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Redactor</label>
                 <input id="f-redactor" name="redactor" type="text" value="{{ filtros.redactor or '' }}"
                     placeholder="Quién redactó"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="w-full bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div>
-                <label for="f-desde" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Desde</label>
+                <label for="f-desde" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Desde</label>
                 <input id="f-desde" name="fecha_desde" type="date" value="{{ filtros.fecha_desde or '' }}"
-                    class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div>
-                <label for="f-hasta" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Hasta</label>
+                <label for="f-hasta" class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1">Hasta</label>
                 <input id="f-hasta" name="fecha_hasta" type="date" value="{{ filtros.fecha_hasta or '' }}"
-                    class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+                    class="bg-superficie-suave border border-superficie-borde rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div class="flex items-center gap-2">
                 <button type="submit"
@@ -99,23 +99,23 @@
                     Filtrar
                 </button>
                 <a href="/minutas"
-                    class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-black text-2xs uppercase tracking-widest hover:bg-slate-50 transition-all">Limpiar</a>
+                    class="px-4 py-2 rounded-xl border border-superficie-borde text-texto-base font-black text-2xs uppercase tracking-widest hover:bg-superficie-suave transition-all">Limpiar</a>
             </div>
         </div>
     </form>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
-            <p class="text-xs text-slate-500 font-bold">
+    <div class="bg-white rounded-2xl shadow-sm border border-superficie-borde overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-superficie-borde">
+            <p class="text-xs text-texto-suave font-bold">
                 {{ filtered_total }} minuta{{ 's' if filtered_total != 1 else '' }}
                 {% if filtros.q or filtros.estado or filtros.tipo or filtros.redactor or filtros.fecha_desde or filtros.fecha_hasta %}
-                <span class="text-slate-400 font-medium">(de {{ stats.total }} en total)</span>
+                <span class="text-texto-tenue font-medium">(de {{ stats.total }} en total)</span>
                 {% endif %}
             </p>
             <div class="flex items-center gap-2">
                 <a href="/minutas/exportar-excel?{{ qs }}"
-                    class="border border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl font-black text-2xs uppercase tracking-widest transition-all flex items-center gap-2">
+                    class="border border-superficie-borde text-texto-base hover:bg-superficie-suave px-4 py-2 rounded-xl font-black text-2xs uppercase tracking-widest transition-all flex items-center gap-2">
                     <span class="material-symbols-rounded text-base" aria-hidden="true">download</span>
                     Exportar
                 </a>
@@ -130,31 +130,31 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
-                    <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Objetivo</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                    <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Objetivo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-texto-suave uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-superficie-borde">
                     {% for m in minutas %}
                     {% set fd = m.form_data or {} %}
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-5 text-sm font-bold text-slate-900">#{{ m.id }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600">{{ m.fecha or '—' }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600 max-w-[200px] truncate">{{ fd.get('objetivo','—') }}</td>
-                        <td class="px-6 py-5 text-sm text-slate-600">{{ fd.get('tipoReunion','—') }}</td>
+                    <tr data-row class="hover:bg-superficie-suave transition-colors">
+                        <td class="px-6 py-5 text-sm font-bold text-texto-fuerte">#{{ m.id }}</td>
+                        <td class="px-6 py-5 text-sm text-texto-base">{{ m.fecha or '—' }}</td>
+                        <td class="px-6 py-5 text-sm text-texto-base max-w-[200px] truncate">{{ fd.get('objetivo','—') }}</td>
+                        <td class="px-6 py-5 text-sm text-texto-base">{{ fd.get('tipoReunion','—') }}</td>
                         <td class="px-6 py-5">
                             {% if m.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
-                                <span class="size-1.5 bg-emerald-500 rounded-full"></span>Finalizado
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-exito-100 text-exito-700 uppercase">
+                                <span class="size-1.5 bg-exito-500 rounded-full"></span>Finalizado
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
-                                <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>Borrador
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-alerta-100 text-alerta-700 uppercase">
+                                <span class="size-1.5 bg-alerta-500 rounded-full animate-pulse"></span>Borrador
                             </span>
                             {% endif %}
                         </td>
@@ -162,13 +162,13 @@
                             <div class="flex items-center justify-end gap-2">
                                 {% if m.status == 'Finalizado' %}
                                 <a href="/minutas/{{ m.id }}/editar"
-                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-emerald-500 transition-all border border-slate-100"
+                                    class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-exito-500 transition-all border border-superficie-borde"
                                     title="Ver" aria-label="Ver">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">visibility</span>
                                 </a>
                                 {% else %}
                                 <a href="/minutas/{{ m.id }}/editar"
-                                    class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-primary transition-all border border-slate-100"
+                                    class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-primary transition-all border border-superficie-borde"
                                     title="Editar" aria-label="Editar">
                                     <span class="material-symbols-rounded text-[18px]" aria-hidden="true">edit</span>
                                 </a>
@@ -177,7 +177,7 @@
                                     data-confirm="Esta acción eliminará permanentemente la minuta #{{ m.id }}. No se puede deshacer.">
                                     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                     <button type="submit"
-                                        class="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 transition-all border border-slate-100"
+                                        class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-peligro-500 transition-all border border-superficie-borde"
                                         title="Eliminar" aria-label="Eliminar">
                                         <span class="material-symbols-rounded text-[18px]" aria-hidden="true">delete</span>
                                     </button>
@@ -191,53 +191,53 @@
         </div>
 
         {% if pagination.total_pages > 1 %}
-        <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 border-t border-slate-100">
-            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
+        <div class="flex items-center justify-between px-6 py-4 bg-superficie-suave/50 border-t border-superficie-borde">
+            <div class="text-2xs font-bold text-texto-tenue uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
             </div>
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
                     <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ('&' + qs) if qs else '' }}"
-                        class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-black text-texto-suave hover:bg-superficie-suave flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-base hover:bg-superficie-fuerte/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-texto-tenue cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
-        <div class="px-6 py-3 bg-slate-50/50 border-t border-slate-100">
-            <span class="text-2xs font-bold text-slate-500">{{ filtered_total }} minuta{{ 's' if filtered_total != 1 else '' }}</span>
+        <div class="px-6 py-3 bg-superficie-suave/50 border-t border-superficie-borde">
+            <span class="text-2xs font-bold text-texto-suave">{{ filtered_total }} minuta{{ 's' if filtered_total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% else %}
         <div class="text-center py-20">
-            <div class="size-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="material-symbols-rounded text-4xl text-slate-400" aria-hidden="true">description</span>
+            <div class="size-20 bg-superficie-suave rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-rounded text-4xl text-texto-tenue" aria-hidden="true">description</span>
             </div>
             {% if filtros.q or filtros.estado or filtros.tipo or filtros.redactor or filtros.fecha_desde or filtros.fecha_hasta %}
-            <h3 class="text-lg font-black text-slate-900 mb-2">Sin resultados</h3>
-            <p class="text-sm text-slate-500 mb-6">Ninguna minuta coincide con los filtros aplicados.</p>
+            <h3 class="text-lg font-black text-texto-fuerte mb-2">Sin resultados</h3>
+            <p class="text-sm text-texto-suave mb-6">Ninguna minuta coincide con los filtros aplicados.</p>
             <a href="/minutas"
-                class="inline-flex border border-slate-200 text-slate-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
+                class="inline-flex border border-superficie-borde text-texto-base px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-superficie-suave transition-all">
                 Limpiar filtros
             </a>
             {% else %}
-            <h3 class="text-lg font-black text-slate-900 mb-2">No hay minutas</h3>
-            <p class="text-sm text-slate-500 mb-6">Crea la primera minuta de reunión.</p>
+            <h3 class="text-lg font-black text-texto-fuerte mb-2">No hay minutas</h3>
+            <p class="text-sm text-texto-suave mb-6">Crea la primera minuta de reunión.</p>
             <a href="/minutas/nueva"
                 class="inline-flex bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">
                 Nueva Minuta

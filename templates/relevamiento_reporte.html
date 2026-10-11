@@ -79,26 +79,26 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-full w-full bg-slate-100 print:bg-white print:h-auto print:block">
+<div class="flex flex-col h-full w-full bg-superficie-suave print:bg-white print:h-auto print:block">
     <!-- Toolbar -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
+    <header class="h-16 bg-white border-b border-superficie-borde flex items-center justify-between px-6 print:hidden rounded-t-xl shrink-0">
         <div class="flex items-center gap-4">
-            <nav class="flex items-center gap-2 text-xs text-slate-500 uppercase tracking-wider font-semibold">
+            <nav class="flex items-center gap-2 text-xs text-texto-suave uppercase tracking-wider font-semibold">
                 <a href="/relevamiento" class="hover:text-primary transition-colors">Relevamiento Técnico</a>
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">chevron_right</span>
-                <span class="text-slate-900">Vista Previa #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</span>
+                <span class="text-texto-fuerte">Vista Previa #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</span>
             </nav>
         </div>
         <div class="flex items-center gap-2">
             {% if survey and survey.status != 'Completado' %}
             <a href="/relevamiento?edit_machine={{ machine.id }}"
-                class="flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-lg transition-colors text-sm font-bold mr-2">
+                class="flex items-center gap-2 px-3 py-2 bg-alerta-50 text-alerta-700 hover:bg-alerta-100 border border-alerta-200 rounded-lg transition-colors text-sm font-bold mr-2">
                 <span class="material-symbols-rounded text-[20px]" aria-hidden="true">edit</span>
                 Volver a Edición
             </a>
             {% endif %}
             <button style="cursor:pointer" data-print-btn
-                class="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-sm font-semibold">
+                class="flex items-center gap-2 px-3 py-2 bg-superficie-suave hover:bg-superficie-fuerte rounded-lg transition-colors text-sm font-semibold">
                 <span class="material-symbols-rounded text-[20px]" aria-hidden="true">print</span>
                 Imprimir
             </button>
@@ -111,50 +111,50 @@
     </header>
 
     <!-- Document Scrollable Area -->
-    <div class="flex-1 overflow-y-auto w-full px-4 py-4 md:px-8 md:py-6 scroll-smooth flex justify-center bg-slate-100 print:bg-white print:p-0 print:overflow-visible print:block print:h-auto print:min-h-0 print:shadow-none print:m-0">
+    <div class="flex-1 overflow-y-auto w-full px-4 py-4 md:px-8 md:py-6 scroll-smooth flex justify-center bg-superficie-suave print:bg-white print:p-0 print:overflow-visible print:block print:h-auto print:min-h-0 print:shadow-none print:m-0">
         
         <!-- PDF Page Simulation -->
-        <div class="pdf-page w-full max-w-[850px] min-h-0 print:min-h-0 print:max-w-none bg-white text-slate-900 px-8 py-6 md:px-12 md:py-8 print:p-0 pdf-shadow print:shadow-none flex flex-col gap-8 rounded-sm text-sm" style="height: fit-content;">
+        <div class="pdf-page w-full max-w-[850px] min-h-0 print:min-h-0 print:max-w-none bg-white text-texto-fuerte px-8 py-6 md:px-12 md:py-8 print:p-0 pdf-shadow print:shadow-none flex flex-col gap-8 rounded-sm text-sm" style="height: fit-content;">
 
             <!-- PDF Header -->
-            <div class="flex justify-between items-start border-b-2 border-slate-100 pb-8">
+            <div class="flex justify-between items-start border-b-2 border-superficie-borde pb-8">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-white shrink-0">
                         <span class="material-symbols-rounded text-3xl" aria-hidden="true">fact_check</span>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-slate-900 uppercase">Aplicación AT</h2>
+                        <h2 class="text-xl font-bold tracking-tight text-texto-fuerte uppercase">Aplicación AT</h2>
                         <p class="text-xs font-semibold text-primary uppercase tracking-widest">Servicios Técnicos Profesionales</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <h3 class="text-lg font-bold text-slate-900">REPORTE DE MÁQUINA</h3>
-                    <p class="text-sm font-medium text-slate-500">Folio: #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</p>
-                    <p class="text-sm font-medium text-slate-500">Fecha: {{ survey.updated_at.strftime('%d/%m/%Y') if survey and survey.updated_at else '-' }}</p>
+                    <h3 class="text-lg font-bold text-texto-fuerte">REPORTE DE MÁQUINA</h3>
+                    <p class="text-sm font-medium text-texto-suave">Folio: #RM-{{ survey.updated_at.strftime('%Y') if survey and survey.updated_at else '0000' }}-{{ "%04d" | format(machine.id) }}</p>
+                    <p class="text-sm font-medium text-texto-suave">Fecha: {{ survey.updated_at.strftime('%d/%m/%Y') if survey and survey.updated_at else '-' }}</p>
                 </div>
             </div>
 
             <!-- Customer & Technical Info Grid -->
             <div class="grid grid-cols-2 gap-8">
                 <section>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
+                    <h4 class="text-xs font-bold text-texto-tenue uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información del Cliente</h4>
                     <div class="space-y-1.5">
-                        <p class="text-sm"><span class="font-bold text-slate-700">Cliente:</span> {{ customer.name if customer else 'No asignado' }}</p>
-                        <p class="text-sm"><span class="font-bold text-slate-700">Planta/Sede:</span> {{ customer.plant if customer and customer.plant else '-' }}</p>
-                        <p class="text-sm"><span class="font-bold text-slate-700">Línea de Prod.:</span> {{ machine.line if machine.line else '-' }}</p>
+                        <p class="text-sm"><span class="font-bold text-texto-base">Cliente:</span> {{ customer.name if customer else 'No asignado' }}</p>
+                        <p class="text-sm"><span class="font-bold text-texto-base">Planta/Sede:</span> {{ customer.plant if customer and customer.plant else '-' }}</p>
+                        <p class="text-sm"><span class="font-bold text-texto-base">Línea de Prod.:</span> {{ machine.line if machine.line else '-' }}</p>
                     </div>
                 </section>
                 <section>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
+                    <h4 class="text-xs font-bold text-texto-tenue uppercase tracking-wider mb-3 border-l-4 border-primary pl-2">Información Operativa</h4>
                     <div class="space-y-1.5">
-                        <p class="text-sm"><span class="font-bold text-slate-700">Asistente Técnico:</span> {{ customer.technical_advisor if customer and customer.technical_advisor else '-' }}</p>
-                        <p class="text-sm"><span class="font-bold text-slate-700">Estado global:</span> 
+                        <p class="text-sm"><span class="font-bold text-texto-base">Asistente Técnico:</span> {{ customer.technical_advisor if customer and customer.technical_advisor else '-' }}</p>
+                        <p class="text-sm"><span class="font-bold text-texto-base">Estado global:</span> 
                             {% if machine.relevamiento_status == 'Completado' %}
-                                <span class="text-emerald-600 font-bold">Completado</span>
+                                <span class="text-exito-600 font-bold">Completado</span>
                             {% elif machine.relevamiento_status == 'En Proceso' %}
-                                <span class="text-blue-600 font-bold">En Proceso</span>
+                                <span class="text-info-600 font-bold">En Proceso</span>
                             {% else %}
-                                <span class="text-amber-600 font-bold">Pendiente</span>
+                                <span class="text-alerta-600 font-bold">Pendiente</span>
                             {% endif %}
                         </p>
                     </div>
@@ -163,15 +163,15 @@
 
             <!-- Section: Machine Specs -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4">
+                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4">
                     <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">precision_manufacturing</span> Especificaciones de la Máquina
                 </h4>
                 <div class="grid grid-cols-2 gap-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Máquina (Marca y Modelo):</span> {{ machine.brand }} {{ machine.model }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">PPM Promedio:</span> {{ survey_data.get('maquinaria_ppm', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Velocidad Objetivo:</span> {{ survey_data.get('maquinaria_capacidad', '-') }} cj/min</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Slotter:</span> {{ survey_data.get('tipo_slotter', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Tipo de Impresión:</span>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Máquina (Marca y Modelo):</span> {{ machine.brand }} {{ machine.model }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">PPM Promedio:</span> {{ survey_data.get('maquinaria_ppm', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Velocidad Objetivo:</span> {{ survey_data.get('maquinaria_capacidad', '-') }} cj/min</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Slotter:</span> {{ survey_data.get('tipo_slotter', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Tipo de Impresión:</span>
                         {% set imp = survey_data.get('tipo_impresion') %}
                         {% if imp is string %}
                             {{ imp }}
@@ -181,41 +181,41 @@
                             -
                         {% endif %}
                     </p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey_data.get('maquinaria_obs', '-') }}</p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">Observaciones:</span> {{ survey_data.get('maquinaria_obs', '-') }}</p>
                 </div>
             </section>
 
             <!-- Station E1: Alimentación -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4">
+                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4">
                     <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">input</span> Estación 1: Alimentación (Feeder)
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Toma de Cajas:</span> {{ survey_data.get('e1_toma_cajas', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Vacío:</span> {{ survey_data.get('e1_tipo_vacio', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Cant. de Ventosas:</span> {{ survey_data.get('e1_cant_ventosas', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Center Line:</span> {{ 'Sí' if survey_data.get('e1_centerline') else 'No' }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e1_requires_sqt') else 'No' }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Toma de Cajas:</span> {{ survey_data.get('e1_toma_cajas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Vacío:</span> {{ survey_data.get('e1_tipo_vacio', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Cant. de Ventosas:</span> {{ survey_data.get('e1_cant_ventosas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Center Line:</span> {{ 'Sí' if survey_data.get('e1_centerline') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e1_requires_sqt') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e1') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
+                        <span class="text-peligro-500 font-bold bg-peligro-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
+                        <span class="text-alerta-500 font-bold bg-alerta-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
+                        <span class="text-exito-500 font-bold bg-exito-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
                     </p>
                     {% if survey_data.get('e1_requires_sqt') %}
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">SQT (Nominal / Mín / Máx):</span>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">SQT (Nominal / Mín / Máx):</span>
                         {{ survey_data.get('e1_sqt_nominal', '-') }} / {{ survey_data.get('e1_sqt_min', '-') }} / {{ survey_data.get('e1_sqt_max', '-') }}</p>
                     {% endif %}
                 </div>
                 {% if survey_data.get('e1_obs') %}
-                <div class="mt-2 p-3 bg-slate-50 rounded border border-slate-200">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                <div class="mt-2 p-3 bg-superficie-suave rounded border border-superficie-borde">
+                    <p class="text-xs font-semibold text-texto-suave uppercase tracking-wider mb-1">Observaciones (FODA)</p>
                     <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e1_obs') }}</p>
                 </div>
                 {% endif %}
@@ -223,36 +223,36 @@
 
             <!-- Station E2: Formado y Escuadrado -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4">
+                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4">
                     <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">square_foot</span> Estación 2: Formado y Escuadrado
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Formado:</span> {{ survey_data.get('e2_tipo_formado', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Cierre Inferior:</span> {{ survey_data.get('e2_cierre_inferior', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Vacío:</span> {{ survey_data.get('e2_tipo_vacio', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Ventosas:</span> {{ survey_data.get('e2_ventosas', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Center Line:</span> {{ 'Sí' if survey_data.get('e2_centerline') else 'No' }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e2_requires_sqt') else 'No' }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Formado:</span> {{ survey_data.get('e2_tipo_formado', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Cierre Inferior:</span> {{ survey_data.get('e2_cierre_inferior', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Vacío:</span> {{ survey_data.get('e2_tipo_vacio', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Ventosas:</span> {{ survey_data.get('e2_ventosas', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Center Line:</span> {{ 'Sí' if survey_data.get('e2_centerline') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e2_requires_sqt') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e2') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
+                        <span class="text-peligro-500 font-bold bg-peligro-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
+                        <span class="text-alerta-500 font-bold bg-alerta-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
+                        <span class="text-exito-500 font-bold bg-exito-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
                     </p>
                     {% if survey_data.get('e2_requires_sqt') %}
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">SQT (Nominal / Mín / Máx):</span>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">SQT (Nominal / Mín / Máx):</span>
                         {{ survey_data.get('e2_sqt_nominal', '-') }} / {{ survey_data.get('e2_sqt_min', '-') }} / {{ survey_data.get('e2_sqt_max', '-') }}</p>
                     {% endif %}
                 </div>
                 {% if survey_data.get('e2_obs') %}
-                <div class="mt-2 p-3 bg-slate-50 rounded border border-slate-200">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                <div class="mt-2 p-3 bg-superficie-suave rounded border border-superficie-borde">
+                    <p class="text-xs font-semibold text-texto-suave uppercase tracking-wider mb-1">Observaciones (FODA)</p>
                     <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e2_obs') }}</p>
                 </div>
                 {% endif %}
@@ -260,54 +260,54 @@
 
             <!-- Station E3: Sistema de Cierre -->
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4">
+                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4">
                     <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">handyman</span> Estación 3: Sistema de Cierre
                 </h4>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Cierre:</span> {{ survey_data.get('e3_tipo_cierre', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Cierre:</span> {{ survey_data.get('e3_tipo_cierre', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e3') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
+                        <span class="text-peligro-500 font-bold bg-peligro-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
+                        <span class="text-alerta-500 font-bold bg-alerta-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
+                        <span class="text-exito-500 font-bold bg-exito-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
                     </p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e3_requires_sqt') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Requiere SQT:</span> {{ 'Sí' if survey_data.get('e3_requires_sqt') else 'No' }}</p>
                     {% if survey_data.get('e3_requires_sqt') %}
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">SQT (Nominal / Mín / Máx):</span>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-texto-base">SQT (Nominal / Mín / Máx):</span>
                         {{ survey_data.get('e3_sqt_nominal', '-') }} / {{ survey_data.get('e3_sqt_min', '-') }} / {{ survey_data.get('e3_sqt_max', '-') }}</p>
                     {% endif %}
                 </div>
 
                 {% if survey_data.get('e3_tipo_cierre') == 'Hotmelt' %}
-                <h5 class="font-bold text-sm mt-3 mb-2 text-slate-700">Configuración Hotmelt</h5>
+                <h5 class="font-bold text-sm mt-3 mb-2 text-texto-base">Configuración Hotmelt</h5>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Marca de Adhesivo:</span> {{ survey_data.get('e3_marca_adhesivo', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Proveedor:</span> {{ survey_data.get('e3_proveedor', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Adhesivo:</span> {{ survey_data.get('e3_tipo_adhesivo', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Colero:</span> {{ survey_data.get('e3_tipo_colero', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Marca de Colero:</span> {{ survey_data.get('e3_marca_colero', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Temperatura:</span> {{ survey_data.get('e3_temp', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Gramos por Caja:</span> {{ survey_data.get('e3_gramos_caja', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Presión de Aire:</span> {{ survey_data.get('e3_presion_aire', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Marca de Adhesivo:</span> {{ survey_data.get('e3_marca_adhesivo', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Proveedor:</span> {{ survey_data.get('e3_proveedor', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Adhesivo:</span> {{ survey_data.get('e3_tipo_adhesivo', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Colero:</span> {{ survey_data.get('e3_tipo_colero', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Marca de Colero:</span> {{ survey_data.get('e3_marca_colero', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Temperatura:</span> {{ survey_data.get('e3_temp', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Gramos por Caja:</span> {{ survey_data.get('e3_gramos_caja', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Presión de Aire:</span> {{ survey_data.get('e3_presion_aire', '-') }}</p>
                 </div>
                 {% elif survey_data.get('e3_tipo_cierre') == 'Cinta' %}
-                <h5 class="font-bold text-sm mt-3 mb-2 text-slate-700">Configuración Cinta</h5>
+                <h5 class="font-bold text-sm mt-3 mb-2 text-texto-base">Configuración Cinta</h5>
                 <div class="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Tipo de Cinta:</span> {{ survey_data.get('e3_tipo_cinta', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Marca de Cinta:</span> {{ survey_data.get('e3_marca_cinta', '-') }}</p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Center Line:</span> {{ 'Sí' if survey_data.get('e3_cinta_cl') else 'No' }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Tipo de Cinta:</span> {{ survey_data.get('e3_tipo_cinta', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Marca de Cinta:</span> {{ survey_data.get('e3_marca_cinta', '-') }}</p>
+                    <p class="text-sm"><span class="font-semibold text-texto-base">Center Line:</span> {{ 'Sí' if survey_data.get('e3_cinta_cl') else 'No' }}</p>
                 </div>
                 {% endif %}
 
                 {% if survey_data.get('e3_obs') %}
-                <div class="mt-2 p-3 bg-slate-50 rounded border border-slate-200">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Observaciones (FODA)</p>
+                <div class="mt-2 p-3 bg-superficie-suave rounded border border-superficie-borde">
+                    <p class="text-xs font-semibold text-texto-suave uppercase tracking-wider mb-1">Observaciones (FODA)</p>
                     <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('e3_obs') }}</p>
                 </div>
                 {% endif %}
@@ -317,16 +317,16 @@
             {% set team_names = survey_data.get('team_name') %}
             {% if team_names %}
             <section class="mt-4 page-break-inside-avoid">
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-2 mb-4">
+                <h4 class="text-xs font-bold text-texto-suave uppercase tracking-widest border-b border-superficie-borde pb-2 mb-4">
                     <span class="material-symbols-rounded align-middle mr-1 text-base" aria-hidden="true">group</span> Equipo de Relevamiento
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-200">
-                                <th class="text-left font-semibold text-slate-600 pb-2" scope="col">Nombre</th>
-                                <th class="text-left font-semibold text-slate-600 pb-2" scope="col">Cargo</th>
-                                <th class="text-left font-semibold text-slate-600 pb-2" scope="col">Observaciones</th>
+                            <tr class="border-b border-superficie-borde">
+                                <th class="text-left font-semibold text-texto-base pb-2" scope="col">Nombre</th>
+                                <th class="text-left font-semibold text-texto-base pb-2" scope="col">Cargo</th>
+                                <th class="text-left font-semibold text-texto-base pb-2" scope="col">Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -342,7 +342,7 @@
                             {% set team_obss = [team_obss] %}
                             {% endif %}
                             {% for idx in range(team_names|length) %}
-                            <tr class="border-b border-slate-100">
+                            <tr class="border-b border-superficie-borde">
                                 <td class="py-1.5 pr-4">{{ team_names[idx] }}</td>
                                 <td class="py-1.5 pr-4">{{ team_roles[idx] if team_roles and idx < team_roles|length else '' }}</td>
                                 <td class="py-1.5">{{ team_obss[idx] if team_obss and idx < team_obss|length else '' }}</td>
@@ -352,8 +352,8 @@
                     </table>
                 </div>
                 {% if survey_data.get('relev_obs_equipo') %}
-                <div class="mt-2 p-3 bg-slate-50 rounded border border-slate-200">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Observaciones del Equipo</p>
+                <div class="mt-2 p-3 bg-superficie-suave rounded border border-superficie-borde">
+                    <p class="text-xs font-semibold text-texto-suave uppercase tracking-wider mb-1">Observaciones del Equipo</p>
                     <p class="text-sm whitespace-pre-wrap">{{ survey_data.get('relev_obs_equipo') }}</p>
                 </div>
                 {% endif %}
@@ -361,28 +361,27 @@
             {% endif %}
 
             <!-- Conclusions & Signatures -->
-            <div class="mt-auto pt-8 border-t border-slate-100 page-break-inside-avoid">
+            <div class="mt-auto pt-8 border-t border-superficie-borde page-break-inside-avoid">
                 {% if survey_data.get('relev_obs_generales') %}
                 <section class="mb-8">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Conclusiones Finales</h4>
-                    <p class="text-sm text-slate-700 leading-relaxed italic border-l-2 border-slate-300 pl-4 py-1 whitespace-pre-wrap">
-                        "{{ survey_data.get('relev_obs_generales') }}"
+                    <h4 class="text-xs font-bold text-texto-tenue uppercase tracking-wider mb-2">Conclusiones Finales</h4>
+                    <p class="text-sm text-texto-base leading-relaxed italic border-l-2 border-superficie-fuerte pl-4 py-1 whitespace-pre-wrap"> "{{ survey_data.get('relev_obs_generales') }}"
                     </p>
                 </section>
                 {% endif %}
 
                 <div class="grid grid-cols-2 gap-20 mt-12">
                     <div class="text-center">
-                        <div class="border-b border-slate-900 mb-2 h-16 flex items-end justify-center">
+                        <div class="border-b border-superficie-fuerte mb-2 h-16 flex items-end justify-center">
                         </div>
                         <p class="text-xs font-bold">Firma Técnico / Profesional</p>
-                        <p class="text-2xs text-slate-500">Representante Aplicación AT</p>
+                        <p class="text-2xs text-texto-suave">Representante Aplicación AT</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Page Number -->
-            <div class="pt-8 flex justify-between items-center text-2xs text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
+            <div class="pt-8 flex justify-between items-center text-2xs text-texto-tenue font-bold uppercase tracking-widest mt-8 border-t border-dashed border-superficie-borde">
                 <span>{{ survey.updated_at.strftime('%Y-%m-%d %H:%M') if survey and survey.updated_at else '' }}</span>
                 <span>Documento Generado vía Aplicación AT</span>
             </div>

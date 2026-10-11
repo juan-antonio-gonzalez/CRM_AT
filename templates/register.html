@@ -8,7 +8,7 @@
     <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
 </head>
-<body class="h-full bg-background-light font-display text-slate-900">
+<body class="h-full bg-background-light font-display text-texto-fuerte">
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
     <div class="min-h-full flex items-center justify-center p-6">
@@ -17,25 +17,25 @@
                 <div class="size-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/20 mx-auto mb-4">
                     <span class="material-symbols-rounded text-3xl" aria-hidden="true">person_add</span>
                 </div>
-                <h1 class="text-2xl font-black text-slate-900 tracking-tight">CRM-AT</h1>
-                <p class="text-sm text-slate-500 font-medium mt-1">Crear nuevo usuario</p>
+                <h1 class="text-2xl font-black text-texto-fuerte tracking-tight">CRM-AT</h1>
+                <p class="text-sm text-texto-suave font-medium mt-1">Crear nuevo usuario</p>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-8">
+            <div class="bg-white rounded-3xl border border-superficie-borde shadow-2xl p-8">
                 <div class="flex items-center gap-3 mb-6">
-                    <span class="material-symbols-rounded text-amber-500 text-lg" aria-hidden="true">admin_panel_settings</span>
-                    <h2 class="text-lg font-black text-slate-900">Administración de Usuarios</h2>
+                    <span class="material-symbols-rounded text-alerta-500 text-lg" aria-hidden="true">admin_panel_settings</span>
+                    <h2 class="text-lg font-black text-texto-fuerte">Administración de Usuarios</h2>
                 </div>
 
                 {% if error %}
-                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold mb-6">
+                <div role="alert" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-peligro-50 border border-peligro-200 text-peligro-700 text-sm font-semibold mb-6">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">error</span>
                     <span>{{ error }}</span>
                 </div>
                 {% endif %}
 
                 {% if success %}
-                <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold mb-6">
+                <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-exito-50 border border-exito-200 text-exito-700 text-sm font-semibold mb-6">
                     <span class="material-symbols-rounded text-lg" aria-hidden="true">check_circle</span>
                     <span>{{ success }}</span>
                 </div>
@@ -44,33 +44,33 @@
                 <form method="POST" action="/auth/register" class="space-y-4" id="registerForm">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token or '' }}">
                     <div class="space-y-2">
-                        <label for="reg-full-name" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
+                        <label for="reg-full-name" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Nombre Completo</label>
                         <input id="reg-full-name" name="full_name" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                            class="w-full bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="Juan Pérez" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-username" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Usuario</label>
+                        <label for="reg-username" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Usuario</label>
                         <input id="reg-username" name="username" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                            class="w-full bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="jperez" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-email" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
+                        <label for="reg-email" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Correo Electrónico</label>
                         <input id="reg-email" name="email" type="email" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                            class="w-full bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="juan@ejemplo.com" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-password" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
+                        <label for="reg-password" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Contraseña</label>
                         <input id="reg-password" name="password" type="password" required minlength="6"
-                            class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
+                            class="w-full bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="Mínimo 6 caracteres" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-role" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Rol</label>
+                        <label for="reg-role" class="text-2xs font-black text-texto-tenue uppercase tracking-widest">Rol</label>
                         <select id="reg-role" name="role"
-                            class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all">
+                            class="w-full bg-superficie-suave border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all">
                             <option value="user">Usuario</option>
                             <option value="admin">Administrador</option>
                         </select>

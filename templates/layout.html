@@ -194,12 +194,12 @@
         <div class="flex-1 flex flex-col overflow-hidden print:overflow-visible print:h-auto">
             <!-- Global Header -->
             <header
-                class="h-16 lg:h-20 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-10 print:hidden">
+                class="h-16 lg:h-20 flex-shrink-0 bg-white border-b border-superficie-borde flex items-center justify-between px-4 lg:px-10 print:hidden">
                 {% block header %}
                 <div class="flex items-center gap-3 lg:gap-6">
                     <!-- Mobile Hamburger -->
                     <button id="btnMobileMenu" aria-label="Abrir menú de navegación" aria-controls="sidebarNav" aria-expanded="false"
-                        class="lg:hidden p-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:text-primary transition-all">
+                        class="lg:hidden p-2 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-suave hover:text-primary transition-all">
                         <span class="material-symbols-rounded" aria-hidden="true">menu</span>
                     </button>
                     
@@ -219,7 +219,7 @@
 
             <!-- Scrollable Content -->
             <main
-                class="flex-1 overflow-y-auto bg-slate-50 p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
+                class="flex-1 overflow-y-auto bg-superficie-suave p-2 sm:p-4 lg:p-6 print:overflow-visible print:h-auto print:block print:p-0 print:bg-white">
                 {% block content %}{% endblock %}
             </main>
         </div>
@@ -244,8 +244,7 @@
     {% endcall %}
     {% endcall %}
 
-    {% call modal("deactivate-modal", "Desactivar registro", "formulario", "block", "peligro",
-                  "Indicá el motivo por el cual desactivás este registro.") %}
+    {% call modal("deactivate-modal", "Desactivar registro", "formulario", "block", "peligro", "Indicá el motivo por el cual desactivás este registro.") %}
     <label for="deactivate-reason" class="block text-sm font-semibold text-texto-base mb-1">Motivo</label>
     <textarea id="deactivate-reason" rows="3" required
         class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md p-3 text-sm focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
