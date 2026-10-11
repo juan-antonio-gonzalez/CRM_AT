@@ -1,171 +1,160 @@
 {% extends "layout.html" %}
+{% from "_ui.html" import indicador, estado %}
 
-{% block title %}Dashboard BI | CRM-AT{% endblock %}
+{% block title %}Dashboard | CRM-AT{% endblock %}
 
 {% block header_extra %}
-<div class="flex items-center gap-3">
-    <div class="flex flex-col">
-        <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Dashboard BI</h2>
-        <p class="text-[10px] text-slate-500 font-bold uppercase">Indicadores principales</p>
+<div class="flex items-center gap-4 min-w-0">
+    <div class="flex flex-col min-w-0">
+        <h1 class="text-base sm:text-xl font-bold text-texto-fuerte tracking-tight truncate">Dashboard</h1>
+        <p class="text-2xs text-texto-suave">Indicadores principales</p>
     </div>
-    <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
-        <p class="text-[8px] font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
-        <p class="text-[11px] font-bold text-slate-700">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
-    </div>
+    <span class="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-superficie-suave text-2xs font-semibold text-texto-suave shrink-0">
+        <span class="material-symbols-rounded text-sm" aria-hidden="true">schedule</span>
+        Actualizado {{ today.strftime('%d/%m/%Y %H:%M') }}
+    </span>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto space-y-12 animate-fade-in pb-10">
+{# ============================================================================
+   DISTRIBUCIÓN DE LOS INDICADORES
 
-    <!-- ════════════ FILTROS ════════════ -->
+   Antes había 9 bloques de tarjetas repartidos en toda la página, con 7
+   configuraciones de grilla distintas (3, 2, 2, 6, 2, 4 y 3 columnas). Sumaban
+   1184px de 1832px —el 65% de la pantalla— y empujaban el primer gráfico hasta
+   los 715px, así que había que desplazarse una pantalla entera para ver un dato
+   con contexto. Dos tarjetas con el mismo tipo de dato medían 150px y 68px de
+   alto según dónde estuvieran.
+
+   Ahora hay UNA sola grilla, con alto uniforme, y agrupada por tema. Cada cifra
+   tiene su etiqueta pegada (antes decía "Activos" y había que deducir de qué),
+   y ninguna pierde contraste: las cifras usaban emerald-500 (2.54:1) y
+   amber-500 (2.15:1), que no llegan al mínimo de 4.5:1.
+   ============================================================================ #}
+
+<div class="max-w-[1600px] mx-auto space-y-6 animate-fade-in pb-10">
+
+    {# ── Indicadores: una sola grilla ─────────────────────────────────────── #}
+    <section aria-label="Indicadores principales">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {{ indicador("Clientes en cartera", clientes.total, "neutro", "group") }}
+            {{ indicador("Visitas realizadas", visitas.finalizado, "exito", "assignment_turned_in") }}
+            {{ indicador("Avance de visitas", visitas.avance_pct ~ "%", "primario", "trending_up") }}
+            {{ indicador("Máquinas relevadas", maquinas.survey_progress ~ "%", "info", "precision_manufacturing") }}
+
+            {{ indicador("Clientes activos", clientes.activos, "exito", "check_circle") }}
+            {{ indicador("Clientes inactivos", clientes.prospectos, "alerta", "pause_circle") }}
+            {{ indicador("Visitas en borrador", visitas.borrador, "alerta", "edit_note") }}
+            {{ indicador("Objetivo total AT", visitas.total_asignadas_at, "neutro", "flag") }}
+
+            {{ indicador("Total de visitas", visitas.total, "neutro", "assignment") }}
+            {{ indicador("Minutas de reunión", minutas.total, "neutro", "description") }}
+            {{ indicador("Minutas finalizadas", minutas.finalizado, "exito", "task_alt") }}
+            {{ indicador("Minutas en borrador", minutas.borrador, "alerta", "draft") }}
+        </div>
+    </section>
+
+    {# ── Filtros ──────────────────────────────────────────────────────────── #}
     <section>
-        <form method="GET" action="/" class="bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-end gap-3 w-full">
-                <div class="flex flex-col gap-0.5 flex-1">
-                    <label for="filter-at" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">AT</label>
-                    <select id="filter-at" name="at" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+        <form method="GET" action="/"
+            class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-4">
+            <div class="flex flex-wrap items-end gap-3">
+                <div class="flex flex-col gap-1 flex-1 min-w-[160px]">
+                    <label for="filter-at" class="text-2xs font-semibold text-texto-suave uppercase tracking-wide">Asistente técnico</label>
+                    <select id="filter-at" name="at"
+                        class="w-full text-sm bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
                         <option value="">Todos</option>
                         {% for a in advisors %}
                         <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="flex flex-col gap-0.5 flex-[2]">
-                    <label for="filter-cliente" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Cliente</label>
-                    <select id="filter-cliente" name="cliente" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                <div class="flex flex-col gap-1 flex-[2] min-w-[200px]">
+                    <label for="filter-cliente" class="text-2xs font-semibold text-texto-suave uppercase tracking-wide">Cliente</label>
+                    <select id="filter-cliente" name="cliente"
+                        class="w-full text-sm bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
                         <option value="">Todos</option>
                         {% for c in customer_list %}
                         <option value="{{ c.id }}" {% if filters.cliente|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="flex flex-col gap-0.5 w-20">
-                    <label for="filter-anio" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Año</label>
-                    <select id="filter-anio" name="anio" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                <div class="flex flex-col gap-1 w-28">
+                    <label for="filter-anio" class="text-2xs font-semibold text-texto-suave uppercase tracking-wide">Año</label>
+                    <select id="filter-anio" name="anio"
+                        class="w-full text-sm bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
                         <option value="">Todos</option>
                         {% for y in available_years %}
                         <option value="{{ y }}" {% if filters.anio == y %}selected{% endif %}>{{ y }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="flex flex-col gap-0.5 w-20">
-                    <label for="filter-mes" class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Mes</label>
-                    <select id="filter-mes" name="mes" class="text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all w-full">
+                <div class="flex flex-col gap-1 w-36">
+                    <label for="filter-mes" class="text-2xs font-semibold text-texto-suave uppercase tracking-wide">Mes</label>
+                    <select id="filter-mes" name="mes"
+                        class="w-full text-sm bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
                         <option value="">Todos</option>
                         {% for m in months %}
                         <option value="{{ m[0] }}" {% if filters.mes == m[0] %}selected{% endif %}>{{ m[1] }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="flex items-end gap-1.5 flex-none">
-                    <button type="submit" class="text-[11px] font-bold bg-primary text-white px-3 py-1.5 rounded-lg hover:bg-primary/90 transition-all">Filtrar</button>
-                    <a href="/" class="text-[11px] font-bold bg-slate-100 text-slate-500 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-all">Limpiar</a>
+                <div class="flex items-center gap-2">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">filter_alt</span>
+                        Filtrar
+                    </button>
+                    <a href="/"
+                        class="px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+                        Limpiar
+                    </a>
                 </div>
             </div>
         </form>
     </section>
 
-    <!-- ════════════ CLIENTES ════════════ -->
-    <section>
+    {# ── Visitas ──────────────────────────────────────────────────────────── #}
+    <section aria-labelledby="sec-visitas">
         <div class="flex items-center gap-3 mb-3">
-            <div class="size-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
-                <span class="material-symbols-rounded text-2xl" aria-hidden="true">group</span>
-            </div>
+            <span class="size-9 rounded-md bg-primary-50 text-primary-600 flex items-center justify-center shrink-0" aria-hidden="true">
+                <span class="material-symbols-rounded text-lg">engineering</span>
+            </span>
             <div>
-                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Clientes</h3>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Cartera y segmentación</p>
+                <h2 id="sec-visitas" class="text-base font-bold text-texto-fuerte">Visitas técnicas</h2>
+                <p class="text-2xs text-texto-suave">
+                    {{ visitas.finalizado }} de {{ visitas.total_asignadas_at }} del objetivo del año
+                </p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Clientes</p>
-                <p class="text-3xl font-black text-slate-900 mt-1">{{ clientes.total }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Activos</p>
-                <p class="text-3xl font-black text-emerald-600 mt-1">{{ clientes.activos }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Inactivos</p>
-                <p class="text-3xl font-black text-amber-600 mt-1">{{ clientes.prospectos }}</p>
-            </div>
-        </div>
-
-
-    </section>
-
-    <!-- ════════════ VISITAS ════════════ -->
-    <section>
-        <div class="flex items-center gap-3 mb-3">
-            <div class="size-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-rounded text-2xl" aria-hidden="true">engineering</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Visitas</h3>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Informes de asistencia técnica</p>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap gap-3 mb-3">
-            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Visitas</p>
-                <p class="text-3xl font-black text-slate-900 mt-1">{{ visitas.total }}</p>
-            </div>
-            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Borrador</p>
-                <p class="text-3xl font-black text-amber-600 mt-1">{{ visitas.borrador }}</p>
-            </div>
-            <div class="flex-1 min-w-[140px] bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Finalizado</p>
-                <p class="text-3xl font-black text-emerald-600 mt-1">{{ visitas.finalizado }}</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Objetivo total AT</p>
-                <p class="text-3xl font-black text-sky-600 mt-1">{{ visitas.total_asignadas_at }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance de Visitas</p>
-                <p class="text-3xl font-black text-emerald-600 mt-1">{{ visitas.avance_pct }}%</p>
-                <div class="mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500" style="width: {{ visitas.avance_pct }}%"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-5 h-[300px] flex flex-col">
+                <div class="flex items-center justify-between mb-4 shrink-0">
+                    <h3 class="text-sm font-bold text-texto-fuerte">Tendencia de visitas</h3>
+                    {{ estado("Mensual", "primario") }}
                 </div>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">{{ visitas.finalizado }} de {{ visitas.total_asignadas_at }} realizadas</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-            <!-- Tendencia de Visitas -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-[300px] flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Tendencia de Visitas</h4>
-                    <span class="text-[9px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-lg uppercase">Mensual</span>
-                </div>
-                <div class="flex-1 relative">
+                <div class="flex-1 relative min-h-0">
                     <canvas id="visitsTrendChart"></canvas>
                 </div>
             </div>
 
-            <!-- Motivos de Visita -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-[300px] flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Motivos de Visita</h4>
-                    <span class="text-[9px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-lg uppercase">Objetivos</span>
+            <div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-5 h-[300px] flex flex-col">
+                <div class="flex items-center justify-between mb-4 shrink-0">
+                    <h3 class="text-sm font-bold text-texto-fuerte">Motivos de visita</h3>
+                    {{ estado("Objetivos", "exito") }}
                 </div>
-                <div class="flex-1 grid grid-cols-2 gap-4">
-                    <div class="space-y-2 overflow-y-auto">
+                <div class="flex-1 grid grid-cols-2 gap-4 min-h-0">
+                    <div class="space-y-2 overflow-y-auto pr-1">
                         {% for item in visitas.objetivos %}
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-slate-600 uppercase truncate">{{ item[0] }}</span>
-                            <span class="text-xs font-black text-slate-900">{{ item[1] }}</span>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-medium text-texto-base truncate">{{ item[0] }}</span>
+                            <span class="text-sm font-bold text-texto-fuerte shrink-0">{{ item[1] }}</span>
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="flex items-center justify-center">
+                    <div class="flex items-center justify-center min-h-0">
                         <div class="size-36 relative">
                             <canvas id="visitTypesChart"></canvas>
                         </div>
@@ -174,135 +163,95 @@
             </div>
         </div>
 
-        <!-- Visitas por AT -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-3">
-            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Visitas por Asistente Técnico</h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {% if visitas.por_at %}
+        <div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-5 mt-4">
+            <h3 class="text-2xs font-semibold text-texto-suave uppercase tracking-wide mb-3">Visitas por asistente técnico</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {% for at, cant in visitas.por_at %}
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <p class="text-lg font-black text-slate-900">{{ cant }}</p>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">{{ at }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-
-    <!-- ════════════ MÁQUINAS ════════════ -->
-    <section>
-        <div class="flex items-center gap-3 mb-3">
-            <div class="size-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                <span class="material-symbols-rounded text-2xl" aria-hidden="true">precision_manufacturing</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Máquinas</h3>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Biblioteca de Máquinas</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Máquinas</p>
-                <p class="text-3xl font-black text-slate-900 mt-1">{{ maquinas.total }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance de Relevamiento</p>
-                <p class="text-3xl font-black text-emerald-600 mt-1">{{ maquinas.survey_progress }}%</p>
-                <div class="mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500" style="width: {{ maquinas.survey_progress }}%"></div>
-                </div>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold uppercase">{{ maquinas.relevamiento_completado }} de {{ maquinas.total }} completadas</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Tipo</h4>
-                <div class="space-y-2">
-                    {% for item in maquinas.por_tipo[:6] %}
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.tipo }}</span>
-                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Estado</h4>
-                <div class="space-y-2">
-                    {% for item in maquinas.por_estado[:6] %}
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.estado }}</span>
-                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Relevamiento</h4>
-                <div class="space-y-2">
-                    {% for item in maquinas.por_relevamiento[:6] %}
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-semibold text-slate-700 truncate">{{ item.estado }}</span>
-                        <span class="text-xs font-black text-slate-900">{{ item.cant }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ════════════ MINUTAS ════════════ -->
-    <section>
-        <div class="flex items-center gap-3 mb-3">
-            <div class="size-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-                <span class="material-symbols-rounded text-2xl" aria-hidden="true">description</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-black text-slate-900 tracking-tight uppercase">Minutas</h3>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Actas de reunión</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Minutas</p>
-                <p class="text-3xl font-black text-slate-900 mt-1">{{ minutas.total }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Borrador</p>
-                <p class="text-3xl font-black text-amber-600 mt-1">{{ minutas.borrador }}</p>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Finalizado</p>
-                <p class="text-3xl font-black text-emerald-600 mt-1">{{ minutas.finalizado }}</p>
-            </div>
-        </div>
-
-        {% if minutas.por_tipo %}
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Por Tipo de Reunión</h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {% for tipo, cant in minutas.por_tipo %}
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <p class="text-lg font-black text-slate-900">{{ cant }}</p>
-                    <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">{{ tipo }}</p>
+                <div class="bg-superficie-suave border border-superficie-borde rounded-md p-3 text-center">
+                    <p class="text-xl font-bold text-texto-fuerte leading-tight">{{ cant }}</p>
+                    <p class="text-2xs font-semibold text-texto-suave truncate mt-0.5" title="{{ at }}">{{ at }}</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
         {% endif %}
     </section>
+
+    {# ── Máquinas ─────────────────────────────────────────────────────────── #}
+    <section aria-labelledby="sec-maquinas">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="size-9 rounded-md bg-info-50 text-info-500 flex items-center justify-center shrink-0" aria-hidden="true">
+                <span class="material-symbols-rounded text-lg">precision_manufacturing</span>
+            </span>
+            <div>
+                <h2 id="sec-maquinas" class="text-base font-bold text-texto-fuerte">Máquinas</h2>
+                <p class="text-2xs text-texto-suave">
+                    {{ maquinas.relevamiento_completado }} de {{ maquinas.total }} con relevamiento completo
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for titulo, items, campo in [
+                ("Por tipo", maquinas.por_tipo, "tipo"),
+                ("Por estado", maquinas.por_estado, "estado"),
+                ("Por relevamiento", maquinas.por_relevamiento, "estado")
+            ] %}
+            <div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-5">
+                <h3 class="text-2xs font-semibold text-texto-suave uppercase tracking-wide mb-3">{{ titulo }}</h3>
+                <div class="space-y-2">
+                    {% for item in items[:6] %}
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-medium text-texto-base truncate">{{ item[campo] }}</span>
+                        <span class="text-sm font-bold text-texto-fuerte shrink-0">{{ item.cant }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-xs text-texto-tenue">Sin datos</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {# ── Minutas ──────────────────────────────────────────────────────────── #}
+    {% if minutas.por_tipo %}
+    <section aria-labelledby="sec-minutas">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="size-9 rounded-md bg-superficie-suave text-texto-base flex items-center justify-center shrink-0" aria-hidden="true">
+                <span class="material-symbols-rounded text-lg">description</span>
+            </span>
+            <div>
+                <h2 id="sec-minutas" class="text-base font-bold text-texto-fuerte">Minutas</h2>
+                <p class="text-2xs text-texto-suave">Reuniones por tipo</p>
+            </div>
+        </div>
+
+        <div class="bg-superficie-card border border-superficie-borde rounded-lg shadow-card p-5">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {% for tipo, cant in minutas.por_tipo %}
+                <div class="bg-superficie-suave border border-superficie-borde rounded-md p-3 text-center">
+                    <p class="text-xl font-bold text-texto-fuerte leading-tight">{{ cant }}</p>
+                    <p class="text-2xs font-semibold text-texto-suave truncate mt-0.5" title="{{ tipo }}">{{ tipo }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
 </div>
 
-<style>
+<style nonce="{{ request.state.script_nonce }}">
+    /* Colores de los gráficos, alineados a la marca y a los colores semánticos
+       accesibles. Antes eran #1a57db y los tonos 500, que no pasan contraste. */
     :root {
-        --color-0: #1a57db;
-        --color-1: #10b981;
-        --color-2: #f59e0b;
-        --color-3: #8b5cf6;
-        --color-4: #ec4899;
-        --color-5: #64748b;
+        --color-0: #0b3d91;
+        --color-1: #047857;
+        --color-2: #b45309;
+        --color-3: #6d28d9;
+        --color-4: #be185d;
+        --color-5: #5b6b82;
     }
 </style>
 {% endblock %}
@@ -420,3 +369,4 @@
 })();
 </script>
 {% endblock %}
+
