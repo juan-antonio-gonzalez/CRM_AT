@@ -9,7 +9,7 @@
 </div>
 {% endblock %}
 
-{% from "_ui.html" import indicador, modal %}
+{% from "_ui.html" import indicador, modal, pie_modal %}
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
 
@@ -201,56 +201,27 @@
 {% endif %}
 
 <!-- Modal Nuevo Cliente -->
-<div id="nuevoClienteModal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="nuevoClienteModal-title">
-    <div
-        class="bg-superficie-card w-full max-w-5xl rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-        <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">person_add</span>
-                <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="nuevoClienteModal-title">Registro de Cuenta</h3>
-            </div>
-            <button type="button" id="btn-close-nuevo-cliente"
-                class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
-        </div>
+{% call modal('nuevoClienteModal', 'Registro de cuenta', 'grande', 'person_add', 'primario') %}
         {% set modal_suffix = 'modal' %}
-        <form action="/nuevo-cliente" method="POST" class="p-6 space-y-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
+<form action="/nuevo-cliente" method="POST" class="space-y-6">
             {% include "_cliente_form_fields.html" with context %}
-            <div class="flex items-center justify-end gap-4 pt-4 border-t border-superficie-borde">
+{% call pie_modal() %}
                 <button type="button" id="btn-cancel-nuevo-cliente"
                     class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
                 <button type="submit"
                     class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg shadow-primary/30 transition-all">
                     Registrar Cliente
                 </button>
-            </div>
-         </form>
-     </div>
- </div>
+{% endcall %}
+</form>
+{% endcall %}
 
  <!-- Modal Editar Cliente -->
- <div id="editarClienteModal"
-      class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editarClienteModal-title">
-     <div
-         class="bg-superficie-card w-full max-w-5xl rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-          <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
-              <div class="flex items-center gap-3">
-                  <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">edit</span>
-                  <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="editarClienteModal-title">Editar Cliente</h3>
-              </div>
-              <button type="button" id="btn-close-editar-cliente"
-                  class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
-                  <span class="material-symbols-rounded" aria-hidden="true">close</span>
-              </button>
-          </div>
-          <div id="editarClienteModalContent"
-              class="p-6 space-y-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
-             <!-- Content will be loaded here via AJAX -->
-         </div>
-     </div>
- </div>
+{% call modal('editarClienteModal', 'Editar cliente', 'grande', 'edit', 'primario') %}
+<div id="editarClienteModalContent" class="space-y-6">
+    {# El contenido lo carga el JavaScript por AJAX. #}
+</div>
+{% endcall %}
 
  <!-- Auxiliary Management Modal -->
 {% call modal('manageEntityModal', 'Gestionar', 'formulario', 'list_alt', 'primario') %}
@@ -580,7 +551,6 @@
 
         const modal = document.getElementById('nuevoClienteModal');
         const btnOpen = document.getElementById('btn-nuevo-cliente');
-        const btnClose = document.getElementById('btn-close-nuevo-cliente');
         const btnCancel = document.getElementById('btn-cancel-nuevo-cliente');
 
         function openModal() {
@@ -909,8 +879,7 @@
        }
       
       // Close modal on close button click
-      document.getElementById('btn-close-editar-cliente')?.addEventListener('click', closeEditModal);
-      
+        
       // Close modal on clicking outside
       editModal.addEventListener('click', function(e) {
           if (e.target === this) closeEditModal();

@@ -588,3 +588,35 @@ def test_los_formularios_abren_y_cierran():
         if abre != cierra:
             ofensores.append(f"{nombre}: {abre} abiertos, {cierra} cerrados")
     assert not ofensores, f"formularios desbalanceados: {ofensores}"
+
+
+def test_cada_macro_usado_esta_importado():
+    """Usar un macro sin importarlo compila, pero falla al renderizar.
+
+    Pasó con `pie_modal` en clientes.html: la plantilla compilaba sin error y el
+    fallo aparecía recién al abrir la página, con HTTP 500 y
+
+        jinja2.exceptions.UndefinedError: 'pie_modal' is undefined
+
+    `get_template()` sólo compila: no evalúa el cuerpo de los bloques, así que no
+    lo detecta. Esta prueba compara lo que cada plantilla usa contra lo que
+    importa.
+    """
+    MACROS = ("indicador", "estado", "boton", "modal", "pie_modal",
+              "barra_filtros", "vacio")
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        usados = set()
+        for macro in MACROS:
+            if re.search(r"\b" + macro + r"\s*\(", texto) or ("call " + macro) in texto:
+                usados.add(macro)
+        if not usados:
+            continue
+        m = re.search(r'\{% from "_ui.html" import ([^%]*?) %\}', texto)
+        importados = set()
+        if m:
+            importados = {x.strip() for x in m.group(1).split(",") if x.strip()}
+        faltan = usados - importados
+        if faltan:
+            ofensores.append(f"{nombre}: usa {sorted(faltan)} sin importar")
+    assert not ofensores, f"macros sin importar: {ofensores}"
