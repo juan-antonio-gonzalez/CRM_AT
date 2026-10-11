@@ -9,7 +9,7 @@
 </div>
 {% endblock %}
 
-{% from "_ui.html" import indicador %}
+{% from "_ui.html" import indicador, modal, pie_modal %}
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
     {% if request.query_params.get('error') == 'duplicate_serial' %}
@@ -234,21 +234,8 @@
 {% endif %}
 
 <!-- New Machine Modal -->
-<div id="newMachineModal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="newMachineModal-title">
-    <div
-        class="bg-superficie-card w-full max-w-lg rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-        <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
-                <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="newMachineModal-title">Nueva Máquina</h3>
-            </div>
-            <button type="button" id="btn-close-new-machine-modal"
-                class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
-        </div>
-        <form action="/nuevo-maquinaria" method="POST" class="p-6 space-y-5 max-h-[calc(100vh-16rem)] overflow-y-auto">
+{% call modal('newMachineModal', 'Nueva máquina', 'formulario', 'precision_manufacturing', 'primario', 'Cargá los datos del equipo') %}
+        <form action="/nuevo-maquinaria" method="POST" class="space-y-5">
             <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
@@ -312,41 +299,26 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end gap-4 pt-4 border-t border-superficie-borde">
+{% call pie_modal() %}
                 <button type="button" id="btn-cancel-new-machine"
                     class="text-xs font-black text-texto-tenue hover:text-texto-fuerte tracking-normal transition-colors">Cancelar</button>
                 <button type="submit"
                     class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg shadow-primary/30 transition-all">
                     Registrar Máquina
                 </button>
-            </div>
-        </form>
-    </div>
-</div>
+{% endcall %}
+</form>
+{% endcall %}
 
 <!-- Edit Machine Modal -->
-<div id="editMachineModal"
-    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editMachineModal-title">
-    <div
-        class="bg-superficie-card w-full max-w-lg rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
-        <div class="flex items-center justify-between p-6 border-b border-superficie-borde">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">precision_manufacturing</span>
-                <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="editMachineModal-title">Editar Máquina</h3>
-            </div>
-            <button type="button" id="btn-close-edit-machine-modal"
-                class="size-10 rounded-xl hover:bg-superficie-suave flex items-center justify-center transition-colors" aria-label="Cerrar">
-                <span class="material-symbols-rounded" aria-hidden="true">close</span>
-            </button>
-        </div>
-        <div id="editMachineModalContent">
-            <div class="text-center py-12 text-texto-tenue">
-                <span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span>
-                <p class="text-sm font-bold">Cargando datos del equipo...</p>
-            </div>
-        </div>
+{% call modal('editMachineModal', 'Editar máquina', 'formulario', 'precision_manufacturing', 'primario') %}
+<div id="editMachineModalContent">
+    <div class="text-center py-12 text-texto-tenue">
+        <span class="material-symbols-rounded text-3xl mb-2" aria-hidden="true">hourglass_top</span>
+        <p class="text-sm">Cargando datos del equipo...</p>
     </div>
 </div>
+{% endcall %}
 
 {% endblock %}
 
@@ -462,9 +434,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // New Machine Modal
     document.getElementById('btn-new-machine')?.addEventListener('click', openNewMachineModal);
-    document.getElementById('btn-close-new-machine-modal')?.addEventListener('click', closeNewMachineModal);
     document.getElementById('btn-cancel-new-machine')?.addEventListener('click', closeNewMachineModal);
-    document.getElementById('newMachineModal')?.addEventListener('click', function(e) { if (e.target === this) closeNewMachineModal(); });
 
     // Edit Machine Modal
     document.querySelectorAll('.btn-edit-machine').forEach(btn => {
@@ -472,7 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
             openEditMachineModal(parseInt(this.dataset.editMachine));
         });
     });
-    document.getElementById('btn-close-edit-machine-modal')?.addEventListener('click', closeEditMachineModal);
     document.getElementById('editMachineModal')?.addEventListener('click', function(e) { if (e.target === this) closeEditMachineModal(); });
 
     // Delete machine forms
