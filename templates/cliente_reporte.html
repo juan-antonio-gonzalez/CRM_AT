@@ -197,7 +197,7 @@
                                         <p class="text-xs text-texto-base line-clamp-1 max-w-xs">{{ visit.objective or 'Sin detalles' }}</p>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex px-2 py-0.5 rounded-full text-2xs font-black uppercase % if visit.status Completada % bg-exito-100 text-exito-700 % else % bg-alerta-100 text-alerta-700 % endif %">
+                                        <span class="inline-flex px-2 py-0.5 rounded-full text-2xs font-black uppercase {% if visit.status == 'Completada' %} bg-exito-100 text-exito-700 {% else %} bg-alerta-100 text-alerta-700 {% endif %}">
                                             {{ visit.status }}
                                         </span>
                                     </td>

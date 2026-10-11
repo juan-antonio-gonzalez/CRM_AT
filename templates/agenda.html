@@ -71,8 +71,7 @@
 
     <!-- Visit detail popover -->
     <div id="visit-popover"
-        class="hidden fixed z-50 bg-white rounded-2xl shadow-2xl border border-superficie-borde p-5 w-80"
-        style="display:none;">
+        class="hidden fixed z-50 bg-white rounded-2xl shadow-2xl border border-superficie-borde p-5 w-80 hidden">
         <div class="flex items-start justify-between mb-3">
             <h4 id="popover-title" class="text-sm font-bold text-texto-fuerte pr-4"></h4>
             <button id="popover-close" class="text-texto-tenue hover:text-texto-base" aria-label="Cerrar">
@@ -146,7 +145,7 @@
                                 <option value="{{ at_name }}">{{ at_name }}</option>
                                 {% endfor %}
                             </select>
-                            <span id="cliente-at-map" style="display:none;"></span>
+                            <span id="cliente-at-map" class="hidden"></span>
                         </div>
                         <div>
                             <label class="block text-2xs font-black text-texto-suave uppercase tracking-widest mb-1.5">Objetivo *</label>
@@ -335,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
         var todayStr = fmtDate(new Date());
 
-        var html = '<div class="grid grid-cols-7 divide-x divide-superficie-borde" style="min-height:500px">';
+        var html = '<div class="grid grid-cols-7 divide-x divide-superficie-borde min-h-[500px]">';
         for (var i = 0; i < 7; i++) {
             var ds = fmtDate(d);
             var isToday = ds === todayStr;

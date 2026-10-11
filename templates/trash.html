@@ -36,39 +36,39 @@
     <!-- Filters -->
     <div class="flex flex-wrap gap-2">
         <a href="/papelera"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if not active_tipo % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if not active_tipo %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Todos
         </a>
         <a href="/papelera?tipo=customer"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo customer % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'customer' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Clientes
         </a>
         <a href="/papelera?tipo=machine"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo machine % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'machine' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Máquinas
         </a>
         <a href="/papelera?tipo=product"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo product % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'product' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Productos
         </a>
         <a href="/papelera?tipo=visit"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo visit % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Visitas
         </a>
         <a href="/papelera?tipo=visit2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo visit2 % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'visit2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Visitas V2
         </a>
         <a href="/papelera?tipo=survey2"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo survey2 % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'survey2' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Relevamientos V2
         </a>
         <a href="/papelera?tipo=infrastructure"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo infrastructure % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'infrastructure' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Infraestructura
         </a>
         <a href="/papelera?tipo=auxiliary"
-            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all % if active_tipo auxiliary % bg-primary text-white shadow-sm % else % bg-superficie-suave text-texto-base hover:bg-superficie-fuerte % endif %">
+            class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all {% if active_tipo == 'auxiliary' %} bg-primary text-white shadow-sm {% else %} bg-superficie-suave text-texto-base hover:bg-superficie-fuerte {% endif %}">
             Tablas Auxiliares
         </a>
     </div>

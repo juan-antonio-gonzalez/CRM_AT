@@ -25,6 +25,18 @@ CONGELADAS = {"nueva_visita2.html", "nueva_minuta.html"}
 SISTEMA = {"_ui.html"}
 
 
+class _RequestUI:
+    """Request mínimo para renderizar el layout sin levantar la aplicación."""
+    class state:
+        csrf_token = "test"
+        script_nonce = "test"
+        user = {"username": "prueba", "role": "admin", "sub": "1"}
+
+    @staticmethod
+    def url_for(name, **params):
+        return "/static/" + str(params.get("path", "")).lstrip("/")
+
+
 def _plantillas_aplicacion():
     for ruta in sorted(glob.glob(os.path.join(PLANTILLAS, "*.html"))):
         nombre = os.path.basename(ruta)
@@ -264,3 +276,71 @@ def test_los_colores_semanticos_pasan_contraste():
             fallan.append(f"texto-{nombre} ({tono}) da {r_contraste:.2f}:1")
 
     assert not fallan, f"colores que no pasan AA sobre blanco: {fallan}"
+
+
+# ── Condicionales de Jinja ─────────────────────────────────────────────────
+def test_los_condicionales_de_jinja_estan_bien_escritos():
+    """Había 80 condicionales escritos sin la llave de apertura (`% if x %` en
+    lugar de `{% if x %}`), dentro de atributos class.
+
+    Jinja no los reconoce, así que el texto se colaba literal en la clase:
+    `<a class="... % if active_page dashboard % sidebar-active % endif %">`.
+    Efecto: el menú marcaba TODOS los enlaces como activos, y los badges de
+    estado y los puntos de estado nunca recibían su color. Es la causa de que la
+    interfaz se viera monocromática: los colores condicionales estaban muertos.
+    """
+    patron = re.compile(r"(?<!\{)%\s*(?:if|elif|else|endif)\b")
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in patron.finditer(texto):
+            linea = texto[:m.start()].count("\n") + 1
+            ofensores.append(f"{nombre}:{linea}")
+    assert not ofensores, (
+        f"{len(ofensores)} condicionales sin la llave de apertura: {ofensores[:6]}"
+    )
+
+
+def test_las_expresiones_de_los_condicionales_comparan():
+    """Además de la llave faltaba la comparación: `if active_page dashboard` en
+    lugar de `if active_page == 'dashboard'`, que no es una expresión válida."""
+    patron = re.compile(r"\{%\s*(?:if|elif)\s+([^%]*?)\s*%\}")
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in patron.finditer(texto):
+            expr = m.group(1).strip()
+            if not expr:
+                continue
+            tiene_operador = re.search(
+                r"==|!=|>=|<=|>|<|\band\b|\bor\b|\bnot\b|\bin\b|\bis\b|\(|\)|\|", expr)
+            # `variable valor` sin operador es el patrón que estaba mal.
+            if not tiene_operador and re.match(
+                    r"^[A-Za-z_][\w.\[\]]*\s+[A-Za-z_]", expr):
+                ofensores.append(f"{nombre}: {expr}")
+    assert not ofensores, f"condicionales sin comparación: {ofensores[:6]}"
+
+
+def test_el_enlace_activo_del_menu_se_marca_solo_en_uno():
+    """El menú debe marcar un solo enlace como activo, no todos."""
+    from jinja2 import Environment, FileSystemLoader
+
+    env = Environment(loader=FileSystemLoader(PLANTILLAS))
+    # Starlette inyecta url_for en el contexto; con un entorno Jinja pelado hay
+    # que registrarlo.
+    env.globals["url_for"] = lambda name, **params: "/static/" + str(params.get("path", "")).lstrip("/")
+    contexto = {
+        "active_page": "clientes",
+        "today": None, "clientes": {"total": 0, "activos": 0, "prospectos": 0},
+        "visitas": {"total": 0, "borrador": 0, "finalizado": 0, "total_asignadas_at": 0,
+                    "avance_pct": 0, "tendencia_meses": [], "tendencia_datos": [],
+                    "objetivos": [], "objetivos_labels": [], "objetivos_data": [], "por_at": []},
+        "maquinas": {"total": 0, "survey_progress": 0, "relevamiento_completado": 0,
+                     "por_tipo": [], "por_estado": [], "por_relevamiento": []},
+        "minutas": {"total": 0, "borrador": 0, "finalizado": 0, "por_tipo": []},
+        "advisors": [], "customer_list": [], "available_years": [], "months": [], "filters": {},
+    }
+    html = env.get_template("layout.html").render(request=_RequestUI(), **contexto)
+    assert html.count('class="') and "sidebar-active" in html
+    # Sólo el enlace de clientes queda activo.
+    activos = [m.group(1) for m in re.finditer(r'<a class="([^"]*sidebar-active[^"]*)"', html)]
+    assert len(activos) == 1, f"hay {len(activos)} enlaces marcados como activos"
+    assert "% if" not in html, "quedó texto de Jinja dentro del HTML"

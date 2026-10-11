@@ -118,7 +118,7 @@
                                 Inactivo
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase % if customer.relevamiento_status Completado % bg-exito-100 text-exito-700 % elif customer.relevamiento_status En Proceso % bg-alerta-100 text-alerta-700 % else % bg-superficie-suave text-texto-suave % endif %">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase {% if customer.relevamiento_status == 'Completado' %} bg-exito-100 text-exito-700 {% elif customer.relevamiento_status == 'En Proceso' %} bg-alerta-100 text-alerta-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
                                 {{ customer.relevamiento_status }}
                             </span>
                             {% endif %}
@@ -283,7 +283,7 @@
                      Agregar
                  </button>
              </div>
-             <div id="manageEntityList" class="space-y-1.5 overflow-y-auto" style="max-height:260px">
+             <div id="manageEntityList" class="space-y-1.5 overflow-y-auto max-h-[260px]">
                  <p class="text-center py-8 text-texto-tenue text-xs font-bold italic">Cargando...</p>
              </div>
          </div>

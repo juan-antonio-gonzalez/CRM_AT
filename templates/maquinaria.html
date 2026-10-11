@@ -140,7 +140,7 @@
                         <td class="px-2 py-2 whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
                                 <span
-                                    class="size-1.5 rounded-full % if machine.status Operativo % bg-exito-500 % else % bg-alerta-500 % endif %"></span>
+                                    class="size-1.5 rounded-full {% if machine.status == 'Operativo' %} bg-exito-500 {% else %} bg-alerta-500 {% endif %}"></span>
                                 <span class="text-2xs">{{ machine.status }}</span>
                             </div>
                         </td>

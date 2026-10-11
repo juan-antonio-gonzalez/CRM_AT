@@ -33,7 +33,7 @@
             <div>
                 <h3 class="text-xl font-black text-texto-fuerte">{{ profile_user.full_name or profile_user.username }}</h3>
                 <p class="text-sm text-texto-suave font-medium">{{ profile_user.email }}</p>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-bold uppercase mt-2 % if profile_user.role admin % bg-alerta-100 text-alerta-700 % else % bg-primary/10 text-primary % endif %">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-bold uppercase mt-2 {% if profile_user.role == 'admin' %} bg-alerta-100 text-alerta-700 {% else %} bg-primary/10 text-primary {% endif %}">
                     {{ profile_user.role }}
                 </span>
             </div>

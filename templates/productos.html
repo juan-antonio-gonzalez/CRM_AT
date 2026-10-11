@@ -91,9 +91,9 @@
                         </td>
                         <td class="px-6 py-5 text-center">
                             <span
-                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold % if product.status Activo % bg-exito-100 text-exito-700 % else % bg-superficie-suave text-texto-suave % endif %">
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold {% if product.status == 'Activo' %} bg-exito-100 text-exito-700 {% else %} bg-superficie-suave text-texto-suave {% endif %}">
                                 <span
-                                    class="w-1.5 h-1.5 rounded-full % if product.status Activo % bg-exito-500 % else % bg-superficie-fuerte % endif %"></span>
+                                    class="w-1.5 h-1.5 rounded-full {% if product.status == 'Activo' %} bg-exito-500 {% else %} bg-superficie-fuerte {% endif %}"></span>
                                 {{ product.status }}
                             </span>
                         </td>

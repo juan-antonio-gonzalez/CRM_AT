@@ -12,30 +12,27 @@
 
 
 {# ── Indicador ───────────────────────────────────────────────────────────────
-   Azulejo compacto: etiqueta arriba, cifra abajo. Pensado para entrar todos en
-   UNA sola fila en pantallas anchas (12 columnas desde 1280px) y repartirse en
-   varias filas en pantallas chicas.
+   Azulejo compacto con esquinas redondeadas. El color va en el borde izquierdo,
+   no en la cifra: así el dato se lee igual de bien, el conjunto queda más
+   sereno que con doce números de colores, y el color sigue agrupando por tema.
 
-   La cifra va en color para que se pueda leer de un vistazo qué está bien y qué
-   requiere atención. Los tonos son los semánticos del sistema, elegidos para
-   pasar contraste AA sobre blanco (exito 5.48:1, alerta 5.02:1, peligro 6.47:1,
-   info 5.93:1). No se usan los tonos 400 ni los 500 de Tailwind, que daban
-   2.15:1 y eran ilegibles.
+   El texto va en caja de oración (la primera letra en mayúscula y el resto en
+   minúscula) y sin negritas: la jerarquía la da el tamaño, no el peso.
 
-   `tabular-nums` alinea los dígitos entre azulejos, y la etiqueta se recorta con
+   `tabular-nums` alinea los dígitos entre azulejos. La etiqueta se recorta con
    puntos suspensivos si no entra, con el texto completo en el `title`. #}
 {% macro indicador(etiqueta, valor, tono='neutro', icono=None) %}
-{% set tonos = {
-    'neutro':   'text-texto-fuerte',
-    'primario': 'text-primary-600',
-    'exito':    'text-exito-500',
-    'alerta':   'text-alerta-500',
-    'peligro':  'text-peligro-500',
-    'info':     'text-info-500',
+{% set bordes = {
+    'neutro':   'border-l-superficie-fuerte',
+    'primario': 'border-l-primary-600',
+    'exito':    'border-l-exito-500',
+    'alerta':   'border-l-alerta-500',
+    'peligro':  'border-l-peligro-500',
+    'info':     'border-l-info-500',
 } %}
-<div class="bg-superficie-card border border-superficie-borde rounded-md px-2.5 py-2 min-w-0">
-    <p class="text-2xs font-medium text-texto-suave truncate" title="{{ etiqueta }}">{{ etiqueta }}</p>
-    <p class="text-lg font-bold tabular-nums leading-tight {{ tonos.get(tono, tonos['neutro']) }}">{{ valor }}</p>
+<div class="bg-superficie-card border border-superficie-borde border-l-4 {{ bordes.get(tono, bordes['neutro']) }} rounded-lg px-3 py-2 min-w-0">
+    <p class="text-2xs text-texto-suave truncate lowercase first-letter:uppercase" title="{{ etiqueta }}">{{ etiqueta }}</p>
+    <p class="text-lg text-texto-fuerte tabular-nums leading-tight">{{ valor }}</p>
 </div>
 {% endmacro %}
 
