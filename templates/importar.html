@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+{% from "_ui.html" import indicador %}
+
+{% block title %}Importar desde Excel | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex items-center gap-4 min-w-0">
+    <h1 class="text-lg sm:text-2xl font-semibold text-texto-fuerte tracking-tight truncate">Importar desde Excel</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{# ============================================================================
+   Carga masiva en tres pasos: subir, previsualizar, confirmar.
+
+   Nada se escribe en la base hasta que la persona vio qué se va a cargar y qué
+   quedó afuera. Una fila con error no frena a las demás: se informa cuáles se
+   omiten y por qué, en lugar de rechazar el archivo entero.
+   ============================================================================ #}
+<div class="max-w-[1400px] mx-auto space-y-6 animate-fade-in pb-16">
+
+    {% if cargados is not none %}
+    <div class="bg-exito-100 border border-exito-300 rounded-lg p-4 flex items-center gap-3">
+        <span class="material-symbols-rounded text-exito-700 text-xl" aria-hidden="true">check_circle</span>
+        <p class="text-sm text-exito-700">
+            Se importaron <strong>{{ cargados }}</strong>
+            {{ 'registro' if cargados == 1 else 'registros' }}.
+            <a href="/{{ 'clientes' if tipo == 'clientes' else 'maquinaria' }}" class="underline ml-1">Ver el listado</a>
+        </p>
+    </div>
+    {% endif %}
+
+    {# ── Paso 1: elegir y subir ──────────────────────────────────────────── #}
+    <section aria-labelledby="sec-paso1">
+        <h2 id="sec-paso1" class="text-lg font-semibold text-texto-fuerte mb-3">
+            <span class="text-texto-tenue text-sm font-medium mr-1">1.</span> Elegí qué importar y subí la planilla
+        </h2>
+
+        <form method="POST" action="/importar/previsualizar" enctype="multipart/form-data"
+            class="bg-superficie-suave border border-superficie-borde rounded-lg p-5 space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+
+            <div class="flex flex-wrap gap-2">
+                {% for clave, titulo in tipos.items() %}
+                <label class="cursor-pointer">
+                    <input type="radio" name="tipo" value="{{ clave }}" class="peer sr-only"
+                        {% if tipo == clave %}checked{% endif %}>
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-superficie-borde text-sm text-texto-base bg-superficie-card peer-checked:border-primary-600 peer-checked:bg-primary-100 peer-checked:text-primary-700 transition-colors">
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">{{ 'group' if clave == 'clientes' else 'precision_manufacturing' }}</span>
+                        {{ titulo }}
+                    </span>
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-wrap items-end gap-3">
+                <div class="flex flex-col gap-1 flex-1 min-w-[260px]">
+                    <label for="archivo" class="text-xs text-texto-suave">Planilla (.xlsx)</label>
+                    <input type="file" name="archivo" id="archivo" accept=".xlsx" required
+                        class="text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 file:mr-3 file:px-3 file:py-1 file:rounded file:border-0 file:bg-primary-100 file:text-primary-700 file:text-sm">
+                </div>
+                <button type="submit"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">upload_file</span>
+                    Previsualizar
+                </button>
+                <a href="/importar/plantilla/{{ tipo }}"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-superficie-borde text-texto-base hover:bg-superficie-card text-sm font-medium transition-colors">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">download</span>
+                    Descargar plantilla
+                </a>
+            </div>
+
+            {% if error_archivo %}
+            <p class="text-sm text-peligro-700 bg-peligro-100 border border-peligro-300 rounded-md px-3 py-2">
+                {{ error_archivo }}
+            </p>
+            {% endif %}
+        </form>
+
+        <details class="mt-3">
+            <summary class="text-sm text-texto-suave cursor-pointer hover:text-texto-base">Columnas esperadas</summary>
+            <div class="mt-2 flex flex-wrap gap-2">
+                {% for campo, etiqueta, obligatorio in columnas %}
+                <span class="text-xs px-2 py-1 rounded-md border {{ 'border-primary-300 bg-primary-100 text-primary-700' if obligatorio else 'border-superficie-borde bg-superficie-card text-texto-suave' }}">
+                    {{ etiqueta }}{% if obligatorio %} *{% endif %}
+                </span>
+                {% endfor %}
+            </div>
+            <p class="text-xs text-texto-tenue mt-2">
+                Los encabezados se buscan por nombre: no importa el orden ni si están en mayúsculas.
+            </p>
+        </details>
+    </section>
+
+    {# ── Paso 2: previsualización ────────────────────────────────────────── #}
+    {% if filas is not none %}
+    <section aria-labelledby="sec-paso2">
+        <h2 id="sec-paso2" class="text-lg font-semibold text-texto-fuerte mb-3">
+            <span class="text-texto-tenue text-sm font-medium mr-1">2.</span> Revisá lo que se va a importar
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+            {{ indicador("Filas leídas", total) }}
+            {{ indicador("Se van a importar", filas|length, "exito") }}
+            {{ indicador("Con problemas", errores|length, "peligro" if errores else "neutro") }}
+            {{ indicador("Tipo", tipos[tipo], "info") }}
+        </div>
+
+        {% if errores %}
+        <div class="bg-alerta-100 border border-alerta-300 rounded-lg p-4 mb-4">
+            <p class="text-sm text-alerta-700 flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">warning</span>
+                {{ errores|length }} fila{{ 's' if errores|length != 1 else '' }} no se va{{ 'n' if errores|length != 1 else '' }} a importar. Las demás sí.
+            </p>
+            <ul class="mt-2 space-y-1 max-h-48 overflow-y-auto">
+                {% for e in errores[:50] %}
+                <li class="text-xs text-alerta-700">Fila {{ e.fila }}: {{ e.motivo }}</li>
+                {% endfor %}
+                {% if errores|length > 50 %}
+                <li class="text-xs text-alerta-700">… y {{ errores|length - 50 }} más.</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if filas %}
+        <div class="bg-superficie-card border border-superficie-borde rounded-lg overflow-hidden">
+            <div class="overflow-auto max-h-[420px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-superficie-suave z-10">
+                        <tr class="border-b border-superficie-borde">
+                            <th class="px-3 py-2.5 text-xs font-semibold text-texto-suave whitespace-nowrap">Fila</th>
+                            {% for campo, etiqueta, obligatorio in columnas %}
+                            <th class="px-3 py-2.5 text-xs font-semibold text-texto-suave whitespace-nowrap">{{ etiqueta }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-superficie-borde">
+                        {% for f in filas[:200] %}
+                        <tr class="hover:bg-superficie-suave">
+                            <td class="px-3 py-2 text-xs text-texto-tenue tabular-nums">{{ f._fila }}</td>
+                            {% for campo, etiqueta, obligatorio in columnas %}
+                            <td class="px-3 py-2 text-sm text-texto-base">{{ f.get(campo, '') }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if filas|length > 200 %}
+            <p class="px-3 py-2 text-xs text-texto-tenue border-t border-superficie-borde">
+                Se muestran las primeras 200 filas. Se van a importar las {{ filas|length }}.
+            </p>
+            {% endif %}
+        </div>
+
+        {# ── Paso 3: confirmar ───────────────────────────────────────────── #}
+        <form method="POST" action="/importar/confirmar" class="mt-4 flex items-center gap-3">
+            <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+            <input type="hidden" name="tipo" value="{{ tipo }}">
+            <input type="hidden" name="token" value="{{ token }}">
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">save</span>
+                Importar {{ filas|length }} {{ 'registro' if filas|length == 1 else 'registros' }}
+            </button>
+            <a href="/importar?tipo={{ tipo }}" class="text-sm text-texto-suave hover:text-texto-base px-3 py-2">Cancelar</a>
+        </form>
+        {% else %}
+        <p class="text-sm text-texto-tenue bg-superficie-suave border border-superficie-borde rounded-lg px-4 py-6 text-center">
+            Ninguna fila pasó la validación. Revisá la planilla y volvé a subirla.
+        </p>
+        {% endif %}
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

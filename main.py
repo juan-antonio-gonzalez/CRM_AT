@@ -12,6 +12,7 @@ from database import SessionLocal, engine
 from enums import RelevamientoStatus, ProductStatus, CustomerStatus
 import datetime
 import json
+import re
 import secrets
 import urllib.parse
 
@@ -118,20 +119,55 @@ async def auth_csrf_middleware(request: Request, call_next):
         if path not in CSRF_EXEMPT_PATHS and not path.startswith("/auth/logout"):
             content_type = request.headers.get("content-type", "")
             if "form-urlencoded" in content_type or "form-data" in content_type:
+                # El token se lee del formulario ya parseado, no con parse_qs sobre
+                # el cuerpo crudo. Con `multipart/form-data` —cualquier formulario
+                # con archivos— parse_qs fallaba, la excepción se tragaba y la
+                # petición **pasaba sin validar**. La comprobación tiene que fallar
+                # cerrada: si no se puede leer el token, se rechaza.
                 try:
+                    # Se lee el cuerpo crudo: `request.form()` consume el stream y
+                    # después FastAPI no puede volver a parsearlo (devolvía 422).
+                    # `request.body()` deja el cuerpo cacheado, así que el endpoint
+                    # lo sigue leyendo sin problema.
                     body = await request.body()
-                    params = urllib.parse.parse_qs(body.decode())
-                    token = params.get("csrf_token", [""])[0]
+                    token = _token_csrf(body, content_type)
                     uid = int(user["sub"])
                     if not token or not verify_csrf_token(token, uid):
-                        logger.warning("CSRF validation failed for %s from user %s", path, user.get("username"))
+                        logger.warning("CSRF validation failed for %s from user %s",
+                                       path, user.get("username"))
                         if path.startswith("/api/"):
-                            return JSONResponse(status_code=403, content={"message": "CSRF token inválido"})
+                            return JSONResponse(status_code=403,
+                                                content={"message": "CSRF token inválido"})
                         return RedirectResponse(url="/auth/login", status_code=303)
                 except Exception as e:
                     logger.warning("CSRF check error on %s: %s", path, e)
+                    if path.startswith("/api/"):
+                        return JSONResponse(status_code=403,
+                                            content={"message": "No se pudo validar la petición"})
+                    return RedirectResponse(url="/auth/login", status_code=303)
 
     return await call_next(request)
+
+
+def _token_csrf(body: bytes, content_type: str) -> str:
+    """Extrae `csrf_token` del cuerpo, sea urlencoded o multipart.
+
+    Con `multipart/form-data` —cualquier formulario con archivos— no se puede usar
+    `parse_qs`, que era lo que hacía fallar la comprobación y dejaba pasar la
+    petición sin validar.
+    """
+    texto = body.decode("utf-8", errors="replace")
+    if "form-urlencoded" in content_type:
+        params = urllib.parse.parse_qs(texto)
+        return params.get("csrf_token", [""])[0]
+    # Multipart: el nombre va en el Content-Disposition y el valor después de la
+    # línea en blanco que separa los encabezados de la parte.
+    # Después del nombre vienen los encabezados de la parte, una línea en blanco y
+    # el valor. El `(?!\r?\n)` evita que el bloque se coma la línea en blanco y
+    # siga de largo hasta el último campo del formulario.
+    m = re.search(r'name="csrf_token"(?:\r?\n(?![\r\n])[^\r\n]*)*\r?\n\r?\n([^\r\n]+)',
+                  texto)
+    return m.group(1).strip() if m else ""
 
 
 def _wants_html(request: Request) -> bool:
@@ -425,6 +461,7 @@ def seed_demo_data(db=None) -> None:
 from routers import auth as auth_router
 from routers import dashboard as dashboard_router
 from routers import products as products_router
+from routers import importacion as importacion_router
 from routers import customers as customers_router
 from routers import machinery as machinery_router
 from routers import visits2 as visits2_router
@@ -443,6 +480,7 @@ from routers import historial as historial_router
 app.include_router(auth_router.router)
 app.include_router(dashboard_router.router)
 app.include_router(products_router.router)
+app.include_router(importacion_router.router)
 app.include_router(customers_router.router)
 app.include_router(machinery_router.router)
 app.include_router(visits2_router.router)

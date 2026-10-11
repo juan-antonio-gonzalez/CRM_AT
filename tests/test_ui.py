@@ -646,7 +646,7 @@ def test_no_vuelven_los_patrones_del_lenguaje_anterior():
                  "infraestructura_reporte.html", "relevamiento_reporte.html",
                  "cliente_reporte.html"}
     patrones = {
-        "bg-white": re.compile(r"\bbg-white\b"),
+        "bg-white": re.compile(r"\bbg-white\b(?!/)"),
         "font-black": re.compile(r"\bfont-black\b"),
         "rounded-2xl": re.compile(r"\brounded-(?:2xl|3xl)\b"),
         "shadow suelto": re.compile(r"\bshadow-(?:sm|md|lg|xl|2xl)\b"),
@@ -692,7 +692,10 @@ def test_todos_los_iconos_estan_en_el_subset():
         for m in re.finditer(
                 r'class="[^"]*material-symbols-rounded[^"]*"[^>]*>(.*?)</span>',
                 texto, re.S):
-            for a, b in re.findall(r"'([a-z][a-z_0-9]*)'|\"([a-z][a-z_0-9]*)\"", m.group(1)):
+            # Se descartan los terminos que se estan comparando (`== 'clientes'`):
+            # no son nombres de icono, son valores contra los que se compara.
+            expr = re.sub(r"[=!]=\s*'[^']*'|'[^']*'\s*[=!]=", "", m.group(1))
+            for a, b in re.findall(r"'([a-z][a-z_0-9]*)'|\"([a-z][a-z_0-9]*)\"", expr):
                 hallados.add(a or b)
             suelto = m.group(1).strip()
             if re.fullmatch(r'[a-z][a-z_0-9]*', suelto):
@@ -789,11 +792,14 @@ def test_los_modulos_no_usan_nombres_sin_definir():
 
     RAIZ = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     ofensores = []
-    for patron in ("services/*.py", "routers/*.py"):
+    # Se incluyen los módulos de la raíz: `main.py` quedaba afuera y por eso pasó
+    # un `re.search` sin el `import re`.
+    for patron in ("*.py", "services/*.py", "routers/*.py"):
         for ruta in glob.glob(os.path.join(RAIZ, patron)):
             with open(ruta, encoding="utf-8") as fh:
                 arbol = ast.parse(fh.read())
-            definidos = set(dir(builtins))
+            definidos = set(dir(builtins)) | {"__file__", "__name__", "__doc__",
+                                             "__package__", "__spec__"}
             for nodo in ast.walk(arbol):
                 if isinstance(nodo, (ast.Import, ast.ImportFrom)):
                     for a in nodo.names:
