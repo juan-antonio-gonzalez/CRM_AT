@@ -8,6 +8,7 @@ from typing import Optional, List
 import models
 from database import get_db
 from services import customer_service, pagination as pg, soft_delete as sd
+from services import auditoria
 from templating import templates
 
 router = APIRouter(tags=["customers"])
@@ -198,6 +199,7 @@ async def quick_create_contact_name(name: str = Form(...), db: Session = Depends
 
 @router.post("/nuevo-cliente")
 async def create_customer(
+    request: Request,
     name: str = Form(...), plant: str = Form(...), industry_sector: str = Form(...),
     assigned_commercial: str = Form(...), technical_advisor: str = Form(...),
     designer: str = Form(...), address: str = Form(...), city: str = Form(...),
@@ -209,10 +211,16 @@ async def create_customer(
     observations: str = Form(""),
     db: Session = Depends(get_db)
 ):
-    customer_service.create_customer(db, name, plant, industry_sector, assigned_commercial,
+    creado = customer_service.create_customer(db, name, plant, industry_sector, assigned_commercial,
                                       technical_advisor, designer, address, city,
                                       status, relevamiento_status,
                                       member_name, member_role, member_phone, member_reports_to, member_sector, observations)
+    # El historial se registra después del alta: si el usuario no tiene permiso o
+    # los datos no validan, no queda un registro de algo que no pasó.
+    if creado is not None:
+        auditoria.registrar(db, "customer", getattr(creado, "id", 0), "crear",
+                            user=getattr(request.state, "user", None),
+                            entity_label=name)
     return RedirectResponse(url="/clientes", status_code=303)
 
 
@@ -243,6 +251,7 @@ async def edit_customer_form(customer_id: int, request: Request, db: Session = D
 
 @router.post("/editar-cliente/{customer_id}")
 async def update_customer(
+    request: Request,
     customer_id: int,
     name: str = Form(...), plant: str = Form(...), industry_sector: str = Form(...),
     assigned_commercial: str = Form(...), technical_advisor: str = Form(...),
@@ -258,10 +267,20 @@ async def update_customer(
     customer = customer_service.get_customer(db, customer_id)
     if customer and not customer.is_active:
         raise HTTPException(status_code=403, detail="No se puede editar un cliente inactivo")
+    # Foto del estado previo: sin esto no se puede decir qué cambió.
+    antes = auditoria.snapshot(customer)
     customer_service.update_customer(db, customer_id, name, plant, industry_sector,
                                        assigned_commercial, technical_advisor, designer,
                                        address, city, status, relevamiento_status,
                                        member_name, member_role, member_phone, member_reports_to, member_sector, observations)
+    # Se relee el registro para comparar contra la foto previa y registrar sólo
+    # los campos que efectivamente cambiaron.
+    despues = auditoria.snapshot(customer_service.get_customer(db, customer_id))
+    cambios = auditoria.diferencias(antes, despues)
+    if cambios:
+        auditoria.registrar(db, "customer", customer_id, "editar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=name, changes=cambios)
     return RedirectResponse(url="/clientes", status_code=303)
 
 
@@ -342,6 +361,11 @@ async def clientes_accion_en_lote(request: Request, db: Session = Depends(get_db
             else:
                 sd.soft_reactivate(db, models.Customer, cid)
             aplicados += 1
+            auditoria.registrar(db, "customer", cid, accion,
+                                user=user, entity_label=cliente.name,
+                                changes=({"motivo": {"antes": "", "despues": motivo}}
+                                         if accion == "desactivar" else None),
+                                commit=False)
         except Exception as ex:
             omitidos.append({"id": cid, "motivo": str(ex)[:80]})
 
@@ -358,7 +382,12 @@ async def deactivate_customer(customer_id: int, request: Request, db: Session = 
     reason = data.get("reason", "")
     user = getattr(request.state, 'user', None)
     uid = int(user["sub"]) if user else None
-    return sd.soft_deactivate(db, models.Customer, customer_id, reason, uid)
+    resultado = sd.soft_deactivate(db, models.Customer, customer_id, reason, uid)
+    cliente = db.query(models.Customer).filter(models.Customer.id == customer_id).first()
+    auditoria.registrar(db, "customer", customer_id, "desactivar",
+                        user=user, entity_label=cliente.name if cliente else None,
+                        changes={"motivo": {"antes": "", "despues": reason or "sin motivo"}})
+    return resultado
 
 
 @router.post("/reactivar-cliente/{customer_id}")
@@ -367,4 +396,8 @@ async def reactivate_customer(customer_id: int, request: Request, db: Session = 
     role = (user.get("role") or "") if user else ""
     if role != "admin":
         raise HTTPException(status_code=403, detail="Solo el admin puede reactivar")
-    return sd.soft_reactivate(db, models.Customer, customer_id)
+    resultado = sd.soft_reactivate(db, models.Customer, customer_id)
+    cliente = db.query(models.Customer).filter(models.Customer.id == customer_id).first()
+    auditoria.registrar(db, "customer", customer_id, "reactivar",
+                        user=user, entity_label=cliente.name if cliente else None)
+    return resultado

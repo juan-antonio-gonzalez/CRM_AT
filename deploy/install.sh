@@ -208,9 +208,18 @@ chmod 640 "$ENV_FILE"
 # Por eso ahora se normaliza TODO archivo, no sólo los .py: alcanza con que un
 # editor cree un archivo con permisos restrictivos para tumbar una pantalla.
 chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
-find "$APP_DIR" -type f -exec chmod 640 {} + 2>/dev/null || true
-find "$APP_DIR" -type d -exec chmod 750 {} + 2>/dev/null || true
+# El virtualenv queda afuera: sus binarios necesitan el permiso de ejecución, y un
+# `chmod 640` sobre todo el árbol se lo quita. Eso rompió `alembic` y `uvicorn`
+# —que se invocan como ejecutables— sin que se notara hasta que hicieron falta.
+find "$APP_DIR" -path "${APP_DIR}/.venv" -prune -o \
+     -type f -exec chmod 640 {} + 2>/dev/null || true
+find "$APP_DIR" -path "${APP_DIR}/.venv" -prune -o \
+     -type d -exec chmod 750 {} + 2>/dev/null || true
 chmod 750 "$APP_DIR"
+# Los del virtualenv sólo necesitan ser legibles y ejecutables por su dueño.
+if [ -d "${APP_DIR}/.venv/bin" ]; then
+  chmod +x "${APP_DIR}"/.venv/bin/* 2>/dev/null || true
+fi
 
 # Los estáticos los lee nginx (www-data), así que necesitan ser legibles por todos
 # y las carpetas atravesables.

@@ -480,3 +480,38 @@ class MeetingMinutes(Base):
         Index("ix_meeting_minutes_status_fecha", "status", "fecha"),
     )
 
+
+
+class ActivityLog(Base):
+    """Historial de cambios por registro.
+
+    Con cinco usuarios trabajando, "¿quién cambió esto?" no tenía respuesta. Cada
+    alta, edición, baja y reactivación queda registrada con quién, cuándo y qué
+    cambió.
+
+    Se guarda el nombre del usuario además de su id: si el usuario se elimina, el
+    historial tiene que seguir siendo legible. Y se guardan los cambios como
+    diferencias campo por campo, no el registro entero, para poder mostrar qué se
+    modificó sin tener que comparar dos versiones completas.
+    """
+
+    __tablename__ = "activity_log"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    # "customer", "machine", "visit", "minute", "product"
+    entity = Column(String(40), nullable=False)
+    entity_id = Column(Integer, nullable=False)
+    # "crear", "editar", "desactivar", "reactivar", "eliminar"
+    action = Column(String(20), nullable=False)
+    # Descripción legible del registro afectado, para mostrarla sin otra consulta.
+    entity_label = Column(String(200), nullable=True)
+    user_id = Column(Integer, nullable=True)
+    username = Column(String(80), nullable=True)
+    # {campo: {"antes": x, "despues": y}}
+    changes = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+    __table_args__ = (
+        Index("ix_activity_log_entity", "entity", "entity_id", "created_at"),
+        Index("ix_activity_log_created", "created_at"),
+    )

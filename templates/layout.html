@@ -167,6 +167,11 @@
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">calendar_month</span>
                             <span class="text-xs font-semibold">Agenda de Visitas</span>
                         </a>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'historial_cambios' %} sidebar-active {% endif %}"
+                            href="/historial-cambios" {% if active_page == 'historial_cambios' %}aria-current="page"{% endif %}>
+                            <span class="material-symbols-rounded text-lg" aria-hidden="true">history</span>
+                            <span class="text-xs font-semibold">Historial de cambios</span>
+                        </a>
                         <a class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:bg-white/10 hover:text-white transition-colors {% if active_page == 'importar' %} sidebar-active {% endif %}"
                             href="/importar" {% if active_page == 'importar' %}aria-current="page"{% endif %}>
                             <span class="material-symbols-rounded text-lg" aria-hidden="true">cloud_upload</span>
