@@ -546,3 +546,24 @@ def test_los_modales_se_abren_centrados():
                 linea = texto[:abre.start()].count("\n") + 1
                 ofensores.append(f"{nombre}:{linea} abre {idd} sin centrar")
     assert not ofensores, f"modales que se abren descuadrados: {ofensores}"
+
+
+def test_no_hay_tracking_arbitrario_ni_escala_al_pasar_el_mouse():
+    """Dos restos del lenguaje anterior.
+
+    * `tracking-[0.2em]` es el mismo patrón de letras separadas que se quitó con
+      `tracking-widest`, pero con un valor a medida que el barrido anterior no
+      atrapaba. Quedaban 22 casos, casi todos en botones.
+    * `hover:scale-105` / `hover:scale-[1.02]` hace que el botón "salte" al pasar
+      el mouse. El sistema usa transiciones de color, no de tamaño.
+    """
+    patron = re.compile(r'tracking-\[[^\]]*\]|hover:scale-')
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        # Los informes imprimibles conservan su diseño propio.
+        if "reporte" in nombre or nombre == "relevamiento_ver.html":
+            continue
+        for m in patron.finditer(texto):
+            linea = texto[:m.start()].count("\n") + 1
+            ofensores.append(f"{nombre}:{linea} {m.group(0)}")
+    assert not ofensores, f"restos del lenguaje anterior: {ofensores[:6]}"
