@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}Buscar | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex items-center gap-4 min-w-0">
+    <h1 class="text-lg sm:text-2xl font-semibold text-texto-fuerte tracking-tight truncate">
+        {% if consultado %}Resultados para «{{ q }}»{% else %}Buscar{% endif %}
+    </h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{# ============================================================================
+   Búsqueda transversal: clientes, visitas, máquinas y minutas en una sola
+   pantalla. Cada grupo trae los primeros resultados y el enlace al listado
+   filtrado, para ver todos si hace falta.
+   ============================================================================ #}
+<div class="max-w-[1200px] mx-auto space-y-6 animate-fade-in pb-16">
+
+    <form method="GET" action="/buscar" class="bg-superficie-suave border border-superficie-borde rounded-lg p-4 flex flex-wrap items-end gap-3">
+        <div class="flex flex-col gap-1 flex-1 min-w-[240px]">
+            <label for="q" class="text-xs text-texto-suave">Buscar en clientes, visitas, máquinas y minutas</label>
+            <div class="relative">
+                <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
+                <input type="search" id="q" name="q" value="{{ q }}" autofocus
+                    placeholder="Nombre, planta, ciudad, máquina, objetivo…"
+                    class="w-full pl-9 pr-3 py-2 text-sm bg-superficie-card border border-superficie-fuerte rounded-md focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
+            </div>
+        </div>
+        <button type="submit"
+            class="px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors">
+            Buscar
+        </button>
+    </form>
+
+    {% if not consultado %}
+    <p class="text-sm text-texto-tenue bg-superficie-suave border border-superficie-borde rounded-lg px-4 py-8 text-center">
+        Escribí al menos dos letras. Se buscan coincidencias en los cuatro módulos a la vez.
+    </p>
+
+    {% elif total == 0 %}
+    <p class="text-sm text-texto-tenue bg-superficie-suave border border-superficie-borde rounded-lg px-4 py-8 text-center">
+        No se encontró nada para «{{ q }}».<br>
+        <span class="text-texto-tenue">Probá con el nombre del cliente, la planta, la ciudad, la marca o el número de serie.</span>
+    </p>
+
+    {% else %}
+    <p class="text-sm text-texto-suave">
+        {{ total }} resultado{{ 's' if total != 1 else '' }} en {{ grupos|length }}
+        módulo{{ 's' if grupos|length != 1 else '' }}.
+    </p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {% for g in grupos %}
+        <section aria-labelledby="grupo-{{ g.clave }}"
+            class="bg-superficie-card border border-superficie-borde rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-superficie-borde bg-superficie-suave">
+                <h2 id="grupo-{{ g.clave }}" class="text-sm font-semibold text-texto-fuerte">
+                    {{ g.titulo }}
+                    <span class="text-texto-tenue font-normal">({{ g.resultados|length }}{{ '+' if g.puede_haber_mas else '' }})</span>
+                </h2>
+                <a href="{{ g.enlace_todos }}" class="text-xs text-primary-700 hover:underline whitespace-nowrap">
+                    Ver todos
+                </a>
+            </div>
+            <ul class="divide-y divide-superficie-borde">
+                {% for r in g.resultados %}
+                <li>
+                    <a href="{{ r.enlace }}" class="flex items-start gap-3 px-4 py-3 hover:bg-superficie-suave transition-colors">
+                        <span class="material-symbols-rounded text-texto-tenue text-lg shrink-0 mt-0.5" aria-hidden="true">{{ r.icono }}</span>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm text-texto-fuerte truncate" title="{{ r.titulo }}">{{ r.titulo }}</p>
+                            {% if r.detalle %}
+                            <p class="text-xs text-texto-suave truncate" title="{{ r.detalle }}">{{ r.detalle }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="material-symbols-rounded text-texto-tenue text-base shrink-0" aria-hidden="true">chevron_right</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -216,7 +216,17 @@
                     {% block header_extra %}{% endblock %}
                 </div>
 
-                <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3 lg:gap-6">
+                    {# Búsqueda transversal: cruza clientes, visitas, máquinas y
+                       minutas. Antes había que entrar a cada módulo por separado. #}
+                    <form method="GET" action="/buscar" role="search" class="relative hidden sm:block">
+                        <label for="busqueda-global" class="sr-only">Buscar en todo el sistema</label>
+                        <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
+                        <input type="search" id="busqueda-global" name="q"
+                            value="{{ q if active_page == 'buscar' and q is defined else '' }}"
+                            placeholder="Buscar en todo…"
+                            class="w-40 lg:w-64 pl-9 pr-3 py-2 text-sm bg-superficie-suave border border-superficie-borde rounded-md focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none">
+                    </form>
                     {% if not request.state.user %}
                     <a href="/auth/login"
                         class="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-primary/20">

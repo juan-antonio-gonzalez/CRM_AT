@@ -462,6 +462,7 @@ from routers import auth as auth_router
 from routers import dashboard as dashboard_router
 from routers import products as products_router
 from routers import importacion as importacion_router
+from routers import busqueda as busqueda_router
 from routers import customers as customers_router
 from routers import machinery as machinery_router
 from routers import visits2 as visits2_router
@@ -481,6 +482,7 @@ app.include_router(auth_router.router)
 app.include_router(dashboard_router.router)
 app.include_router(products_router.router)
 app.include_router(importacion_router.router)
+app.include_router(busqueda_router.router)
 app.include_router(customers_router.router)
 app.include_router(machinery_router.router)
 app.include_router(visits2_router.router)
