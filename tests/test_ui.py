@@ -476,3 +476,23 @@ def test_las_plantillas_cierran_todos_los_divs():
         if saldo:
             ofensores.append(f"{nombre}: {saldo:+d}")
     assert not ofensores, f"plantillas con divs desbalanceados: {ofensores}"
+
+
+def test_los_modales_usan_los_tres_tamanos_del_componente():
+    """El componente define tres tamaños: confirmar, formulario y amplio.
+
+    Los modales escritos a mano usaban cinco anchos distintos (max-w-xs, md, lg,
+    2xl, 6xl), así que el mismo tipo de diálogo medía distinto según la pantalla:
+    en seguimiento, el modal de crear medía max-w-2xl y el de editar lo mismo
+    medía max-w-lg. Ahora todos caen en uno de los tres tamaños.
+    """
+    PERMITIDOS = {"max-w-sm", "max-w-lg", "max-w-3xl", "max-w-4xl"}
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in re.finditer(r'<div[^>]*role="dialog"[^>]*>', texto):
+            frag = texto[m.start():m.start() + 1400]
+            ancho = re.search(r'max-w-[a-z0-9\[\]]+', frag)
+            if ancho and ancho.group(0) not in PERMITIDOS:
+                linea = texto[:m.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea} usa {ancho.group(0)}")
+    assert not ofensores, f"modales con ancho fuera del sistema: {ofensores}"
