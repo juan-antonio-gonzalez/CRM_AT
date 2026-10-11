@@ -56,6 +56,13 @@ def _legible(valor):
     return texto if len(texto) <= 60 else texto[:57] + "…"
 
 
+def _mismo(a, b) -> bool:
+    """Compara dos valores ignorando espacios sobrantes y None vs vacío."""
+    if isinstance(a, (dict, list)) or isinstance(b, (dict, list)):
+        return a == b
+    return str(a if a is not None else "").strip() == str(b if b is not None else "").strip()
+
+
 def diferencias(antes, despues):
     """Campos que cambiaron entre dos versiones de un registro.
 
@@ -70,14 +77,23 @@ def diferencias(antes, despues):
             continue
         valor_antes = antes.get(campo)
         # Se comparan los valores normalizados: cambiar "  " por "" no es un cambio.
+        # Las visitas y las minutas guardan casi todo dentro de `form_data`, que es
+        # un JSON. Comparar el diccionario entero diría "(12 elementos)" y no
+        # serviría: lo que hace falta saber es **qué campo** cambió.
+        if isinstance(valor_antes, dict) and isinstance(valor_despues, dict):
+            for clave in set(valor_antes) | set(valor_despues):
+                va, vd = valor_antes.get(clave), valor_despues.get(clave)
+                if _mismo(va, vd):
+                    continue
+                cambios[f"{campo}.{clave}"] = {"antes": _legible(va),
+                                               "despues": _legible(vd)}
+            continue
         if isinstance(valor_antes, (dict, list)) or isinstance(valor_despues, (dict, list)):
             iguales = valor_antes == valor_despues
         else:
             # Los espacios sobrantes no son un cambio: pasar de "  " a "" es vaciar
             # el campo, no modificarlo. Sin esto el historial se llena de ruido.
-            a = str(valor_antes if valor_antes is not None else "").strip()
-            b = str(valor_despues if valor_despues is not None else "").strip()
-            iguales = a == b
+            iguales = _mismo(valor_antes, valor_despues)
         if not iguales:
             cambios[campo] = {"antes": _legible(valor_antes),
                               "despues": _legible(valor_despues)}

@@ -7,16 +7,38 @@ del usuario.
 """
 
 import datetime
+import os
 
 import models
 from services import auditoria
 
+# Ruta a las plantillas, para las pruebas que revisan el marcado.
+PLANTILLAS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                          "templates")
 
-def _csrf(client, ruta="/clientes"):
+
+def _csrf(client, ruta=None):
+    """Token CSRF de la sesión.
+
+    El token es por usuario, así que sirve el de cualquier página que tenga un
+    formulario. Se prueban varias porque no todas lo incluyen, y buscar en la
+    equivocada devolvía vacío y el POST fallaba por CSRF.
+    """
     import re
-    html = client.get(ruta).text
-    m = re.search(r'name="csrf_token" value="([^"]*)"', html)
-    return m.group(1) if m else ""
+    candidatas = [ruta] if ruta else []
+    candidatas += ["/clientes", "/nuevo-cliente", "/maquinaria", "/nuevo-producto",
+                   "/minutas", "/visitas2", "/productos"]
+    for r in candidatas:
+        if not r:
+            continue
+        try:
+            html = client.get(r).text
+        except Exception:
+            continue
+        m = re.search(r'name="csrf_token" value="([^"]+)"', html)
+        if m:
+            return m.group(1)
+    return ""
 
 
 def _entrar(client):
@@ -222,3 +244,174 @@ def test_la_pagina_avisa_cuando_no_hay_nada(client, db_session, seed_admin):
     r = client.get("/historial-cambios")
     assert r.status_code == 200
     assert "Todavía no hay cambios" in r.text
+
+
+# ── Los otros módulos ──────────────────────────────────────────────────────
+def _csrf_de(client, ruta):
+    return _csrf(client, ruta)
+
+
+def test_editar_una_maquina_registra_la_diferencia(client, db_session, seed_admin):
+    _entrar(client)
+    c = models.Customer(name="Con máquina", is_active=True)
+    db_session.add(c)
+    db_session.commit()
+    m = models.Machine(customer_id=c.id, serial_number="SN-1", brand="Bobst",
+                       model="X5", plant_assigned="P1", machine_type="Impresora",
+                       line="L1", status="Operativo", is_active=True)
+    db_session.add(m)
+    db_session.commit()
+
+    client.post(f"/editar-maquinaria/{m.id}", data={
+        "csrf_token": _csrf_de(client, "/maquinaria"),
+        "customer_id": c.id, "serial_number": "SN-1", "brand": "Bobst",
+        "model_name": "X9", "plant_assigned": "Planta 2", "machine_type": "Impresora",
+        "line": "L1", "status": "Operativo"})
+
+    r = db_session.query(models.ActivityLog).filter(
+        models.ActivityLog.entity == "machine",
+        models.ActivityLog.action == "editar").first()
+    assert r is not None
+    assert "model" in r.changes or "plant_assigned" in r.changes
+
+
+def test_crear_un_producto_queda_registrado(client, db_session, seed_admin):
+    _entrar(client)
+    client.post("/nuevo-producto", data={
+        "csrf_token": _csrf_de(client, "/productos"),
+        "name": "Caja prueba", "et_number": "ET-1", "material": "Corrugado",
+        "manufacturing_route": "R1", "dimensions_l": 10, "dimensions_a": 10,
+        "dimensions_h": 10, "status": "Activo"})
+    r = db_session.query(models.ActivityLog).filter(
+        models.ActivityLog.entity == "product").first()
+    assert r is not None
+    assert r.action == "crear"
+    assert r.entity_label == "Caja prueba"
+
+
+def test_editar_una_minuta_registra_dentro_del_json(client, db_session, seed_admin):
+    """Las minutas guardan todo en `form_data`: hay que ver qué campo cambió."""
+    _entrar(client)
+    m = models.MeetingMinutes(fecha="2026-05-10", status="Borrador", is_active=True,
+                              form_data={"objetivo": "Comité mensual", "tipoReunion": "Seguimiento"})
+    db_session.add(m)
+    db_session.commit()
+
+    client.post(f"/minutas/{m.id}/editar", data={
+        "csrf_token": _csrf_de(client, "/minutas"),
+        "form_data": '{"objetivo": "Comité de calidad", "tipoReunion": "Seguimiento", "fecha": "2026-05-10", "status": "Borrador"}'})
+
+    r = db_session.query(models.ActivityLog).filter(
+        models.ActivityLog.entity == "minute",
+        models.ActivityLog.action == "editar").first()
+    assert r is not None
+    # El campo se nombra `form_data.<clave>`, no "(2 elementos)".
+    assert "form_data.objetivo" in r.changes
+    assert r.changes["form_data.objetivo"]["antes"] == "Comité mensual"
+    assert r.changes["form_data.objetivo"]["despues"] == "Comité de calidad"
+
+
+def test_crear_una_minuta_queda_registrada(client, db_session, seed_admin):
+    _entrar(client)
+    client.post("/minutas/nueva", data={
+        "csrf_token": _csrf_de(client, "/minutas"),
+        "form_data": '{"objetivo": "Reunión inicial", "fecha": "2026-05-10", "status": "Borrador"}'})
+    r = db_session.query(models.ActivityLog).filter(
+        models.ActivityLog.entity == "minute").first()
+    assert r is not None and r.action == "crear"
+
+
+def test_borrar_una_minuta_queda_registrado(client, db_session, seed_admin):
+    _entrar(client)
+    m = models.MeetingMinutes(fecha="2026-05-10", status="Borrador", is_active=True,
+                              form_data={"objetivo": "Para borrar"})
+    db_session.add(m)
+    db_session.commit()
+    mid = m.id
+
+    client.post(f"/eliminar-minuta/{mid}", data={"csrf_token": _csrf_de(client, "/minutas")})
+    r = db_session.query(models.ActivityLog).filter(
+        models.ActivityLog.entity == "minute",
+        models.ActivityLog.action == "eliminar",
+        models.ActivityLog.entity_id == mid).first()
+    assert r is not None
+
+
+def test_el_historial_cubre_todas_las_entidades_esperadas():
+    """Si se agrega auditoría en un módulo nuevo, esto falla si falta la etiqueta."""
+    for entidad in ("customer", "machine", "product", "visit", "minute"):
+        assert entidad in auditoria.ETIQUETAS, f"falta la etiqueta de {entidad}"
+
+
+def test_los_listados_tienen_el_boton_de_historial():
+    """El botón abre el modal con `data-historial="entidad:id"`."""
+    import glob as glob_module
+    esperados = {
+        "clientes.html": "customer:",
+        "maquinaria.html": "machine:",
+        "productos.html": "product:",
+        "minutas_lista.html": "minute:",
+        "visitas2_lista.html": "visit:",
+    }
+    faltan = []
+    for archivo, prefijo in esperados.items():
+        ruta = os.path.join(PLANTILLAS, archivo)
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        if f'data-historial="{prefijo}' not in texto:
+            faltan.append(archivo)
+    assert not faltan, f"listados sin botón de historial: {faltan}"
+
+
+def test_las_plantillas_del_historial_usan_la_variable_correcta():
+    """El botón tiene que referirse a la variable del `for`, no a un nombre inventado.
+
+    Al insertarlo usé `minuta.id` y `visita.id` cuando los bucles usan `m` y `v`, y
+    las páginas devolvían 500.
+    """
+    import glob as glob_module
+    problemas = []
+    for ruta in glob_module.glob(os.path.join(PLANTILLAS, "*.html")):
+        with open(ruta, encoding="utf-8") as fh:
+            texto = fh.read()
+        if "data-historial=" not in texto:
+            continue
+        # La variable del bucle en esa plantilla.
+        import re as re_mod
+        variables = set(re_mod.findall(r"{%-?\s*for\s+(\w+)\s+in\s", texto))
+        usadas = set(re_mod.findall(r'data-historial="[a-z_]+:\{\{\s*(\w+)\.', texto))
+        if usadas and not usadas <= variables:
+            problemas.append(f"{os.path.basename(ruta)}: usa {sorted(usadas - variables)}, "
+                             f"los bucles definen {sorted(variables)}")
+    assert not problemas, f"botones de historial con variable inexistente: {problemas}"
+
+
+def test_el_pie_del_modal_de_historial_esta_dentro_del_modal():
+    """El pie tiene que ir dentro del bloque `call modal()`, no después.
+
+    Fuera del modal, los botones quedan colgando al final de la página.
+    """
+    ruta = os.path.join(PLANTILLAS, "layout.html")
+    with open(ruta, encoding="utf-8") as fh:
+        texto = fh.read()
+    import re as re_mod
+    bloque = re_mod.search(r"call modal\('modalHistorial'.*?endcall", texto, re_mod.S)
+    assert bloque, "no se encontró el modal de historial"
+    assert "call pie_modal" in bloque.group(0), "el pie quedó fuera del modal"
+
+
+def test_el_contenido_del_historial_no_pisa_el_pie():
+    """`abrirHistorial()` escribe sobre un div interno, no sobre el cuerpo del modal.
+
+    Escribir sobre `-cuerpo` borraba el pie de botones, porque el pie vive ahí
+    adentro. El botón desaparecía al cargar el historial.
+    """
+    with open(os.path.join(PLANTILLAS, "layout.html"), encoding="utf-8") as fh:
+        layout = fh.read()
+    assert 'id="historialContenido"' in layout
+
+    raiz = os.path.dirname(PLANTILLAS)
+    with open(os.path.join(raiz, "static/js/app.js"), encoding="utf-8") as fh:
+        js = fh.read()
+    assert "getElementById('historialContenido')" in js
+    assert "getElementById('modalHistorial-cuerpo')" not in js

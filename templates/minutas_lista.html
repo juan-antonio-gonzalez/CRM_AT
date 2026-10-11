@@ -137,6 +137,13 @@
                         </td>
                         <td class="px-6 py-5 text-right">
                             <div class="flex items-center justify-end gap-2">
+                                <button type="button"
+                                    class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-info-700 transition-colors"
+                                    title="Ver historial de cambios" aria-label="Ver historial de cambios"
+                                    data-historial="minute:{{ m.id }}"
+                                    data-historial-etiqueta="{{ m.form_data.get('objetivo', '') if m.form_data else '' }}">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">history</span>
+                                </button>
                                 {% if m.status == 'Finalizado' %}
                                 <a href="/minutas/{{ m.id }}/editar"
                                     class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-exito-500 transition-all border border-superficie-borde"

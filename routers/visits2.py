@@ -6,6 +6,7 @@ import io
 import models
 from database import get_db
 from services import pagination as pg
+from services import auditoria
 from services.utils import safe_json_loads
 from services.customer_service import list_customers
 import datetime
@@ -290,6 +291,18 @@ async def nueva_visita2(request: Request, db: Session = Depends(get_db)):
     })
 
 
+def _etiqueta_visita(visita):
+    """Cómo se nombra una visita en el historial."""
+    if visita is None:
+        return None
+    fd = visita.form_data or {}
+    cliente = fd.get("cliente_nombre") or ""
+    fecha = visita.fecha or fd.get("fecha") or ""
+    if cliente and fecha:
+        return f"{cliente} — {fecha}"
+    return cliente or fecha or f"visita #{getattr(visita, 'id', '?')}"
+
+
 @router.post("/visitas2/nueva")
 async def create_visita2(request: Request, db: Session = Depends(get_db)):
     form = await request.form()
@@ -305,6 +318,9 @@ async def create_visita2(request: Request, db: Session = Depends(get_db)):
     db.add(new_visit)
     db.commit()
     db.refresh(new_visit)
+    auditoria.registrar(db, "visit", new_visit.id, "crear",
+                        user=getattr(request.state, "user", None),
+                        entity_label=_etiqueta_visita(new_visit))
 
     sync_action_plan(db, new_visit.id, data)
     db.commit()
@@ -351,6 +367,8 @@ async def save_editar_visita2(visit_id: int, request: Request, db: Session = Dep
     if not visit:
         return RedirectResponse(url="/visitas2", status_code=303)
 
+    # Foto previa: sin esto no se puede decir qué cambió.
+    antes = auditoria.snapshot(visit)
     form = await request.form()
     data = safe_json_loads(form.get("form_data"))
 
@@ -363,6 +381,14 @@ async def save_editar_visita2(visit_id: int, request: Request, db: Session = Dep
     sync_action_plan(db, visit.id, data)
     db.commit()
 
+    # El historial se registra al final, cuando el cambio ya está guardado.
+    despues = auditoria.snapshot(visit)
+    cambios = auditoria.diferencias(antes, despues)
+    if cambios:
+        auditoria.registrar(db, "visit", visit_id, "editar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=_etiqueta_visita(visit), changes=cambios)
+
     return RedirectResponse(url="/visitas2", status_code=303)
 
 
@@ -370,18 +396,25 @@ async def save_editar_visita2(visit_id: int, request: Request, db: Session = Dep
 async def cancel_visita2(visit_id: int, request: Request, db: Session = Depends(get_db)):
     visit = db.query(models.TechnicalVisit2).filter(models.TechnicalVisit2.id == visit_id).first()
     if visit:
+        etiqueta = _etiqueta_visita(visit)
+        anterior = visit.status
         visit.status = "Cancelado"
         fd = visit.form_data or {}
         fd["status"] = "Cancelado"
         visit.form_data = fd
         db.commit()
-    return RedirectResponse(url="/visitas2", status_code=303)
+        auditoria.registrar(db, "visit", visit_id, "desactivar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=etiqueta,
+                            changes={"status": {"antes": anterior or "En proceso",
+                                                "despues": "Cancelado"}})
 
 
 @router.post("/eliminar-visita2/{visit_id}")
 async def delete_visita2(visit_id: int, request: Request, db: Session = Depends(get_db)):
     visit = db.query(models.TechnicalVisit2).filter(models.TechnicalVisit2.id == visit_id).first()
     if visit:
+        etiqueta = _etiqueta_visita(visit)
         from services.trash_service import move_to_trash
         user = getattr(request.state, 'user', None)
         uid = int(user["sub"]) if user else None
@@ -412,4 +445,6 @@ async def delete_visita2(visit_id: int, request: Request, db: Session = Depends(
         }, uid, uname, f"Visita #{visit.id}")
         db.delete(visit)
         db.commit()
+        auditoria.registrar(db, "visit", visit_id, "eliminar",
+                            user=user, entity_label=etiqueta)
     return RedirectResponse(url="/visitas2?ok=eliminada", status_code=303)

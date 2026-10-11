@@ -560,6 +560,15 @@
     document.getElementById('btnCancelConfirm')?.addEventListener('click', closeConfirmModal);
     document.getElementById('btnMobileMenu')?.addEventListener('click', toggleSidebar);
     initLote();
+
+    // Un solo manejador para todos los botones de historial de la página.
+    document.addEventListener('click', (e) => {
+      const boton = e.target.closest('[data-historial]');
+      if (!boton) return;
+      e.preventDefault();
+      const partes = boton.dataset.historial.split(':');
+      abrirHistorial(partes[0], partes[1], boton.dataset.historialEtiqueta);
+    });
   });
 
 
@@ -668,6 +677,57 @@
     });
 
     refrescar();
+  }
+
+
+  // ── Historial de un registro ──
+  //
+  // Se dispara desde cualquier botón con `data-historial="entidad:id"`. El
+  // contenido se pide al servidor, así que la misma pieza sirve para clientes,
+  // máquinas, visitas, minutas y productos sin duplicar nada por módulo.
+  function abrirHistorial(entity, id, etiqueta) {
+    // Se escribe sobre el div de contenido, no sobre el cuerpo del modal:
+    // el pie de botones vive ahí adentro y se borraría.
+    const cuerpo = document.getElementById('historialContenido');
+    const titulo = document.getElementById('modalHistorial-titulo');
+    if (!cuerpo) return;
+    if (titulo) titulo.textContent = etiqueta || 'Historial de cambios';
+    cuerpo.innerHTML = '<p class="text-sm text-texto-tenue py-6 text-center">Cargando…</p>';
+    abrirModal('modalHistorial');
+
+    fetch('/api/historial/' + encodeURIComponent(entity) + '/' + encodeURIComponent(id),
+          { headers: { 'Accept': 'application/json' } })
+      .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then((datos) => {
+        const registros = datos.registros || [];
+        if (!registros.length) {
+          cuerpo.innerHTML = '<p class="text-sm text-texto-tenue py-6 text-center">'
+            + 'Sin cambios registrados para este registro.</p>';
+          return;
+        }
+        cuerpo.innerHTML = registros.map((r) => {
+          // Sólo se listan los campos que cambiaron, con el valor anterior y el nuevo.
+          const cambios = Object.keys(r.cambios || {}).map((campo) => {
+            const v = r.cambios[campo];
+            return '<li class="text-xs text-texto-suave">'
+              + '<span class="text-texto-base">' + escapeHtml(campo) + '</span>: '
+              + '<span class="text-peligro-700 line-through">' + escapeHtml(v.antes) + '</span>'
+              + ' <span class="material-symbols-rounded text-xs align-middle" aria-hidden="true">arrow_forward</span> '
+              + '<span class="text-exito-700">' + escapeHtml(v.despues) + '</span></li>';
+          }).join('');
+          return '<div class="border-b border-superficie-borde last:border-0 py-3">'
+            + '<div class="flex flex-wrap items-start justify-between gap-2">'
+            + '<p class="text-sm text-texto-fuerte">' + escapeHtml(r.accion_texto) + '</p>'
+            + '<div class="text-right"><p class="text-xs text-texto-base">' + escapeHtml(r.usuario) + '</p>'
+            + '<p class="text-2xs text-texto-tenue">' + escapeHtml(r.fecha) + '</p></div></div>'
+            + (cambios ? '<ul class="mt-1.5 space-y-0.5">' + cambios + '</ul>' : '')
+            + '</div>';
+        }).join('');
+      })
+      .catch(() => {
+        cuerpo.innerHTML = '<p class="text-sm text-peligro-700 py-6 text-center">'
+          + 'No se pudo cargar el historial.</p>';
+      });
   }
 
   // ── Global exports ──

@@ -5,7 +5,7 @@ from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
-from services import machine_service, pagination as pg
+from services import machine_service, pagination as pg, auditoria
 from templating import templates
 
 router = APIRouter(tags=["machinery"])
@@ -79,6 +79,24 @@ async def exportar_maquinaria_excel(
         filas,
         nombre_con_fecha("maquinas"),
     )
+
+
+def _etiqueta_maquina(maquina):
+    """Cómo se nombra una máquina en el historial."""
+    if maquina is None:
+        return None
+    partes = [getattr(maquina, "brand", ""), getattr(maquina, "model", "")]
+    texto = " ".join(p for p in partes if p).strip()
+    if getattr(maquina, "serial_number", ""):
+        texto = f"{texto} ({maquina.serial_number})" if texto else maquina.serial_number
+    return texto or None
+
+
+def _nombre_cliente(db, customer_id):
+    if not customer_id:
+        return ""
+    c = db.query(models.Customer).filter(models.Customer.id == customer_id).first()
+    return c.name if c else str(customer_id)
 
 
 @router.get("/maquinaria", response_class=HTMLResponse)
@@ -157,6 +175,7 @@ async def list_machinery(
 
 @router.post("/nuevo-maquinaria")
 async def create_machine(
+    request: Request,
     serial_number: str = Form(...), machine_model: str = Form(..., alias="model_name"), brand: str = Form(...),
     plant_assigned: str = Form(...), machine_type: str = Form(...), line: str = Form(""),
     customer_id: int = Form(...),
@@ -166,6 +185,9 @@ async def create_machine(
                                              plant_assigned, machine_type, line, customer_id)
     if result is None:
         return RedirectResponse(url="/maquinaria?error=duplicate_serial", status_code=303)
+    auditoria.registrar(db, "machine", getattr(result, "id", 0), "crear",
+                        user=getattr(request.state, "user", None),
+                        entity_label=_etiqueta_maquina(result))
     return RedirectResponse(url="/maquinaria?success=machine_created", status_code=303)
 
 
@@ -216,6 +238,7 @@ async def edit_machine_partial(machine_id: int, request: Request, db: Session = 
 
 @router.post("/editar-maquinaria/{machine_id}")
 async def update_machine(
+    request: Request,
     machine_id: int,
     customer_id: int = Form(...),
     serial_number: str = Form(...),
@@ -227,8 +250,23 @@ async def update_machine(
     status: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    # Foto previa: sin esto no se puede decir qué cambió.
+    antes = auditoria.snapshot(machine_service.get_machine(db, machine_id))
     machine_service.update_machine(db, machine_id, customer_id, serial_number, brand,
                                     machine_model, plant_assigned, machine_type, line, status)
+    despues = auditoria.snapshot(machine_service.get_machine(db, machine_id))
+    # El cliente se guarda como id; en el historial se muestra su nombre.
+    nombre_cliente = _nombre_cliente(db, customer_id)
+    cambios = auditoria.diferencias(antes, despues)
+    if "customer_id" in cambios:
+        cambios["cliente"] = {"antes": _nombre_cliente(db, antes.get("customer_id")),
+                              "despues": nombre_cliente}
+        del cambios["customer_id"]
+    if cambios:
+        auditoria.registrar(db, "machine", machine_id, "editar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=f"{brand} {machine_model}".strip(),
+                            changes=cambios)
     return RedirectResponse(url="/maquinaria", status_code=303)
 
 
@@ -237,5 +275,9 @@ async def delete_machine(machine_id: int, request: Request, redirect: str = Quer
     user = getattr(request.state, 'user', None)
     uid = int(user["sub"]) if user else None
     uname = user.get("username") if user else None
+    maquina = machine_service.get_machine(db, machine_id)
+    etiqueta = _etiqueta_maquina(maquina)
     machine_service.delete_machine(db, machine_id, uid, uname)
+    auditoria.registrar(db, "machine", machine_id, "eliminar",
+                        user=user, entity_label=etiqueta)
     return RedirectResponse(url=redirect, status_code=303)

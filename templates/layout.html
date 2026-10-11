@@ -255,6 +255,25 @@
        componente ({{ id }}-titulo, {{ id }}-icono, {{ id }}-cuerpo). #}
     {% from "_ui.html" import modal, pie_modal %}
 
+    {# Un solo modal de historial para toda la app. El contenido lo llena
+       `abrirHistorial()` desde /api/historial/<entidad>/<id>. #}
+    {% call modal('modalHistorial', 'Historial de cambios', 'amplio', 'history', 'info',
+                  'Quién cambió qué y cuándo.') %}
+        {# El contenido va en su propio div: `abrirHistorial()` lo reemplaza, y si
+           escribiera sobre el cuerpo del modal borraría el pie de botones. #}
+        <div id="historialContenido">
+            <p class="text-sm text-texto-tenue py-6 text-center">Cargando…</p>
+        </div>
+        {# El pie va DENTRO del bloque del modal: fuera de él, los botones quedan
+           colgando al final de la página. #}
+        {% call pie_modal() %}
+            <button type="button" onclick="cerrarModal('modalHistorial')"
+                class="px-4 py-2 rounded-md border border-superficie-borde text-texto-base hover:bg-superficie-suave text-sm font-medium transition-colors">
+                Cerrar
+            </button>
+        {% endcall %}
+    {% endcall %}
+
     {% call modal("confirmModal", "¿Confirmar acción?", "confirmar", "warning", "peligro") %}
     <p id="confirmModalMessage" class="text-sm text-texto-base">¿Deseas continuar con esta acción?</p>
     {% call pie_modal() %}

@@ -154,7 +154,21 @@
                         </td>
                         <td class="px-2 py-2 text-right whitespace-nowrap">
                             <div class="flex justify-end gap-1 transition-opacity">
-                                <button type="button" data-edit-machine="{{ machine.id }}"
+                                
+                                <button type="button"
+
+                                    class="p-1 text-texto-tenue hover:text-info-700 transition-colors bg-superficie-suave rounded-lg"
+
+                                    title="Ver historial de cambios" aria-label="Ver historial de cambios"
+
+                                    data-historial="machine:{{ machine.id }}"
+
+                                    data-historial-etiqueta="{{ machine.brand }} {{ machine.model }}">
+
+                                    <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">history</span>
+
+                                </button>
+<button type="button" data-edit-machine="{{ machine.id }}"
                                     class="p-1 text-texto-tenue hover:text-primary transition-colors bg-superficie-suave rounded-lg border border-superficie-borde btn-edit-machine"
                                     title="Editar Máquina" aria-label="Editar Máquina">
                                     <span class="material-symbols-rounded !text-[14px]" aria-hidden="true">edit</span>

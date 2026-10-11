@@ -145,6 +145,13 @@
                         </td>
                         <td class="px-4 py-3 text-right">
                             <div class="flex items-center justify-end gap-2">
+                                <button type="button"
+                                    class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-info-700 transition-colors"
+                                    title="Ver historial de cambios" aria-label="Ver historial de cambios"
+                                    data-historial="visit:{{ v.id }}"
+                                    data-historial-etiqueta="{{ v.form_data.get('cliente_nombre', '') if v.form_data else '' }}">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">history</span>
+                                </button>
                                 {% if v.status == 'Finalizado' %}
                                 <a href="/visitas2/{{ v.id }}/editar"
                                     class="p-1.5 bg-superficie-suave rounded-md text-texto-tenue hover:text-exito-500 transition-all border border-superficie-borde"

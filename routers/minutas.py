@@ -6,6 +6,7 @@ import io
 import models
 from database import get_db
 from services import pagination as pg
+from services import auditoria
 from services.utils import safe_json_loads
 from services.customer_service import list_customers
 import datetime
@@ -194,6 +195,17 @@ async def nueva_minuta(request: Request, db: Session = Depends(get_db)):
     })
 
 
+def _etiqueta_minuta(minuta):
+    """Cómo se nombra una minuta en el historial."""
+    if minuta is None:
+        return None
+    fd = minuta.form_data or {}
+    objetivo = fd.get("objetivo") or ""
+    if objetivo:
+        return objetivo[:200]
+    return f"minuta del {minuta.fecha}" if minuta.fecha else f"minuta #{minuta.id}"
+
+
 @router.post("/minutas/nueva")
 async def create_minuta(request: Request, db: Session = Depends(get_db)):
     form = await request.form()
@@ -209,6 +221,9 @@ async def create_minuta(request: Request, db: Session = Depends(get_db)):
     db.add(new_minuta)
     db.commit()
     db.refresh(new_minuta)
+    auditoria.registrar(db, "minute", new_minuta.id, "crear",
+                        user=getattr(request.state, "user", None),
+                        entity_label=_etiqueta_minuta(new_minuta))
 
     return RedirectResponse(url="/minutas", status_code=303)
 
@@ -237,6 +252,8 @@ async def save_editar_minuta(minuta_id: int, request: Request, db: Session = Dep
     if not minuta:
         return RedirectResponse(url="/minutas", status_code=303)
 
+    # Foto previa: sin esto no se puede decir qué cambió.
+    antes = auditoria.snapshot(minuta)
     form = await request.form()
     data = safe_json_loads(form.get("form_data"))
 
@@ -245,6 +262,14 @@ async def save_editar_minuta(minuta_id: int, request: Request, db: Session = Dep
     minuta.form_data = data
     minuta.updated_at = datetime.datetime.utcnow()
     db.commit()
+
+    # El historial se registra al final, cuando el cambio ya está guardado.
+    despues = auditoria.snapshot(minuta)
+    cambios = auditoria.diferencias(antes, despues)
+    if cambios:
+        auditoria.registrar(db, "minute", minuta_id, "editar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=_etiqueta_minuta(minuta), changes=cambios)
 
     return RedirectResponse(url="/minutas", status_code=303)
 
@@ -264,6 +289,10 @@ async def delete_minuta(minuta_id: int, request: Request, db: Session = Depends(
             "status": minuta.status,
             "form_data": fd,
         }, uid, uname, f"Minuta #{minuta.id}")
+        etiqueta = _etiqueta_minuta(minuta)
         db.delete(minuta)
         db.commit()
+        auditoria.registrar(db, "minute", minuta_id, "eliminar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=etiqueta)
     return RedirectResponse(url="/minutas", status_code=303)

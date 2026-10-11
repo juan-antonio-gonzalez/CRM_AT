@@ -144,6 +144,13 @@
                         </td>
                         <td class="px-4 py-3 text-right">
                             <div class="flex items-center justify-end gap-2">
+                                <button type="button"
+                                    class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-info-700 transition-colors"
+                                    title="Ver historial de cambios" aria-label="Ver historial de cambios"
+                                    data-historial="customer:{{ customer.id }}"
+                                    data-historial-etiqueta="{{ customer.name }}">
+                                    <span class="material-symbols-rounded text-[18px]" aria-hidden="true">history</span>
+                                </button>
                                 <a href="/cliente-reporte/{{ customer.id }}"
                                     class="p-2 bg-superficie-suave rounded-lg text-texto-tenue hover:text-exito-500 transition-all border border-superficie-borde"
                                     title="Ver Reporte" aria-label="Ver Reporte">

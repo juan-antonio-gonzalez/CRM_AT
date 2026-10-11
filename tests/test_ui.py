@@ -900,3 +900,31 @@ def test_las_celdas_de_columnas_numericas_usan_tabular_nums():
                 if i < len(tds) and "tabular-nums" not in tds[i].group(1):
                     problemas.append(f"{nombre}: columna {i} sin tabular-nums")
     assert not problemas, f"celdas numéricas sin tabular-nums: {problemas}"
+
+
+def test_no_hay_codigo_despues_de_un_return():
+    """Código inalcanzable: casi siempre, una edición que cayó en el lugar equivocado.
+
+    Pasó dos veces al conectar el historial en visitas y minutas: el bloque de
+    registro se insertó después de un `return` temprano (el del `if not registro:`)
+    en lugar del final, así que nunca se ejecutaba y la variable quedaba sin
+    asignar. El código se veía bien.
+    """
+    import ast
+    import glob as glob_module
+
+    ofensores = []
+    for patron in ("*.py", "services/*.py", "routers/*.py"):
+        for ruta in sorted(glob_module.glob(os.path.join(RAIZ, patron))):
+            with open(ruta, encoding="utf-8") as fh:
+                arbol = ast.parse(fh.read())
+            for nodo in ast.walk(arbol):
+                if not isinstance(nodo, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    continue
+                for i, sentencia in enumerate(nodo.body[:-1]):
+                    if isinstance(sentencia, ast.Return):
+                        ofensores.append(
+                            f"{os.path.basename(ruta)}:{sentencia.lineno} "
+                            f"({nodo.name}): {len(nodo.body) - i - 1} sentencia(s) "
+                            f"inalcanzable(s)")
+    assert not ofensores, f"código después de un return: {ofensores}"

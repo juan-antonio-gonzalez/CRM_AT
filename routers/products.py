@@ -5,7 +5,7 @@ from sqlalchemy import func
 from typing import Optional
 import models
 from database import get_db
-from services import product_service, pagination as pg
+from services import product_service, pagination as pg, auditoria
 from templating import templates
 
 router = APIRouter(tags=["products"])
@@ -99,6 +99,7 @@ async def new_product_form(request: Request):
 
 @router.post("/nuevo-producto")
 async def create_product(
+    request: Request,
     name: str = Form(...),
     et_number: str = Form(...),
     material: str = Form(...),
@@ -109,8 +110,10 @@ async def create_product(
     status: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    product_service.create_product(db, name, et_number, material, manufacturing_route,
-                                    dimensions_l, dimensions_a, dimensions_h, status)
+    creado = product_service.create_product(db, name, et_number, material, manufacturing_route,
+                                            dimensions_l, dimensions_a, dimensions_h, status)
+    auditoria.registrar(db, "product", getattr(creado, "id", 0), "crear",
+                        user=getattr(request.state, "user", None), entity_label=name)
     return RedirectResponse(url="/productos", status_code=303)
 
 
@@ -122,6 +125,7 @@ async def edit_product_form(product_id: int, request: Request, db: Session = Dep
 
 @router.post("/editar-producto/{product_id}")
 async def update_product(
+    request: Request,
     product_id: int,
     name: str = Form(...), et_number: str = Form(...), material: str = Form(...),
     manufacturing_route: str = Form(...),
@@ -129,8 +133,15 @@ async def update_product(
     status: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    antes = auditoria.snapshot(product_service.get_product(db, product_id))
     product_service.update_product(db, product_id, name, et_number, material,
                                     manufacturing_route, dimensions_l, dimensions_a, dimensions_h, status)
+    despues = auditoria.snapshot(product_service.get_product(db, product_id))
+    cambios = auditoria.diferencias(antes, despues)
+    if cambios:
+        auditoria.registrar(db, "product", product_id, "editar",
+                            user=getattr(request.state, "user", None),
+                            entity_label=name, changes=cambios)
     return RedirectResponse(url="/productos", status_code=303)
 
 
@@ -139,7 +150,11 @@ async def delete_product(product_id: int, request: Request, db: Session = Depend
     user = getattr(request.state, 'user', None)
     uid = int(user["sub"]) if user else None
     uname = user.get("username") if user else None
+    producto = product_service.get_product(db, product_id)
+    etiqueta = getattr(producto, "name", None)
     product_service.delete_product(db, product_id, uid, uname)
+    auditoria.registrar(db, "product", product_id, "eliminar",
+                        user=user, entity_label=etiqueta)
     return RedirectResponse(url="/productos", status_code=303)
 
 
