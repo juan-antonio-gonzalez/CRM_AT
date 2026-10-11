@@ -9,54 +9,53 @@ propio virtual host, así que no interfiere con lo que ya está corriendo.
 
 ---
 
-## 0. Estado actual: ya desplegado
+## 0. Estado actual: desplegado y en producción
 
-La aplicación **está corriendo en el VPS** desde esta sesión:
+La aplicación está corriendo en el VPS con dominio propio y HTTPS válido:
 
 | Dato | Valor |
 |---|---|
-| URL | `https://203.0.113.10` (certificado provisional) |
-| Usuario | `admin` |
-| Contraseña | `FcVMozag3fIvX1tW` — **cambiala en `/auth/perfil`** |
+| URL | `https://ejemplo.com` |
+| Certificado | Let's Encrypt, renovación automática activa |
+| Usuario administrador | `admin` (la contraseña se define en el despliegue) |
 | Servicio | `systemctl status CRM-AT` |
 | Logs | `journalctl -u CRM-AT -f` |
-| Config | `/etc/crm-at/crm-at.env` |
+| Config | `/etc/crm-at/crm-at.env` (modo 600, dueño `root:crmat`) |
 | Código | `/var/www/crm_at` |
 | Base de datos | PostgreSQL local, base `crm_at`, usuario `crm_at` |
 | Puerto interno | `127.0.0.1:8020` |
 
-El certificado es **autofirmado**, así que el navegador muestra una advertencia
-que hay que aceptar. Se reemplaza por uno de Let's Encrypt en cuanto se corrija
-el DNS (sección 1).
+> Las credenciales **no se guardan en este archivo**. La contraseña del
+> administrador está en `/etc/crm-at/crm-at.env` (modo 600) y se cambia desde
+> `/auth/perfil`. Este documento se versiona en el repositorio.
 
-### Pendiente único: el registro DNS
+### Estado de la base de datos
 
-`ejemplo.com` sigue apuntando a `2.57.91.91` (parking de Hostinger) en lugar de
-al VPS (`203.0.113.10`). La zona DNS **ya está administrada por Hostinger**
-(nameservers `nebula.dns-parking.com` / `aurora.dns-parking.com`, TTL de 50 s),
-así que es un cambio de un solo registro que propaga en minutos:
+La base de producción está **limpia de datos de negocio**, lista para empezar a
+cargar información real:
 
-1. Panel de Hostinger → Dominios → `ejemplo.com` → **DNS / Nameservers**.
-2. En la zona DNS, editá el registro **A** de `@` y poné `203.0.113.10`.
-   Hacé lo mismo con el de `www`.
-3. Verificá desde tu máquina:
+| Contenido | Estado |
+|---|---|
+| Clientes, visitas, máquinas, minutas, asignaciones AT | vacíos, con los contadores en 1 |
+| Catálogos (sectores, tipos de máquina, tipos de visita) | sembrados |
+| Usuarios | 5 |
 
-   ```bash
-   dig +short ejemplo.com     # debe devolver 203.0.113.10
-   ```
+Los datos de demostración que se usaron durante el desarrollo se eliminaron con
+`TRUNCATE ... RESTART IDENTITY CASCADE`, que además reinicia los contadores de id
+para que el primer registro real sea el 1. Queda un respaldo previo al borrado en
+`/tmp/crm_at_antes_de_limpiar.dump` del servidor.
 
-4. En cuanto resuelva, cambiá el certificado (un comando):
+Para cargar datos de ejemplo en un entorno de desarrollo (nunca en producción):
 
-   ```bash
-   ssh root@203.0.113.10
-   cd /var/www/crm_at
-   sudo LETSENCRYPT_EMAIL=tu@correo.com bash deploy/enable-ssl.sh
-   ```
+```bash
+python main.py seed --demo
+```
 
-Ese script verifica el DNS antes de tocar nada, emite el certificado con el
-método webroot (el desafío ACME ya está funcionando), apunta el vhost al
-certificado real, habilita la renovación automática y deja la aplicación en
-`https://ejemplo.com` sin advertencias.
+### Las otras aplicaciones del VPS
+
+`otro-sitio.com`, `www.otro-sitio.com` y `otra-api` **no se tocan**. El vhost de este
+proyecto es un sitio aparte; `deploy/install.sh` nunca elimina ni el sitio
+`default` ni el de `ejemplo`.
 
 ---
 
@@ -205,38 +204,66 @@ archivos; no están en el repositorio.
   `SKIP_MIGRATIONS=true`.
 - **Nginx no toca las otras aplicaciones**: el instalador agrega un sitio nuevo y
   **no** elimina ni el sitio `default` ni el de `ejemplo`.
+- **Permisos de archivos**: el instalador normaliza **todos** los archivos del
+  proyecto, no sólo el código Python. Un `rsync` desde otra máquina conserva el
+  modo del archivo de origen, y un editor puede crear un archivo en modo `600`.
+  El servicio corre como `crmat`, así que un archivo en `600` cuyo dueño no sea
+  `crmat` es ilegible. Ya pasó dos veces, con dos síntomas distintos:
+
+  | Archivo en 600 | Síntoma |
+  | --- | --- |
+  | `run.py` | El servicio entra en bucle de reinicio: `can't open file 'run.py': [Errno 13] Permission denied` |
+  | `templates/_ui.html` | La pantalla devuelve HTTP 500: `PermissionError: [Errno 13] Permission denied: 'templates/_ui.html'` |
+
+  El segundo es más engañoso: sólo falla la pantalla que importa ese componente.
+  Por eso la regla es general (`find "$APP_DIR" -type f -exec chmod 640 {} +`) y no
+  una lista de extensiones.
+
+  **El origen son los permisos locales.** `rsync -a` preserva el modo del archivo de
+  origen, y Git **no** versiona permisos más allá del bit de ejecución. Durante el
+  desarrollo varios archivos quedaron en `600` en la máquina local —`run.py` y
+  `templating.py` entre ellos— y cada `rsync -a` volvía a desplegarlos así. Antes
+  de sincronizar conviene normalizarlos:
+
+  ```bash
+  find . -type d -not -path './.git/*' -not -path './.venv*' -exec chmod 755 {} +
+  find . -type f -not -path './.git/*' -not -path './.venv*' -exec chmod 644 {} +
+  find . -type f -name '*.sh' -not -path './.git/*' -exec chmod 755 {} +
+  ```
+
+  El instalador del servidor igual los corrige, así que esto es defensa en
+  profundidad, no un paso obligatorio.
+
+- **Caché de estáticos**: Nginx sirve `/static` con `Cache-Control: public,
+  immutable` y 30 días de vigencia. `immutable` le indica al navegador que **no
+  revalide**. Con una URL fija, ningún cambio de CSS o JS llegaba al usuario: el
+  servidor tenía todo desplegado y el navegador seguía mostrando la copia vieja
+  durante un mes. Por eso los estáticos se piden con `?v=<huella>`
+  (`static_url()` en `templating.py`): cada despliegue cambia la dirección. Con las
+  URLs versionadas, `immutable` pasa a ser lo correcto, porque un cambio de
+  contenido siempre implica una URL distinta.
+
+  Si hacés un cambio y no lo ves, **antes de dudar del código comprobá la URL del
+  CSS** en el HTML servido: debe terminar en `?v=...`. Un refresco forzado
+  (Cmd+Shift+R) hace falta una sola vez, para que el navegador tome el HTML nuevo.
 
 ---
 
-## 7. Subir el CI a GitHub (requiere un paso manual)
+## 7. Integración continua
 
-El workflow de CI (`.github/workflows/ci.yml`) **está en tu copia local pero
-todavía no se subió**, porque el token de GitHub configurado no tiene el permiso
-`workflow` que GitHub exige para crear o modificar archivos de Actions:
+El workflow vive en `.github/workflows/ci.yml` y **ya está en el repositorio**. Se
+ejecuta en cada push a `main`: levanta un PostgreSQL 16, aplica las migraciones y
+corre la suite completa.
 
-```
-! [remote rejected] main -> main (refusing to allow an OAuth App to create or
-  update workflow `.github/workflows/ci.yml` without `workflow` scope)
-```
-
-El token actual tiene los permisos `gist`, `read:org` y `repo`. Para habilitarlo:
+Si alguna vez hay que volver a subirlo desde cero, el token de GitHub necesita el
+permiso `workflow` (GitHub no permite crear ni modificar archivos de Actions sin
+él):
 
 ```bash
-gh auth refresh --hostname github.com --scopes workflow
-```
-
-Eso abre el navegador para autorizar el permiso adicional. Después:
-
-```bash
-git add .github/workflows/ci.yml
-git commit -m "CI: compila plantillas, migra y prueba sobre PostgreSQL"
+gh auth refresh --scope workflow
 git push origin main
 ```
 
-Si preferís no dar ese permiso, podés borrar el archivo; no afecta al
-funcionamiento de la aplicación, solo se pierde la verificación automática.
-
----
 
 ## 8. Resolución de problemas
 
