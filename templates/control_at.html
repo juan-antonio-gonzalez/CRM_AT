@@ -13,7 +13,7 @@
     </div>
 </div>
 {% endblock %}
-{% from "_ui.html" import indicador %}
+{% from "_ui.html" import indicador, modal, pie_modal %}
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-8 animate-fade-in">
     <!-- KPI Cards -->
@@ -313,35 +313,21 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div id="delete-modal-container" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="delete-modal-container-title">
-    <div id="delete-modal" class="relative w-full max-w-sm hidden">
-        <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
-            <div class="p-6 space-y-5">
-                <div class="flex items-center gap-4">
-                    <div class="size-12 rounded-2xl bg-peligro-50 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-rounded text-peligro-500 text-2xl" aria-hidden="true">delete_forever</span>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-texto-fuerte tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
-                        <p class="text-sm text-texto-suave mt-0.5" id="delete-message">¿Estás seguro?</p>
-                    </div>
-                </div>
-                <input type="hidden" id="delete-assignment-id" value="">
-                <input type="hidden" id="delete-csrf" value="{{ request.state.csrf_token or '' }}">
-                <div class="flex gap-3 pt-2">
-                    <button type="button" id="delete-cancel"
-                        class="flex-1 px-5 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-xl text-xs font-bold tracking-normal transition-all">
-                        Cancelar
-                    </button>
-                    <button type="button" id="delete-confirm"
-                        class="flex-1 px-5 py-2 bg-peligro-500 hover:bg-peligro-600 text-white rounded-xl text-xs font-bold tracking-normal transition-all shadow-lg shadow-peligro-500/20">
-                        Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% call modal('delete-modal-container', 'Eliminar asignación', 'confirmar', 'delete_forever', 'peligro') %}
+<p class="text-sm text-texto-base" id="delete-message">¿Estás seguro?</p>
+<input type="hidden" id="delete-assignment-id" value="">
+<input type="hidden" id="delete-csrf" value="{{ request.state.csrf_token or '' }}">
+{% call pie_modal() %}
+<button type="button" id="delete-cancel"
+    class="flex-1 px-4 py-2 bg-superficie-suave hover:bg-superficie-fuerte text-texto-base rounded-md text-sm font-medium transition-colors">
+    Cancelar
+</button>
+<button type="button" id="delete-confirm"
+    class="flex-1 px-4 py-2 bg-peligro-500 hover:bg-peligro-600 text-white rounded-md text-sm font-medium transition-colors">
+    Eliminar
+</button>
+{% endcall %}
+{% endcall %}
 {% endblock %}
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
@@ -483,12 +469,11 @@ document.getElementById('modal-save').addEventListener('click', function() {
 function openDeleteModal(id, name) {
     document.getElementById('delete-assignment-id').value = id;
     document.getElementById('delete-message').textContent = '¿Eliminar asignación AT para "' + name + '"?';
-    abrirModal('delete-modal-container')
-    abrirModal('delete-modal')
+    abrirModal('delete-modal-container');
 }
 
 function closeDeleteModal() {
-    cerrarModal('delete-modal')
+    cerrarModal('delete-modal-container');
     cerrarModal('delete-modal-container')
 }
 
