@@ -569,3 +569,22 @@ def test_no_hay_tracking_arbitrario_ni_escala_al_pasar_el_mouse():
             linea = texto[:m.start()].count("\n") + 1
             ofensores.append(f"{nombre}:{linea} {m.group(0)}")
     assert not ofensores, f"restos del lenguaje anterior: {ofensores[:6]}"
+
+
+def test_los_formularios_abren_y_cierran():
+    """Un `<form>` sin cerrar hace que el navegador descarte el siguiente.
+
+    Al migrar los modales de seguimiento se perdió el `</form>` de cada uno. HTML
+    no permite formularios anidados, así que el navegador anidó el segundo dentro
+    del primero y lo **descartó del DOM**: `getElementById('editTrackingForm')`
+    devolvía `null` y el modal de edición no abría, aunque el id estuviera en el
+    HTML servido. El HTML se veía bien; el que fallaba era el DOM.
+    """
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        limpio = re.sub(r'<script\b.*?</script>', '', texto, flags=re.S)
+        abre = len(re.findall(r'<form\b', limpio))
+        cierra = len(re.findall(r'</form>', limpio))
+        if abre != cierra:
+            ofensores.append(f"{nombre}: {abre} abiertos, {cierra} cerrados")
+    assert not ofensores, f"formularios desbalanceados: {ofensores}"
