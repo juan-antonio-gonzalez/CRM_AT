@@ -5,23 +5,24 @@
 {% block header_extra %}
 <div class="flex items-center gap-3">
     <div class="flex flex-col">
-        <h2 class="text-sm font-black text-texto-fuerte tracking-tighter">KPIs Calidad</h2>
-        <p class="text-2xs text-texto-suave font-bold">Indicadores de Calidad y Asistencia Técnica</p>
+        <h1 class="text-lg sm:text-2xl font-semibold text-texto-fuerte tracking-tight">KPIs de calidad</h1>
+        <p class="text-sm text-texto-suave mt-0.5">Indicadores de calidad y asistencia técnica</p>
     </div>
-    <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
-        <p class="text-2xs font-black text-primary tracking-normal leading-tight">Última Actualización</p>
-        <p class="text-2xs font-bold text-texto-base">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
+    <div class="hidden sm:block bg-primary-50 px-3 py-1.5 rounded-md border border-primary-200">
+        <p class="text-xs text-primary-700 leading-tight">Última actualización</p>
+        <p class="text-xs font-medium text-primary-700">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
     </div>
 </div>
 {% endblock %}
 
+{% from "_ui.html" import indicador %}
 {% block content %}
     <div class="max-w-7xl mx-auto space-y-6 animate-fade-in pb-10">
-        <form method="GET" action="/kpi-calidad" class="bg-white p-4 rounded-2xl border border-superficie-borde shadow-sm">
+        <form method="GET" action="/kpi-calidad" class="bg-superficie-suave p-4 rounded-lg border border-superficie-borde">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col w-20">
-                <label for="anio" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Año</label>
-                <select name="anio" class="bg-superficie-suave border border-superficie-borde rounded-lg px-2 py-1.5 text-xs font-bold" id="anio">
+                <label for="anio" class="text-xs text-texto-suave mb-1">Año</label>
+                <select name="anio" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="anio">
                     <option value="">Todos</option>
                     {% for y in available_years %}
                     <option value="{{ y }}" {% if filters.anio == y %}selected{% endif %}>{{ y }}</option>
@@ -29,8 +30,8 @@
                 </select>
             </div>
             <div class="flex flex-col w-20">
-                <label for="mes" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Mes</label>
-                <select name="mes" class="bg-superficie-suave border border-superficie-borde rounded-lg px-2 py-1.5 text-xs font-bold" id="mes">
+                <label for="mes" class="text-xs text-texto-suave mb-1">Mes</label>
+                <select name="mes" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="mes">
                     <option value="">Todos</option>
                     {% for m in months %}
                     <option value="{{ m[0] }}" {% if filters.mes == m[0] %}selected{% endif %}>{{ m[1] }}</option>
@@ -38,8 +39,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="at" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">AT</label>
-                <select name="at" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="at">
+                <label for="at" class="text-xs text-texto-suave mb-1">AT</label>
+                <select name="at" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="at">
                     <option value="">Todos</option>
                     {% for a in advisors %}
                     <option value="{{ a }}" {% if filters.at == a %}selected{% endif %}>{{ a }}</option>
@@ -47,8 +48,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="cliente" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Cliente</label>
-                <select name="cliente" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
+                <label for="cliente" class="text-xs text-texto-suave mb-1">Cliente</label>
+                <select name="cliente" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="cliente">
                     <option value="">Todos</option>
                     {% for c in customer_list %}
                     <option value="{{ c.id }}" {% if filters.cliente == c.id|string %}selected{% endif %}>{{ c.name }}</option>
@@ -56,8 +57,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="tema" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Tema</label>
-                <select name="tema" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="tema">
+                <label for="tema" class="text-xs text-texto-suave mb-1">Tema</label>
+                <select name="tema" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="tema">
                     <option value="">Todos</option>
                     {% set all_temas = visitas.all_temas_calidad + visitas.all_temas_asistencia %}
                     {% set unique_temas = all_temas|unique|list|sort %}
@@ -67,8 +68,8 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="tipo-producto" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Tipo Producto</label>
-                <select name="tipo_producto" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="tipo-producto">
+                <label for="tipo-producto" class="text-xs text-texto-suave mb-1">Tipo Producto</label>
+                <select name="tipo_producto" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="tipo-producto">
                     <option value="">Todos</option>
                     {% for tp in visitas.all_tipos_producto %}
                     <option value="{{ tp }}" {% if filters.tipo_producto == tp %}selected{% endif %}>{{ tp }}</option>
@@ -76,27 +77,47 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="planta" class="text-2xs font-black tracking-normal text-texto-tenue mb-1">Planta</label>
-                <select name="planta" class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold" id="planta">
+                <label for="planta" class="text-xs text-texto-suave mb-1">Planta</label>
+                <select name="planta" class="w-full text-sm bg-superficie-card border border-superficie-fuerte rounded-md px-3 py-2 focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none" id="planta">
                     <option value="">Todos</option>
                     {% for p in visitas.all_plantas %}
                     <option value="{{ p }}" {% if filters.planta == p %}selected{% endif %}>{{ p }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-black tracking-normal hover:bg-primary/90">Filtrar</button>
+            <button type="submit" class="px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors">Filtrar</button>
             <a href="/kpi-calidad" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
         </div>
     </form>
+    <section aria-label="Indicadores">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            {{ indicador("Visitas totales", visitas.total) }}
+            {{ indicador("Finalizadas", visitas.finalizado, "exito") }}
+            {{ indicador("En borrador", visitas.borrador, "alerta") }}
+            {{ indicador("Objetivo AT", visitas.total_asignadas_at, "info") }}
+            {{ indicador("Avance", visitas.avance_pct ~ "%", "primario") }}
+            {{ indicador("Registros de calidad", visitas.total_calidad, "info") }}
+        </div>
+    </section>
+
     <div class="grid grid-cols-1 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-superficie-borde shadow-sm flex flex-col">
+        <div class="bg-superficie-card p-5 rounded-lg border border-superficie-borde flex flex-col">
             <div class="flex items-center justify-between mb-2">
-                <h4 class="text-sm font-black text-texto-fuerte tracking-tight">Punto 7 — Asistencia Técnica</h4>
-                <span id="totalRegistros" class="text-2xs font-bold text-info-600 bg-info-500/10 px-2 py-1 rounded-lg">{{ visitas.total_asistencia }} registros</span>
+                <h3 class="text-sm font-medium text-texto-base">Punto 7 — Asistencia Técnica</h4>
+                <span id="totalRegistros" class="text-xs font-medium text-info-700 bg-info-100 px-2 py-1 rounded-md">{{ visitas.total_asistencia }} registros</span>
             </div>
 
             <div class="flex-1 relative h-[350px]">
                 <canvas id="asistenciaChart"></canvas>
+                {# Sin datos, un gráfico vacío es un panel en blanco: se explica qué
+                   va a aparecer, como en el dashboard. #}
+                <div id="asistenciaVacio"
+                    class="absolute inset-0 hidden items-center justify-center text-center px-6">
+                    <p class="text-sm text-texto-tenue">
+                        Con los filtros actuales no hay registros de asistencia técnica.<br>
+                        Cuando se carguen visitas con temas de asistencia, el gráfico muestra su distribución.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -111,9 +132,9 @@
 <script nonce="{{ request.state.script_nonce }}">
 (function() {
     Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.color = '#5b6b82';
 
-    var barColors = ['#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6'];
+    var barColors = ['#0b3d91', '#047857', '#b45309', '#0369a1', '#6d28d9', '#be185d', '#00205b', '#5b6b82', '#0e7490', '#4d7c0f'];
     var chartInstance = null;
 
     function getChartColors(dark) {
@@ -132,6 +153,21 @@
         const colors = getChartColors(isDark);
 
         if (chartInstance) chartInstance.destroy();
+
+        // Sin datos no se dibuja un gráfico vacío: se muestra la explicación.
+        const vacio = document.getElementById('asistenciaVacio');
+        const hayDatos = data && data.some(function (v) { return v > 0; });
+        if (vacio) {
+            vacio.classList.toggle('hidden', hayDatos);
+            vacio.classList.toggle('flex', !hayDatos);
+        }
+        if (!hayDatos) {
+            const cv = document.getElementById('asistenciaChart');
+            if (cv) cv.style.display = 'none';
+            return;
+        }
+        const cv2 = document.getElementById('asistenciaChart');
+        if (cv2) cv2.style.display = '';
 
         chartInstance = new Chart(document.getElementById('asistenciaChart'), {
             type: 'bar',
