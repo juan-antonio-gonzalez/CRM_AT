@@ -193,3 +193,59 @@ def test_el_panel_no_se_renderiza_sin_pendientes(client, db_session, seed_admin)
     client.post("/auth/login", data={"username": "admin", "password": "admin123"})
     html = client.get("/").text
     assert "Requiere atención" not in html
+
+
+# ── Comparación con el período anterior ────────────────────────────────────
+def test_periodo_anterior_segun_el_filtro():
+    """El período de comparación depende del filtro activo."""
+    from services.utils import periodo_anterior, ultimos_30
+
+    # Con año y mes: el mes anterior.
+    d, h, et = periodo_anterior("2026", "06", datetime.date(2026, 6, 15))
+    assert (d, h) == ("2026-05-01", "2026-05-31")
+    assert "mayo" in et
+
+    # Enero: el mes anterior es diciembre del año previo.
+    d, h, et = periodo_anterior("2026", "01", datetime.date(2026, 6, 15))
+    assert (d, h) == ("2025-12-01", "2025-12-31")
+
+    # Con año solo: el año anterior.
+    d, h, et = periodo_anterior("2026", "", datetime.date(2026, 6, 15))
+    assert (d, h) == ("2025-01-01", "2025-12-31")
+
+    # Sin filtro: los 30 días inmediatamente anteriores a los últimos 30.
+    # Los períodos no deben solaparse: si compartieran un día, ese día se
+    # contaría en los dos lados de la comparación.
+    hoy = datetime.date(2026, 6, 15)
+    d, h, et = periodo_anterior("", "", hoy)
+    desde_actual = ultimos_30(hoy)[0]
+    assert h < desde_actual, f"los períodos se solapan: {h} >= {desde_actual}"
+
+
+def test_delta_sin_base_no_inventa_porcentaje(db_session):
+    """Con el período anterior en cero no se muestra un porcentaje."""
+    from services.dashboard_service import _delta
+
+    d = _delta(5, 0)
+    assert d["delta"] == 5
+    assert d["pct"] is None
+    assert d["hay_base"] is False
+
+    d = _delta(10, 8)
+    assert d["delta"] == 2
+    assert d["pct"] == 25.0
+    assert d["mejor"] is True
+
+    d = _delta(6, 10)
+    assert d["delta"] == -4
+    assert d["pct"] == -40.0
+    assert d["mejor"] is False
+
+
+def test_la_comparacion_esta_en_el_dashboard(client, db_session, seed_admin):
+    """La comparación se calcula y llega a la página."""
+    client.post("/auth/login", data={"username": "admin", "password": "admin123"})
+    html = client.get("/").text
+    # Con la base vacía no hay base de comparación, así que no se muestra el
+    # porcentaje, pero la página tiene que renderizar igual.
+    assert "Visitas realizadas" in html

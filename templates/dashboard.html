@@ -31,6 +31,16 @@
    * Un panel sin datos no se muestra vacío: se explica qué va a aparecer.
    ============================================================================ #}
 
+{% macro variacion(d, etiqueta) %}
+{% if d and d.hay_base %}
+<span class="inline-flex items-center gap-1 text-xs font-medium {{ 'text-exito-700' if d.mejor else 'text-peligro-700' }}">
+    <span class="material-symbols-rounded text-sm" aria-hidden="true">{{ 'trending_up' if d.mejor else 'trending_down' }}</span>
+    {{ '+' if d.delta > 0 else '' }}{{ d.delta }} ({{ '+' if d.pct > 0 else '' }}{{ d.pct }}%)
+</span>
+<span class="text-xs text-texto-tenue">vs {{ etiqueta }}</span>
+{% endif %}
+{% endmacro %}
+
 {% set hay_datos_visitas = visitas.total and visitas.total > 0 %}
 {% set hay_datos_maquinas = maquinas.total and maquinas.total > 0 %}
 {% set hay_datos_minutas = minutas.total and minutas.total > 0 %}
@@ -45,6 +55,9 @@
                 <p class="text-sm text-texto-suave">Visitas realizadas</p>
                 <p class="text-4xl font-semibold text-texto-fuerte mt-2 tabular-nums leading-none">{{ visitas.finalizado }}</p>
                 <p class="text-sm text-texto-tenue mt-3">de {{ visitas.total_asignadas_at }} del objetivo anual</p>
+                {% if comparacion %}
+                <div class="mt-2">{{ variacion(comparacion.realizadas, comparacion.etiqueta_anterior) }}</div>
+                {% endif %}
             </div>
 
             <div class="bg-superficie-card border border-superficie-borde rounded-lg p-5">
@@ -71,6 +84,9 @@
                 <p class="text-sm text-texto-suave">Relevamiento de máquinas</p>
                 <p class="text-4xl font-semibold text-texto-fuerte mt-2 tabular-nums leading-none">{{ maquinas.survey_progress }}%</p>
                 <p class="text-sm text-texto-tenue mt-3">{{ maquinas.relevamiento_completado }} de {{ maquinas.total }} completadas</p>
+                {% if comparacion %}
+                <div class="mt-2">{{ variacion(comparacion.nuevas, comparacion.etiqueta_anterior) }}</div>
+                {% endif %}
             </div>
         </div>
     </section>

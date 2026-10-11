@@ -98,3 +98,57 @@ def month_date_range(anio: str, mes: str) -> tuple:
         return "", ""
     last_day = calendar.monthrange(year, month)[1]
     return f"{year:04d}-{month:02d}-01", f"{year:04d}-{month:02d}-{last_day:02d}"
+
+
+def periodo_anterior(anio: str = "", mes: str = "", hoy=None) -> tuple:
+    """Rango ISO y etiqueta del período anterior al que se está mirando.
+
+    Un número sin referencia no comunica: "61 visitas" no dice nada, "61, +18%
+    contra el mes pasado" sí. El período anterior depende del filtro activo, y
+    cuando no hay filtro se comparan los últimos 30 días contra los 30 previos,
+    que es la comparación que siempre está disponible y siempre significa lo mismo.
+
+    Devuelve (desde, hasta, etiqueta).
+    """
+    import calendar
+    import datetime as _dt
+
+    hoy = hoy or _dt.date.today()
+
+    # Con año y mes: el mes anterior.
+    if anio and mes:
+        try:
+            y, m = int(anio), int(mes)
+            m -= 1
+            if m == 0:
+                m, y = 12, y - 1
+            ultimo = calendar.monthrange(y, m)[1]
+            nombre = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+                      "agosto", "septiembre", "octubre", "noviembre", "diciembre"][m - 1]
+            return (f"{y:04d}-{m:02d}-01", f"{y:04d}-{m:02d}-{ultimo:02d}",
+                    f"{nombre} de {y}")
+        except (TypeError, ValueError):
+            pass
+
+    # Con año: el año anterior.
+    if anio:
+        try:
+            y = int(anio) - 1
+            return f"{y:04d}-01-01", f"{y:04d}-12-31", f"el año {y}"
+        except (TypeError, ValueError):
+            pass
+
+    # Sin filtro: los 30 días inmediatamente anteriores a los últimos 30.
+    # El `- 31` es a propósito: si terminara en `hoy - 30` habría un día contado
+    # en los dos períodos, y ese día se sumaría dos veces en la comparación.
+    hasta = hoy - _dt.timedelta(days=31)
+    desde = hoy - _dt.timedelta(days=60)
+    return desde.isoformat(), hasta.isoformat(), "los 30 días anteriores"
+
+
+def ultimos_30(hoy=None) -> tuple:
+    """Rango ISO de los últimos 30 días, con su etiqueta."""
+    import datetime as _dt
+    hoy = hoy or _dt.date.today()
+    return ((hoy - _dt.timedelta(days=30)).isoformat(), hoy.isoformat(),
+            "los últimos 30 días")

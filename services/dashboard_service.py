@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 import models
 from enums import RelevamientoStatus, CustomerStatus, TrackingStatus
-from services.utils import month_buckets
+from services.utils import month_buckets, month_date_range
 import datetime
 
 
@@ -423,3 +423,45 @@ def get_atencion(db: Session, today: datetime.datetime = None):
     """Panel de atención: qué está esperando una acción."""
     hoy = (today or datetime.datetime.now(datetime.UTC)).date()
     return _items_atencion(db, hoy)
+
+
+def _delta(actual, anterior):
+    """Comparación entre dos valores, con la variación absoluta y porcentual."""
+    actual = actual or 0
+    anterior = anterior or 0
+    if anterior == 0:
+        # Sin base de comparación no se inventa un porcentaje: se informa el
+        # absoluto y se marca que no hay referencia.
+        return {"actual": actual, "anterior": anterior, "delta": actual - anterior,
+                "pct": None, "hay_base": False, "mejor": actual >= anterior}
+    pct = round((actual - anterior) / anterior * 100, 1)
+    return {"actual": actual, "anterior": anterior, "delta": actual - anterior,
+            "pct": pct, "hay_base": True, "mejor": actual >= anterior}
+
+
+def get_comparacion(db: Session, today: datetime.datetime, anio: str = "",
+                    mes: str = "", at: str = "", cliente: str = ""):
+    """Compara los indicadores principales contra el período anterior.
+
+    Compara lo que se está mirando contra el período equivalente inmediatamente
+    anterior, según el filtro activo (ver `periodo_anterior`).
+    """
+    from services.utils import periodo_anterior, ultimos_30
+
+    actual_desde, actual_hasta, etiqueta_actual = ultimos_30(today.date())
+    if anio:
+        actual_desde, actual_hasta = month_date_range(anio, mes)
+        etiqueta_actual = f"{mes}/{anio}" if mes else anio
+    prev_desde, prev_hasta, etiqueta_prev = periodo_anterior(anio, mes, today.date())
+
+    actual = get_visitas_stats(db, today, at=at, cliente=cliente,
+                               fecha_desde=actual_desde, fecha_hasta=actual_hasta)
+    previo = get_visitas_stats(db, today, at=at, cliente=cliente,
+                               fecha_desde=prev_desde, fecha_hasta=prev_hasta)
+
+    return {
+        "etiqueta_actual": etiqueta_actual,
+        "etiqueta_anterior": etiqueta_prev,
+        "realizadas": _delta(actual.get("finalizado"), previo.get("finalizado")),
+        "nuevas": _delta(actual.get("total"), previo.get("total")),
+    }

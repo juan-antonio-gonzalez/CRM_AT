@@ -681,15 +681,32 @@ def test_todos_los_iconos_estan_en_el_subset():
         disponibles = {x.strip() for x in fh.read().split(",") if x.strip()}
     assert disponibles, "el manifiesto de iconos está vacío"
 
-    usados = set()
-    for nombre, texto in _plantillas_aplicacion():
+    # La extracción tiene que contemplar nombres INTERPOLADOS dentro del span:
+    #
+    #   <span class="material-symbols-rounded">{{ 'a' if x else 'b' }}</span>
+    #
+    # Buscar sólo el texto suelto dejó pasar `trending_down`, que se veía como
+    # texto en la tarjeta del dashboard.
+    def iconos_de(texto):
+        hallados = set()
         for m in re.finditer(
-                r'class="[^"]*material-symbols-rounded[^"]*"[^>]*>\s*([a-z][a-z_0-9]*)\s*<',
-                texto):
-            usados.add(m.group(1))
+                r'class="[^"]*material-symbols-rounded[^"]*"[^>]*>(.*?)</span>',
+                texto, re.S):
+            for a, b in re.findall(r"'([a-z][a-z_0-9]*)'|\"([a-z][a-z_0-9]*)\"", m.group(1)):
+                hallados.add(a or b)
+            suelto = m.group(1).strip()
+            if re.fullmatch(r'[a-z][a-z_0-9]*', suelto):
+                hallados.add(suelto)
         for m in re.finditer(
                 r'indicador\(\s*"[^"]*"\s*,\s*[^,]+,\s*"[^"]*"\s*,\s*"([a-z_0-9]+)"', texto):
-            usados.add(m.group(1))
+            hallados.add(m.group(1))
+        for m in re.finditer(r'"icono":\s*"([a-z_0-9]+)"', texto):
+            hallados.add(m.group(1))
+        return hallados
+
+    usados = set()
+    for nombre, texto in _plantillas_aplicacion():
+        usados |= iconos_de(texto)
 
     faltan = sorted(usados - disponibles)
     assert not faltan, (

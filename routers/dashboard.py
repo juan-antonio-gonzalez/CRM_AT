@@ -103,6 +103,8 @@ async def dashboard(
     maquinas = dashboard_service.get_maquinas_stats(db, at=at, cliente=cliente)
     minutas = dashboard_service.get_minutas_stats(db, at=at, cliente=cliente)
     atencion = dashboard_service.get_atencion(db, today)
+    comparacion = dashboard_service.get_comparacion(
+        db, today, anio=anio, mes=mes, at=at, cliente=cliente)
 
     advisors = (
         db.query(models.TechnicalAdvisor.name)
@@ -138,6 +140,7 @@ async def dashboard(
         "maquinas": maquinas,
         "minutas": minutas,
         "atencion": atencion,
+        "comparacion": comparacion,
         "advisors": [a[0] for a in advisors],
         "customer_list": customer_list,
         "available_years": available_years,
