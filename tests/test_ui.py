@@ -347,3 +347,142 @@ def test_el_enlace_activo_del_menu_se_marca_solo_en_uno():
     activos = [m.group(1) for m in re.finditer(r'<a class="([^"]*sidebar-active[^"]*)"', html)]
     assert len(activos) == 1, f"hay {len(activos)} enlaces marcados como activos"
     assert "% if" not in html, "quedó texto de Jinja dentro del HTML"
+
+
+# ── Fase 4: lenguaje visual ────────────────────────────────────────────────
+def test_no_queda_texto_en_mayusculas_con_tracking():
+    """El par MAYÚSCULAS + letras separadas es el tell de tablero anticuado.
+
+    Había 860 casos en 36 plantillas. Se pasó todo a caja de oración. Esta prueba
+    evita que vuelvan: es el cambio de mayor impacto visual y se pierde solo, con
+    una etiqueta nueva que alguien escriba a la antigua.
+    """
+    patron = re.compile(r'class="[^"]*\buppercase\b[^"]*"')
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in patron.finditer(texto):
+            if re.search(r'tracking-(?:wide|wider|widest)', m.group(0)):
+                linea = texto[:m.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea}")
+    assert not ofensores, (
+        f"{len(ofensores)} etiquetas en mayúsculas con tracking: {ofensores[:6]}"
+    )
+
+
+def test_los_indicadores_usan_el_componente_compartido():
+    """Cada pantalla tenía sus propias tarjetas de KPI, con otro aspecto.
+
+    Se unificaron 57 llamadas al macro `indicador`. Esta prueba detecta si vuelve
+    a aparecer una tarjeta de KPI escrita a mano, que es como se desincronizan.
+    """
+    patron = re.compile(
+        r'<p class="[^"]*\btext-(?:2xs|xs)\b[^"]*"[^>]*>\s*[^<]{2,34}?\s*</p>\s*'
+        r'<(?:h3|h4|p) class="[^"]*\btext-(?:lg|xl|2xl|3xl)\b', re.S)
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        # Los informes imprimibles tienen su propio encabezado, no son KPIs.
+        if "reporte" in nombre:
+            continue
+        for m in patron.finditer(texto):
+            linea = texto[:m.start()].count("\n") + 1
+            ofensores.append(f"{nombre}:{linea}")
+    assert not ofensores, (
+        f"{len(ofensores)} KPIs escritos a mano en lugar de usar indicador(): {ofensores[:6]}"
+    )
+
+
+def test_las_tablas_ocupan_el_ancho_disponible():
+    """Las tablas de listado deben declarar `w-full` en el propio <table>.
+
+    Nota sobre un error mío: al arreglar el hueco en blanco de la tabla de
+    visitas atribuí el problema a un `w-full` puesto en una columna. Una
+    comprobación A/B en el navegador lo desmintió: con y sin ese `w-full` el
+    hueco mide 0px; lo único que cambia es cuánto espacio extra recibe la columna
+    del cliente (278px contra 240px), que es justamente lo que se busca en la
+    columna de texto variable. Así que `w-full` en una columna es válido y esta
+    prueba ya no lo prohíbe. Lo que sí se verifica es que la tabla lo declare.
+    """
+    # Las tablas que traen su propia clase (por ejemplo `ska-table`, del sistema
+    # de estilos interno de una plantilla) definen sus anchos en su hoja de
+    # estilos y no necesitan `w-full`. La regla aplica a las que se maquetan con
+    # utilidades de Tailwind.
+    PROPIAS = re.compile(r'<table[^>]*class="(ska-[^"]*|[a-z]+-table[^"]*)"')
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in re.finditer(r'<table[^>]*>', texto):
+            etiqueta = m.group(0)
+            if PROPIAS.match(etiqueta):
+                continue
+            if "w-full" not in etiqueta:
+                linea = texto[:m.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea}")
+    assert not ofensores, f"tablas sin w-full: {ofensores[:6]}"
+
+
+def test_las_fechas_se_muestran_en_formato_local():
+    """Mostraba `2026-09-24` en la tabla y `24/09/2026` en el resto.
+
+    El filtro no parseaba texto: `strftime` no existe en un `str`, así que
+    devolvía el valor tal cual.
+    """
+    from templating import _fmt_date
+
+    assert _fmt_date("2026-09-24") == "24/09/2026"
+    assert _fmt_date("2026-09-24T14:30:00") == "24/09/2026"
+    assert _fmt_date("24/09/2026") == "24/09/2026"
+    assert _fmt_date(None) == ""
+    assert _fmt_date("") == ""
+    import datetime as _dt
+    assert _fmt_date(_dt.date(2026, 9, 24)) == "24/09/2026"
+
+
+def test_los_estaticos_llevan_la_huella_de_cache():
+    """nginx sirve /static con `immutable` y 30 días.
+
+    Sin huella en la URL, el navegador no vuelve a pedir el archivo y ningún
+    cambio de CSS llega al usuario: pasó durante todo el rediseño.
+    """
+    from templating import ASSET_VERSION, static_url
+
+    assert ASSET_VERSION and ASSET_VERSION != "0"
+    assert static_url("css/tailwind.css").endswith(f"?v={ASSET_VERSION}")
+    assert "/static/css/tailwind.css?v=" in static_url("css/tailwind.css")
+
+    # Y las plantillas no deben volver a pedir estáticos sin la huella.
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        for m in re.finditer(r"url_for\('static'", texto):
+            linea = texto[:m.start()].count("\n") + 1
+            ofensores.append(f"{nombre}:{linea}")
+    assert not ofensores, f"estáticos sin huella de caché: {ofensores[:6]}"
+
+
+def test_las_plantillas_cierran_todos_los_divs():
+    """Un `<div>` sin cerrar hizo que la tabla quedara dentro de la barra de
+    encabezado, que es `flex ... justify-between`.
+
+    Como el navegador cierra solo los divs que faltan, el HTML "funcionaba" y el
+    error no se veía en el código: se veía en pantalla. La tabla, al ser un flex
+    item, se encogía a su contenido y con `justify-between` quedaba empujada a la
+    derecha, con un hueco en blanco de varios cientos de píxeles que además
+    cambiaba según el ancho de la ventana. Por eso el usuario lo describía como
+    "se ajusta y al segundo vuelve a esa posición".
+    """
+    # Desbalances que ya existían antes de este trabajo. Se listan para que la
+    # prueba siga siendo útil: uno NUEVO falla, y estos quedan a la vista en vez
+    # de escondidos. No se corrigen a ciegas porque agregar o quitar un </div>
+    # sin entender la estructura de cada plantilla puede romper su layout.
+    CONOCIDOS = {
+        "_relevamiento_partial.html": 1,   # envoltorio propio; lo cierra el padre
+        "control_at.html": -1,             # un </div> de más
+        "relevamiento.html": 1,            # envoltorio sin cerrar
+        "nuevo_relevamiento2.html": 2,     # ska-body y ska-container sin cerrar
+    }
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        limpio = re.sub(r'\{#.*?#\}', '', texto, flags=re.S)
+        limpio = re.sub(r'<script.*?</script>', '', limpio, flags=re.S)
+        saldo = len(re.findall(r'<div\b', limpio)) - len(re.findall(r'</div>', limpio))
+        if saldo and saldo != CONOCIDOS.get(nombre):
+            ofensores.append(f"{nombre}: {saldo:+d}")
+    assert not ofensores, f"divs desbalanceados nuevos: {ofensores}"
