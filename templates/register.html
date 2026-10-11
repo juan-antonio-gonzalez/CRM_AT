@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Crear Usuario | CRM-AT</title>
-    <link href="{{ url_for('static', path='/css/tailwind.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', path='/css/fonts.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/tailwind.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/fonts.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/style.css') }}" rel="stylesheet" />
 </head>
 <body class="h-full bg-background-light font-display text-texto-fuerte">
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/app.js') }}"></script>
+    <script nonce="{{ request.state.script_nonce }}" src="{{ static_url('js/app.js') }}"></script>
     <script nonce="{{ request.state.script_nonce }}">
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('registerForm');

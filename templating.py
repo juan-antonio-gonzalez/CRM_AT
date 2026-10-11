@@ -6,11 +6,57 @@ they were not registered at all, so e.g. the ``from_json`` filter only existed
 on an instance nobody used. Import ``templates`` from here instead.
 """
 
+import glob
+import hashlib
 import json
+import os
 
 from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="templates")
+
+_RAIZ = os.path.dirname(os.path.abspath(__file__))
+
+
+def _huella_estaticos() -> str:
+    """Huella de los estáticos, para romper la caché.
+
+    nginx sirve /static con `Cache-Control: public, immutable` y 30 días de
+    vigencia. `immutable` le dice al navegador que NO revalide: guarda el archivo
+    y lo usa tal cual hasta que expire. Con una URL fija, eso significa que
+    ningún cambio de CSS o JS llega al usuario hasta un mes después (o hasta que
+    limpie la caché a mano).
+
+    Por eso los estáticos se piden con `?v=<huella>`: cada build cambia la
+    dirección y el navegador los vuelve a bajar. Con las URLs versionadas, el
+    `immutable` pasa a ser lo correcto, porque un cambio de contenido siempre
+    implica un cambio de URL.
+
+    La huella sale de la fecha de modificación de los archivos: es barata y
+    alcanza, porque cada despliegue reinicia el servicio.
+    """
+    partes = []
+    for patron in ("static/css/*.css", "static/js/*.js", "static/img/*"):
+        for ruta in sorted(glob.glob(os.path.join(_RAIZ, patron))):
+            try:
+                partes.append(f"{os.path.basename(ruta)}:{int(os.path.getmtime(ruta))}")
+            except OSError:
+                continue
+    if not partes:
+        return "0"
+    return hashlib.sha1("|".join(partes).encode()).hexdigest()[:10]
+
+
+ASSET_VERSION = _huella_estaticos()
+
+
+def static_url(path: str) -> str:
+    """URL de un estático con la huella que rompe la caché."""
+    return f"/static/{str(path).lstrip('/')}?v={ASSET_VERSION}"
+
+
+templates.env.globals["static_url"] = static_url
+templates.env.globals["asset_version"] = ASSET_VERSION
 
 
 def _from_json(value):

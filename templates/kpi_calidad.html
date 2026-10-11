@@ -107,7 +107,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/chart.umd.min.js') }}"></script>
+<script nonce="{{ request.state.script_nonce }}" src="{{ static_url('js/chart.umd.min.js') }}"></script>
 <script nonce="{{ request.state.script_nonce }}">
 (function() {
     Chart.defaults.font.family = "'Inter', sans-serif";
