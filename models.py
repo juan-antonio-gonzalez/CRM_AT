@@ -335,6 +335,12 @@ class VisitReason(Base, BaseCatalogMixin):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
 
+    @validates('name')
+    def validate_name(self, key, value):
+        # En mayúsculas, como el resto de los catálogos: los filtros comparan por
+        # igualdad y "Retiro de muestra" no encontraría "RETIRO DE MUESTRA".
+        return value.strip().upper() if value else value
+
 
 class VisitType(Base, BaseCatalogMixin):
     __tablename__ = "visit_types"
