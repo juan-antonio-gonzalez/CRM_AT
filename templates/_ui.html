@@ -27,12 +27,12 @@
    `tabular-nums` alinea los dígitos entre azulejos. #}
 {% macro indicador(etiqueta, valor, tono='neutro', icono=None) %}
 {% set estilos = {
-    'neutro':   ('bg-superficie-card', 'border-superficie-borde', 'border-l-superficie-fuerte', 'text-texto-suave', 'text-texto-fuerte'),
-    'primario': ('bg-primary-50',      'border-primary-200',      'border-l-primary-600',       'text-primary-700',  'text-primary-700'),
-    'exito':    ('bg-exito-50',        'border-exito-200',        'border-l-exito-500',         'text-exito-700',    'text-exito-700'),
-    'alerta':   ('bg-alerta-50',       'border-alerta-200',       'border-l-alerta-500',        'text-alerta-700',   'text-alerta-700'),
-    'peligro':  ('bg-peligro-50',      'border-peligro-200',      'border-l-peligro-500',       'text-peligro-700',  'text-peligro-700'),
-    'info':     ('bg-info-50',         'border-info-200',         'border-l-info-500',          'text-info-700',     'text-info-700'),
+    'neutro':   ('bg-superficie-card', 'border-superficie-borde', 'border-l-superficie-fuerte', 'text-texto-suave',  'text-texto-fuerte'),
+    'primario': ('bg-primary-100',     'border-primary-300',      'border-l-primary-600',       'text-primary-700',  'text-primary-700'),
+    'exito':    ('bg-exito-100',       'border-exito-300',        'border-l-exito-500',         'text-exito-700',    'text-exito-700'),
+    'alerta':   ('bg-alerta-100',      'border-alerta-300',       'border-l-alerta-500',        'text-alerta-700',   'text-alerta-700'),
+    'peligro':  ('bg-peligro-100',     'border-peligro-300',      'border-l-peligro-500',       'text-peligro-700',  'text-peligro-700'),
+    'info':     ('bg-info-100',        'border-info-300',         'border-l-info-500',          'text-info-700',     'text-info-700'),
 } %}
 {% set s = estilos.get(tono, estilos['neutro']) %}
 <div class="{{ s[0] }} border {{ s[1] }} border-l-4 {{ s[2] }} rounded-lg px-3 py-2 min-w-0">

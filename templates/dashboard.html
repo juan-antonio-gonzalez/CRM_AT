@@ -119,13 +119,13 @@
 
     {# ── Visitas ──────────────────────────────────────────────────────────── #}
     <section aria-labelledby="sec-visitas">
-        <div class="flex items-center gap-3 mb-3 bg-primary-50 border border-primary-200 rounded-lg px-4 py-2.5">
+        <div class="flex items-center gap-3 mb-3 bg-primary-100 border border-primary-300 rounded-lg px-4 py-2.5">
             <span class="size-9 rounded-md bg-primary-600 text-white flex items-center justify-center shrink-0" aria-hidden="true">
                 <span class="material-symbols-rounded text-lg">engineering</span>
             </span>
             <div>
                 <h2 id="sec-visitas" class="text-base font-bold text-primary-700">Visitas técnicas</h2>
-                <p class="text-2xs text-primary-700/80">
+                <p class="text-2xs text-primary-700">
                     {{ visitas.finalizado }} de {{ visitas.total_asignadas_at }} del objetivo del año
                 </p>
             </div>
@@ -182,13 +182,13 @@
 
     {# ── Máquinas ─────────────────────────────────────────────────────────── #}
     <section aria-labelledby="sec-maquinas">
-        <div class="flex items-center gap-3 mb-3 bg-info-50 border border-info-200 rounded-lg px-4 py-2.5">
+        <div class="flex items-center gap-3 mb-3 bg-info-100 border border-info-300 rounded-lg px-4 py-2.5">
             <span class="size-9 rounded-md bg-info-600 text-white flex items-center justify-center shrink-0" aria-hidden="true">
                 <span class="material-symbols-rounded text-lg">precision_manufacturing</span>
             </span>
             <div>
                 <h2 id="sec-maquinas" class="text-base font-bold text-info-700">Máquinas</h2>
-                <p class="text-2xs text-info-700/80">
+                <p class="text-2xs text-info-700">
                     {{ maquinas.relevamiento_completado }} de {{ maquinas.total }} con relevamiento completo
                 </p>
             </div>
@@ -220,7 +220,7 @@
     {# ── Minutas ──────────────────────────────────────────────────────────── #}
     {% if minutas.por_tipo %}
     <section aria-labelledby="sec-minutas">
-        <div class="flex items-center gap-3 mb-3 bg-superficie-50 border border-superficie-200 rounded-lg px-4 py-2.5">
+        <div class="flex items-center gap-3 mb-3 bg-superficie-100 border border-superficie-300 rounded-lg px-4 py-2.5">
             <span class="size-9 rounded-md bg-superficie-600 text-white flex items-center justify-center shrink-0" aria-hidden="true">
                 <span class="material-symbols-rounded text-lg">description</span>
             </span>

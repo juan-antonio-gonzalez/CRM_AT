@@ -48,12 +48,15 @@ module.exports = {
         // 50-200 son fondos suaves; 300-400, bordes.
         primary: {
           DEFAULT: "#0b3d91",
-          50: "#f1f4f9",
-          100: "#e3e9f3",
-          200: "#c4d0e4",
-          300: "#96aacb",
-          400: "#5c78a8",
-          500: "#2d4f8a",
+          // Los tonos claros son azules de verdad, no el navy aclarado con
+          // blanco: eso daba grises azulados con 3% de saturación y los fondos
+          // tintados se veían blancos.
+          50: "#eef4fd",
+          100: "#d8e6fa",
+          200: "#b3cdf4",
+          300: "#85abe8",
+          400: "#5583d4",
+          500: "#2f5fb5",
           600: "#0b3d91",
           700: "#00205b",
           800: "#001844",
@@ -97,7 +100,7 @@ module.exports = {
         // ── Superficies y texto ──────────────────────────────────────────────
         // Un solo juego de grises para toda la aplicación.
         superficie: {
-          base: "#f7f8fa",   // fondo de la aplicación
+          base: "#eef1f7",   // fondo de la aplicación (antes #f7f8fa, casi blanco)
           card: "#ffffff",   // tarjetas
           suave: "#f1f3f6",  // cabeceras de tabla, bloques secundarios
           borde: "#e2e5eb",  // bordes
