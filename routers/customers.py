@@ -24,11 +24,21 @@ async def organigrama_page(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/clientes/exportar-excel")
-async def export_customers_excel(db: Session = Depends(get_db)):
+async def export_customers_excel(include_inactive: bool = False,
+                                 db: Session = Depends(get_db)):
+    """Exporta los clientes a Excel.
+
+    Por defecto sólo los activos, para que coincida con el listado, que oculta
+    los dados de baja. Antes exportaba todos y el archivo mostraba clientes que
+    la pantalla no listaba.
+    """
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment
 
-    customers = db.query(models.Customer).order_by(models.Customer.name).all()
+    consulta = db.query(models.Customer)
+    if not include_inactive:
+        consulta = consulta.filter(models.Customer.is_active.is_(True))
+    customers = consulta.order_by(models.Customer.name).all()
 
     wb = Workbook()
     ws = wb.active
@@ -99,9 +109,11 @@ async def list_customers(
         )
     total = query.count()
     page, per_page, offset = pg.paginate(page, per_page)
-    customers = query.order_by(models.Customer.name).offset(offset).limit(per_page).all()
-    # Stats describe the whole filtered set, not just the visible page.
+    # Stats describe the whole filtered set, not just the visible page. Se piden
+    # ANTES de aplicar el recorte: si se aplican limit/offset primero quedan en la
+    # consulta y el agregado describe sólo la página visible (y cambia al paginar).
     stats = customer_service.get_customer_stats(db, base_query=query)
+    customers = query.order_by(models.Customer.name).offset(offset).limit(per_page).all()
     client_names = db.query(models.ClientName).order_by(models.ClientName.name).all()
     plant_names = db.query(models.PlantName).order_by(models.PlantName.name).all()
 

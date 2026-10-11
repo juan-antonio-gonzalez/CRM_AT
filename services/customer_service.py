@@ -32,11 +32,17 @@ def get_customer_stats(db: Session, base_query=None) -> dict:
     """Aggregate relevamiento counts over the *whole* filtered set.
 
     This used to receive the already-paginated list, so the totals described at
-    most one page of rows and changed as the user paged.
+    most one page of rows and changed as the user paged. Además se quitan el
+    limit y el offset si la consulta los trae: así el agregado describe siempre
+    el conjunto completo, sin depender del orden en que se llame.
     """
     from sqlalchemy import func, case
 
     query = base_query if base_query is not None else db.query(models.Customer)
+    # Quitar limit y offset ANTES de cualquier filter(): SQLAlchemy rechaza
+    # filter() sobre una consulta ya recortada, y si quedaran puestos el agregado
+    # describiría sólo la página visible.
+    query = query.limit(None).offset(None)
     query = query.filter(models.Customer.is_active.is_(True))
     rows = query.with_entities(
         func.count(models.Customer.id),
