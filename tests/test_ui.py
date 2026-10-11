@@ -630,3 +630,33 @@ def test_cada_macro_usado_esta_importado():
         if faltan:
             ofensores.append(f"{nombre}: usa {sorted(faltan)} sin importar")
     assert not ofensores, f"macros sin importar: {ofensores}"
+
+
+def test_no_vuelven_los_patrones_del_lenguaje_anterior():
+    """Restos del sistema de estilos previo, que se barrieron de una pasada.
+
+        bg-white        173 casos  -> salta el sistema de tokens
+        font-black      510 casos  -> peso 900 en etiquetas y botones
+        rounded-2xl      69 casos  -> radio fuera de la escala
+        shadow-*        170 casos  -> el sistema separa con bordes, no con sombras
+
+    Las plantillas de impresión quedan afuera: conservan su diseño propio.
+    """
+    IMPRESION = {"nuevo_relevamiento2.html", "relevamiento_ver.html",
+                 "infraestructura_reporte.html", "relevamiento_reporte.html",
+                 "cliente_reporte.html"}
+    patrones = {
+        "bg-white": re.compile(r"\bbg-white\b"),
+        "font-black": re.compile(r"\bfont-black\b"),
+        "rounded-2xl": re.compile(r"\brounded-(?:2xl|3xl)\b"),
+        "shadow suelto": re.compile(r"\bshadow-(?:sm|md|lg|xl|2xl)\b"),
+    }
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        if nombre in IMPRESION:
+            continue
+        for etiqueta, patron in patrones.items():
+            for m in patron.finditer(texto):
+                linea = texto[:m.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea} {etiqueta}")
+    assert not ofensores, f"volvieron patrones del lenguaje anterior: {ofensores[:6]}"
