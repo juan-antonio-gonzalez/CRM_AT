@@ -559,7 +559,116 @@
     // Confirm modal cancel button (CSP-safe)
     document.getElementById('btnCancelConfirm')?.addEventListener('click', closeConfirmModal);
     document.getElementById('btnMobileMenu')?.addEventListener('click', toggleSidebar);
+    initLote();
   });
+
+
+  // ── Selección múltiple para acciones en lote ──
+  //
+  // Desactivar veinte clientes de a uno es la clase de tarea que hace que la gente
+  // deje de usar la herramienta. El contrato es por atributos, así que el mismo
+  // módulo sirve para cualquier listado:
+  //
+  //   <input type="checkbox" data-lote-todos>      el de la cabecera
+  //   <input type="checkbox" data-lote-item="<id>"> el de cada fila
+  //   <div data-lote-barra hidden>                 la barra que aparece al elegir
+  //   <span data-lote-cuenta></span>               cuántos hay elegidos
+  function initLote() {
+    const todos = document.querySelector('[data-lote-todos]');
+    const items = Array.from(document.querySelectorAll('[data-lote-item]'));
+    const barra = document.querySelector('[data-lote-barra]');
+    const cuenta = document.querySelector('[data-lote-cuenta]');
+    if (!items.length || !barra) return;
+
+    function seleccionados() {
+      return items.filter((i) => i.checked).map((i) => i.dataset.loteItem);
+    }
+
+    function refrescar() {
+      const n = seleccionados().length;
+      barra.hidden = n === 0;
+      if (cuenta) cuenta.textContent = String(n);
+      if (todos) {
+        todos.checked = n > 0 && n === items.length;
+        // Estado intermedio: hay algunos pero no todos.
+        todos.indeterminate = n > 0 && n < items.length;
+      }
+      const botones = barra.querySelectorAll('[data-lote-accion]');
+      botones.forEach((b) => { b.disabled = n === 0; });
+    }
+
+    if (todos) {
+      todos.addEventListener('change', () => {
+        items.forEach((i) => { i.checked = todos.checked; });
+        refrescar();
+      });
+    }
+    items.forEach((i) => i.addEventListener('change', refrescar));
+
+    // Barra: botón para limpiar la selección.
+    barra.querySelectorAll('[data-lote-limpiar]').forEach((b) => {
+      b.addEventListener('click', () => {
+        items.forEach((i) => { i.checked = false; });
+        if (todos) todos.checked = false;
+        refrescar();
+      });
+    });
+
+    // Barra: ejecutar la acción contra el servidor.
+    barra.querySelectorAll('[data-lote-accion]').forEach((boton) => {
+      boton.addEventListener('click', async () => {
+        const ids = seleccionados();
+        if (!ids.length) return;
+        const accion = boton.dataset.loteAccion;
+        const ruta = barra.dataset.loteRuta;
+        const etiqueta = boton.dataset.loteEtiqueta || accion;
+
+        const confirmado = await new Promise((resolve) => {
+          showConfirmModal(
+            'Confirmar acción',
+            '¿' + etiqueta + ' ' + ids.length + ' registro' + (ids.length === 1 ? '' : 's') + '?',
+            () => resolve(true)
+          );
+          // Si se cierra sin confirmar, se resuelve en falso.
+          const cerrar = document.getElementById('btnCancelConfirm');
+          if (cerrar) cerrar.addEventListener('click', () => resolve(false), { once: true });
+        });
+        if (!confirmado) return;
+
+        boton.disabled = true;
+        try {
+          const resp = await fetch(ruta, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': getCsrfToken(),
+            },
+            body: JSON.stringify({
+              ids: ids,
+              accion: accion,
+              motivo: (document.querySelector('[data-lote-motivo]') || {}).value || '',
+              csrf_token: getCsrfToken(),
+            }),
+          });
+          if (!resp.ok) throw new Error('HTTP ' + resp.status);
+          const datos = await resp.json();
+          const omitidos = (datos.omitidos || []).length;
+          showToast(
+            datos.aplicados + ' ' + (datos.aplicados === 1 ? 'registro' : 'registros') + ' actualizado' + (datos.aplicados === 1 ? '' : 's') +
+            (omitidos ? ' · ' + omitidos + ' sin cambios' : ''),
+            omitidos ? 'warning' : 'success'
+          );
+          // Los cambios se ven al recargar: el listado se arma en el servidor.
+          setTimeout(() => window.location.reload(), 900);
+        } catch (e) {
+          showToast('No se pudo aplicar la acción', 'error');
+          boton.disabled = false;
+        }
+      });
+    });
+
+    refrescar();
+  }
 
   // ── Global exports ──
   window.showToast = showToast;
@@ -576,4 +685,5 @@
   window.injectCSRF = injectCSRF;
   window.createMaterialRow = createMaterialRow;
   window.createTeamRow = createTeamRow;
+  window.initLote = initLote;
 })();
