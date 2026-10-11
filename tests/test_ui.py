@@ -660,3 +660,61 @@ def test_no_vuelven_los_patrones_del_lenguaje_anterior():
                 linea = texto[:m.start()].count("\n") + 1
                 ofensores.append(f"{nombre}:{linea} {etiqueta}")
     assert not ofensores, f"volvieron patrones del lenguaje anterior: {ofensores[:6]}"
+
+
+def test_todos_los_iconos_estan_en_el_subset():
+    """La fuente de iconos es un subset, no la completa.
+
+    Material Symbols Rounded completo pesa 5,3 MB para los 107 iconos que usa la
+    aplicación: el 99% del peso de la primera carga. Se reemplazó por un subset de
+    160 KB (97% menos) generado con `deploy/subset-iconos.sh`, que deja la lista en
+    `static/fonts/material-symbols.icons.txt`.
+
+    El riesgo de un subset es agregar un icono nuevo y que no se vea. Esta prueba
+    lo detecta: además encontró dos nombres inválidos que ya estaban en el código
+    (`quality` y `groups_off`, que no existen en Material Symbols y se veían como
+    texto en lugar de como icono).
+    """
+    manifiesto = os.path.join(PLANTILLAS, os.pardir, "static", "fonts",
+                              "material-symbols.icons.txt")
+    with open(manifiesto, encoding="utf-8") as fh:
+        disponibles = {x.strip() for x in fh.read().split(",") if x.strip()}
+    assert disponibles, "el manifiesto de iconos está vacío"
+
+    usados = set()
+    for nombre, texto in _plantillas_aplicacion():
+        for m in re.finditer(
+                r'class="[^"]*material-symbols-rounded[^"]*"[^>]*>\s*([a-z][a-z_0-9]*)\s*<',
+                texto):
+            usados.add(m.group(1))
+        for m in re.finditer(
+                r'indicador\(\s*"[^"]*"\s*,\s*[^,]+,\s*"[^"]*"\s*,\s*"([a-z_0-9]+)"', texto):
+            usados.add(m.group(1))
+
+    faltan = sorted(usados - disponibles)
+    assert not faltan, (
+        f"iconos usados que no están en el subset: {faltan}. "
+        f"Corré `bash deploy/subset-iconos.sh` para regenerarlo."
+    )
+
+
+def test_no_quedan_librerias_sin_usar():
+    """`tabulator.min.js` (390 KB) no lo referenciaba ninguna plantilla."""
+    js = os.path.join(PLANTILLAS, os.pardir, "static", "js")
+    plantillas_y_js = ""
+    for nombre, texto in _plantillas_aplicacion():
+        plantillas_y_js += texto
+    for ruta in glob.glob(os.path.join(js, "*.js")):
+        # app.js es el controlador compartido; no se referencia a sí mismo.
+        if os.path.basename(ruta) != "app.js":
+            with open(ruta, encoding="utf-8", errors="replace") as fh:
+                plantillas_y_js += fh.read()
+
+    huerfanas = []
+    for ruta in glob.glob(os.path.join(js, "*.js")):
+        base = os.path.basename(ruta)
+        if base in plantillas_y_js and base != "app.js":
+            continue
+        if base != "app.js" and base not in plantillas_y_js:
+            huerfanas.append(base)
+    assert not huerfanas, f"librerías que nadie referencia: {huerfanas}"
