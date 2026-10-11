@@ -33,12 +33,12 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-slate-50">
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Usuario</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Nombre</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Email</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Rol</th>
-                        <th class="text-left px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="text-right px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Acciones</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Usuario</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Nombre</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Email</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Rol</th>
+                        <th class="text-left px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="text-right px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -55,7 +55,7 @@
                         <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ u.full_name or '-' }}</td>
                         <td class="px-6 py-4 text-sm text-slate-600">{{ u.email }}</td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 if u.role admin else bg-slate-100 text-slate-600">
+                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-black uppercase tracking-wider bg-indigo-100 text-indigo-700 if u.role admin else bg-slate-100 text-slate-600">
                                 {{ u.role }}
                             </span>
                         </td>
@@ -90,57 +90,47 @@
     </div>
 </div>
 
-<!-- Reset Password Modal -->
-<div id="resetModal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-8 w-full max-w-md mx-4 animate-fade-in">
-        <div class="flex items-center gap-3 mb-6">
-            <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">key</span>
-            <div>
-                <h3 id="reset-modal-title" class="text-lg font-black text-slate-900">Resetear Contraseña</h3>
-                <p class="text-sm text-slate-500 font-medium" id="resetUserLabel">Usuario:</p>
-            </div>
-        </div>
-        <form method="POST" id="resetForm">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <div class="space-y-2 mb-6">
-                <label for="reset-new-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
-                <input id="reset-new-password" type="password" name="new_password" required minlength="6"
-                    class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
-                    placeholder="Mínimo 6 caracteres" />
-            </div>
-            <div class="flex gap-3">
-                <button type="button" id="btn-close-reset-modal"
-                    class="flex-1 px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-white transition-all">
-                    Cancelar
-                </button>
-                <button type="submit"
-                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-amber-500/20 transition-all">
-                    Guardar
-                </button>
-            </div>
-        </form>
+{# Modal de reseteo de contraseña, con el componente único (_ui.html). #}
+{% from "_ui.html" import modal, pie_modal %}
+
+{% call modal("resetModal", "Resetear contraseña", "formulario", "key", "alerta") %}
+<p id="resetUserLabel" class="text-sm text-texto-suave mb-4">Usuario:</p>
+<form method="POST" id="resetForm" class="space-y-4">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div>
+        <label for="reset-new-password" class="block text-sm font-semibold text-texto-base mb-1">Nueva contraseña</label>
+        <input id="reset-new-password" type="password" name="new_password" required minlength="6"
+            class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
+            placeholder="Mínimo 6 caracteres">
     </div>
-</div>
+    {% call pie_modal() %}
+    <button type="button" id="btn-close-reset-modal"
+        class="inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="submit"
+        class="inline-flex items-center justify-center px-4 py-2 rounded-md bg-alerta-500 hover:bg-alerta-600 text-white text-sm font-semibold transition-colors">
+        Guardar
+    </button>
+    {% endcall %}
+</form>
+{% endcall %}
 {% endblock %}
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
     function showResetModal(id, username) {
         document.getElementById('resetUserLabel').textContent = 'Usuario: ' + username;
         document.getElementById('resetForm').action = '/auth/usuarios/' + id + '/reset-password';
-        document.getElementById('resetModal').classList.remove('hidden');
-        document.getElementById('resetModal').classList.add('flex');
+        window.abrirModal('resetModal');
     }
     function closeResetModal() {
-        document.getElementById('resetModal').classList.add('hidden');
-        document.getElementById('resetModal').classList.remove('flex');
+        window.cerrarModal('resetModal');
     }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-close-reset-modal')?.addEventListener('click', closeResetModal);
-    // Backdrop click to close
-    document.getElementById('resetModal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeResetModal();
-    });
+    // El cierre al tocar el fondo, con Escape y el bloqueo del scroll los maneja
+    // el controlador común de modales (app.js).
 });
 
     document.querySelectorAll('.btn-show-reset').forEach(b => b.addEventListener('click', function() {

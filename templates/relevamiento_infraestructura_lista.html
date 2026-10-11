@@ -3,7 +3,7 @@
 {% block title %}Infraestructura & Logística | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Infraestructura</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Relevamiento de Planta & Logística</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Relevamiento de Planta & Logística</p>
 </div>
 {% endblock %}
 
@@ -14,7 +14,7 @@
     <form method="GET" action="/relevamiento-infraestructura" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col min-w-[200px]">
-                <label for="cliente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
                 <select name="cliente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos los clientes</option>
                     {% for c in customers %}
@@ -23,7 +23,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[200px]">
-                <label for="asistente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
+                <label for="asistente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Asistente Técnico</label>
                 <select name="asistente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="asistente">
                     <option value="">Todos los asistentes</option>
                     {% for advisor in advisors %}
@@ -43,19 +43,19 @@
     <!-- Indicators -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Relevos</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Relevos</p>
             <p class="text-3xl font-black text-slate-900">{{ stats.total }}</p>
         </div>
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">En Proceso</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">En Proceso</p>
             <p class="text-3xl font-black text-amber-500">{{ stats.en_proceso }}</p>
         </div>
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Completados</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Completados</p>
             <p class="text-3xl font-black text-primary">{{ stats.completados }}</p>
         </div>
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pendientes</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-1">Pendientes</p>
             <p class="text-3xl font-black text-slate-300">{{ stats.pendientes }}</p>
         </div>
     </div>
@@ -66,11 +66,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-slate-100 bg-slate-50/50">
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Cliente / Planta</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Asistente Técnico</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Cliente / Planta</th>
+                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Asistente Técnico</th>
+                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-4 text-2xs font-black text-slate-400 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -79,7 +79,7 @@
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-slate-900">{{ s.customer.name }}</span>
-                                <span class="text-[10px] font-bold text-primary uppercase">{{ s.plant }}</span>
+                                <span class="text-2xs font-bold text-primary uppercase">{{ s.plant }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -90,17 +90,17 @@
                         </td>
                         <td class="px-6 py-4">
                             {% if s.status == 'Completado' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 text-[10px] font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 text-2xs font-bold uppercase tracking-wider">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>
                                 Completado
                             </span>
                             {% elif s.status == 'En Proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-600 text-[10px] font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-600 text-2xs font-bold uppercase tracking-wider">
                                 <span class="size-1.5 bg-amber-500 rounded-full"></span>
                                 En Proceso
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-2xs font-bold uppercase tracking-wider">
                                 <span class="size-1.5 bg-slate-400 rounded-full"></span>
                                 Pendiente
                             </span>

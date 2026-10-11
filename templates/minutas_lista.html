@@ -22,7 +22,7 @@
                 <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">description</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Minutas</p>
+                <p class="text-2xs font-bold text-slate-500 uppercase tracking-widest">Total Minutas</p>
                 <p class="text-2xl font-black text-slate-900">{{ stats.total }}</p>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <span class="material-symbols-rounded text-emerald-500 text-2xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Finalizadas</p>
+                <p class="text-2xs font-bold text-emerald-600 uppercase tracking-widest">Finalizadas</p>
                 <p class="text-2xl font-black text-emerald-600">{{ stats.finalizadas }}</p>
             </div>
         </div>
@@ -40,7 +40,7 @@
                 <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">edit_note</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Borradores</p>
+                <p class="text-2xs font-bold text-amber-600 uppercase tracking-widest">Borradores</p>
                 <p class="text-2xl font-black text-amber-600">{{ stats.borradores }}</p>
             </div>
         </div>
@@ -51,13 +51,13 @@
         class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex-1 min-w-[200px]">
-                <label for="f-q" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Buscar</label>
+                <label for="f-q" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Buscar</label>
                 <input id="f-q" name="q" type="search" value="{{ filtros.q or '' }}"
                     placeholder="Objetivo, lugar, redactor, fecha..."
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div class="min-w-[140px]">
-                <label for="f-estado" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Estado</label>
+                <label for="f-estado" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Estado</label>
                 <select id="f-estado" name="estado"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
@@ -67,7 +67,7 @@
                 </select>
             </div>
             <div class="min-w-[170px]">
-                <label for="f-tipo" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Tipo de reunión</label>
+                <label for="f-tipo" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Tipo de reunión</label>
                 <select id="f-tipo" name="tipo"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
                     <option value="">Todos</option>
@@ -77,29 +77,29 @@
                 </select>
             </div>
             <div class="min-w-[150px]">
-                <label for="f-redactor" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Redactor</label>
+                <label for="f-redactor" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Redactor</label>
                 <input id="f-redactor" name="redactor" type="text" value="{{ filtros.redactor or '' }}"
                     placeholder="Quién redactó"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div>
-                <label for="f-desde" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Desde</label>
+                <label for="f-desde" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Desde</label>
                 <input id="f-desde" name="fecha_desde" type="date" value="{{ filtros.fecha_desde or '' }}"
                     class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div>
-                <label for="f-hasta" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Hasta</label>
+                <label for="f-hasta" class="block text-2xs font-black text-slate-500 uppercase tracking-widest mb-1">Hasta</label>
                 <input id="f-hasta" name="fecha_hasta" type="date" value="{{ filtros.fecha_hasta or '' }}"
                     class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
             </div>
             <div class="flex items-center gap-2">
                 <button type="submit"
-                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-1.5">
+                    class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl font-black text-2xs uppercase tracking-widest transition-all flex items-center gap-1.5">
                     <span class="material-symbols-rounded text-base" aria-hidden="true">filter_alt</span>
                     Filtrar
                 </button>
                 <a href="/minutas"
-                    class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all">Limpiar</a>
+                    class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-black text-2xs uppercase tracking-widest hover:bg-slate-50 transition-all">Limpiar</a>
             </div>
         </div>
     </form>
@@ -115,7 +115,7 @@
             </p>
             <div class="flex items-center gap-2">
                 <a href="/minutas/exportar-excel?{{ qs }}"
-                    class="border border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-2">
+                    class="border border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl font-black text-2xs uppercase tracking-widest transition-all flex items-center gap-2">
                     <span class="material-symbols-rounded text-base" aria-hidden="true">download</span>
                     Exportar
                 </a>
@@ -131,12 +131,12 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Objetivo</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Objetivo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -149,11 +149,11 @@
                         <td class="px-6 py-5 text-sm text-slate-600">{{ fd.get('tipoReunion','—') }}</td>
                         <td class="px-6 py-5">
                             {% if m.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>Finalizado
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
                                 <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>Borrador
                             </span>
                             {% endif %}
@@ -192,35 +192,35 @@
 
         {% if pagination.total_pages > 1 %}
         <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 border-t border-slate-100">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
             </div>
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">{{ p }}</span>
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ('&' + qs) if qs else '' }}"
-                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ('&' + qs) if qs else '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
         <div class="px-6 py-3 bg-slate-50/50 border-t border-slate-100">
-            <span class="text-[11px] font-bold text-slate-500">{{ filtered_total }} minuta{{ 's' if filtered_total != 1 else '' }}</span>
+            <span class="text-2xs font-bold text-slate-500">{{ filtered_total }} minuta{{ 's' if filtered_total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% else %}

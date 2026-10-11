@@ -32,7 +32,7 @@
             </div>
             <div class="text-right flex flex-col gap-1">
                 <p class="text-sm font-black text-slate-900 uppercase tracking-tighter">Generado el {{ generation_date.strftime('%d/%m/%Y') }}</p>
-                <div class="px-3 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-500 uppercase tracking-widest inline-block ml-auto">
+                <div class="px-3 py-1 bg-slate-100 rounded text-2xs font-bold text-slate-500 uppercase tracking-widest inline-block ml-auto">
                     Confidencial
                 </div>
             </div>
@@ -42,22 +42,22 @@
         <section class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50 p-6 rounded-2xl border border-slate-100">
             <div class="flex flex-col gap-6">
                 <div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Datos de la Empresa</span>
+                    <span class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-2 block">Datos de la Empresa</span>
                     <h2 class="text-xl font-black text-slate-900 tracking-tight">{{ customer.name }}</h2>
                     <p class="text-slate-600 font-medium text-sm mt-1">Planta: {{ customer.plant or 'N/A' }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Sector Industrial</span>
+                        <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest block">Sector Industrial</span>
                         <p class="text-sm font-bold text-slate-700">{{ customer.industry_sector or 'No definido' }}</p>
                     </div>
                     <div>
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Ubicación</span>
+                        <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest block">Ubicación</span>
                         <p class="text-sm font-bold text-slate-700">{{ customer.city or 'N/A' }}, {{ customer.country or 'N/A' }}</p>
                     </div>
                 </div>
                 <div>
-                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Dirección</span>
+                    <span class="text-2xs font-bold text-slate-400 uppercase tracking-widest block">Dirección</span>
                     <p class="text-sm font-bold text-slate-700 leading-tight">
                         {{ customer.address or 'Sin dirección registrada' }}
                     </p>
@@ -66,14 +66,14 @@
 
             <div class="flex flex-col gap-6 border-l border-slate-200 pl-8">
                 <div>
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Equipo Asignado AT</span>
+                    <span class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-3 block">Equipo Asignado AT</span>
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                                 <span class="material-symbols-rounded text-lg" aria-hidden="true">person</span>
                             </div>
                             <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Asesor Técnico</p>
+                                <p class="text-2xs font-bold text-slate-400 uppercase tracking-tighter">Asesor Técnico</p>
                                 <p class="text-sm font-black text-slate-800">{{ customer.technical_advisor or 'Pendiente' }}</p>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <span class="material-symbols-rounded text-lg" aria-hidden="true">handshake</span>
                             </div>
                             <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Responsable Comercial</p>
+                                <p class="text-2xs font-bold text-slate-400 uppercase tracking-tighter">Responsable Comercial</p>
                                 <p class="text-sm font-black text-slate-800">{{ customer.assigned_commercial or 'Pendiente' }}</p>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                                 <span class="material-symbols-rounded text-lg" aria-hidden="true">architecture</span>
                             </div>
                             <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Diseñador Estructural</p>
+                                <p class="text-2xs font-bold text-slate-400 uppercase tracking-tighter">Diseñador Estructural</p>
                                 <p class="text-sm font-black text-slate-800">{{ customer.designer or 'Pendiente' }}</p>
                             </div>
                         </div>
@@ -107,10 +107,10 @@
                 <table class="w-full text-left">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Nombre</th>
-                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Cargo / Función</th>
-                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Email de Contacto</th>
-                            <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Teléfono</th>
+                            <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Nombre</th>
+                            <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Cargo / Función</th>
+                            <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Email de Contacto</th>
+                            <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Teléfono</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -142,21 +142,21 @@
                     <div class="p-4 rounded-xl border border-slate-100 bg-white shadow-sm flex flex-col gap-3">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{{ machine.brand }}</p>
+                                <p class="text-2xs font-bold text-slate-400 uppercase tracking-tighter">{{ machine.brand }}</p>
                                 <p class="text-sm font-black text-slate-900 leading-tight">{{ machine.model }}</p>
                             </div>
-                            <span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 uppercase">
+                            <span class="text-2xs font-black px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 uppercase">
                                 {{ machine.machine_type or 'General' }}
                             </span>
                         </div>
                         <div class="flex flex-col gap-1 border-t border-slate-50 pt-3">
                             <div class="flex justify-between">
-                                <span class="text-[9px] font-medium text-slate-400 uppercase">S/N:</span>
-                                <span class="text-[10px] font-black text-slate-700">{{ machine.serial_number }}</span>
+                                <span class="text-2xs font-medium text-slate-400 uppercase">S/N:</span>
+                                <span class="text-2xs font-black text-slate-700">{{ machine.serial_number }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-[9px] font-medium text-slate-400 uppercase">Línea:</span>
-                                <span class="text-[10px] font-black text-slate-700">{{ machine.line or 'N/A' }}</span>
+                                <span class="text-2xs font-medium text-slate-400 uppercase">Línea:</span>
+                                <span class="text-2xs font-black text-slate-700">{{ machine.line or 'N/A' }}</span>
                             </div>
                         </div>
                     </div>
@@ -178,10 +178,10 @@
                         <table class="w-full text-left">
                             <thead class="bg-slate-50">
                                 <tr class="border-b border-slate-200">
-                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase" scope="col">Fecha</th>
-                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase" scope="col">Tipo de Visita</th>
-                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase" scope="col">Objetivo Principal</th>
-                                    <th class="px-5 py-3 text-[9px] font-black text-slate-500 uppercase" scope="col">Estatus</th>
+                                    <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase" scope="col">Fecha</th>
+                                    <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase" scope="col">Tipo de Visita</th>
+                                    <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase" scope="col">Objetivo Principal</th>
+                                    <th class="px-5 py-3 text-2xs font-black text-slate-500 uppercase" scope="col">Estatus</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -197,7 +197,7 @@
                                         <p class="text-xs text-slate-600 line-clamp-1 max-w-xs">{{ visit.objective or 'Sin detalles' }}</p>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase % if visit.status Completada % bg-green-100 text-green-700 % else % bg-amber-100 text-amber-700 % endif %">
+                                        <span class="inline-flex px-2 py-0.5 rounded-full text-2xs font-black uppercase % if visit.status Completada % bg-green-100 text-green-700 % else % bg-amber-100 text-amber-700 % endif %">
                                             {{ visit.status }}
                                         </span>
                                     </td>
@@ -217,7 +217,7 @@
         <!-- Observations -->
         {% if customer.observations %}
         <section class="mt-auto pt-10 border-t border-slate-100 page-break-inside-avoid">
-            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Observaciones Estratégicas</h4>
+            <h4 class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-3">Observaciones Estratégicas</h4>
             <div class="bg-indigo-50/50 p-5 rounded-2xl border border-indigo-100/50 text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">
                 {{ customer.observations }}
             </div>
@@ -225,7 +225,7 @@
         {% endif %}
 
         <!-- Report Footer -->
-        <footer class="mt-10 pt-6 border-t border-dashed border-slate-200 flex justify-between items-center text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em]">
+        <footer class="mt-10 pt-6 border-t border-dashed border-slate-200 flex justify-between items-center text-2xs text-slate-400 font-bold uppercase tracking-[0.2em]">
             <span>© {{ generation_date.year }} Aplicación AT - Inteligencia Industrial</span>
             <div class="flex gap-4">
                 <span>Página 1 de 1</span>

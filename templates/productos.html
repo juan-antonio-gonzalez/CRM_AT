@@ -3,7 +3,7 @@
 {% block title %}Biblioteca de Productos | CRM-AT{% endblock %}{% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Productos</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Biblioteca Técnica</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Biblioteca Técnica</p>
 </div>
 {% endblock %}
 
@@ -14,14 +14,14 @@
     <form method="GET" action="/productos" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="relative flex-1 min-w-[200px]">
-                <label for="filtro-q" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Buscar</label>
+                <label for="filtro-q" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Buscar</label>
                 <div class="relative">
                     <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-lg" aria-hidden="true">search</span>
                     <input id="filtro-q" name="q" value="{{ q or '' }}" placeholder="Descripción, material o ET..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold">
                 </div>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="filtro-material" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Material</label>
+                <label for="filtro-material" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Material</label>
                 <select id="filtro-material" name="material" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Corrugado Doble" {% if selected_material=="Corrugado Doble" %}selected{% endif %}>Corrugado Doble</option>
@@ -29,7 +29,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[120px]">
-                <label for="filtro-status" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Estado</label>
+                <label for="filtro-status" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Estado</label>
                 <select id="filtro-status" name="status" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold">
                     <option value="Todos">Todos</option>
                     <option value="Activo" {% if selected_status=="Activo" %}selected{% endif %}>Activo</option>
@@ -52,19 +52,19 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">
                             Descripción / ET</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Material
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Material
                         </th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">
                             Dimensiones</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Ruta
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Ruta
                             Fabricación</th>
                         <th
-                            class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">
+                            class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">
                             Estado</th>
                         <th
-                            class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">
+                            class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">
                             Acciones</th>
                     </tr>
                 </thead>
@@ -74,12 +74,12 @@
                         <td class="px-6 py-5">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-slate-900">{{ product.name }}</span>
-                                <span class="text-[10px] font-mono text-slate-400 mt-0.5">{{ product.et_number }}</span>
+                                <span class="text-2xs font-mono text-slate-400 mt-0.5">{{ product.et_number }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-5">
                             <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 uppercase">
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-bold bg-blue-50 text-blue-700 uppercase">
                                 {{ product.material }}
                             </span>
                         </td>
@@ -91,7 +91,7 @@
                         </td>
                         <td class="px-6 py-5 text-center">
                             <span
-                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold % if product.status Activo % bg-green-100 text-green-700 % else % bg-slate-100 text-slate-500 % endif %">
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold % if product.status Activo % bg-green-100 text-green-700 % else % bg-slate-100 text-slate-500 % endif %">
                                 <span
                                     class="w-1.5 h-1.5 rounded-full % if product.status Activo % bg-green-500 % else % bg-slate-400 % endif %"></span>
                                 {{ product.status }}
@@ -129,7 +129,7 @@
         {% if pagination and pagination.total_pages > 1 %}
         <div
             class="bg-slate-50/50 px-6 py-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
                 <span class="mx-1">·</span>
                 {{ pagination.total }} producto{{ 's' if pagination.total != 1 else '' }}
@@ -137,35 +137,35 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Anterior</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">Anterior</span>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">Anterior</span>
                 {% endif %}
 
                 {% for p in range(1, pagination.total_pages + 1) %}
                 {% if p == pagination.page %}
-                <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center"
+                <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center"
                     aria-current="page">{{ p }}</span>
                 {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                 <a href="?page={{ p }}{{ ns.qs }}"
-                    class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
+                    class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
                 {% endif %}
                 {% endfor %}
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">Siguiente</a>
                 {% else %}
                 <span
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">Siguiente</span>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
         <div
             class="bg-slate-50/50 px-6 py-3 border-t border-slate-200 flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-500">
+            <span class="text-2xs font-bold text-slate-500">
                 Mostrando {{ products|length }} de {{ pagination.total if pagination else products|length }}
                 producto{{ 's' if (pagination.total if pagination else products|length) != 1 else '' }}
             </span>

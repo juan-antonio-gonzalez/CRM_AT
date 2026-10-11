@@ -6,11 +6,11 @@
 <div class="flex items-center gap-3">
     <div class="flex flex-col">
         <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">KPIs Calidad</h2>
-        <p class="text-[10px] text-slate-500 font-bold uppercase">Indicadores de Calidad y Asistencia Técnica</p>
+        <p class="text-2xs text-slate-500 font-bold uppercase">Indicadores de Calidad y Asistencia Técnica</p>
     </div>
     <div class="bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
-        <p class="text-[8px] font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
-        <p class="text-[11px] font-bold text-slate-700">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p class="text-2xs font-black text-primary uppercase tracking-widest leading-tight">Última Actualización</p>
+        <p class="text-2xs font-bold text-slate-700">{{ today.strftime('%d/%m/%Y %H:%M') }}</p>
     </div>
 </div>
 {% endblock %}
@@ -20,7 +20,7 @@
         <form method="GET" action="/kpi-calidad" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col w-20">
-                <label for="anio" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Año</label>
+                <label for="anio" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Año</label>
                 <select name="anio" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold" id="anio">
                     <option value="">Todos</option>
                     {% for y in available_years %}
@@ -29,7 +29,7 @@
                 </select>
             </div>
             <div class="flex flex-col w-20">
-                <label for="mes" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Mes</label>
+                <label for="mes" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Mes</label>
                 <select name="mes" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold" id="mes">
                     <option value="">Todos</option>
                     {% for m in months %}
@@ -38,7 +38,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="at" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">AT</label>
+                <label for="at" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">AT</label>
                 <select name="at" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="at">
                     <option value="">Todos</option>
                     {% for a in advisors %}
@@ -47,7 +47,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="cliente" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
+                <label for="cliente" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Cliente</label>
                 <select name="cliente" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="cliente">
                     <option value="">Todos</option>
                     {% for c in customer_list %}
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[160px]">
-                <label for="tema" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Tema</label>
+                <label for="tema" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Tema</label>
                 <select name="tema" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="tema">
                     <option value="">Todos</option>
                     {% set all_temas = visitas.all_temas_calidad + visitas.all_temas_asistencia %}
@@ -67,7 +67,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="tipo-producto" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Tipo Producto</label>
+                <label for="tipo-producto" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Tipo Producto</label>
                 <select name="tipo_producto" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="tipo-producto">
                     <option value="">Todos</option>
                     {% for tp in visitas.all_tipos_producto %}
@@ -76,7 +76,7 @@
                 </select>
             </div>
             <div class="flex flex-col min-w-[150px]">
-                <label for="planta" class="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Planta</label>
+                <label for="planta" class="text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">Planta</label>
                 <select name="planta" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold" id="planta">
                     <option value="">Todos</option>
                     {% for p in visitas.all_plantas %}
@@ -92,7 +92,7 @@
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">Punto 7 — Asistencia Técnica</h4>
-                <span id="totalRegistros" class="text-[10px] font-bold text-indigo-600 bg-indigo-500/10 px-2 py-1 rounded-lg">{{ visitas.total_asistencia }} registros</span>
+                <span id="totalRegistros" class="text-2xs font-bold text-indigo-600 bg-indigo-500/10 px-2 py-1 rounded-lg">{{ visitas.total_asistencia }} registros</span>
             </div>
 
             <div class="flex-1 relative h-[350px]">

@@ -170,7 +170,7 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_insumos', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_insumos', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Rotación (POP):</span> {{ survey.storage_data.get('pop_insumos', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.storage_data.get('crit_insumos', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.storage_data.get('obs_insumos', '-') }}</p>
                 </div>
                 
@@ -180,7 +180,7 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Temperatura Prom.:</span> {{ survey.storage_data.get('temp_finished', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Tiempo de Permanencia:</span> {{ survey.storage_data.get('time_finished', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Rotación (POP):</span> {{ survey.storage_data.get('pop_finished', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.storage_data.get('crit_finished', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.storage_data.get('obs_finished', '-') }}</p>
                 </div>
             </section>
@@ -192,7 +192,7 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Tipo Empaque:</span> {{ survey.packaging_data.get('type', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Dimensiones:</span> {{ survey.packaging_data.get('dim', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Peso Promedio:</span> {{ survey.packaging_data.get('weight', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.packaging_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.packaging_data.get('crit', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.packaging_data.get('obs', '-') }}</p>
                 </div>
             </section>
@@ -205,7 +205,7 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Pzas de Recibo:</span> {{ survey.palletizing_data.get('pieces', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Alto Máximo (mm):</span> {{ survey.palletizing_data.get('height', '-') }}</p>
                     <p class="text-sm"><span class="font-semibold text-slate-600">Patrón / Traba:</span> {{ survey.palletizing_data.get('pattern', '-') }}</p>
-                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
+                    <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Criticidad:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.palletizing_data.get('crit', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Observaciones:</span> {{ survey.palletizing_data.get('obs', '-') }}</p>
                 </div>
             </section>
@@ -223,8 +223,8 @@
                 </div>
                 <!-- Logistica Transporte -->
                 <div class="grid grid-cols-2 gap-4 border-t border-slate-50 pt-4">
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
-                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-[10px] font-bold uppercase">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Transporte:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.logistics_data.get('crit_trans', '-') }}</span></p>
+                    <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad Distribución:</span> <span class="px-2 py-0.5 ml-2 bg-slate-200 rounded text-2xs font-bold uppercase">{{ survey.logistics_data.get('crit_dist', '-') }}</span></p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Obs. Transporte:</span> {{ survey.logistics_data.get('obs_trans', '-') }}</p>
                     <p class="text-sm col-span-2"><span class="font-semibold text-slate-600">Obs. Distribución:</span> {{ survey.logistics_data.get('obs_dist', '-') }}</p>
                 </div>
@@ -238,13 +238,13 @@
                             <!-- Espacio para firma técnico -->
                         </div>
                         <p class="text-xs font-bold">Firma Técnico / Profesional</p>
-                        <p class="text-[10px] text-slate-500">Representante Aplicación AT</p>
+                        <p class="text-2xs text-slate-500">Representante Aplicación AT</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Page Number -->
-            <div class="pt-8 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
+            <div class="pt-8 flex justify-between items-center text-2xs text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
                 <span>{{ survey.date.strftime('%Y-%m-%d %H:%M') if survey.date else '' }}</span>
                 <span>Documento Generado vía Aplicación AT</span>
             </div>

@@ -199,11 +199,11 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e1') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
@@ -236,11 +236,11 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e2') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
@@ -268,11 +268,11 @@
                     <p class="text-sm"><span class="font-semibold text-slate-600">Criticidad:</span>
                         {% set c = survey_data.get('criticidad_e3') %}
                         {% if c == 'alta' %}
-                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-[10px]">Alta</span>
+                        <span class="text-red-500 font-bold bg-red-500/10 px-2 py-0.5 rounded text-2xs">Alta</span>
                         {% elif c == 'media' %}
-                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-[10px]">Media</span>
+                        <span class="text-amber-500 font-bold bg-amber-500/10 px-2 py-0.5 rounded text-2xs">Media</span>
                         {% elif c == 'baja' %}
-                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-[10px]">Baja</span>
+                        <span class="text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-2xs">Baja</span>
                         {% else %}
                         -
                         {% endif %}
@@ -376,13 +376,13 @@
                         <div class="border-b border-slate-900 mb-2 h-16 flex items-end justify-center">
                         </div>
                         <p class="text-xs font-bold">Firma Técnico / Profesional</p>
-                        <p class="text-[10px] text-slate-500">Representante Aplicación AT</p>
+                        <p class="text-2xs text-slate-500">Representante Aplicación AT</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Page Number -->
-            <div class="pt-8 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
+            <div class="pt-8 flex justify-between items-center text-2xs text-slate-400 font-bold uppercase tracking-widest mt-8 border-t border-dashed border-slate-200">
                 <span>{{ survey.updated_at.strftime('%Y-%m-%d %H:%M') if survey and survey.updated_at else '' }}</span>
                 <span>Documento Generado vía Aplicación AT</span>
             </div>

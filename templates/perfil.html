@@ -5,7 +5,7 @@
 {% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Perfil</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Configuración de Cuenta</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Configuración de Cuenta</p>
 </div>
 {% endblock %}
 
@@ -33,7 +33,7 @@
             <div>
                 <h3 class="text-xl font-black text-slate-900">{{ profile_user.full_name or profile_user.username }}</h3>
                 <p class="text-sm text-slate-500 font-medium">{{ profile_user.email }}</p>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mt-2 % if profile_user.role admin % bg-amber-100 text-amber-700 % else % bg-primary/10 text-primary % endif %">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-bold uppercase mt-2 % if profile_user.role admin % bg-amber-100 text-amber-700 % else % bg-primary/10 text-primary % endif %">
                     {{ profile_user.role }}
                 </span>
             </div>
@@ -44,22 +44,22 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="space-y-2">
-                    <label for="perfil-full-name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
+                    <label for="perfil-full-name" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
                     <input id="perfil-full-name" name="full_name" value="{{ profile_user.full_name or '' }}" required
                         class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
                 </div>
                 <div class="space-y-2">
-                    <label for="perfil-username" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario</label>
+                    <label for="perfil-username" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Usuario</label>
                     <input id="perfil-username" value="{{ profile_user.username }}" disabled
                         class="w-full bg-slate-100 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-400 cursor-not-allowed" />
                 </div>
                 <div class="space-y-2">
-                    <label for="perfil-email" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
+                    <label for="perfil-email" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
                     <input id="perfil-email" name="email" type="email" value="{{ profile_user.email }}" required
                         class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
                 </div>
                 <div class="space-y-2">
-                    <label for="perfil-phone" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Teléfono</label>
+                    <label for="perfil-phone" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Teléfono</label>
                     <input id="perfil-phone" name="phone" value="{{ profile_user.phone or '' }}"
                         class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                         placeholder="+52 555 123 4567" />
@@ -82,12 +82,12 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
             <div class="space-y-2">
-                <label for="perfil-current-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contraseña Actual</label>
+                <label for="perfil-current-password" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Contraseña Actual</label>
                 <input id="perfil-current-password" name="current_password" type="password" required minlength="6"
                     class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
             </div>
             <div class="space-y-2">
-                <label for="perfil-new-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
+                <label for="perfil-new-password" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
                 <input id="perfil-new-password" name="new_password" type="password" required minlength="6"
                     class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all" />
             </div>

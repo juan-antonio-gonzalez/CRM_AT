@@ -23,7 +23,7 @@
                 data-confirm="Se eliminarán permanentemente {{ items|length }} elemento{{ 's' if items|length != 1 else '' }}{% if active_tipo %} de la categoría {{ active_tipo }}{% endif %}. No se podrá recuperar esta información.">
                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                 <button type="submit" id="btn-empty-trash"
-                    class="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg transition-colors text-[10px] font-bold uppercase tracking-wider">
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg transition-colors text-2xs font-bold uppercase tracking-wider">
                     <span class="material-symbols-rounded text-[14px]" aria-hidden="true">delete_sweep</span>
                     Vaciar{{ ' (' ~ items|length ~ ')' if active_tipo else '' }}
                 </button>
@@ -92,7 +92,7 @@
                             {% endif %}
                         </p>
                         <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                            <span class="px-1.5 py-0.5 rounded bg-slate-100 font-semibold uppercase text-[10px]">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 font-semibold uppercase text-2xs">
                                 {{ item.entity_type }}
                             </span>
                             <span>ID {{ item.entity_id or '-' }}</span>

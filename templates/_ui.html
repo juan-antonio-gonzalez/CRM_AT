@@ -96,6 +96,15 @@
    Parámetros:
      id, titulo, tamano ('confirmar' | 'formulario' | 'amplio'),
      icono, tono_icono, descripcion
+
+   Contrato de identificadores (para que el JavaScript tenga a qué apuntar):
+     {{ id }}            contenedor (el diálogo)
+     {{ id }}-titulo     el título
+     {{ id }}-descripcion la bajada, si se pasó
+     {{ id }}-icono      el recuadro del icono, si se pasó
+     {{ id }}-icono-glifo el glifo del icono
+     {{ id }}-cuerpo     el cuerpo
+   Para cerrarlo desde el código: window.cerrarModal('{{ id }}').
 #}
 {% macro modal(id, titulo, tamano='formulario', icono=None, tono_icono='primario', descripcion=None) %}
 {% set anchos = {'confirmar': 'max-w-sm', 'formulario': 'max-w-lg', 'amplio': 'max-w-3xl'} %}
@@ -113,13 +122,13 @@
 
         <div class="flex items-start gap-3 p-5 border-b border-superficie-borde shrink-0">
             {% if icono %}
-            <span class="size-10 rounded-md flex items-center justify-center shrink-0 {{ tonos.get(tono_icono, tonos['primario']) }}" aria-hidden="true">
-                <span class="material-symbols-rounded text-xl">{{ icono }}</span>
+            <span id="{{ id }}-icono" class="size-10 rounded-md flex items-center justify-center shrink-0 {{ tonos.get(tono_icono, tonos['primario']) }}" aria-hidden="true">
+                <span id="{{ id }}-icono-glifo" class="material-symbols-rounded text-xl">{{ icono }}</span>
             </span>
             {% endif %}
             <div class="min-w-0 flex-1">
                 <h2 id="{{ id }}-titulo" class="text-lg font-bold text-texto-fuerte tracking-tight">{{ titulo }}</h2>
-                {% if descripcion %}<p class="text-sm text-texto-suave mt-0.5">{{ descripcion }}</p>{% endif %}
+                {% if descripcion %}<p id="{{ id }}-descripcion" class="text-sm text-texto-suave mt-0.5">{{ descripcion }}</p>{% endif %}
             </div>
             <button type="button" data-modal-close="{{ id }}" aria-label="Cerrar"
                 class="p-1.5 rounded-md text-texto-tenue hover:text-texto-fuerte hover:bg-superficie-suave transition-colors shrink-0">
@@ -127,7 +136,7 @@
             </button>
         </div>
 
-        <div class="p-5 overflow-y-auto">
+        <div id="{{ id }}-cuerpo" class="p-5 overflow-y-auto">
             {{ caller() }}
         </div>
     </div>

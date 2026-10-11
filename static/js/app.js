@@ -74,8 +74,11 @@
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
     // El foco entra al diálogo para que el teclado no siga navegando el fondo.
-    const primero = modal.querySelector(
-      'input:not([type="hidden"]), select, textarea, button, [href]');
+    // Se prefiere el primer campo: en un modal de formulario lo útil es escribir,
+    // no tabular desde el botón de cerrar.
+    const primero = modal.querySelector('[data-modal-focus]')
+      || modal.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled])')
+      || modal.querySelector('button, [href]');
     if (primero) primero.focus({ preventScroll: true });
   }
 
@@ -130,29 +133,31 @@
   function showConfirmModal(form, message, options = {}) {
     currentFormToSubmit = form;
     currentConfirmCallback = typeof options.onConfirm === 'function' ? options.onConfirm : null;
-    const title = options.title || '¿Confirmar Acción?';
+    const title = options.title || '¿Confirmar acción?';
     const buttonText = options.buttonText || 'Confirmar';
     const type = options.type || 'danger';
     const icon = options.icon || (type === 'danger' ? 'warning' : 'check_circle');
 
-    document.getElementById('confirmModalTitle').textContent = title;
+    // Ids del componente de modal (templates/_ui.html): {{ id }}-titulo, etc.
+    document.getElementById('confirmModal-titulo').textContent = title;
     document.getElementById('confirmModalMessage').textContent = message;
 
     const actionBtn = document.getElementById('confirmModalAction');
     actionBtn.textContent = buttonText;
 
-    const iconContainer = document.getElementById('confirmModalIconContainer');
-    document.getElementById('confirmModalIcon').textContent = icon;
+    const iconContainer = document.getElementById('confirmModal-icono');
+    const iconGlyph = document.getElementById('confirmModal-icono-glifo');
+    if (iconGlyph) iconGlyph.textContent = icon;
 
-    actionBtn.className = 'flex-1 px-4 py-2 rounded-md text-white text-sm font-semibold transition-colors';
-    iconContainer.className = 'size-12 rounded-md flex items-center justify-center';
+    actionBtn.className = 'flex-1 inline-flex items-center justify-center px-4 py-2 rounded-md text-white text-sm font-semibold transition-colors';
+    if (iconContainer) iconContainer.className = 'size-10 rounded-md flex items-center justify-center shrink-0';
 
     if (type === 'danger') {
       actionBtn.classList.add('bg-peligro-500', 'hover:bg-peligro-600');
-      iconContainer.classList.add('bg-peligro-50', 'text-peligro-500');
+      iconContainer?.classList.add('bg-peligro-50', 'text-peligro-500');
     } else {
       actionBtn.classList.add('bg-primary-600', 'hover:bg-primary-700');
-      iconContainer.classList.add('bg-primary-50', 'text-primary-600');
+      iconContainer?.classList.add('bg-primary-50', 'text-primary-600');
     }
 
     abrirModal('confirmModal');

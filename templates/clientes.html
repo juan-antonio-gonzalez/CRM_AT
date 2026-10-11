@@ -5,7 +5,7 @@
 {% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Clientes</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Gestión de Cuentas</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Gestión de Cuentas</p>
 </div>
 {% endblock %}
 
@@ -26,7 +26,7 @@
             </div>
             {% if q %}
             <a href="/clientes"
-                class="text-[10px] font-black text-slate-500 hover:text-primary transition-colors uppercase tracking-wider">Limpiar</a>
+                class="text-2xs font-black text-slate-500 hover:text-primary transition-colors uppercase tracking-wider">Limpiar</a>
             {% endif %}
             <button type="submit"
                 class="bg-slate-900 text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
@@ -46,19 +46,19 @@
     <!-- Stats Row -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Total Clientes</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Total Clientes</p>
             <h4 class="text-lg font-black text-slate-900">{{ stats.total }}</h4>
         </div>
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">En Relevamiento</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-0.5">En Relevamiento</p>
             <h4 class="text-lg font-black text-amber-500">{{ stats.en_relevamiento }}</h4>
         </div>
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Completados</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Completados</p>
             <h4 class="text-lg font-black text-emerald-500">{{ stats.completados }}</h4>
         </div>
         <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Pendiente</p>
+            <p class="text-2xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Pendiente</p>
             <h4 class="text-lg font-black text-primary">{{ stats.pendientes }}</h4>
         </div>
     </div>
@@ -69,11 +69,11 @@
             <table class="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                     <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Empresa / Sector</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Ubicación</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest" scope="col">Equipo</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Status</th>
-                        <th class="px-4 py-3 text-[9px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-4 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Empresa / Sector</th>
+                        <th class="px-4 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Ubicación</th>
+                        <th class="px-4 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Equipo</th>
+                        <th class="px-4 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Status</th>
+                        <th class="px-4 py-3 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -81,44 +81,44 @@
                     <tr class="hover:bg-slate-50/50 transition-colors group opacity-60 if not customer.is_active else">
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-black text-[10px] border border-primary/10">
+                                <div class="size-8 rounded-lg bg-primary/5 text-primary flex items-center justify-center font-black text-2xs border border-primary/10">
                                     {{ customer.name[:2]|upper }}
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-slate-900">{{ customer.name }}</span>
                                     {% if not customer.is_active %}
-                                    <span class="text-[9px] font-black text-red-500 uppercase tracking-tighter mt-0.5">INACTIVO</span>
+                                    <span class="text-2xs font-black text-red-500 uppercase tracking-tighter mt-0.5">INACTIVO</span>
                                     {% endif %}
-                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
+                                    <span class="text-2xs font-black text-slate-400 uppercase tracking-tighter mt-0.5">{{ customer.industry_sector }}</span>
                                 </div>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-xs">
                              <div class="flex flex-col">
                                 <span class="font-bold text-slate-700">{{ customer.plant }}</span>
-                                <span class="text-[9px] text-slate-400 uppercase font-bold">{{ customer.city }}</span>
+                                <span class="text-2xs text-slate-400 uppercase font-bold">{{ customer.city }}</span>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-xs">
                             <div class="flex flex-row gap-1">
-                                <div class="size-5 rounded-full bg-slate-100 flex items-center justify-center text-[8px] font-black text-slate-500 border border-slate-200" title="Comercial: {{ customer.assigned_commercial }}">
+                                <div class="size-5 rounded-full bg-slate-100 flex items-center justify-center text-2xs font-black text-slate-500 border border-slate-200" title="Comercial: {{ customer.assigned_commercial }}">
                                     {{ customer.assigned_commercial[:1]|upper if customer.assigned_commercial else '?' }}
                                 </div>
-                                <div class="size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-black text-primary border border-primary/20" title="Técnico: {{ customer.technical_advisor }}">
+                                <div class="size-5 rounded-full bg-primary/10 flex items-center justify-center text-2xs font-black text-primary border border-primary/20" title="Técnico: {{ customer.technical_advisor }}">
                                     {{ customer.technical_advisor[:1]|upper if customer.technical_advisor else '?' }}
                                 </div>
-                                <div class="size-5 rounded-full bg-amber-500/10 flex items-center justify-center text-[8px] font-black text-amber-600 border border-amber-500/20" title="Diseñador: {{ customer.designer }}">
+                                <div class="size-5 rounded-full bg-amber-500/10 flex items-center justify-center text-2xs font-black text-amber-600 border border-amber-500/20" title="Diseñador: {{ customer.designer }}">
                                     {{ customer.designer[:1]|upper if customer.designer else '?' }}
                                 </div>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-center">
                             {% if not customer.is_active %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-red-100 text-red-700">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase bg-red-100 text-red-700">
                                 Inactivo
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase % if customer.relevamiento_status Completado % bg-green-100 text-green-700 % elif customer.relevamiento_status En Proceso % bg-amber-100 text-amber-700 % else % bg-slate-100 text-slate-500 % endif %">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-black uppercase % if customer.relevamiento_status Completado % bg-green-100 text-green-700 % elif customer.relevamiento_status En Proceso % bg-amber-100 text-amber-700 % else % bg-slate-100 text-slate-500 % endif %">
                                 {{ customer.relevamiento_status }}
                             </span>
                             {% endif %}
@@ -167,7 +167,7 @@
 
 {% if pagination.total_pages > 1 %}
 <div class="flex items-center justify-between px-4 py-3 bg-white border-t border-slate-200 rounded-b-xl">
-    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+    <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
         Página {{ pagination.page }} de {{ pagination.total_pages }}
         <span class="mx-1">·</span>
         {{ pagination.total }} registro{{ 's' if pagination.total != 1 else '' }}
@@ -175,23 +175,23 @@
     <div class="flex items-center gap-1">
         {% if pagination.has_prev %}
         <a href="?page={{ pagination.page - 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
             Anterior
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">
             Anterior
         </span>
         {% endif %}
 
         {% for p in range(1, pagination.total_pages + 1) %}
             {% if p == pagination.page %}
-            <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">
+            <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">
                 {{ p }}
             </span>
             {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
             <a href="?page={{ p }}{% if q %}&q={{ q }}{% endif %}"
-                class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
+                class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
                 {{ p }}
             </a>
             {% endif %}
@@ -199,11 +199,11 @@
 
         {% if pagination.has_next %}
         <a href="?page={{ pagination.page + 1 }}{% if q %}&q={{ q }}{% endif %}"
-            class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
+            class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 uppercase tracking-widest transition-colors">
             Siguiente
         </a>
         {% else %}
-        <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-default">
+        <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 uppercase tracking-widest cursor-default">
             Siguiente
         </span>
         {% endif %}
@@ -213,13 +213,13 @@
 
 <!-- Modal Nuevo Cliente -->
 <div id="nuevoClienteModal"
-    class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="nuevoClienteModal-title">
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="nuevoClienteModal-title">
     <div
-        class="bg-white w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 transform transition-all my-8">
+        class="bg-superficie-card w-full max-w-6xl rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
         <div class="flex items-center justify-between p-6 border-b border-slate-100">
             <div class="flex items-center gap-3">
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">person_add</span>
-                <h3 class="text-lg font-black text-slate-900 tracking-tight" id="nuevoClienteModal-title">Registro de Cuenta</h3>
+                <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="nuevoClienteModal-title">Registro de Cuenta</h3>
             </div>
             <button type="button" id="btn-close-nuevo-cliente"
                 class="size-10 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors" aria-label="Cerrar">
@@ -243,13 +243,13 @@
 
  <!-- Modal Editar Cliente -->
  <div id="editarClienteModal"
-      class="hidden fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="editarClienteModal-title">
+      class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="editarClienteModal-title">
      <div
-         class="bg-white w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden border border-slate-200 transform transition-all my-8">
+         class="bg-superficie-card w-full max-w-6xl rounded-lg shadow-pop overflow-hidden border border-superficie-borde my-8">
           <div class="flex items-center justify-between p-6 border-b border-slate-100">
               <div class="flex items-center gap-3">
                   <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">edit</span>
-                  <h3 class="text-lg font-black text-slate-900 tracking-tight" id="editarClienteModal-title">Editar Cliente</h3>
+                  <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="editarClienteModal-title">Editar Cliente</h3>
               </div>
               <button type="button" id="btn-close-editar-cliente"
                   class="size-10 rounded-xl hover:bg-slate-100 flex items-center justify-center transition-colors" aria-label="Cerrar">
@@ -264,10 +264,10 @@
  </div>
 
  <!-- Auxiliary Management Modal -->
- <div id="manageEntityModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-slate-200">
+ <div id="manageEntityModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="manageEntityTitle">
+      <div class="bg-superficie-card rounded-lg shadow-pop w-full max-w-lg mx-4 max-h-[420px] flex flex-col border border-superficie-borde">
          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 shrink-0">
-             <h3 id="manageEntityTitle" class="text-sm font-black text-slate-900 uppercase tracking-wider">Gestionar</h3>
+             <h3 id="manageEntityTitle" class="text-lg font-bold text-slate-900 uppercase tracking-wider">Gestionar</h3>
              <button type="button" id="manageEntityCloseBtn"
                  class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all" aria-label="Cerrar">
                  <span class="material-symbols-rounded text-lg" aria-hidden="true">close</span>

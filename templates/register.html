@@ -44,31 +44,31 @@
                 <form method="POST" action="/auth/register" class="space-y-4" id="registerForm">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token or '' }}">
                     <div class="space-y-2">
-                        <label for="reg-full-name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
+                        <label for="reg-full-name" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Nombre Completo</label>
                         <input id="reg-full-name" name="full_name" required
                             class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="Juan Pérez" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-username" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Usuario</label>
+                        <label for="reg-username" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Usuario</label>
                         <input id="reg-username" name="username" required
                             class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="jperez" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-email" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
+                        <label for="reg-email" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
                         <input id="reg-email" name="email" type="email" required
                             class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="juan@ejemplo.com" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-password" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
+                        <label for="reg-password" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
                         <input id="reg-password" name="password" type="password" required minlength="6"
                             class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all"
                             placeholder="Mínimo 6 caracteres" />
                     </div>
                     <div class="space-y-2">
-                        <label for="reg-role" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rol</label>
+                        <label for="reg-role" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Rol</label>
                         <select id="reg-role" name="role"
                             class="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-4 focus:ring-primary/10 transition-all">
                             <option value="user">Usuario</option>

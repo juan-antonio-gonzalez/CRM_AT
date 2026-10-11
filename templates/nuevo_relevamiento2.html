@@ -498,30 +498,26 @@
         </div>
     </form>
 
-    <!-- Save confirmation modal -->
-    <div id="confirm-modal-container" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-container-title">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
-        <div id="confirm-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
-            <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
-                <div class="px-12 py-16 text-center space-y-8">
-                    <div class="size-24 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
-                        <span class="material-symbols-rounded text-5xl" aria-hidden="true">save</span>
-                    </div>
-                    <div class="space-y-3">
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight" id="confirm-modal-container-title">¿Guardar cambios?</h3>
-                        <p class="text-slate-500 text-sm">Se guardarán los datos del relevamiento.</p>
-                    </div>
-                    <div class="flex flex-col gap-3 w-full pb-8">
-                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20" id="modal-save-finalize">Guardar y finalizar</button>
-                        <button type="button" class="w-full px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-600 font-bold text-xs uppercase tracking-widest transition-all" id="modal-save-edit">Guardar y seguir editando</button>
-                        <button type="button" class="w-full px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest transition-all" id="modal-cancel">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {# Confirmación de guardado, con el componente único (_ui.html). #}
+    {% from "_ui.html" import modal, pie_modal %}
+
+    {% call modal("confirm-modal-container", "¿Guardar cambios?", "formulario", "save", "primario",
+                  "Se guardarán los datos del relevamiento.") %}
+    <div class="flex flex-col gap-3">
+        <button type="button" id="modal-save-finalize"
+            class="w-full inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+            Guardar y finalizar
+        </button>
+        <button type="button" id="modal-save-edit"
+            class="w-full inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+            Guardar y seguir editando
+        </button>
+        <button type="button" id="modal-cancel" data-modal-close="confirm-modal-container"
+            class="w-full inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-suave text-sm font-semibold hover:bg-superficie-suave transition-colors">
+            Cancelar
+        </button>
     </div>
-</div>
-</div>
+    {% endcall %}
 {% endblock %}
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
@@ -908,7 +904,7 @@ function setupFotoGrid(station) {
                 slot.addEventListener('click', function() { input.click(); });
             } else if (!fotos[i] && fotos.length < 4 && uploading) {
                 slot.className = 'foto-upload-box';
-                slot.innerHTML = '<span style="font-size:0.7rem;color:var(--muted)">Subiendo...</span>';
+                slot.innerHTML = '<span style="font-size: 0.75rem;color:var(--muted)">Subiendo...</span>';
             }
             grid.appendChild(slot);
         }
@@ -973,17 +969,11 @@ var pendingFormData = null;
 document.getElementById('survey-form').addEventListener('submit', function(e) {
     e.preventDefault();
     pendingFormData = serializeForm();
-    var container = document.getElementById('confirm-modal-container');
-    var modal = document.getElementById('confirm-modal');
-    container.classList.remove('hidden');
-    modal.classList.remove('hidden');
+    window.abrirModal('confirm-modal-container');
 });
 
 function closeConfirmModal() {
-    var container = document.getElementById('confirm-modal-container');
-    var modal = document.getElementById('confirm-modal');
-    modal.classList.add('hidden');
-    container.classList.add('hidden');
+    window.cerrarModal('confirm-modal-container');
 }
 
 document.getElementById('modal-cancel').addEventListener('click', closeConfirmModal);

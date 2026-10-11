@@ -26,7 +26,7 @@
                 <span class="material-symbols-rounded text-slate-500 text-2xl" aria-hidden="true">precision_manufacturing</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Pendientes</p>
+                <p class="text-2xs font-bold text-slate-500 uppercase tracking-widest">Pendientes</p>
                 <p class="text-2xl font-black text-slate-600">{{ stats.pendientes }}</p>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <span class="material-symbols-rounded text-primary text-2xl" aria-hidden="true">assignment</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Relevados</p>
+                <p class="text-2xs font-bold text-slate-500 uppercase tracking-widest">Total Relevados</p>
                 <p class="text-2xl font-black text-slate-900">{{ stats.total }}</p>
             </div>
         </div>
@@ -46,7 +46,7 @@
                 <span class="material-symbols-rounded text-emerald-500 text-2xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Completados</p>
+                <p class="text-2xs font-bold text-emerald-600 uppercase tracking-widest">Completados</p>
                 <p class="text-2xl font-black text-emerald-600">{{ stats.completados }}</p>
             </div>
         </div>
@@ -56,7 +56,7 @@
                 <span class="material-symbols-rounded text-amber-500 text-2xl" aria-hidden="true">hourglass_top</span>
             </div>
             <div>
-                <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">En Proceso</p>
+                <p class="text-2xs font-bold text-amber-600 uppercase tracking-widest">En Proceso</p>
                 <p class="text-2xl font-black text-amber-600">{{ stats.en_proceso }}</p>
             </div>
         </div>
@@ -66,7 +66,7 @@
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-end w-full">
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterCliente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <label for="filterCliente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
                 <select id="filterCliente"
                     class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los clientes</option>
@@ -76,7 +76,7 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterAsistente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
+                <label for="filterAsistente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Asistente Técnico</label>
                 <select id="filterAsistente"
                     class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary">
                     <option value="">Todos los asistentes</option>
@@ -86,14 +86,14 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterPlanta" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Planta</label>
+                <label for="filterPlanta" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Planta</label>
                 <select id="filterPlanta" disabled
                     class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las plantas</option>
                 </select>
             </div>
             <div class="flex flex-col gap-1.5 w-full">
-                <label for="filterLinea" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Línea</label>
+                <label for="filterLinea" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Línea</label>
                 <select id="filterLinea" disabled
                     class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary disabled:opacity-50">
                     <option value="">Todas las líneas</option>
@@ -124,16 +124,16 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Máquina</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Planta</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Asistente</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Línea</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Tipo</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Nº</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Fecha</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Máquina</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Planta</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Asistente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Línea</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Tipo</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="surveyTableBody" class="divide-y divide-slate-100">
@@ -165,12 +165,12 @@
                         <td class="px-6 py-5">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-slate-900">{{ mach_display or '—' }}</span>
-                                <span class="text-[10px] font-mono text-slate-400 mt-0.5">{{ mach_serial }}</span>
+                                <span class="text-2xs font-mono text-slate-400 mt-0.5">{{ mach_serial }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-5 text-sm text-slate-600">{{ cli_plant }}</td>
                         <td class="px-6 py-5">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 uppercase">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-2xs font-bold bg-slate-100 text-slate-600 uppercase">
                                 {{ tech_adv or 'Sin Asignar' }}
                             </span>
                         </td>
@@ -182,15 +182,15 @@
                         </td>
                         <td class="px-6 py-5 text-center">
                             {% if s.status == 'Finalizado' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>COMPLETADO
                             </span>
                             {% elif s.status == 'En proceso' %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
                                 <span class="size-1.5 bg-amber-500 rounded-full animate-pulse"></span>EN PROCESO
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold bg-slate-100 text-slate-500 uppercase">
                                 <span class="size-1.5 bg-slate-400 rounded-full"></span>PENDIENTE
                             </span>
                             {% endif %}
@@ -234,7 +234,7 @@
 
         {% if pagination.total_pages > 1 %}
         <div class="flex items-center justify-between px-4 py-3 bg-slate-50/50 border-t border-slate-100">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ pagination.page }} de {{ pagination.total_pages }}
                 <span class="mx-1">·</span>
                 {{ pagination.total }} relevamiento{{ 's' if pagination.total != 1 else '' }}
@@ -242,23 +242,23 @@
             <div class="flex items-center gap-1">
                 {% if pagination.has_prev %}
                 <a href="?page={{ pagination.page - 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
                     Anterior
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">
                     Anterior
                 </span>
                 {% endif %}
 
                 {% for p in range(1, pagination.total_pages + 1) %}
                     {% if p == pagination.page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">
                         {{ p }}
                     </span>
                     {% elif p >= pagination.page - 2 and p <= pagination.page + 2 %}
                     <a href="?page={{ p }}{{ ns.qs }}"
-                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
+                        class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">
                         {{ p }}
                     </a>
                     {% endif %}
@@ -266,11 +266,11 @@
 
                 {% if pagination.has_next %}
                 <a href="?page={{ pagination.page + 1 }}{{ ns.qs }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">
                     Siguiente
                 </a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">
                     Siguiente
                 </span>
                 {% endif %}
@@ -278,7 +278,7 @@
         </div>
         {% else %}
         <div class="px-3 py-2 bg-slate-50/50 border-t border-slate-100">
-            <span class="text-[11px] font-bold text-slate-500">{{ pagination.total }} relevamiento{{ 's' if pagination.total != 1 else '' }}</span>
+            <span class="text-2xs font-bold text-slate-500">{{ pagination.total }} relevamiento{{ 's' if pagination.total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% endif %}

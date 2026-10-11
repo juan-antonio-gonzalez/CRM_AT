@@ -22,7 +22,7 @@
                 <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">business</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Clientes</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Clientes</p>
                 <p class="text-xl font-black text-slate-900">{{ kpi.total_clientes }}</p>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <span class="material-symbols-rounded text-blue-500 text-xl" aria-hidden="true">assignment</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Estándar</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Estándar</p>
                 <p class="text-xl font-black text-blue-600">{{ kpi.total_std }}</p>
             </div>
         </div>
@@ -40,7 +40,7 @@
                 <span class="material-symbols-rounded text-purple-500 text-xl" aria-hidden="true">workspace_premium</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Premium</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Premium</p>
                 <p class="text-xl font-black text-purple-600">{{ kpi.total_prem }}</p>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <span class="material-symbols-rounded text-emerald-500 text-xl" aria-hidden="true">summarize</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total Visitas Asignadas</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Total Visitas Asignadas</p>
                 <p class="text-xl font-black text-emerald-600">{{ kpi.total_vis_sum }}</p>
             </div>
         </div>
@@ -58,7 +58,7 @@
                 <span class="material-symbols-rounded text-teal-500 text-xl" aria-hidden="true">check_circle</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Finalizada</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Finalizada</p>
                 <p class="text-xl font-black text-teal-600">{{ kpi.realizadas_sum }}</p>
             </div>
         </div>
@@ -67,7 +67,7 @@
                 <span class="material-symbols-rounded text-amber-500 text-xl" aria-hidden="true">hourglass_empty</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Pendiente</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Pendiente</p>
                 <p class="text-xl font-black text-amber-600">{{ kpi.pendientes_sum }}</p>
             </div>
         </div>
@@ -76,12 +76,12 @@
                 <span class="material-symbols-rounded text-orange-500 text-xl" aria-hidden="true">schedule</span>
             </div>
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Visita Fuera de Cronograma</p>
+                <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Visita Fuera de Cronograma</p>
                 <p class="text-xl font-black text-orange-600">{{ kpi.fuera_cronograma }}</p>
             </div>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Avance</p>
+            <p class="text-2xs font-bold text-slate-400 uppercase tracking-widest">Avance</p>
             <div class="flex items-baseline gap-2 mt-1">
                 <p class="text-3xl font-black text-sky-600">{{ kpi.avance_pct }}%</p>
                 <span class="text-2xl">
@@ -95,7 +95,7 @@
             <div class="mt-3 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div class="h-full bg-emerald-500" style="width: {{ kpi.avance_pct if kpi.avance_pct <= 100 else 100 }}%"></div>
             </div>
-            <p class="text-[10px] text-slate-400 mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
+            <p class="text-2xs text-slate-400 mt-1.5 font-bold uppercase">{{ kpi.realizadas_sum }} de {{ kpi.total_vis_sum }} realizadas</p>
         </div>
     </div>
 
@@ -103,13 +103,13 @@
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <form id="filter-form" method="GET" action="/control-at" class="flex items-end justify-between gap-4">
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="cliente" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                <label for="cliente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
                 <input type="text" name="cliente" value="{{ filters.cliente }}"
                     class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary"
                     placeholder="Buscar cliente..." id="cliente">
             </div>
             <div class="flex flex-col gap-1 flex-1 max-w-xs">
-                <label for="at" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">AT</label>
+                <label for="at" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">AT</label>
                 <select name="at"
                     class="form-select w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="at">
                     <option value="">Todos</option>
@@ -119,17 +119,17 @@
                 </select>
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="estandar" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estándar</label>
+                <label for="estandar" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estándar</label>
                 <input type="number" name="estandar" value="{{ filters.estandar or '' }}" min="0" placeholder="Cant."
                     class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="estandar">
             </div>
             <div class="flex flex-col gap-1 w-32">
-                <label for="premium" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Premium</label>
+                <label for="premium" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Premium</label>
                 <input type="number" name="premium" value="{{ filters.premium or '' }}" min="0" placeholder="Cant."
                     class="form-input w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="premium">
             </div>
             <div class="flex flex-col gap-1 w-40">
-                <label for="status" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                <label for="status" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estado</label>
                 <select name="status"
                     class="form-select w-full h-[34px] bg-slate-50 border-slate-200 rounded-lg text-xs focus:ring-primary focus:border-primary" id="status">
                     <option value="">Todos</option>
@@ -166,15 +166,15 @@
             <table class="w-full text-left" id="tabla-control-at">
                 <thead>
                     <tr class="bg-slate-50/50 border-b border-slate-200">
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">AT</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Estándar</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Premium</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Total</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente desde</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente hasta</th>
-                        <th class="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Acciones</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Cliente</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Estándar</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Premium</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-right" scope="col">Total</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente desde</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest" scope="col">Vigente hasta</th>
+                        <th class="px-6 py-5 text-2xs font-black text-slate-500 uppercase tracking-widest text-center" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -195,20 +195,20 @@
                         data-pendientes="{{ pendientes }}"
                         data-valid-from="{{ r.valid_from.strftime('%Y-%m-%d') if r.valid_from else '' }}"
                         data-valid-to="{{ r.valid_to.strftime('%Y-%m-%d') if r.valid_to else '' }}">
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ r.name }}<br><span class="text-[11px] text-slate-400 font-normal">{{ r.plant or '—' }}</span></td>
+                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ r.name }}<br><span class="text-2xs text-slate-400 font-normal">{{ r.plant or '—' }}</span></td>
                         <td class="px-6 py-4 text-sm text-slate-600">{{ r.technical_advisor or '—' }}</td>
                         <td class="px-6 py-4 text-center">
                             {% set est = r.status or 'Activo' %}
                             {% if est == 'Activo' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-700 uppercase">
                                 <span class="size-1.5 bg-emerald-500 rounded-full"></span>Activo
                             </span>
                             {% elif est == 'Fuera de Cronograma' %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-amber-100 text-amber-700 uppercase">
                                 <span class="size-1.5 bg-amber-500 rounded-full"></span>Fuera de Cronograma
                             </span>
                             {% else %}
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 uppercase">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-2xs font-bold bg-slate-100 text-slate-500 uppercase">
                                 <span class="size-1.5 bg-slate-400 rounded-full"></span>Inactivo
                             </span>
                             {% endif %}
@@ -251,35 +251,35 @@
 
         {% if total_pages > 1 %}
         <div class="flex items-center justify-between px-6 py-4 bg-slate-50/50 border-t border-slate-100">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <div class="text-2xs font-bold text-slate-400 uppercase tracking-widest">
                 Página {{ page }} de {{ total_pages }}
             </div>
             <div class="flex items-center gap-1">
                 {% if page > 1 %}
                 <a href="?page={{ page - 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Anterior</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Anterior</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Anterior</span>
                 {% endif %}
                 {% for p in range(1, total_pages + 1) %}
                     {% if p == page %}
-                    <span class="size-8 rounded-lg bg-primary text-white text-[10px] font-black flex items-center justify-center">{{ p }}</span>
+                    <span class="size-8 rounded-lg bg-primary text-white text-2xs font-black flex items-center justify-center">{{ p }}</span>
                     {% elif p >= page - 2 and p <= page + 2 %}
                     <a href="?page={{ p }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                        class="size-8 rounded-lg text-[10px] font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
+                        class="size-8 rounded-lg text-2xs font-black text-slate-500 hover:bg-slate-100 flex items-center justify-center transition-colors">{{ p }}</a>
                     {% endif %}
                 {% endfor %}
                 {% if page * per_page < total %}
                 <a href="?page={{ page + 1 }}&cliente={{ filters.cliente }}&at={{ filters.at }}&estandar={{ filters.estandar or '' }}&premium={{ filters.premium or '' }}"
-                    class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
+                    class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-600 hover:bg-slate-200/50 transition-colors">Siguiente</a>
                 {% else %}
-                <span class="px-3 py-1.5 rounded-lg text-[10px] font-black text-slate-300 cursor-default">Siguiente</span>
+                <span class="px-3 py-1.5 rounded-lg text-2xs font-black text-slate-300 cursor-default">Siguiente</span>
                 {% endif %}
             </div>
         </div>
         {% else %}
         <div class="px-6 py-3 bg-slate-50/50 border-t border-slate-100">
-            <span class="text-[11px] font-bold text-slate-500">{{ total }} cliente{{ 's' if total != 1 else '' }}</span>
+            <span class="text-2xs font-bold text-slate-500">{{ total }} cliente{{ 's' if total != 1 else '' }}</span>
         </div>
         {% endif %}
         {% else %}
@@ -292,13 +292,12 @@
 </div>
 
 <!-- Assignment Modal -->
-<div id="asignacion-modal-container" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-    <div id="asignacion-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md hidden">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+<div id="asignacion-modal-container" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="asignacion-modal" class="relative w-full max-w-md hidden">
+        <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
             <div class="p-6 space-y-5">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-black text-slate-900 tracking-tight" id="modal-title">Nueva Asignación</h3>
+                    <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="modal-title">Nueva Asignación</h3>
                     <button type="button" id="modal-close" class="p-1 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
                         <span class="material-symbols-rounded" aria-hidden="true">close</span>
                     </button>
@@ -307,16 +306,16 @@
                 <div class="space-y-4">
                     <div id="modal-info" class="hidden grid grid-cols-2 gap-4 p-3 bg-slate-50 rounded-xl">
                         <div>
-                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Realizadas</label>
+                            <label class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Realizadas</label>
                             <p id="modal-realizadas" class="text-sm font-bold text-emerald-600 mt-0.5">0</p>
                         </div>
                         <div>
-                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pendientes</label>
+                            <label class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Pendientes</label>
                             <p id="modal-pendientes" class="text-sm font-bold text-amber-600 mt-0.5">0</p>
                         </div>
                     </div>
                     <div>
-                        <label for="modal-cliente" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
+                        <label for="modal-cliente" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Cliente</label>
                         <select id="modal-cliente" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar cliente...</option>
                             {% for c in customer_names %}
@@ -325,7 +324,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="modal-at" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AT Asignado</label>
+                        <label for="modal-at" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">AT Asignado</label>
                         <select id="modal-at" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar AT...</option>
                             {% for a in advisors %}
@@ -335,18 +334,18 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-estandar" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visitas Estándar</label>
+                            <label for="modal-estandar" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Visitas Estándar</label>
                             <input type="number" id="modal-estandar" value="0" min="0"
                                 class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-premium" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Visitas Premium</label>
+                            <label for="modal-premium" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Visitas Premium</label>
                             <input type="number" id="modal-premium" value="0" min="0"
                                 class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                     </div>
                     <div>
-                        <label for="modal-estado" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado</label>
+                        <label for="modal-estado" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Estado</label>
                         <select id="modal-estado" class="form-select w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="Activo">Activo</option>
                             <option value="Inactivo">Inactivo</option>
@@ -355,12 +354,12 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="modal-valid-from" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vigente desde</label>
+                            <label for="modal-valid-from" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Vigente desde</label>
                             <input type="date" id="modal-valid-from"
                                 class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
                         <div>
-                            <label for="modal-valid-to" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vigente hasta</label>
+                            <label for="modal-valid-to" class="text-2xs font-bold text-slate-400 uppercase tracking-wider">Vigente hasta</label>
                             <input type="date" id="modal-valid-to"
                                 class="form-input w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                         </div>
@@ -382,17 +381,16 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div id="delete-modal-container" class="fixed inset-0 z-[110] hidden" role="dialog" aria-modal="true" aria-labelledby="delete-modal-container-title">
-    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-    <div id="delete-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xs hidden">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+<div id="delete-modal-container" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="delete-modal-container-title">
+    <div id="delete-modal" class="relative w-full max-w-xs hidden">
+        <div class="bg-superficie-card rounded-lg shadow-pop border border-superficie-borde overflow-hidden">
             <div class="p-6 space-y-5">
                 <div class="flex items-center gap-4">
                     <div class="size-12 rounded-2xl bg-red-50 flex items-center justify-center shrink-0">
                         <span class="material-symbols-rounded text-red-500 text-2xl" aria-hidden="true">delete_forever</span>
                     </div>
                     <div>
-                        <h3 class="text-lg font-black text-slate-900 tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
+                        <h3 class="text-lg font-bold text-slate-900 tracking-tight" id="delete-modal-container-title">Eliminar Asignación</h3>
                         <p class="text-sm text-slate-500 mt-0.5" id="delete-message">¿Estás seguro?</p>
                     </div>
                 </div>

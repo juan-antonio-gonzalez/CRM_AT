@@ -5,7 +5,7 @@
 {% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Maquinaria</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Edición de Activo</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Edición de Activo</p>
 </div>
 {% endblock %}
 
@@ -37,7 +37,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-2">
-                    <label for="client_select" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cliente
+                    <label for="client_select" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Cliente
                         Asignado</label>
                     <select id="client_select" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
@@ -49,7 +49,7 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="plant_select" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Planta
+                    <label for="plant_select" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Planta
                         Asignada</label>
                     <select id="plant_select" name="customer_id" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
@@ -61,7 +61,7 @@
                     <input type="hidden" id="plant_assigned" name="plant_assigned" value="{{ machine.plant_assigned }}">
                 </div>
                 <div class="space-y-2">
-                    <label for="machine-type" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipo de
+                    <label for="machine-type" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Tipo de
                         Máquina</label>
                     <select name="machine_type" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="machine-type">
@@ -73,32 +73,32 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label for="serial-number" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Número de
+                    <label for="serial-number" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Número de
                         Serie</label>
                     <input name="serial_number" value="{{ machine.serial_number }}" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-mono font-bold text-slate-900"
                         type="text"  id="serial-number"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="brand" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marca</label>
+                    <label for="brand" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Marca</label>
                     <input name="brand" value="{{ machine.brand }}" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         type="text"  id="brand"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="model-name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Modelo</label>
+                    <label for="model-name" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Modelo</label>
                     <input name="model_name" value="{{ machine.model }}" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
                         type="text"  id="model-name"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="line" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Línea</label>
+                    <label for="line" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Línea</label>
                     <input name="line" value="{{ machine.line or '' }}"
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold uppercase"
                         type="text" style="text-transform: uppercase;" placeholder="Ej: LÍNEA 1"  id="line"/>
                 </div>
                 <div class="space-y-2">
-                    <label for="status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</label>
+                    <label for="status" class="text-2xs font-black text-slate-400 uppercase tracking-widest">Estado</label>
                     <select name="status" required
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="status">
                         <option value="Operativo" {% if machine.status=="Operativo" %}selected{% endif %}>Operativo

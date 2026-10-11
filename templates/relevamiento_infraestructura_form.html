@@ -17,20 +17,20 @@
                 <h1 class="text-base font-black text-slate-900 uppercase tracking-tight">
                     {% if survey %}Editar Relevamiento{% else %}Nuevo Relevamiento{% endif %}
                 </h1>
-                <p class="text-[10px] text-slate-500 font-bold uppercase">Infraestructura & Logística</p>
+                <p class="text-2xs text-slate-500 font-bold uppercase">Infraestructura & Logística</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <select name="status" class="form-select text-[10px] font-bold uppercase rounded-lg border-slate-200 focus:ring-primary">
+            <select name="status" class="form-select text-2xs font-bold uppercase rounded-lg border-slate-200 focus:ring-primary">
                 <option value="Pendiente" {% if survey and survey.status == "Pendiente" %}selected{% endif %}>Pendiente</option>
                 <option value="En Proceso" {% if survey and survey.status == "En Proceso" or not survey %}selected{% endif %}>En Proceso</option>
                 <option value="Completado" {% if survey and survey.status == "Completado" %}selected{% endif %}>Completado</option>
             </select>
-            <button type="button" id="btn-infra-preview" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
+            <button type="button" id="btn-infra-preview" class="bg-indigo-600 hover:bg-indigo-700 text-white text-2xs font-black uppercase px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center gap-2">
                 <span class="material-symbols-rounded !text-sm" aria-hidden="true">visibility</span>
                 <span class="hidden sm:inline">Previsualizar</span>
             </button>
-            <button type="submit" class="bg-primary text-white text-[10px] font-black uppercase px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+            <button type="submit" class="bg-primary text-white text-2xs font-black uppercase px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
                 <span class="material-symbols-rounded !text-sm" aria-hidden="true">save</span>
                 <span class="hidden sm:inline">Guardar</span>
             </button>
@@ -47,7 +47,7 @@
         </div>
         <div class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="space-y-2">
-                <label for="customer_name_select" class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Cliente</label>
+                <label for="customer_name_select" class="text-2xs font-black text-slate-500 uppercase tracking-widest pl-1">Cliente</label>
                 <select id="customer_name_select" required class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20">
                     <option value="">Seleccionar cliente...</option>
                     {% for name in unique_customer_names %}
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <div class="space-y-2">
-                <label for="plant_select" class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Planta / Sede</label>
+                <label for="plant_select" class="text-2xs font-black text-slate-500 uppercase tracking-widest pl-1">Planta / Sede</label>
                 <select id="plant_select" name="customer_id" required class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20">
                     <option value="">Seleccione un cliente primero</option>
                 </select>
@@ -64,11 +64,11 @@
                 <input type="hidden" name="plant" id="hidden_plant" value="{{ survey.plant if survey else '' }}">
             </div>
             <div class="space-y-2">
-                <label for="date" class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Fecha</label>
+                <label for="date" class="text-2xs font-black text-slate-500 uppercase tracking-widest pl-1">Fecha</label>
                 <input name="date" value="{{ survey.date.strftime('%Y-%m-%d') if survey and survey.date else '' }}" required class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" type="date" id="date"/>
             </div>
             <div class="space-y-2">
-                <label for="technical-advisor" class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">Asistente Técnico</label>
+                <label for="technical-advisor" class="text-2xs font-black text-slate-500 uppercase tracking-widest pl-1">Asistente Técnico</label>
                 <select name="technical_advisor" required class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" id="technical-advisor">
                     <option value="">Seleccionar...</option>
                     {% for advisor in advisors %}
@@ -110,18 +110,18 @@
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <label id="criticidad-del-sector" class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
+                    <label id="criticidad-del-sector" class="text-2xs font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
                     <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector">
                         {% for crit in ['Baja', 'Media', 'Alta'] %}
                         <label for="crit-insumos{{ loop.index }}" class="flex-1 cursor-pointer">
                             <input class="sr-only peer" name="crit_insumos" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_insumos') == crit %}checked{% endif %} id="crit-insumos{{ loop.index }}"/>
-                            <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
+                            <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-2xs uppercase">{{ crit }}</div>
                         </label>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="obs-insumos" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Observaciones Insumos</label>
+                    <label for="obs-insumos" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Observaciones Insumos</label>
                     <textarea name="obs_insumos" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="obs-insumos">{{ survey.storage_data.get('obs_insumos', '') if survey else '' }}</textarea>
                 </div>
             </div>
@@ -140,18 +140,18 @@
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <label id="criticidad-del-sector-2" class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
+                    <label id="criticidad-del-sector-2" class="text-2xs font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
                     <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector-2">
                         {% for crit in ['Baja', 'Media', 'Alta'] %}
                         <label for="crit-finished{{ loop.index }}" class="flex-1 cursor-pointer">
                             <input class="sr-only peer" name="crit_finished" value="{{ crit }}" type="radio" {% if survey and survey.storage_data.get('crit_finished') == crit %}checked{% endif %} id="crit-finished{{ loop.index }}"/>
-                            <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
+                            <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-2xs uppercase">{{ crit }}</div>
                         </label>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label for="obs-finished" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
+                    <label for="obs-finished" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
                     <textarea name="obs_finished" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="obs-finished">{{ survey.storage_data.get('obs_finished', '') if survey else '' }}</textarea>
                 </div>
             </div>
@@ -176,7 +176,7 @@
                 <input name="pkg_material" value="{{ survey.packaging_data.get('material', '') if survey else '' }}" class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Ej: Film PE" type="text" id="pkg-material"/>
             </div>
             <div class="md:col-span-2 space-y-2">
-                <label for="pkg-obs" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Observaciones Empaque</label>
+                <label for="pkg-obs" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Observaciones Empaque</label>
                 <textarea name="pkg_obs" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="pkg-obs">{{ survey.packaging_data.get('obs', '') if survey else '' }}</textarea>
             </div>
         </div>
@@ -214,18 +214,18 @@
                 </div>
             </div>
             <div class="space-y-3">
-                <label id="criticidad-del-sector-3" class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
+                <label id="criticidad-del-sector-3" class="text-2xs font-black text-slate-500 uppercase tracking-wider">Criticidad del Sector</label>
                 <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-del-sector-3">
                     {% for crit in ['Baja', 'Media', 'Alta'] %}
                     <label for="pal-crit{{ loop.index }}" class="flex-1 cursor-pointer">
                         <input class="sr-only peer" name="pal_crit" value="{{ crit }}" type="radio" {% if survey and survey.palletizing_data.get('crit') == crit %}checked{% endif %} id="pal-crit{{ loop.index }}"/>
-                        <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
+                        <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-2xs uppercase">{{ crit }}</div>
                     </label>
                     {% endfor %}
                 </div>
             </div>
             <div class="space-y-2">
-                <label for="pal-obs" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
+                <label for="pal-obs" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
                 <textarea name="pal_obs" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="pal-obs">{{ survey.palletizing_data.get('obs', '') if survey else '' }}</textarea>
             </div>
         </div>
@@ -255,18 +255,18 @@
                 </div>
             </div>
             <div class="space-y-3">
-                <label id="criticidad-logistica" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Criticidad Logística</label>
+                <label id="criticidad-logistica" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Criticidad Logística</label>
                 <div class="flex gap-4" role="radiogroup" aria-labelledby="criticidad-logistica">
                     {% for crit in ['Baja', 'Media', 'Alta'] %}
                     <label for="log-crit-dist{{ loop.index }}" class="flex-1 cursor-pointer">
                         <input class="sr-only peer" name="log_crit_dist" value="{{ crit }}" type="radio" {% if survey and survey.logistics_data.get('crit_dist') == crit %}checked{% endif %} id="log-crit-dist{{ loop.index }}"/>
-                        <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-[10px] uppercase">{{ crit }}</div>
+                        <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary transition-all font-bold text-2xs uppercase">{{ crit }}</div>
                     </label>
                     {% endfor %}
                 </div>
             </div>
             <div class="space-y-2">
-                <label for="log-obs-dist" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
+                <label for="log-obs-dist" class="text-2xs font-black text-slate-500 uppercase tracking-widest">Observaciones</label>
                 <textarea name="log_obs_dist" class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/20" rows="2" id="log-obs-dist">{{ survey.logistics_data.get('obs_dist', '') if survey else '' }}</textarea>
             </div>
         </div>

@@ -223,68 +223,47 @@
                 {% block content %}{% endblock %}
             </main>
         </div>
-      <!-- Custom Confirmation Modal -->
-    <div id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"
-        class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-        <div
-            class="bg-white w-full max-w-md rounded-3xl p-8 border border-slate-200 shadow-2xl">
-            <div class="flex flex-col items-center text-center gap-4">
-                <div id="confirmModalIconContainer"
-                    class="size-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-2">
-                    <span id="confirmModalIcon" class="material-symbols-rounded text-[32px]" aria-hidden="true">warning</span>
-                </div>
-                <h3 id="confirmModalTitle" class="text-xl font-black text-slate-900 tracking-tight">¿Confirmar Acción?</h3>
-                <p id="confirmModalMessage" class="text-slate-500 text-sm leading-relaxed">
-                    ¿Deseas continuar con esta acción?
-                </p>
-                <div class="flex gap-3 w-full mt-6">
-                    <button id="btnCancelConfirm"
-                        class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
-                        Cancelar
-                    </button>
-                    <button id="confirmModalAction"
-                        class="flex-1 px-6 py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-widest transition-all">
-                        Confirmar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {# ── Modales globales, con el componente único ──────────────────────────
+       Los dos usan `modal()` de _ui.html, así que comparten fondo, radio,
+       sombra, relleno, tamaño de título y botón de cierre con el resto de la
+       aplicación. El JavaScript los maneja por el contrato de ids del
+       componente ({{ id }}-titulo, {{ id }}-icono, {{ id }}-cuerpo). #}
+    {% from "_ui.html" import modal, pie_modal %}
 
-    <!-- Deactivation Modal (reason) -->
-    <div id="deactivate-modal-container" role="dialog" aria-modal="true" aria-labelledby="deactivate-modal-title"
-        class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-        <div id="deactivate-modal" class="relative w-full max-w-lg hidden animate-zoom-in">
-            <div class="bg-white w-full max-w-md rounded-3xl p-8 border border-slate-200 shadow-2xl">
-                <div class="flex flex-col items-center text-center gap-4">
-                    <div class="size-16 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-2">
-                        <span class="material-symbols-rounded text-[32px]" aria-hidden="true">block</span>
-                    </div>
-                    <h3 id="deactivate-modal-title" class="text-xl font-black text-slate-900 tracking-tight">Desactivar Registro</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">
-                        Indica el motivo por el cual desactivás este registro:
-                    </p>
-                    <textarea id="deactivate-reason" rows="3"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
-                        placeholder="Motivo obligatorio..."></textarea>
-                    <div id="deactivate-error" class="hidden text-[11px] font-bold text-red-500 -mt-2">
-                        Debes ingresar un motivo
-                    </div>
-                    <div class="flex gap-3 w-full mt-2">
-                        <button id="btn-cancel-deactivate"
-                            class="flex-1 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
-                            Cancelar
-                        </button>
-                        <button id="btn-confirm-deactivate"
-                            class="flex-1 px-6 py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-widest transition-all">
-                            Desactivar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% call modal("confirmModal", "¿Confirmar acción?", "confirmar", "warning", "peligro") %}
+    <p id="confirmModalMessage" class="text-sm text-texto-base">¿Deseas continuar con esta acción?</p>
+    {% call pie_modal() %}
+    <button type="button" id="btnCancelConfirm"
+        class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="button" id="confirmModalAction"
+        class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-md bg-peligro-500 hover:bg-peligro-600 text-white text-sm font-semibold transition-colors">
+        Confirmar
+    </button>
+    {% endcall %}
+    {% endcall %}
+
+    {% call modal("deactivate-modal", "Desactivar registro", "formulario", "block", "peligro",
+                  "Indicá el motivo por el cual desactivás este registro.") %}
+    <label for="deactivate-reason" class="block text-sm font-semibold text-texto-base mb-1">Motivo</label>
+    <textarea id="deactivate-reason" rows="3" required
+        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md p-3 text-sm focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
+        placeholder="Motivo obligatorio..."></textarea>
+    <p id="deactivate-error" class="hidden text-xs font-semibold text-peligro-500 mt-2">
+        Debés ingresar un motivo
+    </p>
+    {% call pie_modal() %}
+    <button type="button" id="btn-cancel-deactivate"
+        class="inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="button" id="btn-confirm-deactivate"
+        class="inline-flex items-center justify-center px-4 py-2 rounded-md bg-peligro-500 hover:bg-peligro-600 text-white text-sm font-semibold transition-colors">
+        Desactivar
+    </button>
+    {% endcall %}
+    {% endcall %}
 
     <!-- Toast Notification -->
     <div id="toastContainer" role="status" aria-live="polite" aria-atomic="true" aria-relevant="additions"
@@ -293,28 +272,25 @@
 
     <script nonce="{{ request.state.script_nonce }}" src="{{ url_for('static', path='/js/app.js') }}"></script>
     <script nonce="{{ request.state.script_nonce }}">
-    // ── Global deactivation modal ──
+    // ── Modal global de desactivación ──
+    // Lo abre cualquier pantalla con openDeactivateModal(callback). El modal en
+    // sí es el componente de _ui.html.
     var deactivateCallback = null;
 
     function openDeactivateModal(callback) {
         deactivateCallback = callback;
         document.getElementById('deactivate-reason').value = '';
         document.getElementById('deactivate-error').classList.add('hidden');
-        document.getElementById('deactivate-modal-container').classList.remove('hidden');
-        document.getElementById('deactivate-modal').classList.remove('hidden');
+        window.abrirModal('deactivate-modal');
     }
 
     function closeDeactivateModal() {
-        document.getElementById('deactivate-modal-container').classList.add('hidden');
-        document.getElementById('deactivate-modal').classList.add('hidden');
+        window.cerrarModal('deactivate-modal');
         deactivateCallback = null;
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('btn-cancel-deactivate')?.addEventListener('click', closeDeactivateModal);
-        document.getElementById('deactivate-modal-container')?.addEventListener('click', function(e) {
-            if (e.target === this) closeDeactivateModal();
-        });
         document.getElementById('btn-confirm-deactivate')?.addEventListener('click', function() {
             var reason = document.getElementById('deactivate-reason').value.trim();
             if (!reason) {

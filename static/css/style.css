@@ -321,8 +321,9 @@ textarea:focus-visible {
     #sidebarOverlay,
     #btnMobileMenu,
     #toastContainer,
-    #confirmModal,
-    #deactivate-modal-container,
+    /* Cualquier diálogo queda fuera del papel. Se apunta al rol y no a IDs
+       concretos: así un modal nuevo no se imprime por olvido. */
+    [role="dialog"],
     .no-print {
         display: none !important;
     }

@@ -5,7 +5,7 @@
 {% block header_extra %}
 <div class="flex flex-col">
     <h2 class="text-sm font-black text-slate-900 uppercase tracking-tighter">Configuración</h2>
-    <p class="text-[10px] text-slate-500 font-bold uppercase">Gestión de Listas Auxiliares</p>
+    <p class="text-2xs text-slate-500 font-bold uppercase">Gestión de Listas Auxiliares</p>
 </div>
 {% endblock %}
 
@@ -16,7 +16,7 @@
         class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <div class="flex flex-col gap-0.5">
             <h2 class="text-xl font-black text-slate-900 tracking-tight">Tablas Auxiliares</h2>
-            <p class="text-slate-500 text-[11px] uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
+            <p class="text-slate-500 text-2xs uppercase font-bold tracking-wide">Gestión de catálogos del sistema</p>
         </div>
         <div class="flex gap-2">
             <a href="/relevamiento"
@@ -52,7 +52,7 @@
                 </div>
                 <div id="list-advisor" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not advisors %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in advisors %}
                     <div id="item-advisor-{{ item.id }}"
@@ -99,7 +99,7 @@
                 </div>
                 <div id="list-designer" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not designers %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in designers %}
                     <div id="item-designer-{{ item.id }}"
@@ -146,7 +146,7 @@
                 </div>
                 <div id="list-commercial" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not commercials %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in commercials %}
                     <div id="item-commercial-{{ item.id }}"
@@ -193,7 +193,7 @@
                 </div>
                 <div id="list-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not sectors %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in sectors %}
                     <div id="item-sector-{{ item.id }}"
@@ -240,7 +240,7 @@
                 </div>
                 <div id="list-machine-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not machine_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in machine_types %}
                     <div id="item-machine-type-{{ item.id }}"
@@ -287,7 +287,7 @@
                 </div>
                 <div id="list-formado" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not formado_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in formado_types %}
                     <div id="item-formado-{{ item.id }}"
@@ -334,7 +334,7 @@
                 </div>
                 <div id="list-cierre-inferior" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not inferior_closure_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in inferior_closure_types %}
                     <div id="item-cierre-inferior-{{ item.id }}"
@@ -381,7 +381,7 @@
                 </div>
                 <div id="list-client-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not client_names %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in client_names %}
                     <div id="item-client-name-{{ item.id }}"
@@ -428,7 +428,7 @@
                 </div>
                 <div id="list-plant-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not plant_names %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in plant_names %}
                     <div id="item-plant-name-{{ item.id }}"
@@ -475,7 +475,7 @@
                 </div>
                 <div id="list-visit-type" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not visit_types %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in visit_types %}
                     <div id="item-visit-type-{{ item.id }}"
@@ -521,7 +521,7 @@
                 </div>
                 <div id="list-distributor-plant" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not distributor_plants %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in distributor_plants %}
                     <div id="item-distributor-plant-{{ item.id }}"
@@ -567,7 +567,7 @@
                 </div>
                 <div id="list-tema-calidad" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_topics %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_topics %}
                     <div id="item-tema-calidad-{{ item.id }}"
@@ -613,7 +613,7 @@
                 </div>
                 <div id="list-calidad-at" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                     {% if not quality_at_topics %}
-                    <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                    <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                     {% endif %}
                     {% for item in quality_at_topics %}
                     <div id="item-calidad-at-{{ item.id }}"
@@ -660,7 +660,7 @@
             </div>
             <div id="list-member-sector" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not member_sectors %}
-                <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                 {% endif %}
                 {% for item in member_sectors %}
                 <div id="item-member-sector-{{ item.id }}"
@@ -704,7 +704,7 @@
             </div>
             <div id="list-contact-name" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                 {% if not contact_names_list %}
-                <p class="empty-msg text-center py-4 text-slate-400 text-[10px] font-bold uppercase italic">No hay elementos</p>
+                <p class="empty-msg text-center py-4 text-slate-400 text-2xs font-bold uppercase italic">No hay elementos</p>
                 {% endif %}
                 {% for item in contact_names_list %}
                 <div id="item-contact-name-{{ item.id }}"
@@ -729,39 +729,30 @@
     </div>
 </div>
 
-<!-- Premium Modals Container -->
-<div id="modal-container" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="modal-container-title">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in"></div>
-    
-    <!-- Edit Modal -->
-    <div id="edit-modal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md hidden animate-zoom-in">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-                <div class="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                    <span class="material-symbols-rounded" aria-hidden="true">edit</span>
-                </div>
-                <div>
-                    <h3 class="font-black text-slate-900 uppercase tracking-tight text-sm" id="modal-container-title">Editar Elemento</h3>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">Actualizar nombre del catálogo</p>
-                </div>
-            </div>
-            <div class="p-8 space-y-6">
-                <div class="space-y-2">
-                    <label for="modal-edit-input" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nuevo Nombre</label>
-                    <input id="modal-edit-input" type="text" 
-                        class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-primary/10 transition-all outline-none"
-                        oninput="this.value = this.value.toUpperCase()">
-                </div>
-                <div class="flex items-center justify-end gap-4 pt-4">
-                    <button id="btn-cancel-edit" class="text-xs font-black text-slate-400 hover:text-slate-600 uppercase tracking-widest transition-colors">Cancelar</button>
-                    <button id="modal-edit-confirm" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 transition-all">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
+{# Modal de edición de catálogo, con el componente único (_ui.html).
+   Antes eran dos capas anidadas (un contenedor de fondo y el panel dentro); el
+   componente ya resuelve las dos. #}
+{% from "_ui.html" import modal, pie_modal %}
 
+{% call modal("edit-modal", "Editar elemento", "formulario", "edit", "primario",
+              "Actualizar el nombre del catálogo") %}
+<div>
+    <label for="modal-edit-input" class="block text-sm font-semibold text-texto-base mb-1">Nuevo nombre</label>
+    <input id="modal-edit-input" type="text" data-modal-focus
+        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600 outline-none"
+        oninput="this.value = this.value.toUpperCase()">
 </div>
+{% call pie_modal() %}
+<button type="button" id="btn-cancel-edit"
+    class="inline-flex items-center justify-center px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+    Cancelar
+</button>
+<button type="button" id="modal-edit-confirm"
+    class="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+    Guardar cambios
+</button>
+{% endcall %}
+{% endcall %}
 {% endblock %}
 {% block scripts %}
 <script nonce="{{ request.state.script_nonce }}">
@@ -789,25 +780,17 @@
         }
     }
 
+    // Sólo existe el modal de edición. El cierre con Escape, el clic en el fondo
+    // y el bloqueo del scroll los maneja el controlador común (app.js).
     function openModal(type, entityType, itemId, currentName) {
-        const container = document.getElementById('modal-container');
-        const modal = document.getElementById(`${type}-modal`);
-        
-        container.classList.remove('hidden');
-        modal.classList.remove('hidden');
-        
-        if (type === 'edit') {
-            const input = document.getElementById('modal-edit-input');
-            input.value = currentName;
-            input.focus();
-            
-            document.getElementById('modal-edit-confirm').onclick = () => performEdit(entityType, itemId, input.value);
-        }
+        const input = document.getElementById('modal-edit-input');
+        input.value = currentName;
+        document.getElementById('modal-edit-confirm').onclick = () => performEdit(entityType, itemId, input.value);
+        window.abrirModal('edit-modal');
     }
 
     function closeModal(type) {
-        document.getElementById('modal-container').classList.add('hidden');
-        document.getElementById(`${type}-modal`).classList.add('hidden');
+        window.cerrarModal('edit-modal');
     }
 
     async function performEdit(entityType, itemId, newName) {
