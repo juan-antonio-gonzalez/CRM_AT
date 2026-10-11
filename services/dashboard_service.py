@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 import models
-from enums import RelevamientoStatus, CustomerStatus
+from enums import RelevamientoStatus, CustomerStatus, TrackingStatus
 from services.utils import month_buckets
 import datetime
 
@@ -292,3 +292,134 @@ def get_minutas_stats(db: Session, at: str = "", cliente: str = ""):
         "finalizado": min_finalizado,
         "por_tipo": sorted(min_tipo_rows.items(), key=lambda x: x[1], reverse=True),
     }
+
+
+# ── Panel de atención ────────────────────────────────────────────────────────
+# El dashboard describía el estado pero no decía qué hacer. Estos son los cruces
+# que requieren una acción concreta: cada uno trae su conteo y el enlace al
+# listado ya filtrado, para pasar de "hay 12 pendientes" a "estos son".
+#
+# Los umbrales están acá arriba y se pueden ajustar sin tocar la plantilla.
+DIAS_SIN_VISITA = 90        # un cliente activo sin visita en este plazo
+DIAS_MINUTA_BORRADOR = 15   # una minuta sin finalizar en este plazo
+
+
+def _items_atencion(db, hoy):
+    """Los cuatro cruces del panel. Devuelve una lista de dicts."""
+    items = []
+
+    # 1) Clientes activos sin visita reciente.
+    #    La fecha de la visita es texto ISO y el nombre del cliente vive en
+    #    form_data, así que se arma un mapa de última visita por cliente en una
+    #    sola consulta (recorrer cliente por cliente sería N+1).
+    corte = (hoy - datetime.timedelta(days=DIAS_SIN_VISITA)).isoformat()
+    ultimas = dict(
+        db.query(
+            models.TechnicalVisit2.form_data["cliente_nombre"].as_string(),
+            func.max(models.TechnicalVisit2.fecha),
+        )
+        .filter(models.TechnicalVisit2.is_active.is_(True))
+        .group_by(models.TechnicalVisit2.form_data["cliente_nombre"].as_string())
+        .all()
+    )
+    activos = (
+        db.query(models.Customer.name)
+        .filter(models.Customer.is_active.is_(True))
+        .all()
+    )
+    sin_visita = []
+    for (nombre,) in activos:
+        if not nombre:
+            continue
+        ultima = ultimas.get(nombre)
+        if not ultima or ultima < corte:
+            sin_visita.append(nombre)
+    if sin_visita:
+        items.append({
+            "clave": "sin_visita",
+            "texto": f"Sin visita hace más de {DIAS_SIN_VISITA} días",
+            "cantidad": len(sin_visita),
+            "detalle": ", ".join(sorted(sin_visita)[:4]),
+            "enlace": "/clientes",
+            "tono": "alerta",
+            "icono": "event_busy",
+        })
+
+    # 2) Máquinas activas sin relevamiento completo.
+    sin_relevar = (
+        db.query(func.count(models.Machine.id))
+        .filter(
+            models.Machine.is_active.is_(True),
+            models.Machine.relevamiento_status != RelevamientoStatus.COMPLETADO.value,
+        )
+        .scalar()
+    ) or 0
+    if sin_relevar:
+        items.append({
+            "clave": "sin_relevar",
+            "texto": "Máquinas sin relevamiento completo",
+            "cantidad": sin_relevar,
+            "detalle": "",
+            "enlace": "/maquinaria",
+            "tono": "info",
+            "icono": "precision_manufacturing",
+        })
+
+    # 3) Minutas que quedaron en borrador.
+    corte_min = (hoy - datetime.timedelta(days=DIAS_MINUTA_BORRADOR)).isoformat()
+    borradores = (
+        db.query(func.count(models.MeetingMinutes.id))
+        .filter(
+            models.MeetingMinutes.is_active.is_(True),
+            models.MeetingMinutes.status == "Borrador",
+            models.MeetingMinutes.fecha < corte_min,
+        )
+        .scalar()
+    ) or 0
+    if borradores:
+        items.append({
+            "clave": "minutas_borrador",
+            "texto": f"Minutas en borrador hace más de {DIAS_MINUTA_BORRADOR} días",
+            "cantidad": borradores,
+            "detalle": "",
+            "enlace": "/minutas?estado=Borrador",
+            "tono": "alerta",
+            "icono": "description",
+        })
+
+    # 4) Tareas del plan de acción vencidas.
+    vencidas = (
+        db.query(func.count(models.ActionPlanTracking.id))
+        .filter(
+            models.ActionPlanTracking.is_active.is_(True),
+            models.ActionPlanTracking.due_date.isnot(None),
+            models.ActionPlanTracking.due_date != "",
+            models.ActionPlanTracking.due_date < hoy.isoformat(),
+            models.ActionPlanTracking.status.notin_([
+                TrackingStatus.FINALIZADO.value,
+                TrackingStatus.CANCELADO.value,
+            ]),
+        )
+        .scalar()
+    ) or 0
+    if vencidas:
+        items.append({
+            "clave": "tareas_vencidas",
+            "texto": "Tareas del plan vencidas",
+            "cantidad": vencidas,
+            "detalle": "",
+            "enlace": "/seguimiento-plan?estado=Pendiente",
+            "tono": "peligro",
+            "icono": "schedule",
+        })
+
+    # Lo más urgente primero.
+    orden = {"peligro": 0, "alerta": 1, "info": 2}
+    items.sort(key=lambda i: (orden.get(i["tono"], 9), -i["cantidad"]))
+    return items
+
+
+def get_atencion(db: Session, today: datetime.datetime = None):
+    """Panel de atención: qué está esperando una acción."""
+    hoy = (today or datetime.datetime.now(datetime.UTC)).date()
+    return _items_atencion(db, hoy)

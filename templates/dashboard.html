@@ -75,6 +75,39 @@
         </div>
     </section>
 
+    {# ── Panel de atención ────────────────────────────────────────────────────
+       Es lo que hace volver al dashboard todos los días: no describe el estado,
+       dice qué está esperando una acción. Cada fila lleva al listado ya filtrado,
+       para pasar de "hay 12 pendientes" a "estos son". Si no hay nada pendiente
+       no se muestra, así el panel conserva su fuerza. #}
+    {% if atencion %}
+    <section aria-labelledby="sec-atencion">
+        <h2 id="sec-atencion" class="text-lg font-semibold text-texto-fuerte mb-3">Requiere atención</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+            {% for a in atencion %}
+            {% set estilos = {
+                'peligro': ('bg-peligro-100', 'border-peligro-300', 'text-peligro-700'),
+                'alerta':  ('bg-alerta-100',  'border-alerta-300',  'text-alerta-700'),
+                'info':    ('bg-info-100',    'border-info-300',    'text-info-700'),
+            } %}
+            {% set e = estilos.get(a.tono, estilos['info']) %}
+            <a href="{{ a.enlace }}"
+                class="{{ e[0] }} border {{ e[1] }} rounded-lg p-4 flex items-start gap-3 hover:brightness-[0.98] transition-all">
+                <span class="material-symbols-rounded {{ e[2] }} text-xl shrink-0 mt-0.5" aria-hidden="true">{{ a.icono }}</span>
+                <div class="min-w-0 flex-1">
+                    <p class="text-2xl {{ e[2] }} tabular-nums leading-none">{{ a.cantidad }}</p>
+                    <p class="text-xs {{ e[2] }} mt-1.5 leading-snug">{{ a.texto }}</p>
+                    {% if a.detalle %}
+                    <p class="text-2xs {{ e[2] }} opacity-80 mt-1 truncate" title="{{ a.detalle }}">{{ a.detalle }}</p>
+                    {% endif %}
+                </div>
+                <span class="material-symbols-rounded {{ e[2] }} text-base shrink-0 opacity-60" aria-hidden="true">chevron_right</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     {# ── Detalle: sin caja, separado por una línea ─────────────────────────── #}
     <section aria-label="Detalle" class="border-t border-superficie-borde pt-5">
         <dl class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-x-6 gap-y-4">

@@ -102,6 +102,7 @@ async def dashboard(
     visitas = dashboard_service.get_visitas_stats(db, today, at=at, cliente=cliente, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta)
     maquinas = dashboard_service.get_maquinas_stats(db, at=at, cliente=cliente)
     minutas = dashboard_service.get_minutas_stats(db, at=at, cliente=cliente)
+    atencion = dashboard_service.get_atencion(db, today)
 
     advisors = (
         db.query(models.TechnicalAdvisor.name)
@@ -136,6 +137,7 @@ async def dashboard(
         "visitas": visitas,
         "maquinas": maquinas,
         "minutas": minutas,
+        "atencion": atencion,
         "advisors": [a[0] for a in advisors],
         "customer_list": customer_list,
         "available_years": available_years,
