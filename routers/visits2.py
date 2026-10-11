@@ -276,6 +276,14 @@ async def nueva_visita2(request: Request, db: Session = Depends(get_db)):
     distribuidoras = db.query(models.DistributorPlant).order_by(models.DistributorPlant.name).all()
     temas_calidad = db.query(models.QualityTopic).order_by(models.QualityTopic.name).all()
     calidad_at = db.query(models.QualityAT).order_by(models.QualityAT.name).all()
+    # Catálogos del encabezado de la visita: qué tipo de visita es y por qué se fue.
+    # Se leen de Tablas Auxiliares en vez de tener los valores escritos acá.
+    visit_types = (db.query(models.VisitType)
+                   .filter(models.VisitType.is_active.is_(True))
+                   .order_by(models.VisitType.name).all())
+    visit_reasons = (db.query(models.VisitReason)
+                     .filter(models.VisitReason.is_active.is_(True))
+                     .order_by(models.VisitReason.name).all())
     return templates.TemplateResponse(request, 'nueva_visita2.html', {
         "request": request,
         "visit": None,
@@ -287,7 +295,9 @@ async def nueva_visita2(request: Request, db: Session = Depends(get_db)):
         "tecnicos": tecnicos,
         "distribuidoras": distribuidoras,
         "temas_calidad": temas_calidad,
-        "calidad_at": calidad_at
+        "calidad_at": calidad_at,
+        "visit_types": visit_types,
+        "visit_reasons": visit_reasons
     })
 
 
@@ -339,6 +349,14 @@ async def editar_visita2(request: Request, visit_id: int, db: Session = Depends(
     distribuidoras = db.query(models.DistributorPlant).order_by(models.DistributorPlant.name).all()
     temas_calidad = db.query(models.QualityTopic).order_by(models.QualityTopic.name).all()
     calidad_at = db.query(models.QualityAT).order_by(models.QualityAT.name).all()
+    # Catálogos del encabezado de la visita: qué tipo de visita es y por qué se fue.
+    # Se leen de Tablas Auxiliares en vez de tener los valores escritos acá.
+    visit_types = (db.query(models.VisitType)
+                   .filter(models.VisitType.is_active.is_(True))
+                   .order_by(models.VisitType.name).all())
+    visit_reasons = (db.query(models.VisitReason)
+                     .filter(models.VisitReason.is_active.is_(True))
+                     .order_by(models.VisitReason.name).all())
     # Tareas del plan de acción que generó esta visita: se muestran en el
     # formulario para que el vínculo visita <-> seguimiento sea visible.
     tareas_vinculadas = db.query(models.ActionPlanTracking).filter(
@@ -357,6 +375,8 @@ async def editar_visita2(request: Request, visit_id: int, db: Session = Depends(
         "distribuidoras": distribuidoras,
         "temas_calidad": temas_calidad,
         "calidad_at": calidad_at,
+        "visit_types": visit_types,
+        "visit_reasons": visit_reasons,
         "tareas_vinculadas": tareas_vinculadas,
     })
 

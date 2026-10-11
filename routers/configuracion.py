@@ -19,6 +19,7 @@ ENTITY_MODEL_MAP = {
     "client-name": models.ClientName,
     "plant-name": models.PlantName,
     "visit-type": models.VisitType,
+      "visit-reason": models.VisitReason,
     "distributor-plant": models.DistributorPlant,
     "contact-name": models.ContactName,
     "member-sector": models.MemberSector,
@@ -43,6 +44,7 @@ async def view_config(request: Request, db: Session = Depends(get_db)):
     client_names = db.query(models.ClientName).order_by(models.ClientName.name).all()
     plant_names = db.query(models.PlantName).order_by(models.PlantName.name).all()
     visit_types = db.query(models.VisitType).order_by(models.VisitType.name).all()
+    visit_reasons = db.query(models.VisitReason).order_by(models.VisitReason.name).all()
     distributor_plants = db.query(models.DistributorPlant).order_by(models.DistributorPlant.name).all()
     quality_topics = db.query(models.QualityTopic).order_by(models.QualityTopic.name).all()
     quality_at_topics = db.query(models.QualityAT).order_by(models.QualityAT.name).all()
@@ -60,6 +62,7 @@ async def view_config(request: Request, db: Session = Depends(get_db)):
         "client_names": client_names,
         "plant_names": plant_names,
         "visit_types": visit_types,
+        "visit_reasons": visit_reasons,
         "distributor_plants": distributor_plants,
         "quality_topics": quality_topics,
         "quality_at_topics": quality_at_topics,

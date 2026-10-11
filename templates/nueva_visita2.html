@@ -215,12 +215,32 @@
                 <input type="date" id="fecha" class="ska-input">
             </div>
             <div class="ska-card">
-                <label class="ska-label">4. OBJETIVO:</label>
+                <label class="ska-label">4. TIPO DE VISITA:</label>
+                {# Los tipos salen de Tablas Auxiliares. Antes eran cuatro valores
+                   escritos acá, que se desincronizaban del catálogo: sólo coincidían
+                   en «Seguimiento». El JS lee por `name="obj"`, así que la lista
+                   dinámica funciona sin tocarlo. #}
                 <div class="ska-obj-grid">
-                    <label for="obj" class="ska-obj-item"><input type="checkbox" name="obj" value="Visita programada" id="obj"> Visita programada</label>
-                    <label for="obj-2" class="ska-obj-item"><input type="checkbox" name="obj" value="Análisis No conformidad" id="obj-2"> Análisis No conformidad</label>
-                    <label for="obj-3" class="ska-obj-item"><input type="checkbox" name="obj" value="Seguimiento" id="obj-3"> Seguimiento</label>
-                    <label for="obj-4" class="ska-obj-item"><input type="checkbox" name="obj" value="Solicitud del cliente" id="obj-4"> Solicitud del cliente</label>
+                    {% for t in visit_types %}
+                    <label for="obj-{{ loop.index }}" class="ska-obj-item"><input type="checkbox" name="obj" value="{{ t.name }}" id="obj-{{ loop.index }}"> {{ t.name }}</label>
+                    {% endfor %}
+                </div>
+                <label for="motivo" class="ska-label" style="margin-top:12px;">MOTIVO DE LA VISITA:</label>
+                {# El motivo es el por qué de esta visita concreta: retiro de muestra,
+                   reunión con calidad, plan de ahorro. También es un catálogo. #}
+                <select id="motivo" name="motivo" class="ska-input">
+                    <option value="">— Sin especificar —</option>
+                    {% for r in visit_reasons %}
+                    <option value="{{ r.name }}">{{ r.name }}</option>
+                    {% endfor %}
+                </select>
+                {# Alcance: una visita puede ser una reunión o un retiro de muestra sin
+                   haber recorrido la línea. Marcarlo explica por qué no hay evaluación
+                   de paletizado ni de logística, en lugar de que parezca incompleta. #}
+                <div class="ska-obj-grid" style="margin-top:10px;">
+                    <label class="ska-obj-item"><input type="checkbox" name="alcance" value="Recorrí la línea"> Recorrí la línea</label>
+                    <label class="ska-obj-item"><input type="checkbox" name="alcance" value="Evalué producto en línea"> Evalué producto en línea</label>
+                    <label class="ska-obj-item"><input type="checkbox" name="alcance" value="Retiré muestra"> Retiré muestra</label>
                 </div>
             </div>
         </div>
@@ -746,6 +766,8 @@ function serializeForm() {
     return {
         fecha: document.getElementById('fecha').value,
         objetivo: selectedObj,
+        motivo: document.getElementById('motivo').value,
+        alcance: Array.prototype.slice.call(document.querySelectorAll('input[name="alcance"]:checked')).map(function(c){ return c.value; }),
         firma: document.getElementById('firma').value,
         swa: swa,
         cli: cli,
@@ -777,6 +799,10 @@ function restoreData(data) {
     if (data.planta_distribuidora) document.getElementById('planta-distribuidora').value = data.planta_distribuidora;
     document.querySelectorAll('input[name="obj"]').forEach(function(cb) {
         cb.checked = data.objetivo && data.objetivo.indexOf(cb.value) !== -1;
+    });
+    if (data.motivo) document.getElementById('motivo').value = data.motivo;
+    document.querySelectorAll('input[name="alcance"]').forEach(function(cb) {
+        cb.checked = data.alcance && data.alcance.indexOf(cb.value) !== -1;
     });
 
     document.getElementById('swa-list').innerHTML = '';

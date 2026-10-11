@@ -321,6 +321,21 @@ class PlantName(Base, BaseCatalogMixin):
     def validate_name(self, key, value):
         return value.strip().upper()
 
+class VisitReason(Base, BaseCatalogMixin):
+    """Motivo de la visita.
+
+    El objetivo dice *qué tipo* de visita es (programada, seguimiento, reclamo).
+    El motivo dice *por qué se fue esta vez*: «retiro de muestra por desvío»,
+    «reunión con calidad por reclamo de cliente», «plan de ahorro en paletizado».
+
+    Va como catálogo y no como texto libre para poder filtrar y agrupar por motivo.
+    """
+
+    __tablename__ = "visit_reasons"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+
+
 class VisitType(Base, BaseCatalogMixin):
     __tablename__ = "visit_types"
     id = Column(Integer, primary_key=True, index=True)

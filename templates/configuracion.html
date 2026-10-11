@@ -460,12 +460,12 @@
                 class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">topic</span>
-                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Motivo de Visita</h3>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Tipo de Visita</h3>
                 </div>
             </div>
             <div class="p-4 space-y-3 flex-1">
                 <div class="flex gap-2">
-                    <input id="input-visit-type" type="text" aria-label="Nuevo Motivo de Visita" placeholder="Nuevo motivo..."
+                    <input id="input-visit-type" type="text" aria-label="Nuevo Tipo de Visita" placeholder="Nuevo tipo..."
                         class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                         oninput="this.value = this.value.toUpperCase()">
                     <button id="btn-add-visit-type"
@@ -489,6 +489,51 @@
                                 data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
                                 <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
                                 <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="visit-type" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
+                                    <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-superficie-card rounded-xl border border-superficie-borde overflow-hidden flex flex-col">
+            <div
+                class="p-3.5 border-b border-superficie-borde bg-superficie-suave/50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary text-lg" aria-hidden="true">flag</span>
+                    <h3 class="font-semibold text-xs text-texto-fuerte tracking-tight">Motivo de Visita</h3>
+                </div>
+            </div>
+            <div class="p-4 space-y-3 flex-1">
+                <div class="flex gap-2">
+                    <input id="input-visit-reason" type="text" aria-label="Nuevo Motivo de Visita" placeholder="Nuevo motivo..."
+                        class="flex-1 bg-superficie-card border border-superficie-borde rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <button id="btn-add-visit-reason"
+                        class="bg-primary text-white p-1.5 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center" aria-label="Agregar Motivo de Visita">
+                        <span class="material-symbols-rounded text-sm" aria-hidden="true">add</span>
+                    </button>
+                </div>
+                <div id="list-visit-reason" class="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
+                    {% if not visit_reasons %}
+                    <p class="empty-msg text-center py-4 text-texto-tenue text-2xs font-bold italic">No hay elementos</p>
+                    {% endif %}
+                    {% for item in visit_reasons %}
+                    <div id="item-visit-reason-{{ item.id }}"
+                        class="flex items-center justify-between px-2 py-2 border-b border-superficie-borde last:border-0 group">
+                        <span class="text-xs font-bold text-texto-base">{{ item.name }}</span>
+                        <div class="flex items-center gap-0.5">
+                            <button class="btn-edit text-texto-tenue hover:text-primary p-1 transition-colors" title="Editar" data-entity="visit-reason" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Editar">
+                                <span class="material-symbols-rounded text-sm" aria-hidden="true">edit</span>
+                            </button>
+                            <form action="/configuracion/delete/visit-reason/{{ item.id }}" method="POST" class="inline"
+                                data-confirm="Se eliminará permanentemente «{{ item.name }}» de esta lista. Esta acción no se puede deshacer.">
+                                <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                <button type="submit" class="btn-delete text-texto-tenue hover:text-peligro-500 p-1 transition-colors" title="Eliminar" data-entity="visit-reason" data-id="{{ item.id }}" data-name="{{ item.name }}" aria-label="Eliminar">
                                     <span class="material-symbols-rounded text-sm" aria-hidden="true">delete</span>
                                 </button>
                             </form>

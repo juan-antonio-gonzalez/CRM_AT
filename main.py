@@ -346,6 +346,20 @@ def seed_catalogues(db=None) -> None:
                     "COMPRAS", "DIRECCIÓN",
                 )
             ])
+        
+
+        # Motivos de visita: por qué se fue esta vez, más allá del tipo de visita.
+        # En mayúsculas, como el resto de los catálogos: el formulario de Tablas
+        # Auxiliares fuerza mayúsculas al cargar.
+        if db.query(models.VisitReason).count() == 0:
+            db.add_all([
+                models.VisitReason(name=n) for n in (
+                    "RECORRIDA DE LÍNEA", "RETIRO DE MUESTRA",
+                    "REUNIÓN CON PRODUCCIÓN", "REUNIÓN CON CALIDAD",
+                    "RECLAMO DE CLIENTE", "PROPUESTA DE MEJORA",
+                    "PLAN DE AHORRO", "CAPACITACIÓN", "CORTESÍA",
+                )
+            ])
         db.commit()
     except Exception as exc:
         logger.error("Error sembrando catálogos: %s", exc)
