@@ -22,10 +22,12 @@ ENV_FILE="${ENV_DIR}/crm-at.env"
 DB_NAME="crm_at"
 DB_USER="crm_at"
 APP_PORT="8020"
-# El dominio se pasa por variable de entorno: el proyecto no lleva un dominio
-# adentro, porque es un dato de cada despliegue y no algo que se herede.
-DOMAIN="${DOMAIN:?Falta DOMAIN: pasá el dominio público, por ejemplo DOMAIN=crm.miempresa.com}"
-ALT_DOMAIN="${ALT_DOMAIN:-www.${DOMAIN}}"
+# El dominio no está escrito en el proyecto: es un dato de cada despliegue y no
+# algo que se herede. Se toma de `--domain` o de la variable de entorno, y se
+# valida **después** de parsear los argumentos: exigirlo acá hacía fallar
+# `--domain`, que todavía no se había leído.
+DOMAIN="${DOMAIN:-}"
+ALT_DOMAIN="${ALT_DOMAIN:-}"
 REPO_URL="https://github.com/juan-antonio-gonzalez/CRM_AT.git"
 WANT_SSL=0
 
@@ -64,6 +66,11 @@ while [[ $# -gt 0 ]]; do
     *) echo "Opción desconocida: $1" >&2; exit 1 ;;
   esac
 done
+
+# Recién ahora, con los argumentos ya leídos.
+DOMAIN="${DOMAIN:?Falta el dominio: usá --domain crm.miempresa.com (o DOMAIN=... en el entorno)}"
+DOMAIN="${DOMAIN#http://}"; DOMAIN="${DOMAIN#https://}"; DOMAIN="${DOMAIN%/}"
+ALT_DOMAIN="${ALT_DOMAIN:-www.${DOMAIN}}"
 
 log()  { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33m[!] %s\033[0m\n' "$*"; }

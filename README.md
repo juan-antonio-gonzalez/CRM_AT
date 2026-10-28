@@ -31,16 +31,35 @@ Hay una **página pública de presentación** en `/` para quien llega sin sesió
 
 ## Documentación
 
+### Por dónde empezar
+
+Si llegás nuevo al proyecto, en este orden:
+
+1. **[docs/arquitectura.md](docs/arquitectura.md)** — cómo está armada la aplicación:
+   las capas, el ciclo de un pedido, la sesión, los permisos, la asistente. Es el
+   documento que hace que el resto tenga sentido.
+2. **[docs/desarrollo.md](docs/desarrollo.md)** — levantarla en tu máquina, cómo
+   trabajar, cómo agregar una pantalla y las trampas que ya costaron tiempo.
+3. **[docs/funcionalidades.md](docs/funcionalidades.md)** — qué hace cada pantalla y
+   qué reglas aplica. Es también la fuente del conocimiento de la asistente, así que
+   si agregás reglas, van acá.
+4. **[DEPLOYMENT.md](DEPLOYMENT.md)** — llevarla a un servidor, actualizarla y
+   operarla.
+
+### Referencia
+
 | Archivo | Contenido |
 |---|---|
+| [docs/arquitectura.md](docs/arquitectura.md) | Capas, ciclo de un pedido, sesión, permisos, asistente |
+| [docs/desarrollo.md](docs/desarrollo.md) | Entorno, convenciones, agregar una pantalla, pruebas, trampas |
 | [docs/funcionalidades.md](docs/funcionalidades.md) | Qué hace cada pantalla y sus reglas |
+| [docs/basededatos.md](docs/basededatos.md) | Esquema tabla por tabla |
 | [docs/usuarios-y-permisos.md](docs/usuarios-y-permisos.md) | Cómo se decide qué ve cada cuenta |
 | [docs/especificacion-equipos.md](docs/especificacion-equipos.md) | El diseño de equipos y sus seis fases |
 | [docs/especificacion-agente.md](docs/especificacion-agente.md) | Cómo funciona Caty |
 | [docs/impresion-informe-clientes.md](docs/impresion-informe-clientes.md) | La paginación de los informes en PDF |
 | [docs/iconos.md](docs/iconos.md) | El subset de íconos y sus dos formas de romperse |
-| [docs/basededatos.md](docs/basededatos.md) | Esquema y migraciones |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Despliegue en el VPS |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Despliegue, actualización y operación |
 
 ---
 
