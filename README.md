@@ -1,7 +1,8 @@
-# CRM-AT
+# AplicaciónAT
 
-Aplicación web de gestión de visitas técnicas, seguimiento de planes de acción y
-relevamientos de infraestructura.
+CRM de asistencia técnica industrial: clientes y sus plantas, equipos de asistencia
+(comercial, diseñador y AT), parque de máquinas, visitas técnicas y su informe,
+relevamientos, minutas de reunión, indicadores de gestión y control de asignaciones.
 
 **Stack:** FastAPI · SQLAlchemy · Alembic · Jinja2 · Tailwind CSS
 **Base de datos:** PostgreSQL (único motor, tanto en desarrollo como en producción).
@@ -10,6 +11,36 @@ relevamientos de infraestructura.
 - **Repositorio:** https://github.com/juan-antonio-gonzalez/CRM_AT
 - **Rama principal:** `main`
 - **Despliegue en el VPS:** ver [DEPLOYMENT.md](DEPLOYMENT.md)
+
+## Qué incluye
+
+| Módulo | Qué hace |
+|---|---|
+| **Clientes** | Fichas por cliente y por planta, con contactos, sector y ubicación. Cada planta se asigna a un **equipo**. |
+| **Equipos** | Comercial + diseñador + AT como una unidad reutilizable. La asignación guarda una foto del momento; hay una acción explícita para propagar los cambios. |
+| **Máquinas** | Parque instalado por planta: marca, modelo, serie, línea, con su informe técnico. |
+| **Visitas técnicas** | Programación, ejecución en planta e informe imprimible. |
+| **Relevamientos** | Técnicos por máquina, e infraestructura y logística, con fotos y reportes. |
+| **Minutas** | Reuniones con el cliente, con acuerdos, responsables y tareas. |
+| **Indicadores** | Tableros de visitas, calidad y asignación AT. |
+| **Usuarios y permisos** | Cada cuenta ve sólo las pantallas que tiene marcadas; se elige con casillas. |
+| **Caty** | Asistente de uso dentro de la aplicación: responde cómo se hace cada cosa, citando la pantalla. |
+
+Hay una **página pública de presentación** en `/` para quien llega sin sesión, con
+`robots.txt` y `sitemap.xml`. Sin sesión, el resto del sistema no se sirve.
+
+## Documentación
+
+| Archivo | Contenido |
+|---|---|
+| [docs/funcionalidades.md](docs/funcionalidades.md) | Qué hace cada pantalla y sus reglas |
+| [docs/usuarios-y-permisos.md](docs/usuarios-y-permisos.md) | Cómo se decide qué ve cada cuenta |
+| [docs/especificacion-equipos.md](docs/especificacion-equipos.md) | El diseño de equipos y sus seis fases |
+| [docs/especificacion-agente.md](docs/especificacion-agente.md) | Cómo funciona Caty |
+| [docs/impresion-informe-clientes.md](docs/impresion-informe-clientes.md) | La paginación de los informes en PDF |
+| [docs/iconos.md](docs/iconos.md) | El subset de íconos y sus dos formas de romperse |
+| [docs/basededatos.md](docs/basededatos.md) | Esquema y migraciones |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Despliegue en el VPS |
 
 ---
 
@@ -95,7 +126,7 @@ database.py             engine de PostgreSQL, get_db
 models.py               modelos SQLAlchemy
 enums.py                vocabularios de estado + normalización
 templating.py           entorno Jinja2 compartido y filtros
-routers/                endpoints (18 módulos)
+routers/                endpoints (24 módulos)
 services/               lógica de negocio y consultas
 alembic/versions/       migraciones
 templates/              plantillas Jinja2
@@ -208,7 +239,7 @@ lugar de 53 KB.
 DATABASE_URL="postgresql://crm_at:crm_at@127.0.0.1:5432/crm_at_test" pytest -q
 ```
 
-127 pruebas. Las que cubren la interfaz viven en `tests/test_ui.py` y verifican el
+577 pruebas. Las que cubren la interfaz viven en `tests/test_ui.py` y verifican el
 lenguaje visual, no el aspecto de una pantalla concreta: que no vuelvan las
 mayúsculas con tracking, que los indicadores usen el componente compartido, que los
 modales usen uno de los tres tamaños, que no haya texto bajo 12px, que los colores

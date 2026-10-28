@@ -2,8 +2,8 @@
 
 Guía para desplegar esta aplicación en un VPS Ubuntu con **PostgreSQL** y **Nginx**
 locales. Está escrita para el servidor `servidor.ejemplo.com` (Hostinger,
-Ubuntu 26.04, PostgreSQL 18, Nginx), que además ya sirve otra aplicación
-(`otro-sitio.com`). El despliegue de CRM-AT es **completamente independiente**: usa
+Ubuntu 26.04, PostgreSQL 18, Nginx), que además ya sirve otras aplicaciones. El despliegue de CRM-AT es
+**completamente independiente**: usa
 su propio usuario de sistema, su propia base de datos, su propio puerto y su
 propio virtual host, así que no interfiere con lo que ya está corriendo.
 
@@ -13,20 +13,24 @@ propio virtual host, así que no interfiere con lo que ya está corriendo.
 
 La aplicación está corriendo en el VPS con dominio propio y HTTPS válido:
 
+El dominio **no está escrito en el proyecto**: es un dato de cada instalación y se
+pasa por variable de entorno (`DOMAIN=... bash deploy/install.sh`).
+
 | Dato | Valor |
 |---|---|
-| URL | `https://ejemplo.com` |
+| URL | `https://<dominio>` |
 | Certificado | Let's Encrypt, renovación automática activa |
 | Usuario administrador | `admin` (la contraseña se define en el despliegue) |
 | Servicio | `systemctl status CRM-AT` |
 | Logs | `journalctl -u CRM-AT -f` |
-| Config | `/etc/crm-at/crm-at.env` (modo 600, dueño `root:crmat`) |
+| Config | `/etc/crm-at/crm-at.env` (modo 640, dueño `root:crmat`) |
+| Caty (instructora de uso) | Requiere `DEEPSEEK_API_KEY` en el archivo de config. Sin ella el botón no aparece y la aplicación funciona igual |
 | Código | `/var/www/crm_at` |
 | Base de datos | PostgreSQL local, base `crm_at`, usuario `crm_at` |
 | Puerto interno | `127.0.0.1:8020` |
 
 > Las credenciales **no se guardan en este archivo**. La contraseña del
-> administrador está en `/etc/crm-at/crm-at.env` (modo 600) y se cambia desde
+> administrador está en `/etc/crm-at/crm-at.env` (modo 640, dueño `root:crmat`) y se cambia desde
 > `/auth/perfil`. Este documento se versiona en el repositorio.
 
 ### Estado de la base de datos
@@ -53,9 +57,9 @@ python main.py seed --demo
 
 ### Las otras aplicaciones del VPS
 
-`otro-sitio.com`, `www.otro-sitio.com` y `otra-api` **no se tocan**. El vhost de este
-proyecto es un sitio aparte; `deploy/install.sh` nunca elimina ni el sitio
-`default` ni el de `ejemplo`.
+Los otros sitios del servidor **no se tocan**. El vhost de este proyecto es un
+sitio aparte; `deploy/install.sh` nunca elimina ni el sitio `default` ni ninguno
+de los que ya existan.
 
 ---
 
@@ -67,8 +71,13 @@ uso. Para actualizar el código:
 ```bash
 # Desde tu máquina
 rsync -a --delete --exclude '.git' --exclude '.venv*' --exclude '__pycache__' \
-  --exclude 'node_modules' --exclude '*.db' --exclude '.env' \
+  --exclude 'node_modules' --exclude '*.db' --exclude '.env' --exclude '.DS_Store' \
+  --exclude 'static/uploads' --exclude 'data' --exclude 'probe_informe.py' \
+  --exclude 'deploy/nginx-crm-at.conf' \
   ~/ruta/al/proyecto/ root@203.0.113.10:/var/www/crm_at/
+
+# Y después, para que los archivos queden del usuario del servicio:
+#   ssh root@203.0.113.10 'chown -R crmat:crmat /var/www/crm_at'
 
 # En el servidor
 ssh root@203.0.113.10
@@ -105,7 +114,7 @@ actualizar):
    no publica wheel para Python 3.14** y se compila desde fuente.
 2. Crea el usuario de sistema `crmat` (sin shell ni home real).
 3. Crea el rol `crm_at` y la base `crm_at` en el PostgreSQL existente, con una
-   contraseña aleatoria. **No toca la base `ejemplo`.**
+   contraseña aleatoria. **No toca ninguna otra base del servidor.**
 4. Crea el entorno virtual e instala `requirements.txt`.
 5. Genera `/etc/crm-at/crm-at.env` con `SECRET_KEY` aleatoria, la contraseña de
    base de datos y una contraseña inicial de administrador. El archivo queda en
@@ -133,10 +142,10 @@ curl -s http://127.0.0.1:8020/health
 nginx -t
 
 # Desde afuera
-curl -I https://ejemplo.com
+curl -I "https://${DOMINIO}"
 ```
 
-Navegá a `https://ejemplo.com` e iniciá sesión con el usuario `admin` y la
+Navegá a `https://<dominio>` e iniciá sesión con el usuario `admin` y la
 contraseña que imprimió el instalador.
 
 ---
@@ -145,12 +154,17 @@ contraseña que imprimió el instalador.
 
 | Tarea | Comando |
 |---|---|
-| Ver logs en vivo | `journalctl -u crm-at -f` |
-| Reiniciar | `systemctl restart crm-at` |
-| Detener | `systemctl stop crm-at` |
-| Estado | `systemctl status crm-at` |
+| Ver logs en vivo | `journalctl -u CRM-AT -f` |
+| Reiniciar | `systemctl restart CRM-AT` |
+| Detener | `systemctl stop CRM-AT` |
+| Estado | `systemctl status CRM-AT` |
+
+> **El nombre de la unidad lleva mayúsculas.** `crm-at` en minúsculas no existe, y
+> `systemctl is-active crm-at` no falla: responde `inactive`. Es decir, parece que la
+> aplicación está caída justo cuando está corriendo. Los comandos son
+> `systemctl <acción> CRM-AT`.
 | Revisión de esquema aplicada | `cd /var/www/crm_at && sudo -u crmat .venv/bin/python main.py check-schema` |
-| Editar configuración | `sudo nano /etc/crm-at/crm-at.env` y luego `systemctl restart crm-at` |
+| Editar configuración | `sudo nano /etc/crm-at/crm-at.env` y luego `systemctl restart CRM-AT` |
 
 ### Actualizar a una versión nueva
 
@@ -203,7 +217,7 @@ archivos; no están en el repositorio.
   arranque. Es idempotente. Si alguna vez necesitás arrancar sin migrar, definí
   `SKIP_MIGRATIONS=true`.
 - **Nginx no toca las otras aplicaciones**: el instalador agrega un sitio nuevo y
-  **no** elimina ni el sitio `default` ni el de `ejemplo`.
+  **no** elimina ni el sitio `default` ni ninguno de los que ya existan.
 - **Permisos de archivos**: el instalador normaliza **todos** los archivos del
   proyecto, no sólo el código Python. Un `rsync` desde otra máquina conserva el
   modo del archivo de origen, y un editor puede crear un archivo en modo `600`.
@@ -219,7 +233,19 @@ archivos; no están en el repositorio.
   Por eso la regla es general (`find "$APP_DIR" -type f -exec chmod 640 {} +`) y no
   una lista de extensiones.
 
-  **El origen son los permisos locales.** `rsync -a` preserva el modo del archivo de
+  **Ojo con `--delete`.** `rsync` no borra lo que está excluido, así que las exclusiones
+de arriba son lo que protege a los archivos que **sólo existen en el servidor**:
+`static/uploads` (las fotos que suben los usuarios), `data/` (datos de ejecución),
+`probe_informe.py` (el verificador del PDF del informe) y
+`deploy/nginx-crm-at.conf`. Sin esas exclusiones, un `--delete` los elimina sin
+preguntar. Antes de desplegar conviene mirar qué borraría:
+
+```bash
+rsync -a --delete --dry-run --itemize-changes <las mismas exclusiones> \
+  ~/ruta/al/proyecto/ root@203.0.113.10:/var/www/crm_at/ | grep deleting
+```
+
+**El origen son los permisos locales.** `rsync -a` preserva el modo del archivo de
   origen, y Git **no** versiona permisos más allá del bit de ejecución. Durante el
   desarrollo varios archivos quedaron en `600` en la máquina local —`run.py` y
   `templating.py` entre ellos— y cada `rsync -a` volvía a desplegarlos así. Antes
@@ -300,7 +326,7 @@ correcto y que `SELinux`/AppArmor no esté bloqueando el proxy local.
 
 **Certbot falla**
 
-Es casi siempre DNS. Verificá con `dig +short ejemplo.com` que devuelva
+Es casi siempre DNS. Verificá con `dig +short <dominio>` que devuelva
 `203.0.113.10`, esperá la propagación y reintentá:
 
 ```bash

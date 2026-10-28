@@ -17,11 +17,37 @@ Stack: **FastAPI + SQLAlchemy + SQLite + Jinja2 + Tailwind CSS**
 | `GET /auth/usuarios` | Lista de usuarios (admin) |
 | `POST /auth/usuarios/{id}/toggle` | Activar/desactivar usuario (admin) |
 | `POST /auth/usuarios/{id}/reset-password` | Resetear contraseña (admin) |
+| `GET /auth/usuarios/{id}/editar` | Editar la cuenta y **elegir qué pantallas ve** (admin) |
+| `POST /auth/usuarios/{id}/editar` | Guarda esos cambios (admin) |
 | `GET /auth/perfil` | Perfil del usuario actual |
 | `POST /auth/perfil` | Actualizar nombre, email, teléfono |
 | `POST /auth/perfil/password` | Cambiar contraseña |
 
-Roles: `admin` (acceso total) y `user` (acceso limitado).
+### Roles y permisos por pantalla
+
+Hay dos roles: `admin` (ve todo y administra las cuentas) y `user`.
+
+Además, **cada cuenta tiene su propia lista de pantallas que puede ver**, y se elige
+con casillas desde `Editar usuario` → **Qué ve esta cuenta**. Un usuario común ve
+exactamente las pantallas marcadas: las que no tiene **no aparecen en su menú y
+tampoco se pueden abrir escribiendo la dirección** (dan error 403).
+
+Tres estados posibles de esa lista:
+
+- **Sin configurar** — ve todas las pantallas menos las de administración, y además
+  las que se agreguen más adelante. Es el estado de las cuentas que ya existían.
+- **Con pantallas marcadas** — ve exactamente ésas.
+- **Ve todas las pantallas** (la casilla de arriba) — lo mismo que «sin configurar».
+
+Una cuenta con rol **Administrador** ve todo siempre, sin importar la lista: no se le
+puede restringir. Las pantallas **Usuarios** y **Papelera** son sólo para
+administradores y no se pueden asignar a un usuario común.
+
+La lista se puede configurar por pantalla, y cada grupo del menú (Análisis,
+Operaciones, Gestión) tiene un botón **Marcar todo** para darlo entero de una vez.
+
+Cambiar los permisos tiene efecto inmediato, y **desactivar una cuenta la echa en el
+acto**: no hay que esperar a que venza la sesión.
 
 ---
 
@@ -48,13 +74,47 @@ Roles: `admin` (acceso total) y `user` (acceso limitado).
 | Listar / buscar | `GET /clientes` |
 | Nuevo cliente | `GET /POST /nuevo-cliente` |
 | Editar cliente | `GET /editar-cliente/{id}` (partial) / `POST /editar-cliente/{id}` |
-| Reporte cliente | `GET /cliente-reporte/{id}` (PDF imprimible) |
+| Reporte cliente | `GET /cliente-reporte/{id}` (Informe Estratégico de Cuenta, para imprimir) |
 | Eliminar cliente | `POST /eliminar-cliente/{id}` (va a papelera) |
 | Exportar Excel | `GET /clientes/exportar-excel` |
 
+### Un cliente se asigna a un EQUIPO, no a tres personas sueltas
+
+El formulario **no** tiene tres desplegables (comercial, diseñador, AT): tiene un
+solo selector, **Equipo asignado**. Al elegir un equipo, sus tres integrantes se
+muestran debajo en modo lectura, para ver a quién se le asigna la cuenta antes de
+guardar. Los tres nombres se copian a la ficha del cliente.
+
+### Imprimir el informe del cliente
+
+`GET /cliente-reporte/{id}` es el **Informe Estratégico de Cuenta**: la ficha del
+cliente con sus contactos, su parque de maquinaria, el historial de visitas y las
+observaciones, lista para imprimir o guardar en PDF con el botón **Imprimir
+Reporte**.
+
+El informe se reparte en **hojas A4**: si el contenido no entra en una, se agregan
+las que hagan falta y cada hoja lleva su pie con el número —«Página 2 de 6»—. Las
+tablas que cruzan de hoja repiten su encabezado, y las tarjetas de máquina no se
+parten al medio. Con un cliente chico sale una sola hoja.
+
+### Sí: cada planta puede tener un equipo distinto
+
+**Sí, un cliente puede tener un equipo distinto en cada planta.** No hay un equipo
+único del cliente: el equipo se asigna **por planta**.
+
+Un cliente con tres plantas (tres fichas, una por planta) puede tener tres equipos
+diferentes, uno en cada una, con comerciales, diseñadores y AT distintos. «El equipo
+del cliente» siempre quiere decir «el equipo de esa planta».
+
+Al editar la ficha de una planta, hay una casilla **«Aplicar este equipo también a
+las otras N plantas»**: sin marcarla, sólo cambia esa planta.
+
+Cambiar de equipo en la ficha **sí** reescribe los tres nombres del cliente. Lo que
+no los reescribe es editar el equipo: ver la sección de Equipos.
+
 El formulario incluye:
 - Datos básicos (nombre, planta, sector, ciudad)
-- Asignación de asesor técnico, diseñador, comercial
+- **Equipo asignado** (un solo selector; los tres integrantes se ven debajo)
 - **Equipo del cliente:** tabla dinámica con columnas Nombre Completo (select + quick-add desde catálogo `ContactName`), Reporta a (select del mismo equipo), Sector/Departamento (select + quick-add desde catálogo `MemberSector`), Cargo/Función (mayúsculas forzadas), Teléfono
 - Observaciones
 - Visitas estándar y premium contratadas
@@ -73,6 +133,53 @@ El formulario incluye:
 - Renderiza árbol jerárquico agrupado por Sector/Departamento
 - Miembros sin `reports_to` son raíces; los que reportan a alguien se anidan debajo
 - Miembros sin sector se agrupan en "SIN SECTOR"
+
+---
+
+## 3c. Equipos (`/equipos`)
+
+Un **equipo** es un comercial, un diseñador y un AT, con un nombre. Es lo que se le
+asigna a un cliente en lugar de elegir las tres personas por separado.
+
+| Acción | Ruta |
+|---|---|
+| Listar / buscar equipos | `GET /equipos` |
+| Nuevo equipo (modal) | `POST /equipos/nuevo` |
+| Editar equipo | `GET /POST /equipos/{id}/editar` |
+| Desactivar equipo (con motivo) | `POST /equipos/{id}/desactivar` |
+| Reactivar equipo | `POST /equipos/{id}/reactivar` |
+| Actualizar las asignaciones | `POST /equipos/{id}/actualizar-asignaciones` |
+
+### Reglas
+
+- **El equipo se asigna por planta.** Un cliente con tres plantas puede tener tres
+  equipos distintos, uno en cada planta: no hay un equipo único del cliente.
+- **Los tres integrantes son obligatorios.** No hay equipo incompleto.
+- **Un equipo no se elimina: se desactiva**, y pide un motivo. Los clientes que lo
+  tuvieron guardan su referencia, así que borrarlo no tendría sentido.
+- **La misma persona puede estar en varios equipos**, y puede tener dos roles en el
+  mismo equipo. No se impide; si dos equipos activos tienen los mismos tres
+  miembros, el listado los marca como «repetido».
+- El nombre del equipo no se puede repetir.
+
+### Editar un equipo NO cambia a sus clientes
+
+Esto es lo más importante de entender. Cuando se asigna un equipo a un cliente, sus
+tres nombres quedan **copiados** en la ficha: es una foto del momento.
+
+Editar un equipo (cambiarle el AT, por ejemplo) **no** reescribe a los clientes que
+ya lo tenían. Es a propósito: un informe de marzo tiene que seguir diciendo quién
+estaba en marzo.
+
+Para que un equipo editado se refleje en sus clientes hay una acción explícita:
+**Actualizar las asignaciones**, desde el listado de Equipos (el botón de
+actualizar de cada fila). Antes de confirmar dice a cuántos clientes afecta, y
+reescribe los tres nombres de ésos y su asignación AT vigente.
+
+### Columnas del listado
+
+Equipo, Comercial, Diseñador, AT, Clientes (cuántos tiene asignados), Estado,
+Acciones.
 
 ---
 
@@ -270,6 +377,59 @@ Todos los textareas (objetivo, tema, responsable, acuerdo, observaciones, tarea)
 
 ---
 
+## 9b. Importar desde Excel (`/importar`)
+
+Carga masiva de **clientes** y **máquinas** desde una planilla `.xlsx`. El flujo es
+en dos pasos: se sube el archivo, se muestra una previsualización de lo que se
+importaría y de lo que no, y recién ahí se confirma. **La previsualización no escribe
+nada.**
+
+| Acción | Ruta |
+|---|---|
+| Descargar la plantilla | `GET /importar/plantilla/{tipo}` |
+| Previsualizar (sube el archivo) | `POST /importar/previsualizar` |
+| Confirmar | `POST /importar/confirmar` |
+
+Los encabezados se buscan por nombre: no importa el orden ni si están en mayúsculas.
+
+### Columnas de clientes
+
+Nombre (obligatoria), Planta, Sector industrial, **Equipo**, Asesor comercial,
+Asistente técnico, Diseñador, Dirección, Ciudad, Estado, Observaciones.
+
+### La columna Equipo
+
+Cuando está, **manda ella**: el cliente se asigna a ese equipo y sus tres integrantes
+se copian a la ficha. Las columnas Asesor comercial / Asistente técnico / Diseñador
+se mantienen para que las planillas que ya se usan sigan funcionando, pero si la fila
+nombra un equipo, se ignoran.
+
+Tres casos:
+
+- **El equipo existe** → se asigna. Si la fila además trae los tres nombres y no
+  coinciden con el equipo, se **avisa** y manda el equipo.
+- **No existe, pero la fila trae los tres nombres** → se crea el equipo con esos tres
+  y se asigna. Se avisa con qué nombre quedó.
+- **No existe y le faltan nombres** → la fila se **rechaza**, con el motivo. No se
+  arma un equipo a medias.
+
+Sin la columna Equipo se resuelve —o se crea— el equipo a partir de los tres nombres,
+como antes.
+
+### Errores y avisos son distintos
+
+La previsualización muestra por separado:
+
+- **Errores** — filas que **no** se van a importar, con el motivo (falta el nombre,
+  el cliente ya existe, está repetido en la planilla, el equipo no existe y faltan
+  miembros).
+- **Avisos** — filas que **sí** se importan, con algo que conviene mirar (la columna
+  Equipo pisó a los tres nombres, o el equipo se creó con otro nombre).
+
+Mezclarlos haría creer que una fila que entra se descartó.
+
+---
+
 ## 10. Infraestructura y Logística (`/relevamiento-infraestructura`)
 
 | Acción | Ruta |
@@ -334,9 +494,19 @@ Secciones: Almacenamiento, Empaque, Paletizado, Logística (cada una como JSON i
 Cliente, AT, Estado (badge), Estándar, Premium, Total, Realizadas, Pendientes, Acciones
 
 ### Modal de asignación
-Campos: Cliente, AT Asignado, Visitas Estándar, Visitas Premium, Estado.
+Campos: Cliente, **Planta**, AT Asignado, Visitas Estándar, Visitas Premium, Estado.
 
-Asigna a cada cliente: asesor técnico, visitas estándar/premium, y estado de seguimiento.
+**La asignación es de una planta, no del cliente entero.** Al elegir el cliente se
+cargan sus plantas en un segundo selector. Un cliente con tres plantas tiene tres
+asignaciones, una por planta, y cada una puede tener un AT distinto.
+
+Por eso el listado muestra **una fila por cliente y planta**, con la planta debajo
+del nombre: antes se unía sólo por nombre de cliente y un cliente con varias plantas
+mostraba una sola fila, con la planta que ganara el desempate y un único AT para
+todas.
+
+Asigna a cada planta: asesor técnico, visitas estándar/premium, y estado de
+seguimiento.
 
 ---
 
@@ -412,16 +582,22 @@ Filtros en la UI: Todos, Clientes, Máquinas, Productos, Visitas, Visitas V2, Re
 
 ## Navegación (Sidebar)
 
+El menú se arma desde el catálogo de módulos (`services/permisos.py`) y **se filtra
+por lo que ve cada usuario**: un usuario común sólo ve las pantallas que tiene
+marcadas.
+
 ### Análisis
 - KPIs - AT (`/`)
-- KPIs Asignación AT (`/control-at`)
 - KPIs Calidad AT (`/kpi-calidad`)
-- KPIs AT (tabla resumen) (`/kpis-at`)
+- KPIs Asignación AT (`/control-at`)
+- Historial Asignación AT (`/historial-at`)
 
 ### Operaciones
 - Biblioteca de Clientes (`/clientes`)
+- Organigrama (`/organigrama`)
+- Equipos (`/equipos`)
 - Biblioteca de Productos (`/productos`)
-- Inventario de Maquinaria (`/maquinaria`)
+- Biblioteca de Máquinas (`/maquinaria`)
 
 ### Gestión
 - Relevamiento Técnico (`/relevamiento2`)
@@ -430,7 +606,13 @@ Filtros en la UI: Todos, Clientes, Máquinas, Productos, Visitas, Visitas V2, Re
 - Infraestructura & Logística (`/relevamiento-infraestructura`)
 - Seguimiento Plan (`/seguimiento-plan`)
 - Agenda de Visitas (`/agenda`)
-- Configuración (`/configuracion`)
+- Historial de cambios (`/historial-cambios`)
+- Importar desde Excel (`/importar`)
+- Tablas Auxiliares (`/configuracion`)
+
+### Administración (sólo administradores)
+- Papelera (`/papelera`)
+- Usuarios (`/auth/usuarios`)
 
 ---
 
