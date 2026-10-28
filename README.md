@@ -10,7 +10,7 @@ relevamientos, minutas de reunión, indicadores de gestión y control de asignac
 
 - **Repositorio:** https://github.com/juan-antonio-gonzalez/CRM_AT
 - **Rama principal:** `main`
-- **Despliegue en el VPS:** ver [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Despliegue:** ver [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Qué incluye
 

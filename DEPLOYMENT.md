@@ -2,9 +2,9 @@
 
 Cómo llevar la aplicación a un servidor Ubuntu desde cero, y cómo mantenerla.
 
-Está escrita para que sirva en **cualquier servidor**, no sólo en el que se usa hoy.
-Todo lo que depende de la instalación —el dominio, el puerto, las rutas— es un
-parámetro; al final hay un apéndice con los datos concretos del despliegue actual.
+Está escrita para servir en **cualquier servidor**. Todo lo que depende de la
+instalación —el dominio, el puerto, las rutas— es un parámetro que se pasa al
+instalador; el proyecto no lleva ninguno adentro.
 
 Para entender el sistema antes de desplegarlo: [docs/arquitectura.md](docs/arquitectura.md).
 
@@ -72,8 +72,8 @@ Es **idempotente**: se puede volver a correr para actualizar. No regenera las
 credenciales si ya existen.
 
 > **Anotá la contraseña del administrador que imprime el instalador.** No se vuelve
-> a mostrar y está hasheada en la base. Si se pierde, se reemplaza con
-> `crm-at-clave` (ver §9).
+> a mostrar y está hasheada en la base: si se pierde, no se recupera, se reemplaza
+> (ver §9).
 
 ### Opciones
 
@@ -302,17 +302,7 @@ una vez en una base descartable.
 | No se puede entrar después de restaurar | El `.env` cambió de `SECRET_KEY` | Volver a la clave anterior o iniciar sesión de nuevo |
 | El sitio carga sin estilos | El CSS no está compilado | `npm run build:css` y volver a desplegar |
 | Un ícono se ve como texto | El glifo no está en la fuente | `bash deploy/subset-iconos.sh` |
-| Olvidé la contraseña del administrador | bcrypt, irreversible | `crm-at-clave` en el servidor |
-
-### Reemplazar una contraseña
-
-```bash
-ssh root@servidor
-crm-at-clave                    # pide la contraseña dos veces, de forma interactiva
-crm-at-clave otro_usuario       # o para otra cuenta
-```
-
-La contraseña no queda en el historial de comandos.
+| Olvidé la contraseña del administrador | bcrypt, irreversible | Se reemplaza desde el servidor; no hay forma de leerla |
 
 ### El dominio está bloqueado en una red corporativa
 
@@ -336,60 +326,3 @@ es que el área de sistemas lo permita o lo recategorice.
   además la huella de su propio archivo, porque la caché de fuentes va por URL.
 - **Nginx no toca otras aplicaciones**: agrega un sitio, no borra ninguno.
 - **Logs**: `journalctl -u CRM-AT -f`. Con `LOG_JSON=true` salen en JSON.
-
----
-
-## Apéndice — El despliegue actual
-
-Datos de la instalación que está en producción hoy, por si hay que operarla.
-El dominio y la dirección del servidor no se publican: son datos de la instalación,
-no del proyecto.
-
-| | |
-|---|---|
-| URL | el dominio de la instalación |
-| Servidor | un VPS Ubuntu 26.04 con PostgreSQL 18 |
-| Aplicación | `/var/www/crm_at`, usuario `crmat` |
-| Configuración | `/etc/crm-at/crm-at.env` (modo 640, `root:crmat`) |
-| Servicio | `CRM-AT.service`, puerto 8020, 2 workers |
-| Vhost | `/etc/nginx/sites-available/CRM-AT` |
-| Certificado | Let's Encrypt, renovación automática activa |
-| Backups | `deploy/backup.sh` |
-
-### Comandos del día a día
-
-```bash
-systemctl status CRM-AT
-systemctl restart CRM-AT
-journalctl -u CRM-AT -n 100 --no-pager
-tail -f /var/log/nginx/access.log
-crm-at-clave                       # reemplazar una contraseña
-cd /var/www/crm_at && sudo -u crmat .venv/bin/python main.py check-schema
-```
-
-### Actualizar
-
-```bash
-# Desde la máquina de desarrollo
-rsync -rlptD --exclude '.git' --exclude '.venv' --exclude '.venv-work' \
-      --exclude '__pycache__' --exclude 'node_modules' --exclude '*.db' \
-      --exclude '.env' --exclude '.DS_Store' --exclude '.pytest_cache' \
-      --exclude 'static/uploads' ./ usuario@servidor:/var/www/crm_at/
-
-# En el servidor
-chown -R crmat:crmat /var/www/crm_at
-chmod -R u+rwX,go+rX /var/www/crm_at
-systemctl restart CRM-AT
-```
-
-### Las otras aplicaciones del servidor
-
-El servidor sirve otros sitios además de éste. **No se tocan**: cada uno tiene su
-propio vhost, su propia base y su propio usuario. El instalador tampoco los toca.
-
-### Estado de la base
-
-Al momento de escribir esto la base de producción está **vacía** de datos de
-negocio (0 clientes, 0 máquinas, 0 visitas), con los catálogos sembrados y cinco
-usuarios. Eso significa que no hay nada que migrar a mano ni respaldos históricos
-que recuperar: se puede reinstalar sin pérdida.

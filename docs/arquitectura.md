@@ -132,7 +132,7 @@ validar.
 ## 4. Sesión y contraseñas
 
 - **Contraseñas**: bcrypt (`passlib`). Irreversibles; si alguien la olvida, se
-  reemplaza, no se recupera. En el servidor existe `crm-at-clave` para eso.
+  reemplaza, no se recupera.
 - **Sesión**: JWT firmado con `SECRET_KEY`, en una cookie `session`. Vida
   `SESSION_EXPIRE_HOURS` (24 por defecto). El token lleva `sub` (id), `username` y
   `role`.
