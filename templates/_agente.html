@@ -1,0 +1,75 @@
+{# ── Caty: la instructora de uso ──────────────────────────────────────────────
+   Panel flotante, no modal: el usuario sigue viendo la aplicación mientras lee.
+   Por eso NO lleva `role="dialog"` ni `aria-modal="true"` — sería mentirle al
+   lector de pantalla, porque no bloquea nada. Es una región complementaria.
+
+   El widget aparece en todas las pantallas con sesión porque se incluye desde
+   layout.html. No aparece en login, que no extiende del layout.
+   ──────────────────────────────────────────────────────────────────────────── #}
+{# `is defined` no es defensivo de más: `test_ui.py` renderiza layout.html con un
+   Environment de Jinja propio, sin los globales de `templating.py`. Sin la guarda,
+   ese render explota con UndefinedError. #}
+{% if agente_habilitado is defined and agente_habilitado() %}
+<section id="caty" role="complementary" aria-label="{{ agente_nombre }}, instructora de uso"
+    data-usuario="{{ request.state.user.sub if request.state.user else 'anonimo' }}"
+    class="fixed bottom-4 right-4 z-[150] flex flex-col items-end gap-3 print:hidden">
+
+    {# ── Panel ── El `hidden` vive en este contenedor y el `flex` en el de
+       adentro: si compartieran elemento, habría que depender del orden en que
+       Tailwind emite las utilidades de display. #}
+    <div id="caty-panel" hidden
+        class="hidden h-[min(36rem,calc(100vh-7rem))] w-[min(26rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-superficie-borde bg-superficie-card shadow-pop">
+        <div class="flex h-full flex-col">
+
+            <header class="flex items-center gap-3 border-b border-superficie-borde bg-superficie-suave px-4 py-3">
+                <span class="material-symbols-rounded text-primary" aria-hidden="true">smart_toy</span>
+                <div class="min-w-0 flex-1">
+                    <h2 id="caty-titulo" class="truncate text-sm font-bold text-texto-fuerte">{{ agente_nombre }}</h2>
+                    <p class="truncate text-2xs text-texto-suave">Te enseño a usar la aplicación</p>
+                </div>
+                {# Limpiar arranca deshabilitado: con la conversación vacía no hay nada
+                   que limpiar, y el botón apagado lo dice sin explicaciones. #}
+                <button type="button" id="caty-limpiar" disabled
+                    class="rounded-md p-1 text-texto-suave transition-colors hover:bg-superficie-card hover:text-peligro-600 focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-texto-suave">
+                    <span class="material-symbols-rounded" aria-hidden="true">delete_sweep</span>
+                    <span class="sr-only">Limpiar la conversación</span>
+                </button>
+                <button type="button" id="caty-cerrar"
+                    class="rounded-md p-1 text-texto-suave transition-colors hover:bg-superficie-card hover:text-texto-fuerte focus:outline-none focus:ring-2 focus:ring-primary">
+                    <span class="material-symbols-rounded" aria-hidden="true">close</span>
+                    <span class="sr-only">Cerrar</span>
+                </button>
+            </header>
+
+            {# `role="log"` + `aria-live="polite"`: el lector de pantalla anuncia
+               cada respuesta sin cortar lo que la persona esté leyendo. #}
+            <div id="caty-mensajes" role="log" aria-live="polite" aria-relevant="additions"
+                class="flex-1 space-y-3 overflow-y-auto px-4 py-4"></div>
+
+            <form id="caty-form" class="border-t border-superficie-borde p-3" autocomplete="off">
+                <label for="caty-entrada" class="sr-only">Escribí tu pregunta sobre el uso de la aplicación</label>
+                <div class="flex items-end gap-2">
+                    <textarea id="caty-entrada" rows="1" maxlength="1000"
+                        placeholder="¿Cómo cargo un cliente?"
+                        class="max-h-28 flex-1 resize-none rounded-md border border-superficie-fuerte bg-superficie-card px-3 py-2 text-sm text-texto-base placeholder:text-texto-tenue focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+                    <button type="submit" id="caty-enviar"
+                        class="flex shrink-0 items-center justify-center rounded-lg bg-primary p-2 text-white shadow-primary/10 transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50">
+                        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+                        <span class="sr-only">Enviar</span>
+                    </button>
+                </div>
+                <div id="caty-aviso" role="alert" class="mt-2 hidden text-2xs text-peligro-600"></div>
+            </form>
+
+        </div>
+    </div>
+
+    {# ── Botón flotante ── #}
+    <button type="button" id="caty-boton" aria-expanded="false" aria-controls="caty-panel"
+        class="flex items-center gap-2 rounded-lg bg-primary px-4 py-3 text-white shadow-pop transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+        <span class="material-symbols-rounded" aria-hidden="true">smart_toy</span>
+        <span class="text-xs font-bold">{{ agente_nombre }}</span>
+    </button>
+
+</section>
+{% endif %}

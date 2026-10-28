@@ -123,16 +123,22 @@ def _buscar_minutas(db, q):
     } for m in filas]
 
 
+# El último campo es el módulo al que pertenece el grupo: sin él, la búsqueda
+# mostraba minutas a quien no tiene Minutas, y el enlace lo mandaba a un 403.
 GRUPOS = [
-    ("clientes", "Clientes", _buscar_clientes, "/clientes?q={q}"),
-    ("visitas", "Visitas técnicas", _buscar_visitas, "/visitas2?q={q}"),
-    ("maquinas", "Máquinas", _buscar_maquinas, "/maquinaria?q={q}"),
-    ("minutas", "Minutas", _buscar_minutas, "/minutas?q={q}"),
+    ("clientes", "Clientes", _buscar_clientes, "/clientes?q={q}", "clientes"),
+    ("visitas", "Visitas técnicas", _buscar_visitas, "/visitas2?q={q}", "visitas2"),
+    ("maquinas", "Máquinas", _buscar_maquinas, "/maquinaria?q={q}", "maquinaria"),
+    ("minutas", "Minutas", _buscar_minutas, "/minutas?q={q}", "minutas"),
 ]
 
 
-def buscar(db, q: str):
-    """Busca en las cuatro entidades. Devuelve (grupos, total)."""
+def buscar(db, q: str, modulos=None):
+    """Busca en las cuatro entidades. Devuelve (grupos, total).
+
+    `modulos` es lo que ve el usuario. Con `None` no se filtra, para los llamados
+    que no vienen de una sesión.
+    """
     q = (q or "").strip()
     if len(q) < 2:
         # Con una sola letra cualquier cosa coincide y el resultado no ayuda.
@@ -140,7 +146,9 @@ def buscar(db, q: str):
 
     grupos = []
     total = 0
-    for clave, titulo, funcion, plantilla_enlace in GRUPOS:
+    for clave, titulo, funcion, plantilla_enlace, modulo in GRUPOS:
+        if modulos is not None and modulo not in modulos:
+            continue
         try:
             resultados = funcion(db, q)
         except Exception:

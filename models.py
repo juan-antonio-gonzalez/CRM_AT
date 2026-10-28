@@ -15,6 +15,12 @@ class User(Base):
     full_name = Column(String, default="")
     phone = Column(String, default="")
     role = Column(String, default="user")  # user, admin
+    # Las claves de los módulos que ve, según `services/permisos.py`.
+    #
+    # `None` significa **sin configurar**, y es distinto de la lista vacía: los
+    # usuarios que ya existían tienen que seguir viendo lo de siempre, no quedar sin
+    # nada. Ver `permisos.visibles()`.
+    modulos = Column(JSON, nullable=True, default=None)
     is_active = Column(Boolean, default=True)
     avatar_url = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
@@ -64,6 +70,15 @@ class Customer(Base):
     assigned_commercial = Column(String)
     technical_advisor = Column(String)
     designer = Column(String)
+    # El equipo asignado a esta fila, que ya es un par cliente-planta: un cliente
+    # con tres plantas son tres filas, así que una sola columna alcanza para que
+    # cada planta tenga su equipo.
+    #
+    # Las tres columnas de arriba NO se reemplazan por esto: se llenan desde el
+    # equipo al asignarlo, y siguen siendo lo que leen el listado, los filtros,
+    # los KPIs, los reportes y la importación. Son la foto del momento en que se
+    # asignó; el equipo es la fuente de verdad para lo que viene.
+    team_id = Column(Integer, ForeignKey("teams.id"), nullable=True, index=True)
     address = Column(String)
     city = Column(String)
     status = Column(String, default=CustomerStatus.PROSPECTO.value)
@@ -233,11 +248,30 @@ class TrashItem(Base):
         Index("ix_trash_items_restored_entity_deleted", "restored_at", "entity_type", "deleted_at"),
     )
 
-class BaseCatalogMixin:
+class BaseSoftDeleteMixin:
+    """La familia de baja lógica: no se borra, se desactiva con un motivo.
+
+    La comparten los catálogos y otras entidades que también se dan de baja, como
+    los equipos. Está separada de `BaseCatalogMixin` a propósito: heredar del
+    catálogo significa además "esto se mantiene desde Tablas Auxiliares", y un
+    equipo tiene su propia pantalla porque son tres miembros y una baja con
+    consecuencias sobre los clientes.
+    """
+
     is_active = Column(Boolean, default=True)
     inactivation_reason = Column(Text, nullable=True)
     inactivated_by_id = Column(Integer, nullable=True)
     inactivated_at = Column(DateTime, nullable=True)
+
+
+class BaseCatalogMixin(BaseSoftDeleteMixin):
+    """Un catálogo simple: sólo tiene un nombre, y se mantiene desde Configuración.
+
+    `tests/test_catalogos.py` recorre exactamente las clases que heredan de acá
+    para exigir que estén registradas en Tablas Auxiliares y que suban el nombre a
+    mayúsculas. Por eso lo que no sea un catálogo de un nombre no debe heredar
+    este mixín: rompería esa garantía sin que nadie la esté cuidando.
+    """
 
 
 class TechnicalAdvisor(Base, BaseCatalogMixin):
@@ -266,6 +300,57 @@ class CommercialAdvisor(Base, BaseCatalogMixin):
     @validates('name')
     def validate_name(self, key, value):
         return value.strip().upper()
+
+
+class Team(Base, BaseSoftDeleteMixin):
+    """Un equipo comercial: comercial, diseñador y AT.
+
+    Existe para no volver a elegir tres personas de tres listas cada vez que se da
+    de alta un cliente. Se arma una vez y se reutiliza.
+
+    **Los tres miembros son obligatorios a nivel de columna.** La regla es que un
+    equipo no puede estar incompleto, y eso se garantiza donde no se puede
+    saltear: una validación de formulario la evade cualquier otro camino de
+    escritura —una importación, un script, la consola—.
+
+    Los miembros se guardan por **nombre** y no por id, como el resto del
+    esquema: `customers.assigned_commercial` y compañía ya son texto, y los
+    catálogos tienen el nombre único. Guardar ids acá obligaría a traducir en
+    cada lectura para convivir con las 208 que ya existen.
+
+    **Una persona puede integrar varios equipos.** Por eso `commercial`,
+    `designer` y `technical_advisor` no llevan ninguna restricción de unicidad:
+    la única es `name`, el nombre del equipo. Agregarle un `unique` a un miembro
+    parecería razonable y le quitaría a la empresa la posibilidad de tener a la
+    misma persona en dos zonas, dos turnos o dos cadenas.
+
+    **Asignar un equipo copia sus tres nombres al cliente.** La copia es una foto
+    del momento: editar el equipo después no reescribe a los clientes que ya lo
+    tenían, porque un informe de marzo tiene que seguir diciendo quién estaba en
+    marzo.
+    """
+
+    __tablename__ = "teams"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True, nullable=False)
+    commercial = Column(String, nullable=False)
+    designer = Column(String, nullable=False)
+    technical_advisor = Column(String, nullable=False)
+    observations = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow,
+                        onupdate=datetime.datetime.utcnow)
+
+    @validates('name', 'commercial', 'designer', 'technical_advisor')
+    def validate_texto(self, key, value):
+        """Mismo criterio que los catálogos: sin espacios sobrantes, en mayúsculas.
+
+        Si los miembros no se normalizaran igual que en los catálogos, un equipo
+        con «Pérez » y un cliente filtrado por «PÉREZ» no se encontrarían nunca.
+        """
+        return (value or "").strip().upper()
+
 
 class IndustrialSector(Base, BaseCatalogMixin):
     __tablename__ = "industrial_sectors"
@@ -400,6 +485,19 @@ class ATAssignment(Base):
     __tablename__ = "at_assignments"
     id = Column(Integer, primary_key=True, index=True)
     customer_name = Column(String, index=True)
+    # La planta de la asignación.
+    #
+    # Antes la asignación era sólo por nombre de cliente, y con un cliente de
+    # varias plantas eso obligaba a un único AT para todas: `Control de
+    # Asignación AT` joinea por nombre y después descarta filas agrupando por
+    # nombre, así que mostraba una sola fila con la planta que ganara el
+    # desempate. Con un equipo por planta —y por lo tanto un AT por planta— eso
+    # ya no se puede representar.
+    #
+    # Es nullable porque las asignaciones que ya existían no tienen planta. La
+    # base está vacía, así que hoy no hay ninguna; queda nullable para que un
+    # registro viejo no rompa la lectura.
+    plant = Column(String, nullable=True)
     technical_advisor = Column(String)
     standard_visits = Column(Integer, default=0)
     premium_visits = Column(Integer, default=0)
@@ -416,6 +514,9 @@ class ATAssignment(Base):
     __table_args__ = (
         Index("ix_at_assignments_customer_valid_to", "customer_name", "valid_to"),
         Index("ix_at_assignments_advisor_valid_to", "technical_advisor", "valid_to"),
+        # La búsqueda pasa a ser por cliente y planta: la asignación vigente de
+        # una planta puntual.
+        Index("ix_at_assignments_customer_plant", "customer_name", "plant"),
         Index("ix_at_assignments_inactivated_by_id", "inactivated_by_id"),
     )
 

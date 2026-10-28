@@ -1,0 +1,349 @@
+{% extends "layout.html" %}
+
+{% block title %}Equipos | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex flex-col">
+    <h2 class="text-sm font-semibold text-texto-fuerte tracking-tighter">Equipos</h2>
+    <p class="text-2xs text-texto-suave font-bold">Comercial, diseñador y AT</p>
+</div>
+{% endblock %}
+
+{% from "_ui.html" import modal, pie_modal %}
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-4 animate-fade-in pb-10">
+
+    {# Un equipo es la unidad que se le asigna a un cliente. Antes eran tres
+       elecciones sueltas en el alta; armar equipos permite reutilizarlos y
+       cambiarlos de una sola vez. #}
+    <div class="bg-primary-50 border border-primary-200 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="material-symbols-rounded text-primary shrink-0" aria-hidden="true">info</span>
+        <p class="text-xs text-texto-base leading-relaxed">
+            Un equipo es un <strong>comercial</strong>, un <strong>diseñador</strong> y un <strong>AT</strong>
+            juntos. Se arma una vez y después se le asigna a cada cliente —o a cada planta de un
+            cliente— en lugar de elegir las tres personas por separado.
+        </p>
+    </div>
+
+    {% if catalogos_vacios %}
+    <div class="bg-alerta-50 border border-alerta-200 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="material-symbols-rounded text-alerta-600 shrink-0" aria-hidden="true">warning</span>
+        <p class="text-xs text-texto-base">
+            Todavía no hay {{ catalogos_vacios|join(', ') }} cargados, así que no se puede armar un
+            equipo. Se cargan en
+            <a href="/configuracion" class="font-bold text-primary underline">Configuración → Tablas Auxiliares</a>.
+        </p>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    {# El error vuelve a la pantalla con lo que el usuario había escrito: perder
+       cuatro campos por un error de tipeo sería peor que el error. #}
+    <div role="alert" class="bg-peligro-50 border border-peligro-200 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="material-symbols-rounded text-peligro-600 shrink-0" aria-hidden="true">error</span>
+        <p class="text-xs text-peligro-700 font-semibold">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <form method="GET" action="/equipos" class="bg-superficie-card p-4 rounded-lg border border-superficie-borde">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="relative flex-1 min-w-[200px]">
+                <label for="filtro-q" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Buscar</label>
+                <div class="relative">
+                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-texto-tenue text-lg" aria-hidden="true">search</span>
+                    <input id="filtro-q" name="q" value="{{ filtros.q }}"
+                        placeholder="Equipo, comercial, diseñador o AT..."
+                        class="w-full pl-9 pr-4 py-2 bg-superficie-suave border border-superficie-borde rounded-lg text-xs font-bold">
+                </div>
+            </div>
+            <div class="flex flex-col min-w-[140px]">
+                <label for="filtro-estado" class="text-2xs font-semibold tracking-normal text-texto-tenue mb-1">Estado</label>
+                <select id="filtro-estado" name="estado"
+                    class="bg-superficie-suave border border-superficie-borde rounded-lg px-3 py-1.5 text-xs font-bold">
+                    <option value="" {% if filtros.estado == '' %}selected{% endif %}>Todos</option>
+                    <option value="activos" {% if filtros.estado == 'activos' %}selected{% endif %}>Activos</option>
+                    <option value="inactivos" {% if filtros.estado == 'inactivos' %}selected{% endif %}>Inactivos</option>
+                </select>
+            </div>
+            <button type="submit"
+                class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-semibold tracking-normal hover:bg-primary/90">
+                Filtrar
+            </button>
+            <a href="/equipos" class="text-xs font-bold text-texto-tenue hover:text-texto-base px-2 py-1.5">Limpiar</a>
+            {# `data-modal-open` es el atributo que escucha el controlador de
+               modales de `app.js`. Estaba como `data-abrir-modal`, que nadie
+               atiende: el botón se veía habilitado y no hacía nada. #}
+            <button type="button" data-modal-open="nuevoTeamModal"
+                {% if catalogos_vacios %}disabled title="Falta cargar los catálogos de personas"{% endif %}
+                class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all ml-auto disabled:opacity-50 disabled:cursor-default">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">add_circle</span>
+                Nuevo Equipo
+            </button>
+        </div>
+    </form>
+
+    <div class="bg-superficie-card rounded-lg border border-superficie-borde overflow-hidden">
+        <div class="overflow-auto max-h-[70vh]">
+            <table class="w-full text-left border-collapse">
+                <thead class="sticky top-0 z-10 bg-superficie-card">
+                    <tr class="bg-superficie-suave/50 border-b border-superficie-borde">
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Equipo</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Comercial</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">Diseñador</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal bg-superficie-card" scope="col">AT</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Clientes</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-center bg-superficie-card" scope="col">Estado</th>
+                        <th class="px-6 py-5 text-2xs font-semibold text-texto-suave tracking-normal text-right bg-superficie-card" scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-superficie-borde">
+                    {% for equipo in equipos %}
+                    <tr class="hover:bg-superficie-suave/50 transition-colors group">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-texto-fuerte">{{ equipo.name }}</span>
+                                {% if equipo.id in repetidos %}
+                                <span title="Otro equipo activo tiene los mismos tres miembros"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold bg-alerta-50 text-alerta-700">
+                                    <span class="material-symbols-rounded text-sm" aria-hidden="true">content_copy</span>
+                                    repetido
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% if equipo.observations %}
+                            <span class="text-2xs text-texto-tenue">{{ equipo.observations }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-5 text-xs text-texto-base font-medium">{{ equipo.commercial }}</td>
+                        <td class="px-6 py-5 text-xs text-texto-base font-medium">{{ equipo.designer }}</td>
+                        <td class="px-6 py-5 text-xs text-texto-base font-medium">{{ equipo.technical_advisor }}</td>
+                        <td class="px-6 py-5 text-center">
+                            {% set asignados = conteo.get(equipo.id, 0) %}
+                            {% if asignados %}
+                            <a href="/clientes?equipo={{ equipo.id }}"
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-2xs font-bold bg-primary-50 text-primary-700 hover:bg-primary-100">
+                                {{ asignados }}
+                            </a>
+                            {% else %}
+                            <span class="text-2xs text-texto-tenue">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-2xs font-bold {% if equipo.is_active %}bg-exito-100 text-exito-700{% else %}bg-superficie-suave text-texto-suave{% endif %}">
+                                <span class="w-1.5 h-1.5 rounded-full {% if equipo.is_active %}bg-exito-500{% else %}bg-superficie-fuerte{% endif %}"></span>
+                                {{ 'Activo' if equipo.is_active else 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <div class="flex justify-end gap-2">
+                                {% if equipo.is_active %}
+                                <a href="/equipos/{{ equipo.id }}/editar"
+                                    class="p-2 text-texto-tenue hover:text-primary transition-colors bg-superficie-suave rounded-lg border border-superficie-borde"
+                                    title="Editar equipo" aria-label="Editar equipo {{ equipo.name }}">
+                                    <span class="material-symbols-rounded text-lg" aria-hidden="true">edit</span>
+                                </a>
+                                {% if conteo.get(equipo.id, 0) %}
+                                {# Sólo tiene sentido si hay clientes que reflejar. Un equipo
+                                   sin clientes ya está actualizado por definición. #}
+                                <button type="button" data-actualizar-equipo="{{ equipo.id }}"
+                                    data-equipo-nombre="{{ equipo.name }}"
+                                    data-equipo-clientes="{{ conteo.get(equipo.id, 0) }}"
+                                    class="p-2 text-texto-tenue hover:text-primary transition-colors bg-superficie-suave rounded-lg border border-superficie-borde"
+                                    title="Actualizar las asignaciones de este equipo"
+                                    aria-label="Actualizar las asignaciones de {{ equipo.name }}">
+                                    <span class="material-symbols-rounded text-lg" aria-hidden="true">sync</span>
+                                </button>
+                                {% endif %}
+                                <button type="button" data-desactivar-equipo="{{ equipo.id }}"
+                                    data-equipo-nombre="{{ equipo.name }}"
+                                    data-equipo-clientes="{{ conteo.get(equipo.id, 0) }}"
+                                    class="p-2 text-texto-tenue hover:text-peligro-500 transition-colors bg-superficie-suave rounded-lg border border-superficie-borde"
+                                    title="Desactivar equipo" aria-label="Desactivar equipo {{ equipo.name }}">
+                                    <span class="material-symbols-rounded text-lg" aria-hidden="true">block</span>
+                                </button>
+                                {% else %}
+                                <form action="/equipos/{{ equipo.id }}/reactivar" method="POST" class="inline">
+                                    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+                                    <button type="submit"
+                                        class="p-2 text-texto-tenue hover:text-exito-600 transition-colors bg-superficie-suave rounded-lg border border-superficie-borde"
+                                        title="Reactivar equipo" aria-label="Reactivar equipo {{ equipo.name }}">
+                                        <span class="material-symbols-rounded text-lg" aria-hidden="true">restart_alt</span>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-16 text-center">
+                            <span class="material-symbols-rounded text-4xl text-texto-tenue" aria-hidden="true">diversity_3</span>
+                            <p class="mt-2 text-sm font-bold text-texto-suave">Todavía no hay equipos</p>
+                            <p class="text-xs text-texto-tenue">
+                                {% if filtros.q or filtros.estado %}
+                                Ningún equipo coincide con el filtro.
+                                {% else %}
+                                Armá el primero para poder asignarlo a los clientes.
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="bg-superficie-suave/50 px-6 py-3 border-t border-superficie-borde">
+            <span class="text-2xs font-bold text-texto-suave">
+                Mostrando {{ equipos|length }} equipo{{ 's' if equipos|length != 1 else '' }}
+            </span>
+        </div>
+    </div>
+</div>
+
+{% call modal('nuevoTeamModal', 'Nuevo equipo', 'formulario', 'diversity_3', 'primario',
+              'Comercial, diseñador y AT. Los tres son obligatorios.') %}
+<form action="/equipos/nuevo" method="POST" class="space-y-4">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+    <div class="space-y-1.5">
+        <label for="nuevo-team-name" class="text-2xs font-semibold text-texto-tenue">Nombre del equipo *</label>
+        <input id="nuevo-team-name" name="name" required maxlength="80"
+            value="{{ form.name or '' }}" placeholder="Ej: Equipo Norte"
+            class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm font-semibold">
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for campo, etiqueta in [('commercial', 'Comercial'), ('designer', 'Diseñador'), ('technical_advisor', 'AT')] %}
+        <div class="space-y-1.5">
+            <label for="nuevo-team-{{ campo }}" class="text-2xs font-semibold text-texto-tenue">{{ etiqueta }} *</label>
+            <select id="nuevo-team-{{ campo }}" name="{{ campo }}" required
+                class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm font-semibold">
+                <option value="">Seleccionar...</option>
+                {% for persona in catalogos[campo] %}
+                <option value="{{ persona.name }}" {% if form[campo] == persona.name %}selected{% endif %}>{{ persona.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="space-y-1.5">
+        <label for="nuevo-team-obs" class="text-2xs font-semibold text-texto-tenue">Observaciones</label>
+        <input id="nuevo-team-obs" name="observations" maxlength="200"
+            value="{{ form.observations or '' }}" placeholder="Opcional"
+            class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm">
+    </div>
+    {% call pie_modal() %}
+    <button type="button" data-modal-close="nuevoTeamModal"
+        class="px-4 py-2 rounded-md text-sm font-semibold text-texto-base hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="submit"
+        class="px-4 py-2 rounded-md bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-colors">
+        Crear equipo
+    </button>
+    {% endcall %}
+</form>
+{% endcall %}
+
+{% call modal('actualizarTeamModal', 'Actualizar las asignaciones', 'confirmar', 'sync', 'primario') %}
+<form id="form-actualizar-equipo" action="" method="POST" class="space-y-4">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+    <p class="text-sm text-texto-base">
+        Se van a reescribir los tres nombres de <strong id="actualizar-equipo-clientes"></strong>
+        de <strong id="actualizar-equipo-nombre"></strong> con los miembros que tiene hoy.
+    </p>
+    <p class="text-xs text-texto-suave">
+        Editar un equipo <strong>no</strong> cambia a sus clientes: la asignación guarda una
+        foto del momento, para que un informe viejo siga diciendo quién estaba entonces.
+        Esto es lo contrario, y por eso se pide aparte.
+    </p>
+    {% call pie_modal() %}
+    <button type="button" data-modal-close="actualizarTeamModal"
+        class="px-4 py-2 rounded-md text-sm font-semibold text-texto-base hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="submit"
+        class="px-4 py-2 rounded-md bg-primario-500 hover:bg-primario-600 text-white text-sm font-bold transition-colors">
+        Actualizar
+    </button>
+    {% endcall %}
+</form>
+{% endcall %}
+
+{% call modal('desactivarTeamModal', 'Desactivar equipo', 'confirmar', 'block', 'peligro') %}
+<form id="form-desactivar-equipo" action="" method="POST" class="space-y-4">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+    <p class="text-sm text-texto-base">
+        Vas a desactivar <strong id="desactivar-equipo-nombre"></strong>.
+    </p>
+    <p id="desactivar-equipo-aviso" class="text-xs text-texto-suave hidden"></p>
+    <div class="space-y-1.5">
+        <label for="desactivar-equipo-motivo" class="text-2xs font-semibold text-texto-tenue">Motivo *</label>
+        <input id="desactivar-equipo-motivo" name="reason" required maxlength="200"
+            placeholder="Por qué se desactiva"
+            class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm">
+    </div>
+    {% call pie_modal() %}
+    <button type="button" data-modal-close="desactivarTeamModal"
+        class="px-4 py-2 rounded-md text-sm font-semibold text-texto-base hover:bg-superficie-suave transition-colors">
+        Cancelar
+    </button>
+    <button type="submit"
+        class="px-4 py-2 rounded-md bg-peligro-500 hover:bg-peligro-600 text-white text-sm font-bold transition-colors">
+        Desactivar
+    </button>
+    {% endcall %}
+</form>
+{% endcall %}
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', function () {
+    // Desactivar: un solo modal para todas las filas. La acción y el nombre se
+    // copian del botón que se apretó, así no hace falta un modal por equipo.
+    document.querySelectorAll('[data-desactivar-equipo]').forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            var id = boton.getAttribute('data-desactivar-equipo');
+            var nombre = boton.getAttribute('data-equipo-nombre');
+            var clientes = parseInt(boton.getAttribute('data-equipo-clientes') || '0', 10);
+
+            document.getElementById('form-desactivar-equipo').action = '/equipos/' + id + '/desactivar';
+            document.getElementById('desactivar-equipo-nombre').textContent = nombre;
+            document.getElementById('desactivar-equipo-motivo').value = '';
+
+            // Un equipo en uso se puede desactivar, pero el usuario tiene que
+            // saber a cuántos clientes afecta antes de confirmar.
+            var aviso = document.getElementById('desactivar-equipo-aviso');
+            if (clientes > 0) {
+                aviso.textContent = 'Lo tienen asignado ' + clientes +
+                    ' cliente' + (clientes === 1 ? '' : 's') + '. Los clientes no cambian: el equipo queda inactivo.';
+                aviso.classList.remove('hidden');
+            } else {
+                aviso.classList.add('hidden');
+            }
+            window.abrirModal('desactivarTeamModal');
+        });
+    });
+
+    // Actualizar las asignaciones: mismo patrón de un modal para todas las filas.
+    document.querySelectorAll('[data-actualizar-equipo]').forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            var id = boton.getAttribute('data-actualizar-equipo');
+            var clientes = parseInt(boton.getAttribute('data-equipo-clientes') || '0', 10);
+
+            document.getElementById('form-actualizar-equipo').action =
+                '/equipos/' + id + '/actualizar-asignaciones';
+            document.getElementById('actualizar-equipo-nombre').textContent =
+                boton.getAttribute('data-equipo-nombre');
+            document.getElementById('actualizar-equipo-clientes').textContent =
+                clientes + ' cliente' + (clientes === 1 ? '' : 's');
+            window.abrirModal('actualizarTeamModal');
+        });
+    });
+
+    // Si el alta falló, se vuelve con el modal abierto y los campos cargados.
+    {% if modal_abierto == 'nuevo' %}
+    window.abrirModal('nuevoTeamModal');
+    {% endif %}
+});
+</script>
+{% endblock %}

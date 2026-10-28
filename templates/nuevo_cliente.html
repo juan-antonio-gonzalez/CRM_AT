@@ -105,90 +105,51 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <label for="assigned-commercial" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                        Asesor Comercial Asignado <span class="text-peligro-500">*</span>
-                        <button type="button" data-manage-entity="commercial" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+                {# Un solo equipo en vez de tres personas sueltas. Los tres miembros se
+                   muestran debajo en modo lectura: la cuenta se le asigna a un equipo,
+                   y conviene ver quiénes lo forman antes de guardar. #}
+                <div class="space-y-2 md:col-span-2">
+                    <label for="team_id" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
+                        Equipo asignado <span class="text-peligro-500">*</span>
+                        {% if modulo_visible(request, 'equipos') %}<a href="/equipos" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar equipos</a>{% endif %}
                     </label>
-                    <div class="relative">
-                        <div class="flex gap-1.5">
-                            <div class="flex-1">
-                                <select name="assigned_commercial" required
-                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="assigned-commercial">
-                                    <option value="">Seleccionar Comercial...</option>
-                                    {% for c in commercials %}
-                                    <option value="{{ c.name }}">{{ c.name }}</option>
-                                    {% endfor %}
-                                </select>
+
+                    {% if equipos %}
+                    <select name="team_id" required id="team_id"
+                        class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold">
+                        <option value="">Seleccionar equipo...</option>
+                        {% for e in equipos %}
+                        <option value="{{ e.id }}"
+                            data-commercial="{{ e.commercial }}"
+                            data-designer="{{ e.designer }}"
+                            data-technical-advisor="{{ e.technical_advisor }}">{{ e.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div id="equipo-integrantes" hidden
+                        class="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-xl bg-superficie-suave p-3">
+                        {% for campo, etiqueta, icono in [('commercial', 'Comercial', 'sell'), ('designer', 'Diseñador', 'design_services'), ('technical_advisor', 'AT', 'engineering')] %}
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="material-symbols-rounded text-texto-tenue text-lg" aria-hidden="true">{{ icono }}</span>
+                            <div class="min-w-0">
+                                <p class="text-2xs text-texto-tenue">{{ etiqueta }}</p>
+                                <p class="text-xs font-bold text-texto-fuerte truncate" data-miembro="{{ campo }}">—</p>
                             </div>
-                            <button type="button" class="quick-add-btn size-11 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="commercial" data-select="assigned_commercial" title="Crear nuevo comercial" aria-label="Crear nuevo comercial">
-                                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                            </button>
                         </div>
-                        <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
-                                <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="commercial" data-select="assigned_commercial">Crear</button>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                </div>
-                <div class="space-y-2">
-                    <label for="technical-advisor" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                        Asistente Técnico Asignado <span class="text-peligro-500">*</span>
-                        <button type="button" data-manage-entity="advisor" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
-                    </label>
-                    <div class="relative">
-                        <div class="flex gap-1.5">
-                            <div class="flex-1">
-                                <select name="technical_advisor" required
-                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor">
-                                    <option value="">Seleccionar AT...</option>
-                                    {% for a in advisors %}
-                                    <option value="{{ a.name }}">{{ a.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button type="button" class="quick-add-btn size-11 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="advisor" data-select="technical_advisor" title="Crear nuevo AT" aria-label="Crear nuevo AT">
-                                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                            </button>
-                        </div>
-                        <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
-                                <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="advisor" data-select="technical_advisor">Crear</button>
-                            </div>
-                        </div>
+                    {% else %}
+                    <div class="rounded-xl bg-alerta-50 border border-alerta-200 px-4 py-3 space-y-1">
+                        <p class="text-xs text-texto-base font-semibold">Todavía no hay equipos cargados.</p>
+                        <p class="text-xs text-texto-base">
+                            Un cliente necesita un equipo, y un equipo se arma con un comercial, un
+                            diseñador y un AT.
+                            {% if modulo_visible(request, 'equipos') %}<a href="/equipos" class="font-bold text-primary underline">Creá el primero</a>{% else %}pedíselo a un administrador{% endif %}.
+                        </p>
                     </div>
+                    {% endif %}
                 </div>
-                <div class="space-y-2">
-                    <label for="designer" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                        Diseñador Asignado <span class="text-peligro-500">*</span>
-                        <button type="button" data-manage-entity="designer" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
-                    </label>
-                    <div class="relative">
-                        <div class="flex gap-1.5">
-                            <div class="flex-1">
-                                <select name="designer" required
-                                    class="w-full bg-superficie-suave border-none rounded-xl p-4 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="designer">
-                                    <option value="">Seleccionar Diseñador...</option>
-                                    {% for d in designers %}
-                                    <option value="{{ d.name }}">{{ d.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button type="button" class="quick-add-btn size-11 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="designer" data-select="designer" title="Crear nuevo diseñador" aria-label="Crear nuevo diseñador">
-                                <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                            </button>
-                        </div>
-                        <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue">
-                                <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap" data-entity="designer" data-select="designer">Crear</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="space-y-2">
                     <label for="city" class="text-2xs font-semibold text-texto-tenue tracking-normal">Ciudad</label>
                     <input name="city" required
@@ -722,9 +683,6 @@
             'client-name': 'select[name="name"]',
             'plant-name': 'select[name="plant"]',
             'sector': 'select[name="industry_sector"]',
-            'commercial': 'select[name="assigned_commercial"]',
-            'advisor': 'select[name="technical_advisor"]',
-            'designer': 'select[name="designer"]',
         };
         return document.querySelector(map[entityType] || '');
     }
@@ -735,9 +693,6 @@
             'client-name': 'Nombre de Empresa',
             'plant-name': 'Planta / Unidad Productiva',
             'sector': 'Sector Industrial',
-            'commercial': 'Asesor Comercial',
-            'advisor': 'Asistente Técnico',
-            'designer': 'Diseñador',
         };
         document.getElementById('manageEntityModal-titulo').textContent = 'Gestionar:' + (labels[entityType] || entityType);
         abrirModal('manageEntityModal')
@@ -745,6 +700,31 @@
         document.getElementById('manageEntityInput').value = '';
         document.getElementById('manageEntityInput').focus();
     }
+
+    // El equipo elegido se despliega en sus tres integrantes. Es sólo lectura: el
+    // equipo se arma en /equipos y acá se ve a quién se le está asignando la
+    // cuenta antes de guardar, que es lo que antes no se veía sin abrir tres
+    // desplegables.
+    (function () {
+        const selector = document.getElementById('team_id');
+        const panel = document.getElementById('equipo-integrantes');
+        if (!selector || !panel) return;
+
+        function pintar() {
+            const opcion = selector.options[selector.selectedIndex];
+            const hay = Boolean(selector.value);
+            panel.hidden = !hay;
+            ['commercial', 'designer', 'technical_advisor'].forEach(function (campo) {
+                const destino = panel.querySelector('[data-miembro="' + campo + '"]');
+                if (!destino) return;
+                const atributo = 'data-' + campo.split('_').join('-');
+                destino.textContent = (hay && opcion.getAttribute(atributo)) || '—';
+            });
+        }
+
+        selector.addEventListener('change', pintar);
+        pintar();
+    })();
 
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('manageEntityAddBtn')?.addEventListener('click', async function() {

@@ -31,6 +31,7 @@ def build_table_data(assignments: list):
         table_data.append({
             "id": a.id,
             "cliente": a.customer_name,
+            "planta": a.plant or "—",
             "at": a.technical_advisor or "No asignado",
             "estandar": a.standard_visits or 0,
             "premium": a.premium_visits or 0,
@@ -44,16 +45,27 @@ def build_table_data(assignments: list):
 
 
 def quick_create_assignment(db: Session, name: str, at: str = None, status: str = "Activo",
-                            valid_from: str = None, valid_to: str = None):
+                            valid_from: str = None, valid_to: str = None, plant: str = None):
     import datetime
     if not name:
         raise HTTPException(status_code=400, detail="El nombre del cliente es obligatorio")
+    if not plant:
+        raise HTTPException(
+            status_code=400,
+            detail="Hay que indicar la planta: una asignación es de una planta, no del cliente entero",
+        )
+    # El duplicado se busca por cliente **y planta**. Antes era sólo por nombre, así
+    # que un cliente con dos plantas no podía tener una asignación en cada una.
     existing = db.query(models.ATAssignment).filter(
         models.ATAssignment.customer_name == name,
+        models.ATAssignment.plant == plant,
         or_(models.ATAssignment.valid_to.is_(None), models.ATAssignment.valid_to > datetime.datetime.utcnow())
     ).first()
     if existing:
-        raise HTTPException(status_code=400, detail=f"Ya existe una asignación vigente para '{name}'")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Ya existe una asignación vigente para '{name}' en la planta '{plant}'",
+        )
 
     vf = datetime.datetime.utcnow()
     if valid_from:
@@ -70,7 +82,8 @@ def quick_create_assignment(db: Session, name: str, at: str = None, status: str 
             pass
 
     new_assignment = models.ATAssignment(
-        customer_name=name, technical_advisor=at, standard_visits=0, premium_visits=0,
+        customer_name=name, plant=plant, technical_advisor=at,
+        standard_visits=0, premium_visits=0,
         status=status, valid_from=vf, valid_to=vt
     )
     db.add(new_assignment)
@@ -145,6 +158,10 @@ def update_assignment_kpis(db: Session, assignment_id: int, data: dict):
         db.flush()
         new_assignment = models.ATAssignment(
             customer_name=name or assignment.customer_name,
+            # La versión nueva sigue siendo de la misma planta. Sin esto, cerrar un
+            # período y abrir el siguiente perdería la planta y la asignación
+            # volvería a valer para todas.
+            plant=data.get("plant") or assignment.plant,
             technical_advisor=at_name or assignment.technical_advisor,
             standard_visits=int(standard) if standard is not None else (assignment.standard_visits or 0),
             premium_visits=int(premium) if premium is not None else (assignment.premium_visits or 0),
@@ -168,11 +185,17 @@ def update_assignment_kpis(db: Session, assignment_id: int, data: dict):
             if name != assignment.customer_name:
                 existing = db.query(models.ATAssignment).filter(
                     models.ATAssignment.customer_name == name,
+                    models.ATAssignment.plant == assignment.plant,
                     models.ATAssignment.valid_to.is_(None)
                 ).first()
                 if existing:
-                    raise HTTPException(status_code=400, detail=f"Ya existe una asignación para '{name}'")
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Ya existe una asignación para '{name}' en esa planta",
+                    )
             assignment.customer_name = name
+        if data.get("plant") is not None:
+            assignment.plant = data.get("plant") or None
         vf = _parse_dt(valid_from_raw)
         if vf:
             assignment.valid_from = vf

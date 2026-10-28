@@ -38,7 +38,9 @@ TEXTO_LARGO = (
     "con reloj comparador antes de volver a poner el equipo en servicio."
 )
 PALABRA_LARGA = "Electroencefalografistaespecializadoenmantenimientoindustrial"
-URL_LARGA = ("https://intranet.ejemplo.com/documentos/mantenimiento/2026/"
+# Un dominio largo y genérico: la prueba es que la URL se parta bien al imprimir,
+# no a quién pertenece.
+URL_LARGA = ("https://intranet.ejemplo-industrial.com/documentos/mantenimiento/2026/"
              "procedimiento-completo-reemplazo-rodamiento-motorreductor-linea-3.pdf")
 TEXTO_TABLA = (
     "El operador informa que la alarma se dispara de manera intermitente durante "
@@ -115,6 +117,21 @@ def _html(raiz: str = None) -> str:
             css += f"\n/* ==== {nombre} ==== */\n" + fh.read()
     for hoja in ("tailwind.css", "fonts.css", "style.css"):
         html = re.sub(r'<link[^>]*/css/' + re.escape(hoja) + r'[^>]*>', "", html)
+
+    # Las fuentes se piden a /static/..., que en un archivo temporal no existe: los
+    # íconos se imprimirían como su palabra ligadura («person», «handshake») y lo
+    # que se mide no sería lo que ve el navegador del usuario. La `url()` lleva la
+    # huella del archivo (`?v=...`), así que se acepta cualquier consulta.
+    import base64
+    for fuente in ("inter.woff2", "material-symbols.woff2"):
+        camino = os.path.join(raiz, "static", "fonts", fuente)
+        if not os.path.exists(camino):
+            continue
+        with open(camino, "rb") as fh:
+            datos = base64.b64encode(fh.read()).decode("ascii")
+        css = re.sub(r"url\('/static/fonts/" + re.escape(fuente) + r"(\?[^')]*)?'\)",
+                     f"url(data:font/woff2;base64,{datos})", css)
+
     return html.replace("</head>", f"<style>{css}</style>\n</head>", 1)
 
 

@@ -2,9 +2,9 @@
 //
 // Sistema de diseño del CRM-AT.
 //
-// La identidad sale del logo oficial de AplicacionAT: azul marino #00205b y
-// celeste #08b2ff. Sobre esa base se construyó una escala funcional, porque el
-// celeste de marca sobre blanco da 2.38:1 y no se puede usar para texto.
+// La identidad de la aplicación es el azul marino #00205b y el celeste #08b2ff.
+// Sobre esa base se construyó una escala funcional, porque el celeste de marca
+// sobre blanco da 2.38:1 y no se puede usar para texto.
 //
 // Los colores semánticos están elegidos para pasar WCAG AA (4.5:1) sobre blanco.
 // Antes se usaban emerald-500 (2.54:1), amber-500 (2.15:1) y slate-400 (2.56:1)
@@ -51,8 +51,8 @@ module.exports = {
       colors: {
         // ── Marca ────────────────────────────────────────────────────────────
         brand: {
-          navy: "#00205b",   // oficial, tomado del logo
-          sky: "#08b2ff",    // oficial, tomado del logo
+          navy: "#00205b",   // base de la identidad
+          sky: "#08b2ff",    // acento de la identidad
         },
 
         // ── Primario: escala derivada del navy ───────────────────────────────

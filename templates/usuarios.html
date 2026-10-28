@@ -11,14 +11,21 @@
 {% from "_ui.html" import boton_exportar, modal, pie_modal %}
 {% block content %}
 <div class="max-w-5xl mx-auto">
-    <div class="flex items-center justify-end mb-6">
+    <div class="flex items-center justify-end gap-2 mb-6">
+        {{ boton_exportar("/auth/usuarios/exportar-excel", request.url.query) }}
         <a href="/auth/register"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
             <span class="material-symbols-rounded text-lg" aria-hidden="true">person_add</span>
-            {{ boton_exportar("/auth/usuarios/exportar-excel", request.url.query) }}
             Nuevo usuario
         </a>
     </div>
+
+    {% if request.query_params.get('editado') %}
+    <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-exito-50 border border-exito-200 text-exito-700 text-sm font-semibold mb-6">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">check_circle</span>
+        <span>Se guardaron los cambios de «{{ request.query_params.get('editado') }}».</span>
+    </div>
+    {% endif %}
 
     {% if success %}
     <div role="status" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-exito-50 border border-exito-200 text-exito-700 text-sm font-semibold mb-6">
@@ -43,6 +50,7 @@
                         <th class="text-left px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Nombre</th>
                         <th class="text-left px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Email</th>
                         <th class="text-left px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Rol</th>
+                        <th class="text-left px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Pantallas</th>
                         <th class="text-left px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Estado</th>
                         <th class="text-right px-6 py-4 text-2xs font-semibold text-texto-tenue tracking-normal bg-superficie-card" scope="col">Acciones</th>
                     </tr>
@@ -61,28 +69,46 @@
                         <td class="px-6 py-4 text-sm text-texto-base font-medium">{{ u.full_name or '-' }}</td>
                         <td class="px-6 py-4 text-sm text-texto-base">{{ u.email }}</td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-semibold tracking-normal bg-info-100 text-info-700 if u.role admin else bg-superficie-suave text-texto-base">
+                            <span class="inline-flex px-2.5 py-1 rounded-lg text-2xs font-semibold tracking-normal {{ 'bg-info-100 text-info-700' if u.role == 'admin' else 'bg-superficie-suave text-texto-base' }}">
                                 {{ u.role }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-exito-600 if u.is_active else text-peligro-500">
-                                <span class="size-2 rounded-full bg-exito-500 if u.is_active else bg-peligro-500"></span>
+                            {% if u.role == 'admin' %}
+                            <span class="text-2xs font-bold px-2 py-0.5 rounded-md bg-info-100 text-info-700"
+                                title="Ve todas las pantallas, incluidas las de administración">Todas</span>
+                            {% elif u.modulos is none %}
+                            <span class="text-2xs font-bold px-2 py-0.5 rounded-md bg-superficie-suave text-texto-suave"
+                                title="Sin configurar: ve todas las pantallas menos las de administración, y también las que se agreguen más adelante">Sin configurar</span>
+                            {% else %}
+                            <span class="text-2xs font-bold px-2 py-0.5 rounded-md {{ 'bg-superficie-suave text-texto-suave' if u.modulos else 'bg-alerta-100 text-alerta-700' }}"
+                                title="{{ u.modulos|length }} de {{ total_modulos }} pantallas">
+                                {{ u.modulos|length }} de {{ total_modulos }}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold {{ 'text-exito-600' if u.is_active else 'text-peligro-500' }}">
+                                <span class="size-2 rounded-full {{ 'bg-exito-500' if u.is_active else 'bg-peligro-500' }}"></span>
                                 {{ 'Activo' if u.is_active else 'Inactivo' }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
+                                <a href="/auth/usuarios/{{ u.id }}/editar"
+                                    class="p-2 rounded-lg text-texto-tenue hover:text-primary transition-colors border border-superficie-borde hover:bg-superficie-suave"
+                                    title="Editar usuario" aria-label="Editar usuario {{ u.username }}">
+                                    <span class="material-symbols-rounded text-lg" aria-hidden="true">edit</span>
+                                </a>
                                 <form action="/auth/usuarios/{{ u.id }}/toggle" method="POST" class="inline">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                     <button type="submit"
-                                        class="p-2 rounded-lg text-texto-tenue hover:text- red if u.is_active else emerald -500 transition-colors border border-superficie-borde hover:bg-superficie-suave"
+                                        class="p-2 rounded-lg text-texto-tenue transition-colors border border-superficie-borde hover:bg-superficie-suave {{ 'hover:text-peligro-500' if u.is_active else 'hover:text-exito-600' }}"
                                         title="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario" aria-label="{{ 'Desactivar' if u.is_active else 'Activar' }} usuario">
                                         <span class="material-symbols-rounded text-lg" aria-hidden="true">{{ 'block' if u.is_active else 'check_circle' }}</span>
                                     </button>
                                 </form>
                                 <button data-user-id="{{ u.id }}" data-username="{{ u.username }}" class="btn-show-reset p-2 rounded-lg text-texto-tenue hover:text-alerta-500 transition-colors border border-superficie-borde hover:bg-superficie-suave"
-                                    
                                     title="Resetear contraseña" aria-label="Resetear contraseña">
                                     <span class="material-symbols-rounded text-lg" aria-hidden="true">key</span>
                                 </button>

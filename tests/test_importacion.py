@@ -35,9 +35,9 @@ def _planilla(encabezados, filas):
     return buf.getvalue()
 
 
-ENCABEZADOS_CLIENTES = ["Nombre", "Planta", "Sector industrial", "Asesor comercial",
-                        "Asistente técnico", "Diseñador", "Dirección", "Ciudad",
-                        "Estado", "Observaciones"]
+ENCABEZADOS_CLIENTES = ["Nombre", "Planta", "Sector industrial", "Equipo",
+                        "Asesor comercial", "Asistente técnico", "Diseñador",
+                        "Dirección", "Ciudad", "Estado", "Observaciones"]
 
 ENCABEZADOS_MAQUINAS = ["Cliente", "Planta", "Marca", "Modelo", "Tipo",
                         "Nº de serie", "Línea", "Estado"]
@@ -46,10 +46,10 @@ ENCABEZADOS_MAQUINAS = ["Cliente", "Planta", "Marca", "Modelo", "Tipo",
 # ── Lectura de la planilla ─────────────────────────────────────────────────
 def test_lee_una_planilla_de_clientes():
     contenido = _planilla(ENCABEZADOS_CLIENTES, [
-        ["Cartocor SA", "Planta 1", "Corrugado", "Carlos", "ING. GOMEZ", "Diseño",
-         "Calle 1", "Rosario", "Activo", ""],
-        ["Envalora SRL", "Planta 2", "Flexible", "Ana", "ING. DIAZ", "Diseño",
-         "Calle 2", "Rosario", "Activo", ""],
+        ["Cartocor SA", "Planta 1", "Corrugado", "", "Carlos", "ING. GOMEZ",
+         "Diseño", "Calle 1", "Rosario", "Activo", ""],
+        ["Envalora SRL", "Planta 2", "Flexible", "", "Ana", "ING. DIAZ",
+         "Diseño", "Calle 2", "Rosario", "Activo", ""],
     ])
     filas, error = importacion.leer_planilla(contenido, "clientes")
     assert error is None
@@ -99,9 +99,9 @@ def test_planilla_sin_filas_de_datos():
 
 def test_las_filas_vacias_se_ignoran():
     contenido = _planilla(ENCABEZADOS_CLIENTES, [
-        ["Cartocor SA", "", "", "", "", "", "", "", "", ""],
+        ["Cartocor SA", "", "", "", "", "", "", "", "", "", ""],
         ["", "", "", "", "", "", "", "", "", ""],
-        [None, None, None, None, None, None, None, None, None, None],
+        [None, None, None, None, None, None, None, None, None, None, None],
     ])
     filas, error = importacion.leer_planilla(contenido, "clientes")
     assert error is None
@@ -112,7 +112,7 @@ def test_las_filas_vacias_se_ignoran():
 def test_cliente_sin_nombre_se_rechaza(db_session):
     filas = [{"_fila": 2, "name": "", "plant": "P1"},
              {"_fila": 3, "name": "Válido", "plant": "P2"}]
-    listas, errores = importacion.validar(db_session, "clientes", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "clientes", filas)
     assert len(listas) == 1
     assert listas[0]["name"] == "Válido"
     assert len(errores) == 1
@@ -123,7 +123,7 @@ def test_cliente_repetido_en_la_base(db_session):
     db_session.add(models.Customer(name="Cartocor SA", is_active=True))
     db_session.commit()
     filas = [{"_fila": 2, "name": "cartocor sa", "plant": ""}]
-    listas, errores = importacion.validar(db_session, "clientes", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "clientes", filas)
     # La comparación ignora mayúsculas: es el mismo cliente.
     assert listas == []
     assert "Ya existe" in errores[0]["motivo"]
@@ -132,7 +132,7 @@ def test_cliente_repetido_en_la_base(db_session):
 def test_cliente_repetido_en_la_misma_planilla(db_session):
     filas = [{"_fila": 2, "name": "Nuevo SA", "plant": ""},
              {"_fila": 3, "name": "Nuevo SA", "plant": ""}]
-    listas, errores = importacion.validar(db_session, "clientes", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "clientes", filas)
     assert len(listas) == 1
     assert len(errores) == 1
     assert "repetido" in errores[0]["motivo"]
@@ -140,7 +140,7 @@ def test_cliente_repetido_en_la_misma_planilla(db_session):
 
 def test_maquina_de_cliente_inexistente(db_session):
     filas = [{"_fila": 2, "_cliente": "No Existe SRL", "serial_number": "SN-1"}]
-    listas, errores = importacion.validar(db_session, "maquinas", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "maquinas", filas)
     assert listas == []
     assert "No existe un cliente" in errores[0]["motivo"]
 
@@ -150,7 +150,7 @@ def test_maquina_de_cliente_existente_resuelve_el_id(db_session):
     db_session.commit()
     filas = [{"_fila": 2, "_cliente": "cartocor sa", "serial_number": "SN-1",
               "brand": "Bobst"}]
-    listas, errores = importacion.validar(db_session, "maquinas", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "maquinas", filas)
     assert not errores
     assert listas[0]["customer_id"] == db_session.query(models.Customer.id).first()[0]
 
@@ -163,7 +163,7 @@ def test_numero_de_serie_repetido(db_session):
     db_session.commit()
 
     filas = [{"_fila": 2, "_cliente": "Cartocor SA", "serial_number": "SN-1"}]
-    listas, errores = importacion.validar(db_session, "maquinas", filas)
+    listas, errores, _avisos = importacion.validar(db_session, "maquinas", filas)
     assert listas == []
     assert "Ya existe una máquina" in errores[0]["motivo"]
 
@@ -256,7 +256,7 @@ def test_la_previsualizacion_no_escribe_en_la_base(client, db_session, seed_admi
     """Ver la previsualización no debe crear nada."""
     client.post("/auth/login", data={"username": "admin", "password": "admin123"})
     contenido = _planilla(ENCABEZADOS_CLIENTES, [
-        ["Cartocor SA", "P1", "", "", "", "", "", "", "", ""],
+        ["Cartocor SA", "P1", "", "", "", "", "", "", "", "", ""],
     ])
     r = client.post("/importar/previsualizar",
                     data={"tipo": "clientes", "csrf_token": _csrf(client)},
@@ -275,7 +275,7 @@ def test_el_flujo_completo_importa(client, db_session, seed_admin):
 
     client.post("/auth/login", data={"username": "admin", "password": "admin123"})
     contenido = _planilla(ENCABEZADOS_CLIENTES, [
-        ["Cartocor SA", "P1", "Corrugado", "", "", "", "", "", "Activo", ""],
+        ["Cartocor SA", "P1", "Corrugado", "", "", "", "", "", "", "Activo", ""],
     ])
     r = client.post("/importar/previsualizar",
                     data={"tipo": "clientes", "csrf_token": _csrf(client)},
@@ -312,3 +312,134 @@ def test_un_token_con_ruta_no_escapa_del_directorio(client, db_session, seed_adm
                     follow_redirects=False)
     assert r.status_code == 303
     assert db_session.query(models.Customer).count() == 0
+
+
+# ── La columna Equipo ──────────────────────────────────────────────────────
+#
+# A partir de los equipos, un cliente se asigna a uno. La planilla puede traer
+# la columna «Equipo», que manda cuando está; las tres columnas de personas se
+# mantienen para que las planillas que ya se usan sigan funcionando.
+
+def _fila_cliente(**extra):
+    datos = {"_fila": 2, "name": "CARTOCOR", "plant": "Planta 1",
+             "assigned_commercial": "", "designer": "", "technical_advisor": "",
+             "equipo": ""}
+    datos.update(extra)
+    return datos
+
+
+def test_la_columna_equipo_esta_en_la_plantilla():
+    etiquetas = [c[1] for c in importacion.CLIENTES["columnas"]]
+    assert "Equipo" in etiquetas
+    # Y el ejemplo tiene un valor por columna.
+    assert len(importacion.CLIENTES["ejemplo"]) == len(etiquetas)
+
+
+def test_un_equipo_que_existe_se_usa_y_manda_sus_miembros(db_session):
+    from services import team_service
+
+    equipo = team_service.crear(db_session, "Equipo Norte", "Pérez", "Gómez", "López")
+    listas, errores, avisos = importacion.validar(db_session, "clientes", [
+        _fila_cliente(equipo=equipo.name)])
+
+    assert not errores
+    assert not avisos
+    assert listas[0]["team_id"] == equipo.id
+    # Los tres nombres salen del equipo, no de la planilla.
+    assert listas[0]["assigned_commercial"] == equipo.commercial
+    assert listas[0]["technical_advisor"] == equipo.technical_advisor
+    assert listas[0]["designer"] == equipo.designer
+
+
+def test_un_equipo_inexistente_con_los_tres_miembros_se_crea(db_session):
+    listas, errores, avisos = importacion.validar(db_session, "clientes", [
+        _fila_cliente(equipo="Equipo Nuevo", assigned_commercial="Pérez",
+                      designer="Gómez", technical_advisor="López")])
+
+    assert not errores
+    assert listas[0]["team_id"] is not None
+    # Se creó, y con otro nombre: hay que avisarlo.
+    assert len(avisos) == 1
+    assert "no existe" in avisos[0]["motivo"]
+
+
+def test_un_equipo_inexistente_sin_los_miembros_rechaza_la_fila(db_session):
+    """No se inventa un equipo a medias."""
+    listas, errores, avisos = importacion.validar(db_session, "clientes", [
+        _fila_cliente(equipo="Equipo Fantasma", assigned_commercial="Pérez")])
+
+    assert listas == []
+    assert len(errores) == 1
+    assert "no existe" in errores[0]["motivo"]
+
+
+def test_si_los_miembros_no_coinciden_con_el_equipo_se_avisa(db_session):
+    """La columna Equipo manda, y la fila se importa igual: por eso es aviso y no error."""
+    from services import team_service
+
+    equipo = team_service.crear(db_session, "Equipo Norte", "Pérez", "Gómez", "López")
+    listas, errores, avisos = importacion.validar(db_session, "clientes", [
+        _fila_cliente(equipo=equipo.name, assigned_commercial="OTRO",
+                      designer="OTRO2", technical_advisor="OTRO3")])
+
+    assert not errores, "la fila tiene que entrar"
+    assert len(listas) == 1
+    assert len(avisos) == 1
+    assert "Se usó el equipo" in avisos[0]["motivo"]
+    assert listas[0]["assigned_commercial"] == equipo.commercial
+
+
+def test_sin_columna_equipo_se_resuelve_por_los_tres_nombres(db_session):
+    """El camino viejo sigue funcionando: es lo que usan las planillas de siempre."""
+    listas, errores, avisos = importacion.validar(db_session, "clientes", [
+        _fila_cliente(assigned_commercial="Pérez", designer="Gómez",
+                      technical_advisor="López")])
+
+    assert not errores
+    assert listas[0]["team_id"] is not None
+    # Se creó sin aviso: no había ningún nombre de equipo que contradijera nada.
+    assert not avisos
+
+
+def test_la_previsualizacion_avisa_sin_rechazar(client, db_session, seed_admin):
+    """Una fila que entra con una advertencia tiene que verse distinto de una que no entra.
+
+    Se sube una planilla que nombra un equipo inexistente pero trae los tres
+    miembros: la fila se importa y el equipo se crea al confirmar, con un aviso. Si
+    el aviso cayera en el bloque de errores —cuyo texto dice «no se van a
+    importar»—, el usuario creería que la fila se descartó.
+    """
+    import re
+
+    client.post("/auth/login", data={"username": "admin", "password": "admin123"})
+    contenido = _planilla(ENCABEZADOS_CLIENTES, [
+        ["Cartocor SA", "P1", "Corrugado", "Equipo Inventado", "Pérez", "ING. GOMEZ",
+         "Diseño", "Calle 1", "Rosario", "Activo", ""],
+    ])
+    r = client.post("/importar/previsualizar",
+                    data={"tipo": "clientes", "csrf_token": _csrf(client)},
+                    files={"archivo": ("c.xlsx", contenido, "application/octet-stream")})
+
+    assert r.status_code == 200
+    assert "con una advertencia" in r.text
+    assert "Importar 1 registro" in r.text
+    # El aviso nombra el equipo que se va a crear.
+    assert "se va a crear como" in r.text
+
+    # La previsualización no escribe nada: ni el cliente ni el equipo.
+    assert db_session.query(models.Customer).filter_by(name="Cartocor SA").count() == 0
+    assert db_session.query(models.Team).count() == 0
+
+    # Al confirmar sí se crean los dos.
+    token = re.search(r'name="token" value="([^"]+)"', r.text).group(1)
+    client.post("/importar/confirmar",
+                data={"tipo": "clientes", "token": token,
+                      "csrf_token": _csrf(client)},
+                follow_redirects=False)
+
+    assert db_session.query(models.Customer).filter_by(name="Cartocor SA").count() == 1
+    equipo = db_session.query(models.Team).filter_by(
+        name="PÉREZ / DISEÑO / ING. GOMEZ").first()
+    assert equipo is not None, "no se creó el equipo a partir de los tres nombres"
+    cliente = db_session.query(models.Customer).filter_by(name="Cartocor SA").one()
+    assert cliente.team_id == equipo.id

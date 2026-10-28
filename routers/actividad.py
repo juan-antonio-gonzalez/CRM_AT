@@ -24,7 +24,9 @@ async def historial_cambios(
     accion: str = Query(""),
     db: Session = Depends(get_db),
 ):
-    consulta = db.query(models.ActivityLog)
+    consulta = db.query(models.ActivityLog).filter(
+        models.ActivityLog.entity.notin_(auditoria.ENTIDADES_FUERA_DEL_HISTORIAL)
+    )
     if entidad:
         consulta = consulta.filter(models.ActivityLog.entity == entidad)
     if usuario:
@@ -40,8 +42,13 @@ async def historial_cambios(
     )
 
     # Las opciones de los filtros salen de lo que hay registrado, no de una lista
-    # fija: si mañana se audita otra entidad, aparece sola.
-    entidades = [e for (e,) in db.query(models.ActivityLog.entity).distinct().all() if e]
+    # fija: si mañana se audita otra entidad, aparece sola. Las que no son
+    # cambios se excluyen también acá: ofrecer un filtro que no devuelve nada
+    # porque la vista las esconde sería una trampa.
+    entidades = [
+        e for (e,) in db.query(models.ActivityLog.entity).distinct().all()
+        if e and e not in auditoria.ENTIDADES_FUERA_DEL_HISTORIAL
+    ]
     usuarios = [u for (u,) in db.query(models.ActivityLog.username).distinct().all() if u]
 
     return templates.TemplateResponse(request, "historial_cambios.html", {

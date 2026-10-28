@@ -2,16 +2,19 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # CRM-AT — cambia el certificado autofirmado por uno de Let's Encrypt.
 #
-# Se ejecuta UNA vez que `ejemplo.com` resuelva a la IP de este servidor:
-#     dig +short ejemplo.com     # debe devolver 203.0.113.10
+# Se ejecuta UNA vez que el dominio resuelva a la IP de este servidor:
+#     dig +short "$DOMAIN"        # debe devolver SERVER_IP
 #
 # Uso:
-#   sudo LETSENCRYPT_EMAIL=tu@correo.com bash deploy/enable-ssl.sh
+#   sudo DOMAIN=crm.miempresa.com LETSENCRYPT_EMAIL=tu@correo.com \
+#        bash deploy/enable-ssl.sh
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-DOMAIN="ejemplo.com"
-ALT_DOMAIN="www.ejemplo.com"
+# El dominio se pasa por variable de entorno: el proyecto no lleva un dominio
+# adentro, porque es un dato de cada despliegue y no algo que se herede.
+DOMAIN="${DOMAIN:?Falta DOMAIN: pasá el dominio público, por ejemplo DOMAIN=crm.miempresa.com}"
+ALT_DOMAIN="${ALT_DOMAIN:-www.${DOMAIN}}"
 SERVER_IP="203.0.113.10"
 VHOST="/etc/nginx/sites-available/CRM-AT"
 ENV_FILE="/etc/crm-at/crm-at.env"

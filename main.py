@@ -19,6 +19,7 @@ import urllib.parse
 from config import settings
 from logger import setup_logging, get_logger
 from security import get_current_user, generate_csrf_token, verify_csrf_token, COOKIE_NAME
+from services import permisos
 from templating import templates
 
 setup_logging()
@@ -69,7 +70,11 @@ app.add_middleware(
 )
 
 # Paths that must be reachable without a session.
-PUBLIC_PATHS = {"/auth/login", "/auth/logout", "/health", "/favicon.ico"}
+# Direcciones que se pueden abrir sin sesión. La lista vive en el catálogo de
+# módulos (`services/permisos.py`), para que no haya dos listas de lo mismo: una
+# ruta que quedara pública acá y protegida allá es exactamente el tipo de agujero
+# que no se nota.
+PUBLIC_PATHS = set(permisos.RUTAS_SIN_SESION)
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -108,12 +113,50 @@ async def auth_csrf_middleware(request: Request, call_next):
     request.state.user = user
     request.state.csrf_token = csrf
 
-    path = request.url.path.rstrip("/")
+    # El `or "/"` no es cosmético: `"/".rstrip("/")` da cadena vacía, así que la
+    # raíz no coincidía con ninguna dirección de las listas y quedaba **sin
+    # módulo**, o sea abierta para cualquier usuario aunque no tuviera el tablero.
+    path = request.url.path.rstrip("/") or "/"
 
     if not user and path not in PUBLIC_PATHS and not path.startswith("/static/"):
         if path.startswith("/api/"):
             return JSONResponse(status_code=401, content={"message": "No autenticado"})
         return RedirectResponse(url="/auth/login", status_code=303)
+
+    # Permisos por módulo, y la cuenta activa.
+    #
+    # La comprobación va acá y no en cada router porque son más de cien rutas: una
+    # que se olvide de pedir el permiso queda abierta, y eso no se nota hasta que
+    # alguien entra donde no debe. Acá pasa todo.
+    #
+    # La consulta se hace **sólo** cuando la dirección pertenece a un módulo: los
+    # estáticos, la búsqueda y el perfil no pagan el viaje a la base.
+    # El usuario de la base se consulta **sólo cuando hace falta**, que es en dos
+    # casos:
+    #
+    #  * la dirección pertenece a un módulo, así que hay un permiso que comprobar;
+    #  * o la respuesta es una página, que arma el menú lateral.
+    #
+    # Un endpoint de API libre —Caty, el historial de una fila— no necesita ninguna
+    # de las dos. Consultar igual rompía una propiedad del diseño: los endpoints de
+    # Caty no tocan la base, y por eso siguen andando aunque la base no responda.
+    if user and (_wants_html(request) or permisos.modulos_de(path)):
+        completo = _usuario_de_la_base(user)
+        # El menú lo lee desde acá: `templating.py` registra el global que lo arma.
+        request.state.db_user = completo
+
+        if completo is None:
+            # No se pudo leer: la base no responde, o la fila ya no está. En una
+            # dirección con módulo se niega —falla cerrada—; en una libre se deja
+            # pasar, porque no hay nada que autorizar.
+            if permisos.modulos_de(path):
+                return _cerrar_sesion(request, path)
+        elif not completo.is_active:
+            # La cuenta se desactivó después de que se emitió el token. Sin esto,
+            # desactivar a alguien no lo echaba hasta que venciera.
+            return _cerrar_sesion(request, path)
+        elif not permisos.puede_ver(completo, path):
+            return _sin_permiso(request, path, completo)
 
     if request.method in ("POST", "PUT", "DELETE") and user:
         if path not in CSRF_EXEMPT_PATHS and not path.startswith("/auth/logout"):
@@ -147,6 +190,46 @@ async def auth_csrf_middleware(request: Request, call_next):
                     return RedirectResponse(url="/auth/login", status_code=303)
 
     return await call_next(request)
+
+
+def _usuario_de_la_base(user_data):
+    """El usuario completo, para mirar sus módulos y si sigue activo."""
+    from database import SessionLocal
+    from models import User
+
+    db = SessionLocal()
+    try:
+        return db.query(User).filter(User.id == int(user_data["sub"])).first()
+    except Exception:  # pragma: no cover - una base caída no debe tumbar el sitio
+        logger.exception("no se pudo leer el usuario %s", user_data.get("username"))
+        return None
+    finally:
+        db.close()
+
+
+def _cerrar_sesion(request: Request, path: str):
+    """La cuenta ya no está activa: se la manda a entrar de nuevo."""
+    if path.startswith("/api/"):
+        return JSONResponse(status_code=401, content={"message": "Cuenta desactivada"})
+    respuesta = RedirectResponse(url="/auth/logout", status_code=303)
+    respuesta.delete_cookie("session")
+    return respuesta
+
+
+def _sin_permiso(request: Request, path: str, usuario):
+    """El usuario no tiene el módulo de esa pantalla."""
+    duenos = permisos.modulos_de(path)
+    etiquetas = ", ".join(m.etiqueta for m in duenos)
+    logger.warning("acceso denegado a %s para %s (necesita: %s)",
+                   path, usuario.username, etiquetas)
+    if path.startswith("/api/"):
+        return JSONResponse(
+            status_code=403,
+            content={"message": f"Tu cuenta no tiene acceso a {etiquetas}"})
+    return _render_error(
+        request, 403,
+        f"Tu cuenta no tiene acceso a {etiquetas}. "
+        f"Si lo necesitás, pedíselo a un administrador.")
 
 
 def _token_csrf(body: bytes, content_type: str) -> str:
@@ -491,7 +574,10 @@ from routers import configuracion as config_router
 from routers import trash as trash_router
 from routers import agenda as agenda_router
 from routers import minutas as minutas_router
+from routers import publico as publico_router
 from routers import historial as historial_router
+from routers import agente as agente_router
+from routers import teams as teams_router
 
 app.include_router(auth_router.router)
 app.include_router(dashboard_router.router)
@@ -512,7 +598,10 @@ app.include_router(config_router.router)
 app.include_router(trash_router.router)
 app.include_router(agenda_router.router)
 app.include_router(minutas_router.router)
+app.include_router(publico_router.router)
 app.include_router(historial_router.router)
+app.include_router(agente_router.router)
+app.include_router(teams_router.router)
 
 
 # ── CLI ─────────────────────────────────────────────────────────────────────

@@ -82,7 +82,7 @@ async def importar_previsualizar(
         "request": request, "active_page": "importar", "tipo": tipo,
         "tipos": {k: v["titulo"] for k, v in importacion.TIPOS.items()},
         "columnas": importacion.TIPOS[tipo]["columnas"],
-        "filas": None, "errores": None, "token": None,
+        "filas": None, "errores": None, "avisos": None, "token": None,
         "cargados": None, "fallados": None,
     }
 
@@ -98,7 +98,7 @@ async def importar_previsualizar(
         contexto["error_archivo"] = error
         return templates.TemplateResponse(request, "importar.html", contexto)
 
-    listas, errores = importacion.validar(db, tipo, filas)
+    listas, errores, avisos = importacion.validar(db, tipo, filas)
 
     # El archivo se guarda para el paso de confirmación: los navegadores no
     # permiten precargar un input de archivo, así que no se puede reenviar.
@@ -110,6 +110,7 @@ async def importar_previsualizar(
     contexto.update({
         "filas": listas,
         "errores": errores,
+        "avisos": avisos,
         "token": token,
         "total": len(filas),
         "nombre_archivo": archivo.filename,

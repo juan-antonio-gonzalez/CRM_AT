@@ -1,0 +1,239 @@
+{% extends "layout.html" %}
+{% block title %}Editar {{ objetivo.username }} — CRM-AT{% endblock %}
+{% block header_extra %}
+<div class="flex flex-col min-w-0">
+    <h1 class="text-base sm:text-xl font-bold text-texto-fuerte tracking-tight truncate">
+        Editar usuario
+    </h1>
+    <p class="text-2xs text-texto-suave">Datos de la cuenta y pantallas que ve</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <a href="/auth/usuarios"
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-texto-suave hover:text-primary transition-colors mb-4">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+        Volver a Usuarios
+    </a>
+
+    {% if errores %}
+    <div role="alert"
+        class="flex items-start gap-3 px-4 py-3 rounded-xl bg-peligro-50 border border-peligro-200 text-peligro-700 text-sm font-semibold mb-6">
+        <span class="material-symbols-rounded text-lg shrink-0" aria-hidden="true">error</span>
+        <span>No se guardó nada. Revisá lo marcado abajo.</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/auth/usuarios/{{ objetivo.id }}/editar" class="space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        {# ── Datos de la cuenta ────────────────────────────────────────── #}
+        <section class="bg-superficie-card rounded-lg border border-superficie-borde p-5 space-y-4">
+            <h2 class="text-sm font-bold text-texto-fuerte">Datos de la cuenta</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="username" class="block text-2xs font-semibold text-texto-tenue mb-1">
+                        Usuario <span class="text-peligro-500">*</span>
+                    </label>
+                    <input id="username" name="username" required maxlength="50"
+                        value="{{ borrador.username if borrador else objetivo.username }}"
+                        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600">
+                    {% if errores and errores.username %}
+                    <p class="text-2xs text-peligro-600 mt-1">{{ errores.username }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="email" class="block text-2xs font-semibold text-texto-tenue mb-1">
+                        Correo <span class="text-peligro-500">*</span>
+                    </label>
+                    <input id="email" name="email" type="email" required maxlength="120"
+                        value="{{ borrador.email if borrador else objetivo.email }}"
+                        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600">
+                    {% if errores and errores.email %}
+                    <p class="text-2xs text-peligro-600 mt-1">{{ errores.email }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="full_name" class="block text-2xs font-semibold text-texto-tenue mb-1">
+                        Nombre completo
+                    </label>
+                    <input id="full_name" name="full_name" maxlength="120"
+                        value="{{ borrador.full_name if borrador else (objetivo.full_name or '') }}"
+                        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600">
+                </div>
+
+                <div>
+                    <label for="phone" class="block text-2xs font-semibold text-texto-tenue mb-1">
+                        Teléfono
+                    </label>
+                    <input id="phone" name="phone" maxlength="40"
+                        value="{{ borrador.phone if borrador else (objetivo.phone or '') }}"
+                        class="w-full bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600">
+                </div>
+            </div>
+
+            <div>
+                <label for="role" class="block text-2xs font-semibold text-texto-tenue mb-1">Rol</label>
+                <select id="role" name="role"
+                    class="w-full sm:w-72 bg-superficie-suave border border-superficie-fuerte rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-600/20 focus:border-primary-600">
+                    <option value="user" {% if (borrador.role if borrador else objetivo.role) == 'user' %}selected{% endif %}>
+                        Usuario — ve sólo las pantallas marcadas abajo
+                    </option>
+                    <option value="admin" {% if (borrador.role if borrador else objetivo.role) == 'admin' %}selected{% endif %}>
+                        Administrador — ve todo y administra las cuentas
+                    </option>
+                </select>
+                {% if errores and errores.role %}
+                <p class="text-2xs text-peligro-600 mt-1">{{ errores.role }}</p>
+                {% endif %}
+                {% if es_uno_mismo %}
+                <p class="text-2xs text-texto-tenue mt-1">
+                    Estás editando tu propia cuenta: no podés quitarte el rol de administrador.
+                </p>
+                {% endif %}
+            </div>
+        </section>
+
+        {# ── Qué ve ────────────────────────────────────────────────────── #}
+        <section class="bg-superficie-card rounded-lg border border-superficie-borde p-5 space-y-4"
+            id="seccion-permisos">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-sm font-bold text-texto-fuerte">Qué ve esta cuenta</h2>
+                    <p class="text-2xs text-texto-suave mt-0.5">
+                        Marcá las pantallas que puede abrir. Lo que no esté marcado no aparece en su menú
+                        y tampoco se puede abrir escribiendo la dirección.
+                    </p>
+                </div>
+                <span id="contador-modulos"
+                    class="text-2xs font-bold text-texto-suave bg-superficie-suave border border-superficie-borde rounded-md px-2 py-1 shrink-0">
+                    0 de {{ total_modulos }}
+                </span>
+            </div>
+
+            <label class="flex items-start gap-3 p-3 rounded-md bg-superficie-suave border border-superficie-borde cursor-pointer">
+                <input type="checkbox" id="ve-todo" name="ve_todo" value="1"
+                    class="mt-0.5 size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-primary-600/30"
+                    {% if ve_todo %}checked{% endif %}>
+                <span class="text-xs text-texto-base">
+                    <strong>Ve todas las pantallas.</strong>
+                    <span class="block text-2xs text-texto-suave mt-0.5">
+                        Incluidas las que se agreguen más adelante. Es lo que veían todos los usuarios
+                        antes de que existiera esta pantalla.
+                    </span>
+                </span>
+            </label>
+
+            <div id="lista-modulos" class="space-y-4">
+                {% for grupo in grupos %}
+                <fieldset class="rounded-md border border-superficie-borde overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-2 bg-superficie-suave border-b border-superficie-borde">
+                        <legend class="text-2xs font-bold text-texto-suave">{{ grupo.grupo }}</legend>
+                        <button type="button" data-marcar-grupo
+                            class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors">
+                            Marcar todo
+                        </button>
+                    </div>
+                    <div class="divide-y divide-superficie-borde">
+                        {% for m in grupo.modulos %}
+                        <label class="flex items-start gap-3 px-4 py-3 {% if m.solo_admin %} opacity-60 cursor-not-allowed {% else %} cursor-pointer hover:bg-superficie-suave/50 {% endif %} transition-colors">
+                            <input type="checkbox" name="modulos" value="{{ m.clave }}"
+                                data-modulo
+                                {% if m.marcado %}checked{% endif %}
+                                {% if m.solo_admin %}disabled{% endif %}
+                                class="mt-0.5 size-4 rounded border-superficie-fuerte text-primary-600 focus:ring-primary-600/30">
+                            <span class="text-xs text-texto-base">
+                                {{ m.etiqueta }}
+                                <span class="block text-2xs text-texto-suave mt-0.5">
+                                    {{ m.ayuda }}
+                                </span>
+                                {% if m.solo_admin %}
+                                <span class="block text-2xs text-alerta-600 mt-0.5">
+                                    Sólo para administradores: no se puede asignar.
+                                </span>
+                                {% endif %}
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+                {% endfor %}
+            </div>
+        </section>
+
+        <div class="flex items-center justify-end gap-3">
+            <a href="/auth/usuarios"
+                class="px-4 py-2 rounded-md border border-superficie-fuerte text-texto-base text-sm font-semibold hover:bg-superficie-suave transition-colors">
+                Cancelar
+            </a>
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">save</span>
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script nonce="{{ request.state.script_nonce }}">
+document.addEventListener('DOMContentLoaded', function () {
+    var todo = document.getElementById('ve-todo');
+    var lista = document.getElementById('lista-modulos');
+    var contador = document.getElementById('contador-modulos');
+    var casillas = Array.prototype.slice.call(document.querySelectorAll('[data-modulo]'))
+        .filter(function (c) { return !c.disabled; });
+
+    // Con «ve todas» marcado, los checks individuales no deciden nada: se apagan
+    // para que quede claro que la lista no se está aplicando.
+    function pintar() {
+        var todos = todo.checked;
+        lista.classList.toggle('opacity-50', todos);
+        lista.classList.toggle('pointer-events-none', todos);
+        var marcados = casillas.filter(function (c) { return c.checked; }).length;
+        contador.textContent = todos ? 'todas' : (marcados + ' de ' + casillas.length);
+    }
+
+    todo.addEventListener('change', pintar);
+
+    casillas.forEach(function (c) {
+        c.addEventListener('change', function () {
+            // Tocar un check individual implica que la lista sí decide.
+            if (todo.checked) { todo.checked = false; }
+            pintar();
+        });
+    });
+
+    // «Marcar todo» por grupo. Es la razón de que los checks estén agrupados como
+    // el menú: casi siempre se da un grupo entero, no una pantalla suelta.
+    document.querySelectorAll('[data-marcar-grupo]').forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            var grupo = boton.closest('fieldset');
+            var suyos = Array.prototype.slice.call(grupo.querySelectorAll('[data-modulo]'))
+                .filter(function (c) { return !c.disabled; });
+            var falta = suyos.some(function (c) { return !c.checked; });
+            suyos.forEach(function (c) { c.checked = falta; });
+            boton.textContent = falta ? 'Desmarcar todo' : 'Marcar todo';
+            if (falta && todo.checked) { todo.checked = false; }
+            pintar();
+        });
+    });
+
+    // Si el rol es administrador, los permisos no se aplican: se avisa.
+    var rol = document.getElementById('role');
+    rol.addEventListener('change', function () {
+        var esAdmin = rol.value === 'admin';
+        document.getElementById('seccion-permisos').classList.toggle('opacity-50', esAdmin);
+        document.getElementById('lista-modulos').classList.toggle('pointer-events-none', esAdmin);
+        todo.disabled = esAdmin;
+    });
+
+    pintar();
+});
+</script>
+{% endblock %}

@@ -34,12 +34,13 @@ async def quick_create_assignment(request: Request, db: Session = Depends(get_db
     data = await request.json()
     new_assignment = kpi_service.quick_create_assignment(
         db, data.get("name"), data.get("at"), data.get("status", "Activo"),
-        data.get("valid_from"), data.get("valid_to")
+        data.get("valid_from"), data.get("valid_to"), plant=data.get("plant")
     )
     return {
         "status": "success",
         "id": new_assignment.id,
         "cliente": new_assignment.customer_name,
+        "planta": new_assignment.plant or "—",
         "at": new_assignment.technical_advisor or "No asignado",
         "estandar": 0,
         "premium": 0,

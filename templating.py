@@ -59,6 +59,50 @@ def static_url(path: str) -> str:
 templates.env.globals["static_url"] = static_url
 templates.env.globals["asset_version"] = ASSET_VERSION
 
+# ── Caty, la instructora de uso ─────────────────────────────────────────────
+# El widget vive en layout.html, que renderizan ~35 rutas con contextos
+# distintos. Pasarle `agente_habilitado` a cada una sería tocar 35 routers y
+# olvidarse en la número 36, así que va como global del entorno.
+#
+# Se importa acá adentro y no arriba para no crear un ciclo: `services.agente`
+# no importa `templating`, pero mantener la importación local deja explícito que
+# este módulo no depende del agente para nada más.
+from config import settings as _settings  # noqa: E402
+from services.agente import persona as _persona  # noqa: E402
+
+templates.env.globals["agente_habilitado"] = lambda: _settings.agente_habilitado
+templates.env.globals["agente_nombre"] = _persona.NOMBRE
+
+
+# ── El menú lateral ─────────────────────────────────────────────────────────
+# Se arma desde el catálogo de módulos y filtrado por lo que ve el usuario del
+# pedido. Va como global por el mismo motivo que el widget de Caty: el menú vive
+# en `layout.html`, que renderizan decenas de rutas con contextos distintos, y
+# pasarle la lista a cada una sería olvidarse en la número treinta.
+#
+# El usuario lo deja el middleware en `request.state.db_user`: es el mismo que ya
+# consulta para comprobar los permisos, así que el menú no cuesta una consulta
+# más.
+from services import permisos as _permisos  # noqa: E402
+
+
+def _menu_lateral(request):
+    return _permisos.menu(getattr(request.state, "db_user", None))
+
+
+def _modulo_visible(request, clave: str) -> bool:
+    """¿El usuario de este pedido ve ese módulo?
+
+    Sirve para los enlaces de ayuda que llevan de una pantalla a otra: sin esto, el
+    formulario de cliente le ofrece «Gestionar equipos» a alguien que no tiene
+    Equipos, y el enlace lo manda a un 403.
+    """
+    return clave in _permisos.visibles(getattr(request.state, "db_user", None))
+
+
+templates.env.globals["menu_lateral"] = _menu_lateral
+templates.env.globals["modulo_visible"] = _modulo_visible
+
 
 def _from_json(value):
     """Decode a JSON string, tolerating already-decoded values."""

@@ -10,6 +10,7 @@ import datetime
 import os
 
 import models
+from tests import apoyo
 from services import auditoria
 
 # Ruta a las plantillas, para las pruebas que revisan el marcado.
@@ -159,7 +160,7 @@ def test_crear_un_cliente_queda_registrado(client, db_session, seed_admin):
     client.post("/nuevo-cliente", data={
         "csrf_token": _csrf(client, "/nuevo-cliente"),
         "name": "Historial SA", "plant": "P1", "industry_sector": "Corrugado",
-        "assigned_commercial": "A", "technical_advisor": "ING. X", "designer": "D",
+        "team_id": apoyo.equipo_de_prueba_id(),
         "address": "Calle 1", "city": "Rosario", "status": "Activo"})
 
     r = db_session.query(models.ActivityLog).filter(
@@ -174,14 +175,14 @@ def test_editar_un_cliente_registra_la_diferencia(client, db_session, seed_admin
     client.post("/nuevo-cliente", data={
         "csrf_token": _csrf(client, "/nuevo-cliente"),
         "name": "Editable SA", "plant": "P1", "industry_sector": "Corrugado",
-        "assigned_commercial": "A", "technical_advisor": "ING. X", "designer": "D",
+        "team_id": apoyo.equipo_de_prueba_id(),
         "address": "Calle 1", "city": "Rosario", "status": "Activo"})
 
     cid = db_session.query(models.Customer).filter_by(name="Editable SA").first().id
     client.post(f"/editar-cliente/{cid}", data={
         "csrf_token": _csrf(client),
         "name": "Editable SA", "plant": "Planta 9", "industry_sector": "Corrugado",
-        "assigned_commercial": "A", "technical_advisor": "ING. X", "designer": "D",
+        "team_id": apoyo.equipo_de_prueba_id(),
         "address": "Calle 1", "city": "Rosario", "status": "Activo"})
 
     r = db_session.query(models.ActivityLog).filter(
@@ -196,7 +197,7 @@ def test_editar_sin_cambios_no_registra_nada(client, db_session, seed_admin):
     """Abrir el formulario y guardar sin tocar nada no es un cambio."""
     _entrar(client)
     datos = {"name": "Sin cambios SA", "plant": "P1", "industry_sector": "Corrugado",
-             "assigned_commercial": "A", "technical_advisor": "ING. X", "designer": "D",
+             "team_id": apoyo.equipo_de_prueba_id(),
              "address": "Calle 1", "city": "Rosario", "status": "Activo"}
     client.post("/nuevo-cliente", data={"csrf_token": _csrf(client, "/nuevo-cliente"), **datos})
     cid = db_session.query(models.Customer).filter_by(name="Sin cambios SA").first().id

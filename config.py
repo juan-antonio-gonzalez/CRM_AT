@@ -31,6 +31,31 @@ class Settings(BaseSettings):
     # Uploaded files live under this directory (served from /static).
     upload_dir: str = "static/uploads"
 
+    # --- Agente instructor de uso (Caty) ---------------------------------- #
+    # Sin clave, Caty no existe: el widget no se renderiza y los endpoints
+    # devuelven 503. La aplicación funciona igual, que es lo que tiene que pasar
+    # en desarrollo y en un arranque en frío.
+    deepseek_api_key: str = ""
+    deepseek_base_url: str = "https://api.deepseek.com"
+    deepseek_model: str = "deepseek-flash"
+    agente_timeout: float = 30.0
+    # Para una respuesta que llega por partes, el timeout de lectura es de
+    # **inactividad**, no total: cada fragmento que llega lo reinicia. 30 segundos
+    # de silencio mataban consultas que estaban funcionando —pasó en la
+    # evaluación, una de 79— porque DeepSeek tardó en mandar el primer fragmento.
+    # Con 90 segundos, un silencio así ya significa una conexión muerta.
+    agente_timeout_lectura: float = 90.0
+    agente_timeout_conexion: float = 10.0
+    agente_max_entrada: int = 1000
+    agente_max_turnos: int = 10
+    agente_max_respuesta: int = 2500
+    agente_consultas_por_minuto: int = 20
+    agente_consultas_por_dia: int = 300
+
+    @property
+    def agente_habilitado(self) -> bool:
+        return bool(self.deepseek_api_key.strip())
+
     @property
     def database_url_resolved(self) -> str:
         """Normalise the database URL.

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AplicaciónAT — CRM de asistencia técnica industrial</title>
+
+    {# Lo que lee un buscador, y también el robot de un filtro web que tiene que
+       decidir en qué categoría poner el dominio. Antes esta página no existía y lo
+       único público era el formulario de acceso. #}
+    <meta name="description" content="{{ descripcion }}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{ request.base_url }}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AplicaciónAT" />
+    <meta property="og:title" content="AplicaciónAT — CRM de asistencia técnica industrial" />
+    <meta property="og:description" content="{{ descripcion }}" />
+    <meta property="og:url" content="{{ request.base_url }}" />
+    <meta property="og:locale" content="es_AR" />
+
+    <link href="{{ static_url('css/tailwind.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/fonts.css') }}" rel="stylesheet" />
+    <link href="{{ static_url('css/style.css') }}" rel="stylesheet" />
+
+    {# Datos estructurados. Es la forma más directa de decirle a una máquina qué es
+       este sitio, sin que tenga que deducirlo del texto. #}
+    <script type="application/ld+json" nonce="{{ request.state.script_nonce }}">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AplicaciónAT",
+      "alternateName": "CRM-AT",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "CRM de asistencia técnica industrial",
+      "description": {{ descripcion | tojson }},
+      "inLanguage": "es",
+      "url": {{ request.base_url | string | tojson }},
+      "operatingSystem": "Web"
+    }
+    </script>
+</head>
+<body class="h-full bg-background-light font-display text-texto-fuerte">
+    <div class="min-h-full flex flex-col">
+
+        <header class="border-b border-superficie-borde bg-superficie-card">
+            <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+                {# El logo y el nombre juntos: el logo es un monograma, y el nombre al
+                   lado es lo que le dice a un visitante —y a un robot— de qué sitio
+                   se trata. #}
+                <div class="flex items-center gap-2.5">
+                    <img src="{{ static_url('img/logo-aplicacionat.svg') }}"
+                        alt="AplicaciónAT" class="h-8 w-auto" width="56" height="40">
+                    <span class="text-base font-bold text-texto-fuerte tracking-tight">AplicaciónAT</span>
+                </div>
+                <a href="/auth/login"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors shrink-0">
+                    <span class="material-symbols-rounded text-lg" aria-hidden="true">login</span>
+                    Iniciar sesión
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <div class="max-w-5xl mx-auto px-6 py-12 sm:py-16">
+
+                <p class="text-2xs font-bold text-primary tracking-normal mb-2">
+                    Gestión Operativa
+                </p>
+                <h1 class="text-3xl sm:text-4xl font-bold text-texto-fuerte tracking-tight leading-tight">
+                    AplicaciónAT
+                </h1>
+                <p class="text-lg text-texto-base font-semibold mt-2">
+                    CRM de asistencia técnica industrial
+                </p>
+                <p class="text-base text-texto-base leading-relaxed mt-6 max-w-3xl">
+                    AplicaciónAT es la aplicación web con la que los equipos de asistencia
+                    técnica industrial gestionan sus clientes, sus plantas y sus máquinas, y
+                    dejan registro de cada visita, relevamiento y reunión. Reúne en un solo
+                    lugar lo que antes vivía repartido entre planillas: la ficha del cliente,
+                    el parque de máquinas instalado, las visitas programadas y su informe, los
+                    indicadores de gestión y el historial de quién cambió qué.
+                </p>
+                <p class="text-base text-texto-base leading-relaxed mt-4 max-w-3xl">
+                    Es una herramienta <strong>privada y de uso interno</strong>. No hay
+                    registro público: las cuentas las crea un administrador y cada una ve
+                    únicamente las pantallas que le corresponden.
+                </p>
+
+                <h2 class="text-xl font-bold text-texto-fuerte tracking-tight mt-12 mb-1">
+                    Qué se puede hacer
+                </h2>
+                <p class="text-sm text-texto-suave mb-6">
+                    Estos son los módulos de la aplicación, los mismos que aparecen en su menú.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% set modulos = [
+                        ('Clientes', 'group', 'Las fichas de cada cliente y de cada una de sus plantas, con sus contactos, su ubicación y su sector industrial.'),
+                        ('Equipos de asistencia', 'diversity_3', 'Los equipos formados por un asesor comercial, un diseñador y un asistente técnico, que se asignan a cada planta.'),
+                        ('Máquinas', 'precision_manufacturing', 'El parque de máquinas instalado: marca, modelo, número de serie y línea de producción.'),
+                        ('Visitas técnicas', 'assignment', 'La programación de visitas, su ejecución en planta y el informe técnico que queda asociado.'),
+                        ('Relevamientos', 'summarize', 'Los relevamientos técnicos de cada máquina y los de infraestructura y logística, con sus fotos y sus reportes.'),
+                        ('Minutas de reunión', 'description', 'El registro de las reuniones con el cliente, con sus acuerdos, responsables y tareas pendientes.'),
+                        ('Indicadores', 'ssid_chart', 'Los tableros de visitas, calidad y asignación AT, con sus totales y su avance.'),
+                        ('Agenda', 'calendar_month', 'El calendario de visitas programadas y su seguimiento.'),
+                        ('Historial', 'history', 'Quién cambió cada registro y cuándo, y la papelera para recuperar lo que se desactivó.'),
+                    ] %}
+                    {% for nombre, icono, texto in modulos %}
+                    <div class="bg-superficie-card rounded-lg border border-superficie-borde p-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="material-symbols-rounded text-primary text-xl" aria-hidden="true">{{ icono }}</span>
+                            <h3 class="text-sm font-bold text-texto-fuerte">{{ nombre }}</h3>
+                        </div>
+                        <p class="text-xs text-texto-base leading-relaxed">{{ texto }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="bg-superficie-suave rounded-lg border border-superficie-borde p-6 mt-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-base font-bold text-texto-fuerte">Acceso restringido</h2>
+                        <p class="text-xs text-texto-base mt-1 max-w-xl">
+                            Si ya tenés una cuenta, entrá con tu usuario. Si necesitás una,
+                            pedísela al administrador de tu área.
+                        </p>
+                    </div>
+                    <a href="/auth/login"
+                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold transition-colors shrink-0">
+                        <span class="material-symbols-rounded text-lg" aria-hidden="true">login</span>
+                        Iniciar sesión
+                    </a>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="border-t border-superficie-borde bg-superficie-card">
+            <div class="max-w-5xl mx-auto px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <p class="text-2xs text-texto-suave">
+                    AplicaciónAT — CRM de asistencia técnica industrial
+                </p>
+                <p class="text-2xs text-texto-tenue">
+                    Aplicación privada de uso interno. No ofrece servicios al público.
+                </p>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

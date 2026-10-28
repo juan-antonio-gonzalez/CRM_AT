@@ -22,8 +22,10 @@ ENV_FILE="${ENV_DIR}/crm-at.env"
 DB_NAME="crm_at"
 DB_USER="crm_at"
 APP_PORT="8020"
-DOMAIN="ejemplo.com"
-ALT_DOMAIN="www.ejemplo.com"
+# El dominio se pasa por variable de entorno: el proyecto no lleva un dominio
+# adentro, porque es un dato de cada despliegue y no algo que se herede.
+DOMAIN="${DOMAIN:?Falta DOMAIN: pasá el dominio público, por ejemplo DOMAIN=crm.miempresa.com}"
+ALT_DOMAIN="${ALT_DOMAIN:-www.${DOMAIN}}"
 REPO_URL="https://github.com/juan-antonio-gonzalez/CRM_AT.git"
 WANT_SSL=0
 
@@ -291,7 +293,7 @@ if [[ -f "${EXISTING_VHOST}" ]] && grep -q "letsencrypt/live" "${EXISTING_VHOST}
          "$EXISTING_VHOST"
 else
   sed -e "s|server 127.0.0.1:8020;|server 127.0.0.1:${APP_PORT};|" \
-      -e "s|server_name ejemplo.com www.ejemplo.com 203.0.113.10;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
+      -e "s|server_name __DOMINIO__ __DOMINIO_ALT__ 203.0.113.10;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
       -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
       "${SCRIPT_DIR}/nginx-crm-at.conf" > "$EXISTING_VHOST"
 fi
@@ -301,7 +303,7 @@ mkdir -p /var/www/certbot/.well-known/acme-challenge
 ln -sf "$EXISTING_VHOST" "/etc/nginx/sites-enabled/${APP_NAME}"
 
 # NOTE: pre-existing sites are deliberately left untouched. This server already
-# serves other applications (e.g. otro-sitio.com) and removing the 'default' site
+# serves other applications on the same server and removing the 'default' site
 # could change which vhost answers requests with an unknown Host header.
 
 nginx -t || die "La configuración de Nginx es inválida."

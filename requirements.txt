@@ -17,3 +17,8 @@ openpyxl==3.1.5
 # PostgreSQL, but without this dependency it was not installable from the
 # declared requirements.
 psycopg2-binary==2.9.10
+
+# Cliente HTTP del agente instructor. Estaba declarado sólo en
+# requirements-dev.txt (lo usa el TestClient de Starlette para los tests), así
+# que en producción el agente no habría arrancado.
+httpx==0.28.1

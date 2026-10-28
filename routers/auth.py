@@ -1,9 +1,13 @@
+import logging
+
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
+from typing import List
 
 from database import get_db
 from models import User
+from services import permisos
 from templating import templates
 from security import (
     hash_password,
@@ -30,6 +34,8 @@ def require_admin(request: Request) -> User:
     finally:
         db.close()
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -181,6 +187,7 @@ async def list_users(request: Request, db: Session = Depends(get_db)):
         "active_page": "usuarios",
         "users": users,
         "csrf_token": csrf,
+        "total_modulos": len(permisos.claves_asignables()),
     })
 
 
@@ -328,3 +335,132 @@ async def change_password(
         "csrf_token": generate_csrf_token(user.id),
         "success": "Contraseña actualizada correctamente",
     })
+
+
+# ── Editar un usuario ───────────────────────────────────────────────────────
+#
+# Antes sólo se podía crear, activar/desactivar y resetear la contraseña: para
+# corregir un nombre mal escrito o cambiar un correo había que crear otro usuario.
+# Y no había forma de elegir qué veía cada uno: todos veían todo el menú.
+
+def _usuario_o_404(db: Session, user_id: int) -> User:
+    objetivo = db.query(User).filter(User.id == user_id).first()
+    if not objetivo:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return objetivo
+
+
+def _verificar_csrf(csrf_token: str, admin: User) -> None:
+    if not verify_csrf_token(csrf_token, int(admin.id)):
+        raise HTTPException(status_code=403, detail="CSRF inválido")
+
+
+def _normalizar_modulos(marcados) -> list:
+    """Deja sólo las claves que existen y que se pueden asignar.
+
+    La pantalla manda lo que el administrador marcó, pero el formulario se puede
+    armar a mano: sin este filtro se podría guardar «usuarios» y que un usuario
+    común se diera permisos a sí mismo.
+    """
+    return sorted(set(marcados or []) & permisos.claves_asignables())
+
+
+@router.get("/usuarios/{user_id}/editar", response_class=HTMLResponse)
+async def edit_user_page(request: Request, user_id: int, db: Session = Depends(get_db)):
+    admin = require_admin(request)
+    objetivo = _usuario_o_404(db, user_id)
+
+    return templates.TemplateResponse(request, 'editar_usuario.html', {
+        "request": request,
+        "active_page": "usuarios",
+        "objetivo": objetivo,
+        "csrf_token": generate_csrf_token(int(admin.id)),
+        "es_uno_mismo": objetivo.id == int(admin.id),
+        # `None` es «sin configurar»: ve todo lo que no sea de administración, y
+        # además todo lo que se agregue más adelante.
+        "ve_todo": objetivo.modulos is None,
+        "grupos": permisos.agrupados_para_elegir(objetivo),
+        "total_modulos": len(permisos.claves_asignables()),
+    })
+
+
+@router.post("/usuarios/{user_id}/editar")
+async def edit_user(
+    request: Request,
+    user_id: int,
+    username: str = Form(...),
+    email: str = Form(...),
+    full_name: str = Form(""),
+    phone: str = Form(""),
+    role: str = Form("user"),
+    ve_todo: str = Form(None),
+    modulos: List[str] = Form([]),
+    csrf_token: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    admin = require_admin(request)
+    _verificar_csrf(csrf_token, admin)
+    objetivo = _usuario_o_404(db, user_id)
+
+    username = username.strip()
+    email = email.strip()
+    errores = {}
+
+    if not username:
+        errores["username"] = "El nombre de usuario no puede quedar vacío"
+    elif db.query(User).filter(User.username == username,
+                               User.id != objetivo.id).first():
+        errores["username"] = "Ya hay otro usuario con ese nombre"
+
+    if not email:
+        errores["email"] = "El correo no puede quedar vacío"
+    elif db.query(User).filter(User.email == email, User.id != objetivo.id).first():
+        errores["email"] = "Ya hay otro usuario con ese correo"
+
+    # Un administrador no se puede sacar el rol a sí mismo: se quedaría sin poder
+    # volver a entrar a esta pantalla, y no hay forma de arreglarlo desde la
+    # aplicación.
+    es_uno_mismo = objetivo.id == int(admin.id)
+    if es_uno_mismo and role != "admin":
+        errores["role"] = ("No podés quitarte el rol de administrador a vos mismo. "
+                           "Pedile a otro administrador que lo haga.")
+
+    if errores:
+        return templates.TemplateResponse(request, 'editar_usuario.html', {
+            "request": request,
+            "active_page": "usuarios",
+            "objetivo": objetivo,
+            "csrf_token": generate_csrf_token(int(admin.id)),
+            "es_uno_mismo": es_uno_mismo,
+            "ve_todo": bool(ve_todo),
+            "grupos": permisos.agrupados_para_elegir(objetivo),
+            "total_modulos": len(permisos.claves_asignables()),
+            "errores": errores,
+            # Lo que el administrador escribió, para no perderlo al volver.
+            "borrador": {"username": username, "email": email,
+                         "full_name": full_name, "phone": phone, "role": role,
+                         "modulos": modulos},
+        })
+
+    objetivo.username = username
+    objetivo.email = email
+    objetivo.full_name = full_name.strip()
+    objetivo.phone = phone.strip()
+    objetivo.role = role if role in ("admin", "user") else "user"
+
+    if objetivo.role == "admin":
+        # Un administrador ve todo por definición: guardar una lista sería una
+        # restricción que no se aplica, y confunde al leerla.
+        objetivo.modulos = None
+    elif ve_todo:
+        objetivo.modulos = None
+    else:
+        objetivo.modulos = _normalizar_modulos(modulos)
+
+    db.commit()
+    logger.info("usuario %s editado por %s (rol=%s, modulos=%s)",
+                objetivo.username, admin.username, objetivo.role,
+                objetivo.modulos)
+
+    return RedirectResponse(url=f"/auth/usuarios?editado={objetivo.username}",
+                            status_code=303)

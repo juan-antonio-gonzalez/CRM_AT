@@ -11,6 +11,7 @@ import re
 from openpyxl import load_workbook
 
 import models
+from tests import apoyo
 
 
 def _csrf(client, ruta="/nuevo-cliente"):
@@ -25,9 +26,9 @@ def _cliente(idx=0, **extra):
         "name": f"Cliente Prueba {idx}",
         "plant": f"Planta {idx}",
         "industry_sector": "Metalurgia",
-        "assigned_commercial": "Carlos Pérez",
-        "technical_advisor": "ING. GOMEZ",
-        "designer": "Diseñador Uno",
+        # El equipo es lo que se asigna. Sus tres miembros son los que quedan
+        # copiados en las columnas del cliente.
+        "team_id": apoyo.equipo_de_prueba_id(),
         "address": f"Calle {idx} 123",
         "city": "Rosario",
         "status": "Activo",
@@ -60,9 +61,12 @@ def test_crear_cliente_guarda_todos_los_campos(client, db_session, admin_cookie)
     c = db_session.query(models.Customer).filter_by(name="Cliente Prueba 0").one()
     assert c.plant == "Planta 0"
     assert c.industry_sector == "Metalurgia"
-    assert c.assigned_commercial == "Carlos Pérez"
-    assert c.technical_advisor == "ING. GOMEZ"
-    assert c.designer == "Diseñador Uno"
+    # Los tres nombres salen del equipo, y el modelo los normaliza a mayúsculas
+    # igual que los catálogos.
+    assert c.assigned_commercial == apoyo.COMERCIAL
+    assert c.technical_advisor == apoyo.AT
+    assert c.designer == apoyo.DISENADOR
+    assert c.team_id == apoyo.equipo_de_prueba_id()
     assert c.address == "Calle 0 123"
     assert c.city == "Rosario"
     assert c.status == "Activo"

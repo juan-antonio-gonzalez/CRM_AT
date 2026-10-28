@@ -8,10 +8,39 @@ from typing import Optional, List
 import models
 from database import get_db
 from services import customer_service, pagination as pg, soft_delete as sd
-from services import auditoria, lote
+from services import auditoria, lote, team_service
 from templating import templates
 
 router = APIRouter(tags=["customers"])
+
+
+def _equipos_activos(db: Session):
+    """Los equipos que se pueden asignar, por nombre."""
+    return (db.query(models.Team)
+            .filter(models.Team.is_active.is_(True))
+            .order_by(models.Team.name)
+            .all())
+
+
+def _equipo_para_asignar(db: Session, team_id) -> models.Team:
+    """El equipo elegido, o el motivo por el que no se puede usar.
+
+    El formulario exige un equipo, pero el POST se puede armar a mano: por eso se
+    vuelve a comprobar acá, contra la base, en vez de confiar en el `required` del
+    navegador.
+    """
+    if not team_id:
+        raise HTTPException(status_code=400, detail="Hay que elegir un equipo para el cliente")
+    equipo = (db.query(models.Team)
+              .filter(models.Team.id == team_id, models.Team.is_active.is_(True))
+              .first())
+    if not equipo:
+        raise HTTPException(
+            status_code=400,
+            detail="El equipo elegido no existe o está desactivado",
+        )
+    return equipo
+
 
 
 @router.get("/organigrama", response_class=HTMLResponse)
@@ -123,6 +152,7 @@ async def list_customers(
         "advisors": db.query(models.TechnicalAdvisor).order_by(models.TechnicalAdvisor.name).all(),
         "designers": db.query(models.Designer).order_by(models.Designer.name).all(),
         "commercials": db.query(models.CommercialAdvisor).order_by(models.CommercialAdvisor.name).all(),
+            "equipos": _equipos_activos(db),
         "sectors": db.query(models.IndustrialSector).order_by(models.IndustrialSector.name).all(),
         "client_names": client_names,
         "plant_names": plant_names,
@@ -144,6 +174,7 @@ async def new_customer_form(request: Request, db: Session = Depends(get_db)):
         "advisors": advisors,
         "designers": designers,
         "commercials": commercials,
+        "equipos": _equipos_activos(db),
         "sectors": sectors,
         "client_names": client_names,
         "plant_names": plant_names,
@@ -201,8 +232,8 @@ async def quick_create_contact_name(name: str = Form(...), db: Session = Depends
 async def create_customer(
     request: Request,
     name: str = Form(...), plant: str = Form(...), industry_sector: str = Form(...),
-    assigned_commercial: str = Form(...), technical_advisor: str = Form(...),
-    designer: str = Form(...), address: str = Form(...), city: str = Form(...),
+    team_id: Optional[int] = Form(None),
+    address: str = Form(...), city: str = Form(...),
     status: str = Form("Inactivo"), relevamiento_status: Optional[str] = Form(None),
     member_name: List[str] = Form([]), member_role: List[str] = Form([]),
     member_phone: List[str] = Form([]),
@@ -211,10 +242,16 @@ async def create_customer(
     observations: str = Form(""),
     db: Session = Depends(get_db)
 ):
-    creado = customer_service.create_customer(db, name, plant, industry_sector, assigned_commercial,
-                                      technical_advisor, designer, address, city,
-                                      status, relevamiento_status,
-                                      member_name, member_role, member_phone, member_reports_to, member_sector, observations)
+    # Los tres nombres salen del equipo, no de tres desplegables. Se copian a las
+    # columnas del cliente —la foto del momento— y el `team_id` queda como el
+    # vínculo con el equipo.
+    equipo = _equipo_para_asignar(db, team_id)
+    creado = customer_service.create_customer(
+        db, name, plant, industry_sector,
+        equipo.commercial, equipo.technical_advisor, equipo.designer,
+        address, city, status, relevamiento_status,
+        member_name, member_role, member_phone, member_reports_to, member_sector,
+        observations, team_id=equipo.id)
     # El historial se registra después del alta: si el usuario no tiene permiso o
     # los datos no validan, no queda un registro de algo que no pasó.
     if creado is not None:
@@ -236,12 +273,21 @@ async def edit_customer_form(customer_id: int, request: Request, db: Session = D
     sectors = db.query(models.IndustrialSector).order_by(models.IndustrialSector.name).all()
     client_names = db.query(models.ClientName).order_by(models.ClientName.name).all()
     plant_names = db.query(models.PlantName).order_by(models.PlantName.name).all()
+    # Un cliente con varias plantas son varias filas con el mismo nombre. Sólo se
+    # ofrece aplicar el equipo a todas si hay otras.
+    otras_plantas = (db.query(models.Customer)
+                     .filter(models.Customer.name == customer.name,
+                             models.Customer.id != customer.id,
+                             models.Customer.is_active.is_(True))
+                     .count())
     return templates.TemplateResponse(request, '_editar_cliente_partial.html', {
         "request": request,
         "customer": customer,
+        "otras_plantas": otras_plantas,
         "advisors": advisors,
         "designers": designers,
         "commercials": commercials,
+        "equipos": _equipos_activos(db),
         "sectors": sectors,
         "client_names": client_names,
         "plant_names": plant_names,
@@ -254,8 +300,9 @@ async def update_customer(
     request: Request,
     customer_id: int,
     name: str = Form(...), plant: str = Form(...), industry_sector: str = Form(...),
-    assigned_commercial: str = Form(...), technical_advisor: str = Form(...),
-    designer: str = Form(...), address: str = Form(...), city: str = Form(...),
+    team_id: Optional[int] = Form(None),
+    aplicar_a_todas: bool = Form(False),
+    address: str = Form(...), city: str = Form(...),
     status: str = Form(...), relevamiento_status: Optional[str] = Form(None),
     member_name: List[str] = Form([]), member_role: List[str] = Form([]),
     member_phone: List[str] = Form([]),
@@ -269,14 +316,34 @@ async def update_customer(
         raise HTTPException(status_code=403, detail="No se puede editar un cliente inactivo")
     # Foto del estado previo: sin esto no se puede decir qué cambió.
     antes = auditoria.snapshot(customer)
-    customer_service.update_customer(db, customer_id, name, plant, industry_sector,
-                                       assigned_commercial, technical_advisor, designer,
-                                       address, city, status, relevamiento_status,
-                                       member_name, member_role, member_phone, member_reports_to, member_sector, observations)
+    # Cambiar de equipo reescribe los tres nombres del cliente, que es lo que el
+    # formulario anuncia. Los clientes de las otras plantas no se tocan.
+    equipo = _equipo_para_asignar(db, team_id)
+    # El nombre original se lee **antes** de la edición: si el usuario renombra el
+    # cliente en el mismo guardado, las otras plantas siguen teniendo el nombre
+    # viejo, y son ésas las que hay que alcanzar.
+    nombre_original = customer_service.get_customer(db, customer_id).name
+    customer_service.update_customer(
+        db, customer_id, name, plant, industry_sector,
+        equipo.commercial, equipo.technical_advisor, equipo.designer,
+        address, city, status, relevamiento_status,
+        member_name, member_role, member_phone, member_reports_to, member_sector,
+        observations, team_id=equipo.id)
     # Se relee el registro para comparar contra la foto previa y registrar sólo
     # los campos que efectivamente cambiaron.
     despues = auditoria.snapshot(customer_service.get_customer(db, customer_id))
     cambios = auditoria.diferencias(antes, despues)
+
+    if aplicar_a_todas:
+        alcanzadas = team_service.aplicar_a_todas_las_plantas(
+            db, equipo.id, nombre_original, customer_id)
+        if alcanzadas:
+            # Queda en el historial: se tocaron otras filas además de ésta, y quien
+            # lea el cambio tiene que poder verlo sin abrir cada planta.
+            cambios["otras_plantas"] = {
+                "antes": "",
+                "despues": f"{alcanzadas} planta(s) más quedaron con el mismo equipo",
+            }
     if cambios:
         auditoria.registrar(db, "customer", customer_id, "editar",
                             user=getattr(request.state, "user", None),

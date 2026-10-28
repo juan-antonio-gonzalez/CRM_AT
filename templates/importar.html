@@ -124,6 +124,25 @@
         </div>
         {% endif %}
 
+        {% if avisos %}
+        {# Filas que **sí** se importan, con algo que conviene mirar. Van aparte de
+           los errores a propósito: mezclarlas haría creer que no entran. #}
+        <div class="bg-info-50 border border-info-200 rounded-lg p-4 mb-4">
+            <p class="text-sm text-info-700 flex items-center gap-2">
+                <span class="material-symbols-rounded text-lg" aria-hidden="true">info</span>
+                {{ avisos|length }} fila{{ 's' if avisos|length != 1 else '' }} se va{{ 'n' if avisos|length != 1 else '' }} a importar con una advertencia.
+            </p>
+            <ul class="mt-2 space-y-1 max-h-48 overflow-y-auto">
+                {% for a in avisos[:50] %}
+                <li class="text-xs text-info-700">Fila {{ a.fila }}: {{ a.motivo }}</li>
+                {% endfor %}
+                {% if avisos|length > 50 %}
+                <li class="text-xs text-info-700">… y {{ avisos|length - 50 }} más.</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
         {% if filas %}
         <div class="bg-superficie-card border border-superficie-borde rounded-lg overflow-hidden">
             <div class="overflow-auto max-h-[420px]">

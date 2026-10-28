@@ -14,6 +14,7 @@ import subprocess
 import pytest
 
 import models
+from tests import apoyo
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,8 +29,8 @@ def _csrf(client, ruta="/nuevo-cliente"):
 def _crear(client, csrf, nombre, equipo=None, activo=True):
     datos = {
         "name": nombre, "plant": "Planta", "industry_sector": "Metalurgia",
-        "assigned_commercial": "Comercial", "technical_advisor": "ING. GOMEZ",
-        "designer": "Diseñador", "address": "Calle 1", "city": "Rosario",
+        "team_id": apoyo.equipo_de_prueba_id(),
+        "address": "Calle 1", "city": "Rosario",
         "status": "Activo", "observations": "", "csrf_token": csrf,
     }
     if equipo:

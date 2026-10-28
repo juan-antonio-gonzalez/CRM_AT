@@ -168,16 +168,19 @@ def seed_admin(db_session):
 
     existing = db_session.query(models.User).filter(models.User.username == "admin").first()
     if not existing:
-        db_session.add(models.User(
+        existing = models.User(
             username="admin",
             email="admin@crm-at.com",
             hashed_password=hash_password("admin123"),
             full_name="Administrador",
             role="admin",
             is_active=True,
-        ))
+        )
+        db_session.add(existing)
         db_session.commit()
-    return existing
+    # Se devuelve el usuario de verdad: antes devolvía `existing`, que en la
+    # primera corrida era `None` y hacía fallar a quien pidiera esta fixture.
+    return db_session.query(models.User).filter(models.User.username == "admin").one()
 
 
 @pytest.fixture

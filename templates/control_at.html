@@ -121,6 +121,7 @@
                     <tr data-row class="hover:bg-superficie-suave transition-colors"
                         data-assignment-id="{{ r.assignment_id or '' }}"
                         data-customer-name="{{ r.name }}"
+                        data-plant="{{ r.plant or '' }}"
                         data-at="{{ r.technical_advisor or '' }}"
                         data-estandar="{{ std }}"
                         data-premium="{{ prem }}"
@@ -249,6 +250,13 @@
                         </select>
                     </div>
                     <div>
+                        <label for="modal-plant" class="text-2xs font-bold text-texto-tenue tracking-normal">Planta</label>
+                        <select id="modal-plant" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
+                            <option value="">Seleccionar planta...</option>
+                        </select>
+                        <p id="modal-plant-aviso" class="text-2xs text-texto-tenue mt-1"></p>
+                    </div>
+                    <div>
                         <label for="modal-at" class="text-2xs font-bold text-texto-tenue tracking-normal">AT Asignado</label>
                         <select id="modal-at" class="form-select w-full bg-superficie-suave border-superficie-borde rounded-lg text-sm focus:ring-primary focus:border-primary mt-1">
                             <option value="">Seleccionar AT...</option>
@@ -332,12 +340,46 @@ function toDateStr(d) {
         String(dt.getDate()).padStart(2, '0');
 }
 
+// Las plantas del cliente elegido. Sin esto, una asignación no puede decir de qué
+// planta es, y un cliente con varias plantas sólo podía tener una.
+function cargarPlantas(cliente, seleccionada) {
+    var select = document.getElementById('modal-plant');
+    var aviso = document.getElementById('modal-plant-aviso');
+    select.innerHTML = '<option value="">Seleccionar planta...</option>';
+    aviso.textContent = '';
+    if (!cliente) {
+        aviso.textContent = 'Elegí primero un cliente.';
+        return Promise.resolve();
+    }
+    return fetch('/api/cliente-plantas/' + encodeURIComponent(cliente))
+        .then(function (r) { return r.json(); })
+        .then(function (plantas) {
+            plantas.forEach(function (p) {
+                var opcion = document.createElement('option');
+                opcion.value = p.name;
+                opcion.textContent = p.name;
+                select.appendChild(opcion);
+            });
+            if (seleccionada) select.value = seleccionada;
+            if (!plantas.length) {
+                aviso.textContent = 'Este cliente no tiene plantas cargadas.';
+            } else if (!select.value && plantas.length === 1) {
+                // Con una sola planta no hay nada que elegir.
+                select.value = plantas[0].name;
+            }
+        })
+        .catch(function () {
+            aviso.textContent = 'No se pudieron cargar las plantas.';
+        });
+}
+
 function openModal(title, data) {
     var infoBlock = document.getElementById('modal-info');
     document.getElementById('asignacion-modal-container-titulo').textContent = title;
     if (data) {
         document.getElementById('edit-assignment-id').value = data.id || '';
         document.getElementById('modal-cliente').value = data.cliente || '';
+        cargarPlantas(data.cliente, data.plant || '');
         document.getElementById('modal-at').value = data.at || '';
         document.getElementById('modal-estandar').value = data.estandar || 0;
         document.getElementById('modal-premium').value = data.premium || 0;
@@ -355,6 +397,7 @@ function openModal(title, data) {
         infoBlock.classList.add('hidden');
         document.getElementById('edit-assignment-id').value = '';
         document.getElementById('modal-cliente').value = '';
+        cargarPlantas('', '');
         document.getElementById('modal-at').value = '';
         document.getElementById('modal-estandar').value = 0;
         document.getElementById('modal-premium').value = 0;
@@ -374,6 +417,10 @@ modalContainer.addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
 
+document.getElementById('modal-cliente').addEventListener('change', function() {
+    cargarPlantas(this.value, '');
+});
+
 document.getElementById('btn-nueva-asignacion').addEventListener('click', function() {
     openModal('Nueva Asignación', null);
 });
@@ -391,6 +438,7 @@ document.querySelectorAll('.btn-edit-asignacion').forEach(function(btn) {
         openModal('Editar Asignación', {
             id: tr.dataset.assignmentId,
             cliente: tr.dataset.customerName,
+            plant: tr.dataset.plant,
             at: tr.dataset.at,
             estandar: tr.dataset.estandar,
             premium: tr.dataset.premium,
@@ -406,6 +454,7 @@ document.querySelectorAll('.btn-edit-asignacion').forEach(function(btn) {
 document.getElementById('modal-save').addEventListener('click', function() {
     var id = document.getElementById('edit-assignment-id').value;
     var cliente = document.getElementById('modal-cliente').value;
+    var planta = document.getElementById('modal-plant').value;
     var at = document.getElementById('modal-at').value;
     var estandar = parseInt(document.getElementById('modal-estandar').value) || 0;
     var premium = parseInt(document.getElementById('modal-premium').value) || 0;
@@ -421,13 +470,14 @@ document.getElementById('modal-save').addEventListener('click', function() {
     if (id) {
         url = '/api/customers/' + id + '/update-kpis';
         payload = JSON.stringify({
-            name: cliente, at: at, standard_visits: estandar, premium_visits: premium,
+            name: cliente, plant: planta, at: at,
+            standard_visits: estandar, premium_visits: premium,
             status: estado, valid_from: validFrom || null, valid_to: validTo || null
         });
     } else {
         url = '/api/customers/quick-create';
         payload = JSON.stringify({
-            name: cliente, at: at, status: estado,
+            name: cliente, plant: planta, at: at, status: estado,
             valid_from: validFrom || null, valid_to: validTo || null
         });
     }
@@ -444,7 +494,7 @@ document.getElementById('modal-save').addEventListener('click', function() {
                 xhr2.open('POST', '/api/customers/' + newId + '/update-kpis', true);
                 xhr2.setRequestHeader('Content-Type', 'application/json');
                 xhr2.onload = function() { location.reload(); };
-                xhr2.send(JSON.stringify({ name: cliente, at: at, standard_visits: estandar, premium_visits: premium, status: estado, valid_from: validFrom || null, valid_to: validTo || null, reason: 'create' }));
+                xhr2.send(JSON.stringify({ name: cliente, plant: planta, at: at, standard_visits: estandar, premium_visits: premium, status: estado, valid_from: validFrom || null, valid_to: validTo || null, reason: 'create' }));
             } else {
                 location.reload();
             }

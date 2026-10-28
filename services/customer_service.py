@@ -1,4 +1,5 @@
 import datetime
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from typing import List, Optional
@@ -78,7 +79,7 @@ def create_customer(db: Session, name: str, plant: str, industry_sector: str,
                     member_phone: List[str] = None,
                     member_reports_to: List[str] = None,
                     member_sector: List[str] = None,
-                    observations: str = ""):
+                    observations: str = "", team_id: int = None):
     member_name = member_name or []
     member_role = member_role or []
     member_phone = member_phone or []
@@ -107,18 +108,24 @@ def create_customer(db: Session, name: str, plant: str, industry_sector: str,
         designer=designer, address=address, city=city,
         status=status or CustomerStatus.PROSPECTO.value,
         relevamiento_status=relevamiento_status or calculated_status,
-        client_team=team, observations=observations
+        client_team=team, observations=observations, team_id=team_id
     )
     db.add(new_customer)
     db.flush()
 
+    # La asignación se busca por cliente **y planta**: con el nombre solo, dar de
+    # alta la segunda planta de un cliente encontraba la asignación de la primera y
+    # no creaba nada, así que esa planta quedaba sin AT en el control de
+    # asignaciones. Se veía como una fila con el cliente y la planta en blanco.
     existing_at = db.query(models.ATAssignment).filter(
         models.ATAssignment.customer_name == name,
+        models.ATAssignment.plant == plant,
         models.ATAssignment.valid_to.is_(None)
     ).first()
     if not existing_at:
         at_assignment = models.ATAssignment(
             customer_name=name,
+            plant=plant,
             technical_advisor=technical_advisor,
             standard_visits=0,
             premium_visits=0,
@@ -146,9 +153,10 @@ def update_customer(db: Session, customer_id: int, name: str, plant: str,
                     member_phone: List[str],
                     member_reports_to: List[str],
                     member_sector: List[str],
-                    observations: str):
+                    observations: str, team_id: int = None):
     customer = get_customer(db, customer_id)
     old_name = customer.name
+    old_plant = customer.plant
 
     member_name = member_name or []
     member_role = member_role or []
@@ -184,10 +192,22 @@ def update_customer(db: Session, customer_id: int, name: str, plant: str,
     customer.relevamiento_status = calculated_status
     customer.client_team = team
     customer.observations = observations
+    customer.team_id = team_id
 
-    db.query(models.ATAssignment).filter(models.ATAssignment.customer_name == old_name).update({
+    # La asignación AT se busca por cliente **y planta**. Filtrar sólo por nombre
+    # actualizaba el AT de todas las plantas del cliente de una vez, que es justo
+    # lo que deja de ser cierto cuando cada planta tiene su equipo.
+    #
+    # El `plant IS NULL` cubre una asignación de antes de que existiera la
+    # columna: eran por cliente, así que hay a lo sumo una por nombre.
+    db.query(models.ATAssignment).filter(
+        models.ATAssignment.customer_name == old_name,
+        or_(models.ATAssignment.plant == old_plant,
+            models.ATAssignment.plant.is_(None)),
+    ).update({
         "customer_name": name,
-        "technical_advisor": technical_advisor
+        "plant": plant,
+        "technical_advisor": technical_advisor,
     })
 
     db.commit()

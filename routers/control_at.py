@@ -34,6 +34,15 @@ def _control_at_query(db, cliente="", at="", estandar=None, premium=None,
     ]
     now = datetime.datetime.utcnow()
     on_condition = models.Customer.name == models.ATAssignment.customer_name
+    # La planta es parte de la identidad de la asignación. Unir sólo por nombre
+    # hacía que un cliente con tres plantas trajera las tres filas contra la misma
+    # asignación, y después el deduplicado dejaba una sola: la planta que ganara el
+    # desempate, con un único AT para todas.
+    #
+    # El `plant IS NULL` tolera una asignación de antes de que existiera la
+    # columna: esas eran por cliente, así que valen para todas sus plantas.
+    on_condition &= or_(models.Customer.plant == models.ATAssignment.plant,
+                        models.ATAssignment.plant.is_(None))
     if vigentes:
         on_condition &= or_(models.ATAssignment.valid_to.is_(None),
                             models.ATAssignment.valid_to > now)
@@ -49,6 +58,30 @@ def _control_at_query(db, cliente="", at="", estandar=None, premium=None,
     if status:
         base = base.filter(models.ATAssignment.status == status)
     return base
+
+
+def _clave_fila(fila):
+    """La identidad de una fila de Control AT: el cliente y su planta.
+
+    Antes era sólo el nombre, así que un cliente con varias plantas mostraba una
+    sola fila y un único AT para todas.
+    """
+    return (fila.name, fila.plant or "")
+
+
+def _total_filas(base_q) -> int:
+    """Cuántas filas quedan **después** de conservar la versión vigente de cada una.
+
+    El `count()` del join cuenta versiones: un cliente con tres asignaciones
+    históricas son tres filas antes de deduplicar y una sola después. Paginar con
+    el número inflado mostraba páginas con menos filas de las pedidas, y la última
+    página vacía.
+    """
+    return (
+        base_q.with_entities(models.Customer.name, models.Customer.plant)
+        .distinct()
+        .count()
+    )
 
 
 @router.get("/control-at/exportar-excel")
@@ -73,10 +106,11 @@ async def exportar_control_at_excel(
     # Se conserva la version mas reciente por cliente, igual que el listado.
     vistos = {}
     for r in filas_crudas:
-        previo = vistos.get(r.name)
+        clave = _clave_fila(r)
+        previo = vistos.get(clave)
         if previo is None or (r.assignment_id and (previo.assignment_id is None
                                                    or r.assignment_id > previo.assignment_id)):
-            vistos[r.name] = r
+            vistos[clave] = r
 
     filas = []
     for r in vistos.values():
@@ -117,16 +151,18 @@ async def control_at_lista(
         status=status, vigentes=vigentes)
 
     base_q = build_base_query(vigentes=True)
-    total = base_q.count()
+    total = _total_filas(base_q)
     page, per_page, offset = pg.paginate(page, per_page)
     raw_rows = base_q.order_by(models.Customer.name).offset(offset).limit(per_page).all()
 
-    # deduplicate: keep latest version per customer (highest id)
+    # Se conserva la versión vigente de cada cliente **y planta** (la de id más
+    # alto). Antes la clave era sólo el nombre del cliente.
     seen = {}
     for r in raw_rows:
-        prev = seen.get(r.name)
+        clave = _clave_fila(r)
+        prev = seen.get(clave)
         if prev is None or (r.assignment_id and (prev.assignment_id is None or r.assignment_id > prev.assignment_id)):
-            seen[r.name] = r
+            seen[clave] = r
     rows = list(seen.values())
 
     use_all_versions = bool(at)

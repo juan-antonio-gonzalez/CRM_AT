@@ -124,9 +124,10 @@ def test_una_entidad_que_falla_no_tumba_las_demas(db_session, monkeypatch):
         raise RuntimeError("falla simulada")
 
     original = busqueda.GRUPOS
+    # El último campo es el módulo al que pertenece el grupo.
     busqueda.GRUPOS = [
-        ("clientes", "Clientes", busqueda._buscar_clientes, "/clientes?q={q}"),
-        ("visitas", "Visitas", _explota, "/visitas2?q={q}"),
+        ("clientes", "Clientes", busqueda._buscar_clientes, "/clientes?q={q}", "clientes"),
+        ("visitas", "Visitas", _explota, "/visitas2?q={q}", "visitas2"),
     ]
     try:
         grupos, total = busqueda.buscar(db_session, "Cartocor")

@@ -25,6 +25,8 @@ ETIQUETAS = {
     "product": "Producto",
     "at_assignment": "Asignación AT",
     "tracking": "Tarea de seguimiento",
+    "team": "Equipo",
+    "agente": "Consulta a Caty",
 }
 
 ACCIONES = {
@@ -33,7 +35,19 @@ ACCIONES = {
     "desactivar": "Desactivó",
     "reactivar": "Reactivó",
     "eliminar": "Eliminó",
+    "consultar": "Consultó",
+    "actualizar": "Actualizó",
 }
+
+# Entidades que no son cambios y por eso no van en el historial de cambios.
+#
+# Las consultas a Caty se registran en esta misma tabla —es la tabla de
+# actividad del sistema— pero no son cambios: son lecturas. Mezclarlas haría que
+# un usuario que hace cincuenta preguntas entierre los cambios reales de los
+# últimos 300 registros, que es todo lo que muestra la vista.
+#
+# Quedan auditables en la base. Una vista propia para ellas es trabajo futuro.
+ENTIDADES_FUERA_DEL_HISTORIAL = ("agente",)
 
 # Campos que no aportan al historial: ruido técnico o datos que no se editan a mano.
 IGNORAR = {

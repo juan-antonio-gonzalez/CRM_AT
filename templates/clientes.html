@@ -32,7 +32,7 @@
             <button type="submit"
                 class="bg-primary-700 text-white px-5 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity">Buscar</button>
             <a href="/clientes/exportar-excel"
-                class="bg-exito-600 hover:bg-exito-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all
+                class="bg-exito-600 hover:bg-exito-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-bold text-xs transition-all">
                 <span class="material-symbols-rounded text-sm" aria-hidden="true">download</span>
                 <span class="whitespace-nowrap">Exportar Excel</span>
             </a>
@@ -92,7 +92,7 @@
                 </thead>
                 <tbody class="divide-y divide-superficie-borde">
                     {% for customer in customers %}
-                    <tr data-row class="hover:bg-superficie-suave/50 transition-colors group opacity-60 if not customer.is_active else">
+                    <tr data-row class="hover:bg-superficie-suave/50 transition-colors group {{ 'opacity-60' if not customer.is_active else '' }}">
                                                 <td class="px-3 py-3">
                             <input type="checkbox" data-lote-item="{{ customer.id }}"
                                 aria-label="Seleccionar {{ customer.name }}"
@@ -791,6 +791,30 @@
             // Rebind quick-add buttons for the edit modal content
             const editModalEl = document.getElementById('editarClienteModal');
             setupQuickAddHandlers(editModalEl);
+
+            // El equipo elegido se despliega en sus tres integrantes. Va acá y no
+            // dentro del parcial porque el parcial se inserta con `innerHTML`, y un
+            // `<script>` insertado así no se ejecuta nunca.
+            (function () {
+                const selector = editModalEl.querySelector('[data-equipo-selector]');
+                const panel = editModalEl.querySelector('[data-equipo-integrantes]');
+                if (!selector || !panel) return;
+
+                function pintar() {
+                    const opcion = selector.options[selector.selectedIndex];
+                    const hay = Boolean(selector.value);
+                    panel.hidden = !hay;
+                    ['commercial', 'designer', 'technical_advisor'].forEach(function (campo) {
+                        const destino = panel.querySelector('[data-miembro="' + campo + '"]');
+                        if (!destino) return;
+                        const atributo = 'data-' + campo.split('_').join('-');
+                        destino.textContent = (hay && opcion.getAttribute(atributo)) || '—';
+                    });
+                }
+
+                selector.addEventListener('change', pintar);
+                pintar();
+            })();
 
             // Rebind manage entity buttons for the edit modal content
             editModalEl.querySelectorAll('[data-manage-entity]').forEach(btn => {

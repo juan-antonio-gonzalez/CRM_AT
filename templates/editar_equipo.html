@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Equipo | CRM-AT{% endblock %}
+
+{% block header_extra %}
+<div class="flex items-center gap-4 ml-4 min-w-0">
+    <a href="/equipos"
+        class="p-2 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-suave hover:text-primary hover:border-primary/30 transition-all shrink-0"
+        title="Volver al listado" aria-label="Volver al listado">
+        <span class="material-symbols-rounded text-lg" aria-hidden="true">arrow_back</span>
+    </a>
+    <div class="flex flex-col min-w-0">
+        <h2 class="text-sm lg:text-xl font-bold text-texto-fuerte leading-tight truncate">Editar equipo</h2>
+        <p class="hidden lg:block text-xs text-texto-suave font-medium">{{ equipo.name }}</p>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+{% set v = form or {'name': equipo.name, 'commercial': equipo.commercial,
+                    'designer': equipo.designer,
+                    'technical_advisor': equipo.technical_advisor,
+                    'observations': equipo.observations or ''} %}
+<div class="max-w-3xl mx-auto space-y-4 animate-fade-in pb-10">
+
+    {% if error %}
+    <div role="alert" class="bg-peligro-50 border border-peligro-200 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="material-symbols-rounded text-peligro-600 shrink-0" aria-hidden="true">error</span>
+        <p class="text-xs text-peligro-700 font-semibold">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    {# Lo más importante de esta pantalla. Sin este aviso, cualquiera esperaría
+       que cambiar un miembro actualice a los clientes del equipo, y no lo hace:
+       la asignación guarda una foto del momento para que un informe viejo siga
+       diciendo quién estaba entonces. #}
+    <div class="bg-info-50 border border-info-200 rounded-lg px-4 py-3 flex items-start gap-3">
+        <span class="material-symbols-rounded text-info-600 shrink-0" aria-hidden="true">info</span>
+        <div class="text-xs text-texto-base leading-relaxed">
+            <p class="font-bold">Los cambios no se aplican a los clientes que ya tienen este equipo.</p>
+            <p class="mt-1">
+                {% if clientes %}
+                Hay <strong>{{ clientes }}</strong> cliente{{ 's' if clientes != 1 else '' }} con este equipo asignado.
+                Van a conservar los nombres que tenían cuando se les asignó.
+                {% else %}
+                Ningún cliente tiene este equipo asignado todavía.
+                {% endif %}
+                Para que lo reflejen, usá <strong>Actualizar las asignaciones</strong> en la
+                pantalla de Equipos: reescribe los tres nombres de esos clientes con los
+                miembros que tiene el equipo hoy.
+            </p>
+        </div>
+    </div>
+
+    <form action="/equipos/{{ equipo.id }}/editar" method="POST"
+        class="bg-superficie-card rounded-lg border border-superficie-borde p-5 space-y-5">
+        <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token or '' }}">
+
+        <div class="space-y-1.5">
+            <label for="edit-team-name" class="text-2xs font-semibold text-texto-tenue">Nombre del equipo *</label>
+            <input id="edit-team-name" name="name" required maxlength="80" value="{{ v.name }}"
+                class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm font-semibold">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for campo, etiqueta in [('commercial', 'Comercial'), ('designer', 'Diseñador'), ('technical_advisor', 'AT')] %}
+            <div class="space-y-1.5">
+                <label for="edit-team-{{ campo }}" class="text-2xs font-semibold text-texto-tenue">{{ etiqueta }} *</label>
+                <select id="edit-team-{{ campo }}" name="{{ campo }}" required
+                    class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm font-semibold">
+                    <option value="">Seleccionar...</option>
+                    {% for persona in catalogos[campo] %}
+                    <option value="{{ persona.name }}" {% if v[campo] == persona.name %}selected{% endif %}>{{ persona.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if v[campo] and v[campo] not in catalogos[campo]|map(attribute='name')|list %}
+                {# El miembro guardado ya no está en el catálogo: se desactivó a esa
+                   persona. El selector no lo ofrece, así que sin este aviso el
+                   equipo quedaría incompleto al guardar sin entender por qué. #}
+                <p class="text-2xs text-alerta-600">
+                    «{{ v[campo] }}» ya no está en el catálogo. Elegí otro para poder guardar.
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="space-y-1.5">
+            <label for="edit-team-obs" class="text-2xs font-semibold text-texto-tenue">Observaciones</label>
+            <input id="edit-team-obs" name="observations" maxlength="200" value="{{ v.observations }}"
+                placeholder="Opcional"
+                class="w-full bg-superficie-suave border border-superficie-borde rounded-md px-3 py-2 text-sm">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-superficie-borde">
+            <a href="/equipos"
+                class="px-4 py-2 rounded-md text-sm font-semibold text-texto-base hover:bg-superficie-suave transition-colors">
+                Cancelar
+            </a>
+            <button type="submit"
+                class="px-4 py-2 rounded-md bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-colors">
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

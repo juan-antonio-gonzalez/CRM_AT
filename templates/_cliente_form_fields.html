@@ -90,90 +90,82 @@
                 </div>
             </div>
         </div>
-        <div class="space-y-2">
-            <label for="assigned-commercial-{{ modal_suffix }}" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                Asesor Comercial Asignado <span class="text-peligro-500">*</span>
-                <button type="button" data-manage-entity="commercial" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+        {# Un solo equipo en vez de tres personas sueltas. #}
+        <div class="space-y-2 md:col-span-2">
+            <label for="team_id-{{ modal_suffix }}" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
+                Equipo asignado <span class="text-peligro-500">*</span>
+                {% if modulo_visible(request, 'equipos') %}<a href="/equipos" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar equipos</a>{% endif %}
             </label>
-            <div class="relative">
-                <div class="flex gap-1.5">
-                    <div class="flex-1">
-                        <select name="assigned_commercial" required
-                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="assigned-commercial-{{ modal_suffix }}">
-                            <option value="">Seleccionar Comercial...</option>
-                            {% for c in commercials %}
-                            <option value="{{ c.name }}" {% if customer and customer.assigned_commercial == c.name %}selected{% endif %}>{{ c.name }}</option>
-                            {% endfor %}
-                        </select>
+
+            {% if equipos %}
+            <select name="team_id" required id="team_id-{{ modal_suffix }}"
+                class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold"
+                data-equipo-selector>
+                <option value="">Seleccionar equipo...</option>
+                {% for e in equipos %}
+                <option value="{{ e.id }}"
+                    data-commercial="{{ e.commercial }}"
+                    data-designer="{{ e.designer }}"
+                    data-technical-advisor="{{ e.technical_advisor }}"
+                    {% if customer and customer.team_id == e.id %}selected{% endif %}>{{ e.name }}</option>
+                {% endfor %}
+            </select>
+
+            <div data-equipo-integrantes hidden
+                class="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-xl bg-superficie-suave p-3">
+                {% for campo, etiqueta, icono in [('commercial', 'Comercial', 'sell'), ('designer', 'Diseñador', 'design_services'), ('technical_advisor', 'AT', 'engineering')] %}
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="material-symbols-rounded text-texto-tenue text-lg" aria-hidden="true">{{ icono }}</span>
+                    <div class="min-w-0">
+                        <p class="text-2xs text-texto-tenue">{{ etiqueta }}</p>
+                        <p class="text-xs font-bold text-texto-fuerte truncate" data-miembro="{{ campo }}">—</p>
                     </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="commercial" data-select="assigned_commercial" title="Crear nuevo comercial" aria-label="Crear nuevo comercial">
-                        <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                    </button>
                 </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo comercial..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
-                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-        </div>
-        <div class="space-y-2">
-            <label for="technical-advisor-{{ modal_suffix }}" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                Asistente Técnico Asignado <span class="text-peligro-500">*</span>
-                <button type="button" data-manage-entity="advisor" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
+
+            {% if customer and customer.team_id %}
+            {# Un cliente que ya tenía equipo asignado. Se muestran los nombres
+               guardados porque editar el equipo no los actualiza: la asignación es
+               una foto del momento. #}
+            <p class="text-2xs text-texto-tenue">
+                Asignado el equipo con
+                <strong>{{ customer.assigned_commercial }}</strong> ·
+                <strong>{{ customer.designer }}</strong> ·
+                <strong>{{ customer.technical_advisor }}</strong>.
+                Cambiar de equipo acá actualiza estos nombres.
+            </p>
+            {% endif %}
+            {% if otras_plantas %}
+            {# Un cliente con varias plantas son varias filas con el mismo nombre. El
+               equipo se cambia de a una planta —cada una tiene el suyo—, así que
+               aplicar al cliente entero tiene que ser una decisión aparte. #}
+            <label class="flex items-start gap-2 rounded-xl bg-superficie-suave p-3 cursor-pointer">
+                <input type="checkbox" name="aplicar_a_todas" value="1"
+                    class="mt-0.5 size-4 rounded border-superficie-borde text-primary focus:ring-primary/30">
+                <span class="text-xs text-texto-base">
+                    Aplicar este equipo también a las otras
+                    {{ otras_plantas }} planta{{ 's' if otras_plantas != 1 else '' }}
+                    de <strong>{{ customer.name }}</strong>.
+                    <span class="block text-2xs text-texto-tenue mt-0.5">
+                        Sin marcar, sólo cambia la planta {{ customer.plant or 'que estás editando' }}.
+                    </span>
+                </span>
             </label>
-            <div class="relative">
-                <div class="flex gap-1.5">
-                    <div class="flex-1">
-                        <select name="technical_advisor" required
-                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="technical-advisor-{{ modal_suffix }}">
-                            <option value="">Seleccionar AT...</option>
-                            {% for a in advisors %}
-                            <option value="{{ a.name }}" {% if customer and customer.technical_advisor == a.name %}selected{% endif %}>{{ a.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="advisor" data-select="technical_advisor" title="Crear nuevo AT" aria-label="Crear nuevo AT">
-                        <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                    </button>
-                </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo AT..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
-                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
-                    </div>
-                </div>
+            {% endif %}
+
+            {% else %}
+            <div class="rounded-xl bg-alerta-50 border border-alerta-200 px-4 py-3 space-y-1">
+                <p class="text-xs text-texto-base font-semibold">Todavía no hay equipos cargados.</p>
+                <p class="text-xs text-texto-base">
+                    Un cliente necesita un equipo, y un equipo se arma con un comercial, un
+                    diseñador y un AT.
+                    {% if modulo_visible(request, 'equipos') %}<a href="/equipos" class="font-bold text-primary underline">Creá el primero</a>{% else %}pedíselo a un administrador{% endif %}.
+                </p>
             </div>
+            {% endif %}
         </div>
-        <div class="space-y-2">
-            <label for="designer-{{ modal_suffix }}" class="text-2xs font-semibold text-texto-tenue tracking-normal flex items-center gap-2">
-                Diseñador Asignado <span class="text-peligro-500">*</span>
-                <button type="button" data-manage-entity="designer" class="text-2xs font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-2">Gestionar</button>
-            </label>
-            <div class="relative">
-                <div class="flex gap-1.5">
-                    <div class="flex-1">
-                        <select name="designer" required
-                            class="w-full bg-superficie-suave border-none rounded-xl p-3 text-sm focus:ring-4 focus:ring-primary/10 transition-all font-bold" id="designer-{{ modal_suffix }}">
-                            <option value="">Seleccionar Diseñador...</option>
-                            {% for d in designers %}
-                            <option value="{{ d.name }}" {% if customer and customer.designer == d.name %}selected{% endif %}>{{ d.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="button" class="quick-add-btn size-9 shrink-0 rounded-xl bg-superficie-suave border border-superficie-borde text-texto-tenue hover:text-primary hover:bg-primary/10 hover:border-primary/30 flex items-center justify-center transition-all" data-entity="designer" data-select="designer" title="Crear nuevo diseñador" aria-label="Crear nuevo diseñador">
-                        <span class="material-symbols-rounded text-lg" aria-hidden="true">add</span>
-                    </button>
-                </div>
-                <div class="quick-add-popover hidden absolute right-0 top-full mt-1 z-50 bg-superficie-card rounded-xl border border-superficie-borde p-2 min-w-[220px]">
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="Nuevo diseñador..." class="quick-add-input flex-1 bg-superficie-suave border-none rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-primary/30 text-texto-fuerte placeholder:text-texto-tenue" oninput="this.value = this.value.toUpperCase()">
-                        <button type="button" class="quick-add-confirm bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap">Crear</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="space-y-2">
             <label for="city-{{ modal_suffix }}" class="text-2xs font-semibold text-texto-tenue tracking-normal">Ciudad</label>
             <input name="city" required

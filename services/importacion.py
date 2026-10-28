@@ -27,6 +27,7 @@ import re
 import unicodedata
 
 import models
+from services import team_service
 from enums import CustomerStatus, RelevamientoStatus
 
 
@@ -51,6 +52,9 @@ CLIENTES = {
         ("name", "Nombre", True),
         ("plant", "Planta", False),
         ("industry_sector", "Sector industrial", False),
+        # La columna que manda cuando está. Las tres de abajo se mantienen para
+        # que las planillas que ya se usan sigan funcionando.
+        ("equipo", "Equipo", False),
         ("assigned_commercial", "Asesor comercial", False),
         ("technical_advisor", "Asistente técnico", False),
         ("designer", "Diseñador", False),
@@ -61,9 +65,9 @@ CLIENTES = {
     ],
     # Cómo reconocer la misma fila ya cargada.
     "clave": "name",
-    "ejemplo": ["Cartocor SA", "Planta 1", "Corrugado", "Carlos Pérez",
-                "ING. GOMEZ", "Diseño", "Av. Central 123", "Rosario", "Activo",
-                "Cliente histórico"],
+    "ejemplo": ["Cartocor SA", "Planta 1", "Corrugado", "Equipo Norte",
+                "Carlos Pérez", "ING. GOMEZ", "Diseño", "Av. Central 123",
+                "Rosario", "Activo", "Cliente histórico"],
 }
 
 MAQUINAS = {
@@ -157,11 +161,68 @@ def leer_planilla(contenido: bytes, tipo: str):
     return filas, None
 
 
+def _equipo_de_la_fila(db, f, equipos_por_nombre):
+    """El equipo que le corresponde a la fila.
+
+    Devuelve ``(equipo, aviso, error)``. Tres casos cuando la planilla trae la
+    columna **Equipo**:
+
+    * **Existe:** se usa. Si además trae los tres miembros y no coinciden, se
+      avisa y manda el equipo: la columna Equipo es la que decide, y los tres
+      nombres suelen ser restos de una planilla vieja.
+    * **No existe, pero trae los tres miembros:** se crea.
+    * **No existe y le faltan miembros:** error. No se inventa un equipo a medias.
+
+    Sin la columna, se resuelve —o se crea— a partir de los tres nombres, que es
+    como funcionaba antes de que existieran los equipos.
+    """
+    miembros = (f.get("assigned_commercial", ""), f.get("designer", ""),
+                f.get("technical_advisor", ""))
+    pedido = (f.get("equipo", "") or "").strip()
+
+    if not pedido:
+        equipo = team_service.obtener_o_crear(db, *miembros)
+        return equipo, "", ""
+
+    equipo = equipos_por_nombre.get(_normalizar(pedido))
+    if equipo is None:
+        equipo = team_service.obtener_o_crear(db, *miembros)
+        if equipo is None:
+            return None, "", (f"El equipo «{pedido}» no existe y la fila no trae el "
+                              f"comercial, el diseñador y el AT para crearlo")
+        # Se creó a partir de los tres miembros, pero con otro nombre.
+        equipos_por_nombre[_normalizar(equipo.name)] = equipo
+        # En futuro: este mensaje se lee en la previsualización, y ahí todavía no
+        # se escribió nada. El equipo se crea al confirmar.
+        return equipo, (f"El equipo «{pedido}» no existe; se va a crear como "
+                        f"«{equipo.name}» a partir de los tres nombres de la fila"), ""
+
+    if all(m.strip() for m in miembros):
+        cargados = tuple(m.strip().upper() for m in miembros)
+        del_equipo = (equipo.commercial, equipo.designer, equipo.technical_advisor)
+        if cargados != del_equipo:
+            return equipo, (f"La fila traía «{cargados[0]} · {cargados[1]} · {cargados[2]}» "
+                            f"pero el equipo «{equipo.name}» es "
+                            f"«{del_equipo[0]} · {del_equipo[1]} · {del_equipo[2]}». "
+                            f"Se usó el equipo"), ""
+    return equipo, "", ""
+
+
 def _validar_clientes(db, filas):
-    """Valida y prepara filas de clientes."""
+    """Valida y prepara filas de clientes.
+
+    Devuelve ``(listas, errores, avisos)``. Los avisos son filas que **sí** se
+    importan pero con algo que conviene mirar: hoy, que la columna Equipo haya
+    pisado a los tres nombres. Un rechazo y un aviso no son lo mismo, y mezclarlos
+    haría creer que la fila no entra.
+    """
     existentes = {_normalizar(n) for (n,) in db.query(models.Customer.name).all()}
+    equipos_por_nombre = {
+        _normalizar(e.name): e
+        for e in db.query(models.Team).filter(models.Team.is_active.is_(True)).all()
+    }
     vistos_en_archivo = set()
-    listas, errores = [], []
+    listas, errores, avisos = [], [], []
 
     for f in filas:
         nombre = f.get("name", "").strip()
@@ -179,23 +240,34 @@ def _validar_clientes(db, filas):
             continue
         vistos_en_archivo.add(clave)
 
+        equipo, aviso, error = _equipo_de_la_fila(db, f, equipos_por_nombre)
+        if error:
+            errores.append({"fila": f["_fila"], "motivo": error})
+            continue
+        if aviso:
+            avisos.append({"fila": f["_fila"], "motivo": aviso})
+
         estado = f.get("status", "").strip() or CustomerStatus.CLIENTE.value
         listas.append({
             "_fila": f["_fila"],
             "name": nombre,
             "plant": f.get("plant", ""),
             "industry_sector": f.get("industry_sector", ""),
-            "assigned_commercial": f.get("assigned_commercial", ""),
-            "technical_advisor": f.get("technical_advisor", ""),
-            "designer": f.get("designer", ""),
+            # Los tres nombres salen del equipo: es la fuente de verdad, y así la
+            # columna del cliente y el vínculo no pueden discrepar.
+            "assigned_commercial": equipo.commercial if equipo else f.get("assigned_commercial", ""),
+            "technical_advisor": equipo.technical_advisor if equipo else f.get("technical_advisor", ""),
+            "designer": equipo.designer if equipo else f.get("designer", ""),
             "address": f.get("address", ""),
             "city": f.get("city", ""),
             "status": estado,
             "relevamiento_status": RelevamientoStatus.PENDIENTE.value,
             "observations": f.get("observations", ""),
             "is_active": True,
+            "team_id": equipo.id if equipo else None,
         })
-    return listas, errores
+
+    return listas, errores, avisos
 
 
 def _validar_maquinas(db, filas):
@@ -247,16 +319,20 @@ def _validar_maquinas(db, filas):
             "relevamiento_status": RelevamientoStatus.PENDIENTE.value,
             "is_active": True,
         })
-    return listas, errores
+    return listas, errores, []
 
 
 def validar(db, tipo: str, filas):
-    """Devuelve (filas listas para importar, errores por fila)."""
+    """Devuelve (filas listas para importar, errores por fila, avisos por fila).
+
+    Un error es una fila que **no** entra. Un aviso es una fila que entra igual,
+    con algo que conviene mirar. Mezclarlos haría creer que la fila se rechazó.
+    """
     if tipo == "clientes":
         return _validar_clientes(db, filas)
     if tipo == "maquinas":
         return _validar_maquinas(db, filas)
-    return [], [{"fila": 0, "motivo": f"Tipo desconocido: {tipo}"}]
+    return [], [{"fila": 0, "motivo": f"Tipo desconocido: {tipo}"}], []
 
 
 def importar(db, tipo: str, filas):
@@ -265,7 +341,7 @@ def importar(db, tipo: str, filas):
     Se revalida contra la base: entre la previsualización y la confirmación pudo
     cargarse algo, y no queremos duplicar.
     """
-    listas, errores = validar(db, tipo, filas)
+    listas, errores, _avisos = validar(db, tipo, filas)
     if errores and not listas:
         return 0, len(filas), errores
 

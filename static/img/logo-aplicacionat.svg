@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 40" width="56" height="40" role="img" aria-label="AplicaciónAT">
+  <!--
+    Logo genérico de AplicaciónAT: monograma «AT» sobre una insignia redondeada.
+
+    Por qué está dibujado con trazos y no con texto: un SVG cargado como imagen no
+    puede usar las fuentes de la página, así que un <text> se vería distinto en cada
+    sistema. Con trazos, el logo es idéntico en todos lados.
+
+    Por qué la insignia es azul marino y el monograma blanco: tiene que funcionar
+    sobre el menú lateral —que también es azul marino, donde la insignia se funde
+    pero el monograma se lee igual— y sobre el fondo blanco del resto de las
+    pantallas, donde la insignia resalta.
+  -->
+  <rect width="56" height="40" rx="9" fill="#00205b"/>
+
+  <g fill="none" stroke="#ffffff" stroke-width="3"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- A -->
+    <path d="M13 28.5 L19.5 13"/>
+    <path d="M19.5 13 L26 28.5"/>
+    <path d="M15.7 23 L23.3 23"/>
+    <!-- T -->
+    <path d="M30 13 L43 13"/>
+    <path d="M36.5 13 L36.5 28.5"/>
+  </g>
+</svg>

@@ -340,6 +340,11 @@ def test_el_enlace_activo_del_menu_se_marca_solo_en_uno():
     # `static_url` lo registra templating.py sobre el entorno compartido; acá se
     # replica para poder renderizar el layout en un entorno pelado.
     env.globals["static_url"] = lambda path: "/static/" + str(path).lstrip("/")
+    # El menú lateral se arma con un global que registra templating.py. Acá se
+    # replica para un usuario que ve todo, que es el caso que esta prueba mira.
+    from services import permisos
+    env.globals["menu_lateral"] = lambda request: permisos.menu(
+        type("_Usuario", (), {"role": "admin", "modulos": None})())
     contexto = {
         "active_page": "clientes",
         "today": None, "clientes": {"total": 0, "activos": 0, "prospectos": 0},
@@ -1023,3 +1028,108 @@ def test_los_controles_conservan_su_borde():
         if marca not in texto:
             faltan.append(f"{archivo} (falta {marca})")
     assert not faltan, f"controles que perdieron su borde: {faltan}"
+
+
+# ── Integridad del marcado ─────────────────────────────────────────────────
+def test_ningun_atributo_se_come_el_marcado():
+    """Una comilla sin cerrar se traga el resto de la etiqueta.
+
+    Encontrado en `clientes.html`: al `<a>` de exportar le faltaba la comilla de
+    cierre de `class`, así que el valor del atributo siguió de largo hasta la
+    comilla siguiente y se llevó puesto el `<span>` del ícono. El navegador
+    terminaba mostrando el nombre del ícono —la palabra «download»— como texto al
+    lado de «Exportar Excel».
+
+    La detección no puede ser «el valor tiene `<` o `>`»: un `placeholder="Ej:
+    Corte > Impresión"` es válido, y las expresiones Jinja traen `>=` y `>` a
+    montones. Lo que delata el problema es el **inicio de una etiqueta** dentro
+    del valor.
+    """
+    from html.parser import HTMLParser
+
+    inicio_de_etiqueta = re.compile(r"<[a-zA-Z/]")
+
+    class Escaner(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.malos = []
+
+        def handle_starttag(self, tag, attrs):
+            for nombre, valor in attrs:
+                if valor and inicio_de_etiqueta.search(valor):
+                    self.malos.append((self.getpos()[0], tag, nombre))
+
+        handle_startendtag = handle_starttag
+
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        escaner = Escaner()
+        escaner.feed(texto)
+        for linea, tag, atributo in escaner.malos:
+            ofensores.append(f"{nombre}:{linea} (<{tag} {atributo}=...>)")
+
+    assert not ofensores, (
+        f"atributos que se tragan el marcado siguiente, por una comilla sin "
+        f"cerrar: {ofensores}"
+    )
+
+
+def test_los_ternarios_de_jinja_dentro_de_un_class_tienen_llaves():
+    """Un ternario sin `{{ }}` no es un ternario: es texto.
+
+    En `usuarios.html` había cinco así:
+
+        class="... bg-info-100 text-info-700 if u.role admin else bg-superficie-suave ..."
+
+    Jinja no lo reconoce, no falla, y el texto queda **como nombre de clase**. El
+    efecto es que el chip de rol y los puntos de estado no recibían nunca su color:
+    la pantalla se veía gris y nadie sabía por qué.
+
+    La prueba de los condicionales sin llave (`% if`) no lo agarra, porque acá no
+    hay ningún `%`. Se busca el ternario desnudo adentro de un `class`.
+    """
+    atributo = re.compile(r'class="([^"]*)"', re.S)
+    jinja = re.compile(r"\{\{.*?\}\}|\{%.*?%\}", re.S)
+    ofensores = []
+
+    for nombre, texto in _plantillas_aplicacion():
+        for m in atributo.finditer(texto):
+            valor = jinja.sub(" ", m.group(1))
+            # `... if algo else ...` sin llaves que lo envuelvan.
+            if re.search(r"\bif\b.+\belse\b", valor):
+                linea = texto[:m.start()].count("\n") + 1
+                ofensores.append(f"{nombre}:{linea}")
+
+    assert not ofensores, (
+        "hay ternarios dentro de un `class` sin las llaves de Jinja, así que el "
+        f"texto queda como nombre de clase: {ofensores[:6]}")
+
+
+def test_los_atributos_de_modal_son_los_que_entiende_el_controlador():
+    """Un atributo inventado no abre nada, y no da ningún error.
+
+    El botón «Nuevo Equipo» usaba `data-abrir-modal` y el controlador de `app.js`
+    escucha `data-modal-open`. El botón existía, se veía habilitado, el modal
+    estaba en la página… y no pasaba nada al tocarlo. No hay forma de detectarlo
+    salvo abriendo la pantalla, así que se comprueba acá.
+    """
+    fuente_js = open(os.path.join(RAIZ, "static", "js", "app.js"),
+                     encoding="utf-8").read()
+    conocidos = set(re.findall(r"data-modal-[a-z]+", fuente_js))
+    assert conocidos == {"data-modal-open", "data-modal-close", "data-modal-focus"}, (
+        f"el controlador cambió su contrato: {sorted(conocidos)}")
+
+    # Se mira el marcado, no la prosa: un comentario que explica el error viejo
+    # nombrando el atributo no es un uso.
+    comentarios = re.compile(r"\{#.*?#\}|<!--.*?-->", re.S)
+
+    ofensores = []
+    for nombre, texto in _plantillas_aplicacion():
+        limpio = comentarios.sub(" ", texto)
+        for atributo in sorted(set(re.findall(r"data-[a-z-]*modal[a-z-]*", limpio))):
+            if atributo not in conocidos:
+                ofensores.append(f"{nombre}: {atributo}")
+
+    assert not ofensores, (
+        f"atributos de modal que el controlador no entiende: {ofensores}. "
+        f"Los válidos son {sorted(conocidos)}")

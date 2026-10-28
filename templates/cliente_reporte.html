@@ -1,22 +1,43 @@
 {% extends "layout.html" %}
 
 {% block title %}Reporte Maestro: {{ customer.name }} | CRM-AT{% endblock %}{% block content %}
-<div class="max-w-5xl mx-auto py-8 print:p-0">
+<div class="py-8 print:p-0">
     <!-- Action Bar (Hidden on print) -->
-    <div class="flex justify-between items-center mb-8 print:hidden">
+    <div class="max-w-5xl mx-auto flex justify-between items-center mb-8 print:hidden">
         <a href="/clientes" class="flex items-center gap-2 text-texto-suave hover:text-primary transition-colors font-bold text-sm">
             <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
             Volver al Directorio
         </a>
-        <button id="btn-print-customer" class="bg-primary-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+        {# `data-print-btn` es lo que engancha el manejador de abajo. Sin él el botón
+           no hacía nada: tenía un `id` que no usaba nadie. #}
+        <button data-print-btn class="bg-primary-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             <span class="material-symbols-rounded" aria-hidden="true">print</span>
             Imprimir Reporte
         </button>
     </div>
 
-    <!-- Report Paper Simulation -->
-    <div class="pdf-page w-full max-w-[850px] min-h-[1100px] mx-auto bg-white text-texto-fuerte px-10 py-10 print:px-0 print:py-4 print:shadow-none shadow-2xl rounded-sm border border-superficie-borde flex flex-col gap-10 text-sm transition-colors duration-300">
-        
+    {# El contenido se reparte en hojas A4 de `js/informe-paginado.js`. La hoja es
+       una caja de alto fijo: lo que se mide es lo que se imprime, y el pie puede
+       decir el número de página de verdad. Sin JavaScript el informe queda en una
+       tirada larga, que se imprime peor pero se imprime. #}
+    <div data-informe-paginado class="informe-paginado text-sm text-texto-fuerte">
+
+        <template data-hoja-modelo>
+            <article class="hoja" data-hoja>
+                <div class="hoja-cuerpo" data-hoja-cuerpo></div>
+                <footer class="hoja-pie">
+                    <span>© {{ generation_date.year }} Aplicación AT — Inteligencia Industrial</span>
+                    <div class="flex gap-4">
+                        {# Vacío a propósito: lo llena el paginador. Un «Página 1 de 1»
+                           escrito a mano es mentira en cuanto el informe pasa de una
+                           hoja, que es justamente el caso que hay que resolver. #}
+                        <span data-hoja-numero></span>
+                        <span>Ref: MAST-{{ customer.id }}</span>
+                    </div>
+                </footer>
+            </article>
+        </template>
+
         <!-- Header Section -->
         <header class="flex justify-between items-start border-b-2 border-superficie-fuerte pb-6">
             <div class="flex flex-col gap-2">
@@ -134,9 +155,9 @@
         </section>
 
         <!-- Machinery Inventory -->
-        <section class="flex flex-col gap-4 page-break-inside-avoid">
+        <section class="flex flex-col gap-4">
             <h3 class="text-xs font-black text-texto-fuerte tracking-normal border-l-4 border-alerta-500 pl-3">Parque de Maquinaria</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" data-partible="tarjetas">
                 {% if machines %}
                     {% for machine in machines %}
                     <div class="p-4 rounded-xl border border-superficie-borde bg-white shadow-sm flex flex-col gap-3">
@@ -216,50 +237,145 @@
 
         <!-- Observations -->
         {% if customer.observations %}
-        <section class="mt-auto pt-10 border-t border-superficie-borde page-break-inside-avoid">
+        <section class="pt-10 border-t border-superficie-borde">
             <h4 class="text-2xs font-black text-texto-tenue tracking-normal mb-3">Observaciones Estratégicas</h4>
-            <div class="bg-info-50/50 p-5 rounded-2xl border border-info-100/50 text-texto-base text-sm leading-relaxed whitespace-pre-wrap">
-                {{ customer.observations }}
-            </div>
+            <div class="bg-info-50/50 p-5 rounded-2xl border border-info-100/50 text-texto-base text-sm leading-relaxed whitespace-pre-wrap"
+                data-partible="texto">{{ customer.observations }}</div>
         </section>
         {% endif %}
-
-        <!-- Report Footer -->
-        <footer class="mt-10 pt-6 border-t border-dashed border-superficie-borde flex justify-between items-center text-2xs text-texto-tenue font-bold tracking-[0.2em]">
-            <span>© {{ generation_date.year }} Aplicación AT - Inteligencia Industrial</span>
-            <div class="flex gap-4">
-                <span>Página 1 de 1</span>
-                <span>Ref: MAST-{{ customer.id }}</span>
-            </div>
-        </footer>
 
     </div>
 </div>
 
 <style>
+    /* ── La hoja ──────────────────────────────────────────────────────────────
+       Alto fijo de A4 menos un milímetro. El milímetro de menos es a propósito: una
+       hoja de 297 mm exactos en una página de 297 mm roza el redondeo del navegador
+       y termina imprimiendo una página en blanco detrás de cada hoja.
+
+       El alto es el mismo en pantalla y en papel porque el paginador mide acá y
+       después se imprime: si cambiara, lo que se midió no es lo que sale. */
+    .informe-paginado {
+        display: block;
+    }
+    .hoja {
+        width: 210mm;
+        height: 296mm;
+        padding: 15mm;
+        box-sizing: border-box;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto 2rem;
+        border: 1px solid var(--superficie-borde, #e2e8f0);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .08);
+        border-radius: 2px;
+    }
+    .hoja-cuerpo {
+        flex: 1 1 auto;
+        /* `min-height: 0` es obligatorio: sin eso, un ítem de flex no baja de su
+           altura de contenido y el cuerpo nunca se recorta, así que el desborde no
+           se detecta y la hoja crece sin límite. */
+        min-height: 0;
+        /* `hidden` es lo que hace que `scrollHeight > clientHeight` sirva para
+           saber si la pieza entró. */
+        overflow: hidden;
+    }
+    .hoja-cuerpo > * + * {
+        margin-top: 2.25rem;
+    }
+    .hoja-pie {
+        flex: 0 0 auto;
+        margin-top: 1rem;
+        padding-top: .75rem;
+        border-top: 1px dashed var(--superficie-borde, #e2e8f0);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        font-size: 12px;
+        line-height: 1.2;
+        font-weight: 700;
+        letter-spacing: .18em;
+        color: var(--texto-tenue, #94a3b8);
+    }
+    /* Sin paginar —si el JavaScript no corrió— el informe queda en una tirada
+       larga. Se le da aire para que al menos se lea. */
+    .informe-paginado > * + * {
+        margin-top: 2.25rem;
+    }
+
+    .logo-shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    }
+
     @media print {
-        html, body { height: auto !important; overflow: visible !important; background: white !important; }
-        body > div { height: auto !important; overflow: visible !important; display: block !important; }
-        .pdf-page { 
-            box-shadow: none !important; 
-            border: none !important; 
-            width: 100% !important; 
-            max-width: none !important;
+        /* La hoja es la página: el margen lo pone el padding de `.hoja`, así que el
+           de `@page` va en cero. Si los dos sumaran, el contenido se correría
+           respecto de lo que se midió. */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        html, body {
+            height: auto !important;
+            overflow: visible !important;
+            background: white !important;
             margin: 0 !important;
             padding: 0 !important;
-            min-height: auto !important;
         }
-        .bg-superficie-suave { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; }
-    }
-    
-    .logo-shadow {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        /* El armazón de la aplicación. No se usa un `header` a secas porque el
+           informe tiene el suyo propio, que sí se imprime. */
+        #sidebarNav, #sidebarOverlay, #mobile-nav, nav {
+            display: none !important;
+        }
+        body > div, main {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+        }
+
+        .informe-paginado {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .hoja {
+            margin: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            /* Una hoja por página. La última no fuerza el salto: si lo hiciera,
+               saldría una página en blanco al final. */
+            break-after: page;
+            page-break-after: always;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        .hoja:last-child {
+            break-after: auto;
+            page-break-after: auto;
+        }
+
+        /* El color de fondo es parte del informe (la tarjeta de datos, los chips de
+           estado). Sin esto el navegador los imprime en blanco. */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
     }
 </style>
 
 {% endblock %}
 
 {% block scripts %}
+<script nonce="{{ request.state.script_nonce }}" src="{{ static_url('js/informe-paginado.js') }}"></script>
 <script nonce="{{ request.state.script_nonce }}">
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-print-btn]').forEach(b => b.addEventListener('click', () => window.print()));

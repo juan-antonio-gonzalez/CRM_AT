@@ -20,10 +20,29 @@ def test_login_admin(client, seed_admin):
     assert 'set-cookie' in r.headers
 
 
-def test_dashboard_requires_auth(client):
+def test_la_raiz_sin_sesion_muestra_la_presentacion(client):
+    """Antes redirigía al login. Ahora muestra la presentación, y es a propósito.
+
+    El dominio tenía **una sola** página pública —el formulario de acceso—, y un
+    dominio nuevo cuya única página es un login es el perfil que los filtros web
+    corporativos clasifican como sospechoso y bloquean. La presentación le da algo
+    que categorizar. Ver `routers/publico.py`.
+
+    Lo que sigue prohibido es que se filtre el tablero.
+    """
     r = client.get('/', follow_redirects=False)
-    assert r.status_code in (302, 303)
-    assert 'login' in r.headers.get('location', '')
+    assert r.status_code == 200
+    assert 'AplicaciónAT' in r.text
+    # El armazón de la aplicación —menú, sesión— no aparece.
+    assert 'sidebarNav' not in r.text
+    assert 'Cerrar sesión' not in r.text
+
+
+def test_el_tablero_con_sesion_sigue_siendo_el_tablero(client, admin_cookie):
+    """Con sesión, la raíz es el tablero: la presentación es sólo para el visitante."""
+    r = client.get('/', cookies={'session': admin_cookie.split('=', 1)[1]})
+    assert r.status_code == 200
+    assert 'sidebarNav' in r.text, 'no se renderizó el armazón de la aplicación' 
 
 
 def test_admin_register_page(client, admin_cookie):

@@ -124,16 +124,41 @@ try {
     html = html.replace("</body>", sonda + "</body>", 1)
 
     # Embeber las hojas de estilo reales, para medir lo mismo que el navegador.
-    raiz = os.path.dirname(os.path.abspath(__file__))
+    #
+    # La raíz es el repo, no `tests/`: con `dirname(__file__)` se buscaba
+    # `tests/static/...` y la prueba moría con un FileNotFoundError. No se veía en
+    # el servidor porque ahí no hay Chrome y la prueba se saltea.
+    raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     css = ""
     for nombre in ("static/css/tailwind.css", "static/css/fonts.css", "static/css/style.css"):
         with open(os.path.join(raiz, nombre), encoding="utf-8") as fh:
             css += f"\n/* ==== {nombre} ==== */\n" + fh.read()
     for hoja in ("tailwind.css", "fonts.css", "style.css"):
         html = re.sub(r'<link[^>]*/css/' + re.escape(hoja) + r'[^>]*>', "", html)
+    css = _con_fuentes(css, raiz)
     html_sin_sonda = html_sin_sonda.replace("</head>", f"<style>{css}</style>\n</head>", 1)
     html = html.replace("</head>", f"<style>{css}</style>\n</head>", 1)
     return html, html_sin_sonda
+
+
+def _con_fuentes(css: str, raiz: str) -> str:
+    """Embebe las fuentes como data URI.
+
+    Sin esto los íconos se imprimen como su palabra ligadura («person»,
+    «handshake») desde un archivo temporal, y lo que se mide no es lo que ve el
+    navegador del usuario. La `url()` lleva la huella del archivo (`?v=...`), así
+    que se acepta cualquier consulta.
+    """
+    import base64
+    for fuente in ("inter.woff2", "material-symbols.woff2"):
+        camino = os.path.join(raiz, "static", "fonts", fuente)
+        if not os.path.exists(camino):
+            continue
+        with open(camino, "rb") as fh:
+            datos = base64.b64encode(fh.read()).decode("ascii")
+        css = re.sub(r"url\('/static/fonts/" + re.escape(fuente) + r"(\?[^')]*)?'\)",
+                     f"url(data:font/woff2;base64,{datos})", css)
+    return css
 
 
 def _chrome_proceso(args, stdout=None):

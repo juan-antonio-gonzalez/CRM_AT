@@ -6,6 +6,7 @@ from database import get_db
 from services import dashboard_service
 import datetime
 from templating import templates
+from routers import publico
 from services.utils import month_date_range
 
 router = APIRouter(tags=["dashboard"])
@@ -93,6 +94,17 @@ async def dashboard(
     mes: str = Query("", alias="mes"),
     db: Session = Depends(get_db)
 ):
+    # Sin sesión, la raíz muestra la presentación en lugar de mandar al login.
+    #
+    # Es lo primero que ve alguien que llega al dominio, y también el robot de un
+    # filtro web: hasta ahora rebotaba al formulario de acceso, así que lo único
+    # que se podía leer del sitio era un login. Ver `routers/publico.py`.
+    if not getattr(request.state, "user", None):
+        return templates.TemplateResponse(request, 'bienvenida.html', {
+            "request": request,
+            "descripcion": publico.DESCRIPCION,
+        })
+
     today = datetime.datetime.now(datetime.UTC)
 
     fecha_desde = ""
@@ -146,33 +158,4 @@ async def dashboard(
         "available_years": available_years,
         "months": months,
         "filters": {"at": at, "cliente": cliente, "anio": anio, "mes": mes},
-    })
-
-
-@router.get("/search", response_class=HTMLResponse)
-async def global_search(request: Request, q: str = Query(...), db: Session = Depends(get_db)):
-    customers = db.query(models.Customer).filter(
-        (models.Customer.name.ilike(f"%{q}%")) |
-        (models.Customer.plant.ilike(f"%{q}%"))
-    ).limit(5).all()
-
-    products = db.query(models.Product).filter(
-        (models.Product.name.ilike(f"%{q}%")) |
-        (models.Product.et_number.ilike(f"%{q}%"))
-    ).limit(5).all()
-
-    machines = db.query(models.Machine).filter(
-        (models.Machine.serial_number.ilike(f"%{q}%")) |
-        (models.Machine.model.ilike(f"%{q}%"))
-    ).limit(5).all()
-
-    return templates.TemplateResponse(request, 'layout.html', {
-        "request": request,
-        "search_results": {
-            "customers": customers,
-            "products": products,
-            "machines": machines
-        },
-        "search_query": q,
-        "active_page": "dashboard"
     })
