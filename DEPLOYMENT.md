@@ -342,11 +342,13 @@ es que el área de sistemas lo permita o lo recategorice.
 ## Apéndice — El despliegue actual
 
 Datos de la instalación que está en producción hoy, por si hay que operarla.
+El dominio y la dirección del servidor no se publican: son datos de la instalación,
+no del proyecto.
 
 | | |
 |---|---|
-| URL | `https://ejemplo.com` |
-| Servidor | Hostinger, Ubuntu 26.04, PostgreSQL 18 |
+| URL | el dominio de la instalación |
+| Servidor | un VPS Ubuntu 26.04 con PostgreSQL 18 |
 | Aplicación | `/var/www/crm_at`, usuario `crmat` |
 | Configuración | `/etc/crm-at/crm-at.env` (modo 640, `root:crmat`) |
 | Servicio | `CRM-AT.service`, puerto 8020, 2 workers |
@@ -372,7 +374,7 @@ cd /var/www/crm_at && sudo -u crmat .venv/bin/python main.py check-schema
 rsync -rlptD --exclude '.git' --exclude '.venv' --exclude '.venv-work' \
       --exclude '__pycache__' --exclude 'node_modules' --exclude '*.db' \
       --exclude '.env' --exclude '.DS_Store' --exclude '.pytest_cache' \
-      --exclude 'static/uploads' ./ servidor:/var/www/crm_at/
+      --exclude 'static/uploads' ./ usuario@servidor:/var/www/crm_at/
 
 # En el servidor
 chown -R crmat:crmat /var/www/crm_at

@@ -300,7 +300,7 @@ if [[ -f "${EXISTING_VHOST}" ]] && grep -q "letsencrypt/live" "${EXISTING_VHOST}
          "$EXISTING_VHOST"
 else
   sed -e "s|server 127.0.0.1:8020;|server 127.0.0.1:${APP_PORT};|" \
-      -e "s|server_name __DOMINIO__ __DOMINIO_ALT__ 203.0.113.10;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
+      -e "s|server_name __DOMINIO__ __DOMINIO_ALT__;|server_name ${DOMAIN} ${ALT_DOMAIN};|" \
       -e "s|/var/www/crm_at/static/|${APP_DIR}/static/|g" \
       "${SCRIPT_DIR}/nginx-crm-at.conf" > "$EXISTING_VHOST"
 fi

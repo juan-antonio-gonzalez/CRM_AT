@@ -15,7 +15,8 @@ set -euo pipefail
 # adentro, porque es un dato de cada despliegue y no algo que se herede.
 DOMAIN="${DOMAIN:?Falta DOMAIN: pasá el dominio público, por ejemplo DOMAIN=crm.miempresa.com}"
 ALT_DOMAIN="${ALT_DOMAIN:-www.${DOMAIN}}"
-SERVER_IP="203.0.113.10"
+# La IP se detecta sola: escribirla en el proyecto la ata a un servidor.
+SERVER_IP="${SERVER_IP:-$(curl -s -4 --max-time 10 https://ifconfig.me 2>/dev/null || true)}"
 VHOST="/etc/nginx/sites-available/CRM-AT"
 ENV_FILE="/etc/crm-at/crm-at.env"
 WEBROOT="/var/www/certbot"
@@ -27,14 +28,22 @@ die()  { printf '\033[1;31m[x] %s\033[0m\n' "$*" >&2; exit 1; }
 [[ $EUID -eq 0 ]] || die "Ejecutá este script como root."
 
 # ── 1. Verificar DNS ────────────────────────────────────────────────────────
-log "Verificando que ${DOMAIN} resuelva a ${SERVER_IP}"
-RESOLVED="$(getent hosts "$DOMAIN" | awk '{print $1}' | head -1 || true)"
-if [[ "$RESOLVED" != "$SERVER_IP" ]]; then
-  die "${DOMAIN} resuelve a '${RESOLVED:-nada}', no a ${SERVER_IP}.
+# Si no se pudo detectar la IP pública, se avisa y se sigue: el certificado se
+# emite igual por webroot, y Certbot falla con su propio mensaje si el DNS está mal.
+if [[ -z "$SERVER_IP" ]]; then
+  warn "No se pudo detectar la IP pública del servidor; se omite la comprobación de DNS."
+  warn "Si Certbot falla, verificá que ${DOMAIN} apunte a este servidor."
+else
+  log "Verificando que ${DOMAIN} resuelva a ${SERVER_IP}"
+  RESOLVED="$(getent hosts "$DOMAIN" | awk '{print $1}' | head -1 || true)"
+  if [[ "$RESOLVED" != "$SERVER_IP" ]]; then
+    die "${DOMAIN} resuelve a '${RESOLVED:-nada}', no a ${SERVER_IP}.
      Corregí el registro A en el panel DNS y esperá la propagación.
-     El certificado actual (autofirmado) sigue funcionando mientras tanto."
+     Si sabés que la IP es correcta (por ejemplo, detrás de un proxy), pasala:
+         SERVER_IP=1.2.3.4 bash deploy/enable-ssl.sh"
+  fi
+  log "DNS correcto (${RESOLVED})"
 fi
-log "DNS correcto (${RESOLVED})"
 
 # ── 2. Emitir el certificado ────────────────────────────────────────────────
 command -v certbot >/dev/null 2>&1 || {
